@@ -1,0 +1,65 @@
+"""Readiness checks over parsed canonical state."""
+
+from __future__ import annotations
+
+from standard_harness.domain.packets import PacketService
+from standard_harness.state.store import HarnessStore
+from standard_harness.validation.diagnostics import DiagnosticRecord
+
+
+class ReadinessService:
+    def __init__(self, store: HarnessStore):
+        self.store = store
+
+    def check_packet(self, packet_id: str) -> dict[str, object]:
+        packet = PacketService(self.store).get_packet(packet_id)
+        diagnostics: list[dict[str, object]] = []
+
+        required_list_fields = [
+            ("change_zones", "missing_change_zones"),
+            ("acceptance_criteria_ids", "missing_acceptance_criteria"),
+            ("evidence_requirements", "missing_evidence_requirements"),
+            ("closeout_criteria", "missing_closeout_criteria"),
+        ]
+        for field, error_code in required_list_fields:
+            if not packet[field]:
+                diagnostics.append(
+                    DiagnosticRecord(
+                        error_code=error_code,
+                        severity="high",
+                        category="readiness",
+                        message=f"Packet field is required: {field}",
+                        repair_hint=f"Populate packet.{field} before proceeding.",
+                        affected_entity_type="packet",
+                        affected_entity_id=packet_id,
+                        packet_id=packet_id,
+                        field=field,
+                        expected_value="non_empty",
+                        actual_value="empty",
+                        freshness_watermark=self.store.latest_event_seq(),
+                    ).to_dict()
+                )
+
+        if diagnostics:
+            return {"status": "blocked", "diagnostics": diagnostics}
+
+        if packet["approval_required"] and packet["approval_state"] != "approved":
+            diagnostics.append(
+                DiagnosticRecord(
+                    error_code="missing_approval",
+                    severity="high",
+                    category="readiness",
+                    message="Packet requires approval before work can proceed.",
+                    repair_hint="Run packet-approve with an authorized approval record.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="approval_state",
+                    expected_value="approved",
+                    actual_value=str(packet["approval_state"]),
+                    freshness_watermark=self.store.latest_event_seq(),
+                ).to_dict()
+            )
+            return {"status": "hold", "diagnostics": diagnostics}
+
+        return {"status": "ready", "diagnostics": []}
