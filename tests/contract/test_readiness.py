@@ -76,6 +76,7 @@ class ReadinessTests(unittest.TestCase):
 
     def test_readiness_ready_after_approval_and_required_fields(self):
         from standard_harness.domain.packets import PacketService
+        from standard_harness.domain.requirements import RequirementRegistry
         from standard_harness.state.store import HarnessStore
         from standard_harness.validation.readiness import ReadinessService
 
@@ -105,6 +106,27 @@ class ReadinessTests(unittest.TestCase):
                 approved_scope="low-risk documentation packet",
                 rationale="MVP contract test",
                 idempotency_key="approve-pkt-001",
+            )
+            registry = RequirementRegistry(store)
+            registry.register_requirement(
+                requirement_id="REQ-001",
+                version="1",
+                source_doc="docs/requirements/example.md",
+                status="approved",
+                classification="Core",
+                risk_classification="low",
+                acceptance_criteria=["ac-001"],
+                completion_classification="unverified",
+                packet_id="pkt-001",
+                idempotency_key="requirement-REQ-001",
+            )
+            registry.register_acceptance_criterion(
+                acceptance_criterion_id="ac-001",
+                requirement_id="REQ-001",
+                packet_id="pkt-001",
+                description="Command inventory is documented.",
+                status="proposed",
+                idempotency_key="acceptance-ac-001",
             )
 
             result = ReadinessService(store).check_packet("pkt-001")

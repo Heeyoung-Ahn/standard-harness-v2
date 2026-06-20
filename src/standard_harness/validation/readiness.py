@@ -62,4 +62,41 @@ class ReadinessService:
             )
             return {"status": "hold", "diagnostics": diagnostics}
 
+        missing_acceptance_ids = [
+            acceptance_id
+            for acceptance_id in packet["acceptance_criteria_ids"]
+            if not self._acceptance_exists(packet_id, acceptance_id)
+        ]
+        for acceptance_id in missing_acceptance_ids:
+            diagnostics.append(
+                DiagnosticRecord(
+                    error_code="unregistered_acceptance_criterion",
+                    severity="high",
+                    category="readiness",
+                    message="Packet acceptance criterion is not registered.",
+                    repair_hint="Register the acceptance criterion before proceeding.",
+                    affected_entity_type="acceptance_criterion",
+                    affected_entity_id=acceptance_id,
+                    packet_id=packet_id,
+                    acceptance_criterion_id=acceptance_id,
+                    field="acceptance_criteria_ids",
+                    expected_value="registered",
+                    actual_value="missing",
+                    freshness_watermark=self.store.latest_event_seq(),
+                ).to_dict()
+            )
+        if diagnostics:
+            return {"status": "blocked", "diagnostics": diagnostics}
+
         return {"status": "ready", "diagnostics": []}
+
+    def _acceptance_exists(self, packet_id: str, acceptance_criterion_id: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                """
+                select 1 from acceptance_criteria
+                where packet_id = ? and acceptance_criterion_id = ?
+                """,
+                (packet_id, acceptance_criterion_id),
+            ).fetchone()
+        return row is not None

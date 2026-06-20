@@ -547,9 +547,14 @@ def _handle_context(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
 def _handle_starter_check(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
     parser = _command_parser("starter-check")
     parser.add_argument("--paths", default="")
+    parser.add_argument("--root", default=None)
     parsed = parser.parse_args(argv)
-    paths = _csv(parsed.paths)
-    diagnostics = StarterContaminationChecker().check_paths(paths)
+    checker = StarterContaminationChecker()
+    if parsed.root:
+        diagnostics = checker.check_root(Path(parsed.root))
+    else:
+        paths = _csv(parsed.paths)
+        diagnostics = checker.check_paths(paths)
     return {"starter": {"status": "ok" if not diagnostics else "blocked", "diagnostics": diagnostics}}
 
 

@@ -54,6 +54,17 @@ class HarnessStore:
             row = conn.execute("select coalesce(max(event_seq), 0) as seq from events").fetchone()
         return int(row["seq"])
 
+    def event_for_idempotency_key(self, idempotency_key: str) -> dict[str, Any] | None:
+        if not self.db_path.exists():
+            return None
+        with closing(self.connect()) as conn:
+            row = conn.execute(
+                "select * from events where idempotency_key = ?", (idempotency_key,)
+            ).fetchone()
+        if row is None:
+            return None
+        return _row_to_event(row)
+
     def append_event(
         self,
         *,
@@ -79,6 +90,15 @@ class HarnessStore:
             ).fetchone()
             if existing is not None:
                 return _row_to_event(existing)
+
+            if expected_state_version is not None:
+                current_version = conn.execute(
+                    "select coalesce(max(event_seq), 0) as seq from events"
+                ).fetchone()["seq"]
+                if int(current_version) != expected_state_version:
+                    raise ValueError(
+                        f"expected_state_version mismatch: expected {expected_state_version}, current {current_version}"
+                    )
 
             event_id = new_event_id()
             transaction_id = new_transaction_id()

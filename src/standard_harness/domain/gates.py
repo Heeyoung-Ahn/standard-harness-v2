@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+from standard_harness.domain.packets import PacketService
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 
@@ -35,6 +36,11 @@ class GateService:
         declared_by_source: str,
         idempotency_key: str,
     ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_gate(gate_id)
+        if self._row_exists("gate_declarations", "gate_id", gate_id):
+            raise ValueError(f"gate_id already exists: {gate_id}")
+        self._require_packet(packet_id)
         _validate_requirement_level(requirement_level)
         watermark = self.store.latest_event_seq()
         gate = {
@@ -84,7 +90,14 @@ class GateService:
         packet_id: str,
         idempotency_key: str,
     ) -> dict[str, object]:
-        self.get_gate(gate_id)
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_activation(gate_activation_id)
+        if self._row_exists("gate_activations", "gate_activation_id", gate_activation_id):
+            raise ValueError(f"gate_activation_id already exists: {gate_activation_id}")
+        self._require_packet(packet_id)
+        gate = self.get_gate(gate_id)
+        if gate["packet_id"] != packet_id:
+            raise ValueError("gate activation must belong to the same packet")
         watermark = self.store.latest_event_seq()
         activation = {
             "gate_activation_id": gate_activation_id,
@@ -138,6 +151,14 @@ class GateService:
         rationale: str,
         idempotency_key: str,
     ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_gate_result(gate_result_id)
+        if self._row_exists("gate_results", "gate_result_id", gate_result_id):
+            raise ValueError(f"gate_result_id already exists: {gate_result_id}")
+        self._require_packet(packet_id)
+        gate = self.get_gate(gate_id)
+        if gate["packet_id"] != packet_id:
+            raise ValueError("gate result must belong to the same packet")
         _validate_requirement_level(requirement_level)
         if status not in GATE_STATUSES:
             raise ValueError(f"Invalid gate status: {status}")
@@ -255,13 +276,31 @@ class GateService:
             for claim_id in checked_claim_ids:
                 claim = conn.execute(
                     """
-                    select support_status from claims
+                    select support_status, evidence_ids_json from claims
                     where claim_id = ? and packet_id = ?
                     """,
                     (claim_id, packet_id),
                 ).fetchone()
                 if claim is None or claim["support_status"] != "supported":
                     raise ValueError("Passing gate results require supported claims")
+                claim_evidence_ids = set(json.loads(claim["evidence_ids_json"]))
+                if not claim_evidence_ids.intersection(evidence_ids):
+                    raise ValueError(
+                        "Passing gate results require evidence linked to each checked claim"
+                    )
+
+    def _require_packet(self, packet_id: str) -> dict[str, object]:
+        try:
+            return PacketService(self.store).get_packet(packet_id)
+        except KeyError as exc:
+            raise ValueError(f"Unknown packet: {packet_id}") from exc
+
+    def _row_exists(self, table: str, key_column: str, key_value: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                f"select 1 from {table} where {key_column} = ?", (key_value,)
+            ).fetchone()
+        return row is not None
 
 
 def _validate_requirement_level(requirement_level: str) -> None:

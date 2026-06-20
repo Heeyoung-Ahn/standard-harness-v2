@@ -118,18 +118,66 @@ class ValidationService:
 
     def _completion_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:
         with self.store.connection() as conn:
+            packet = conn.execute(
+                "select acceptance_criteria_ids_json from packets where packet_id = ?",
+                (packet_id,),
+            ).fetchone()
+            registered_acceptance = {
+                row["acceptance_criterion_id"]
+                for row in conn.execute(
+                    "select acceptance_criterion_id from acceptance_criteria where packet_id = ?",
+                    (packet_id,),
+                ).fetchall()
+            }
             supported_claims = conn.execute(
                 """
-                select evidence_ids_json from claims
+                select claim_id, acceptance_criterion_id, evidence_ids_json from claims
                 where packet_id = ? and support_status = 'supported'
                 """,
                 (packet_id,),
             ).fetchall()
             passing_gates = conn.execute(
-                "select 1 from gate_results where packet_id = ? and status = 'pass'",
+                """
+                select checked_claim_ids_json from gate_results
+                where packet_id = ? and status = 'pass'
+                """,
                 (packet_id,),
             ).fetchall()
         diagnostics = []
+        packet_acceptance_ids = json.loads(packet["acceptance_criteria_ids_json"]) if packet else []
+        supported_acceptance_ids = {
+            claim["acceptance_criterion_id"] for claim in supported_claims
+        }
+        for acceptance_id in packet_acceptance_ids:
+            if acceptance_id not in registered_acceptance:
+                diagnostics.append(
+                    _diagnostic(
+                        error_code="unregistered_acceptance_criterion",
+                        category="readiness",
+                        message="Packet acceptance criterion is not registered.",
+                        repair_hint="Register the acceptance criterion before closeout.",
+                        affected_entity_type="acceptance_criterion",
+                        affected_entity_id=acceptance_id,
+                        packet_id=packet_id,
+                        acceptance_criterion_id=acceptance_id,
+                        field="acceptance_criteria_ids",
+                        expected_value="registered",
+                        actual_value="missing",
+                    )
+                )
+            if acceptance_id not in supported_acceptance_ids:
+                diagnostics.append(
+                    _diagnostic(
+                        error_code="missing_supported_claim",
+                        category="evidence",
+                        message="Acceptance criterion has no supported claim.",
+                        repair_hint="Record a supported claim backed by passed evidence for every acceptance criterion.",
+                        affected_entity_type="acceptance_criterion",
+                        affected_entity_id=acceptance_id,
+                        packet_id=packet_id,
+                        acceptance_criterion_id=acceptance_id,
+                    )
+                )
         evidence_ids = []
         for claim in supported_claims:
             evidence_ids.extend(json.loads(claim["evidence_ids_json"]))
@@ -157,6 +205,25 @@ class ValidationService:
                     packet_id=packet_id,
                 )
             )
+        else:
+            gate_claim_ids = {
+                claim_id
+                for gate in passing_gates
+                for claim_id in json.loads(gate["checked_claim_ids_json"])
+            }
+            required_claim_ids = {claim["claim_id"] for claim in supported_claims}
+            if not required_claim_ids.issubset(gate_claim_ids):
+                diagnostics.append(
+                    _diagnostic(
+                        error_code="missing_gate_claim_coverage",
+                        category="gate",
+                        message="Passing gate results do not cover every supported claim.",
+                        repair_hint="Record a passing gate result that checks every claim used for closeout.",
+                        affected_entity_type="packet",
+                        affected_entity_id=packet_id,
+                        packet_id=packet_id,
+                    )
+                )
         return diagnostics
 
     def _gate_activation_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:
@@ -229,6 +296,7 @@ def _diagnostic(
     affected_entity_type: str | None = None,
     affected_entity_id: str | None = None,
     packet_id: str | None = None,
+    acceptance_criterion_id: str | None = None,
     gate_id: str | None = None,
     field: str | None = None,
     expected_value: str | None = None,
@@ -243,6 +311,7 @@ def _diagnostic(
         affected_entity_type=affected_entity_type,
         affected_entity_id=affected_entity_id,
         packet_id=packet_id,
+        acceptance_criterion_id=acceptance_criterion_id,
         gate_id=gate_id,
         field=field,
         expected_value=expected_value,

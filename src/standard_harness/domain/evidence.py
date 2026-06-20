@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 
+from standard_harness.domain.packets import PacketService
+from standard_harness.domain.requirements import RequirementRegistry
 from standard_harness.state.events import HASH_ALGORITHM, sha256_text, utc_now_iso
 from standard_harness.state.store import HarnessStore
 
@@ -32,6 +34,15 @@ class EvidenceService:
         rationale: str,
         idempotency_key: str,
     ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_evidence(evidence_id)
+        if self._row_exists("evidence", "evidence_id", evidence_id):
+            raise ValueError(f"evidence_id already exists: {evidence_id}")
+        self._require_packet(packet_id)
+        if claim_id is not None:
+            claim = self._require_claim(claim_id)
+            if claim["packet_id"] != packet_id:
+                raise ValueError("evidence claim must belong to the same packet")
         if result_status not in EVIDENCE_STATUSES:
             raise ValueError(f"Invalid evidence status: {result_status}")
         timestamp = utc_now_iso()
@@ -101,6 +112,20 @@ class EvidenceService:
         idempotency_key: str,
         gate_result_ids_optional: list[str] | None = None,
     ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_claim(claim_id)
+        if self._row_exists("claims", "claim_id", claim_id):
+            raise ValueError(f"claim_id already exists: {claim_id}")
+        self._require_packet(packet_id)
+        requirement = self._require_requirement(requirement_id)
+        if requirement["packet_id"] != packet_id:
+            raise ValueError("claim requirement must belong to the same packet")
+        criterion = self._require_acceptance_criterion(acceptance_criterion_id)
+        if criterion["packet_id"] != packet_id:
+            raise ValueError("claim acceptance criterion must belong to the same packet")
+        if criterion["requirement_id"] != requirement_id:
+            raise ValueError("claim acceptance criterion must belong to the claim requirement")
+        self._validate_evidence_packet(evidence_ids, packet_id)
         if support_status not in SUPPORT_STATUSES:
             raise ValueError(f"Invalid support status: {support_status}")
         if support_status == "supported":
@@ -174,3 +199,50 @@ class EvidenceService:
             evidence = self.get_evidence(evidence_id)
             if evidence["result_status"] != "passed":
                 raise ValueError("support_status=supported requires passed evidence")
+
+    def _validate_evidence_packet(self, evidence_ids: list[str], packet_id: str) -> None:
+        for evidence_id in evidence_ids:
+            evidence = self._require_evidence(evidence_id)
+            if evidence["packet_id"] != packet_id:
+                raise ValueError("claim evidence must belong to the same packet")
+
+    def _require_packet(self, packet_id: str) -> dict[str, object]:
+        try:
+            return PacketService(self.store).get_packet(packet_id)
+        except KeyError as exc:
+            raise ValueError(f"Unknown packet: {packet_id}") from exc
+
+    def _require_requirement(self, requirement_id: str) -> dict[str, object]:
+        try:
+            return RequirementRegistry(self.store).get_requirement(requirement_id)
+        except KeyError as exc:
+            raise ValueError(f"Unknown requirement: {requirement_id}") from exc
+
+    def _require_acceptance_criterion(self, acceptance_criterion_id: str) -> dict[str, object]:
+        try:
+            return RequirementRegistry(self.store).get_acceptance_criterion(
+                acceptance_criterion_id
+            )
+        except KeyError as exc:
+            raise ValueError(
+                f"Unknown acceptance criterion: {acceptance_criterion_id}"
+            ) from exc
+
+    def _require_evidence(self, evidence_id: str) -> dict[str, object]:
+        try:
+            return self.get_evidence(evidence_id)
+        except KeyError as exc:
+            raise ValueError(f"Unknown evidence: {evidence_id}") from exc
+
+    def _require_claim(self, claim_id: str) -> dict[str, object]:
+        try:
+            return self.get_claim(claim_id)
+        except KeyError as exc:
+            raise ValueError(f"Unknown claim: {claim_id}") from exc
+
+    def _row_exists(self, table: str, key_column: str, key_value: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                f"select 1 from {table} where {key_column} = ?", (key_value,)
+            ).fetchone()
+        return row is not None

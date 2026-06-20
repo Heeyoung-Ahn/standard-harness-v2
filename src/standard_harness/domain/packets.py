@@ -42,6 +42,10 @@ class PacketService:
         idempotency_key: str,
         approval_required: bool = True,
     ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_packet(packet_id)
+        if self._packet_exists(packet_id):
+            raise ValueError(f"packet_id already exists: {packet_id}")
         now = utc_now_iso()
         packet = {
             "packet_id": packet_id,
@@ -206,6 +210,11 @@ class PacketService:
         if row is None:
             raise KeyError(f"Unknown packet: {packet_id}")
         return _packet_from_row(dict(row))
+
+    def _packet_exists(self, packet_id: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute("select 1 from packets where packet_id = ?", (packet_id,)).fetchone()
+        return row is not None
 
 
 def _packet_row_values(packet: dict[str, object]) -> tuple[object, ...]:

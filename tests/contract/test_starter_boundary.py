@@ -1,11 +1,14 @@
 import sys
 import tempfile
 import unittest
+import json
+import subprocess
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "src"
+CLI = ROOT / "tools" / "harness_cli.py"
 
 
 class StarterBoundaryTests(unittest.TestCase):
@@ -68,6 +71,70 @@ class StarterBoundaryTests(unittest.TestCase):
         self.assertTrue(start_here.exists())
         self.assertIn("clean starter payload", readme.read_text(encoding="utf-8"))
         self.assertIn("first low-risk packet", start_here.read_text(encoding="utf-8"))
+
+    def test_contamination_check_scans_root_and_requires_starter_docs(self):
+        from standard_harness.starter.contamination import StarterContaminationChecker
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text("starter readme", encoding="utf-8")
+            (root / "START_HERE.md").write_text("start here", encoding="utf-8")
+            (root / ".harness" / "state").mkdir(parents=True)
+            (root / ".harness" / "state" / "harness.sqlite3").write_text("db", encoding="utf-8")
+
+            diagnostics = StarterContaminationChecker().check_root(root)
+
+            self.assertIn(
+                "development_packet_state",
+                {diagnostic["error_code"] for diagnostic in diagnostics},
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            diagnostics = StarterContaminationChecker().check_root(Path(tmp))
+
+            self.assertIn(
+                "missing_starter_readme",
+                {diagnostic["error_code"] for diagnostic in diagnostics},
+            )
+            self.assertIn(
+                "missing_starter_start_here",
+                {diagnostic["error_code"] for diagnostic in diagnostics},
+            )
+
+    def test_cli_starter_check_root_scans_actual_filesystem(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "README.md").write_text("starter readme", encoding="utf-8")
+            (root / "START_HERE.md").write_text("start here", encoding="utf-8")
+            (root / "__pycache__").mkdir()
+            (root / "__pycache__" / "module.pyc").write_text("cache", encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(CLI),
+                    "--json",
+                    "--harness-root",
+                    tmp,
+                    "starter-check",
+                    "--root",
+                    str(root),
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            payload = json.loads(result.stdout)
+            self.assertEqual(payload["status"], "ok")
+            starter = payload["starter"]
+            self.assertEqual(starter["status"], "blocked")
+            self.assertIn(
+                "cache_files",
+                {diagnostic["error_code"] for diagnostic in starter["diagnostics"]},
+            )
 
 
 if __name__ == "__main__":

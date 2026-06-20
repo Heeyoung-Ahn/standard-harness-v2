@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+from standard_harness.domain.packets import PacketService
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 
@@ -26,6 +27,11 @@ class RequirementRegistry:
         packet_id: str,
         idempotency_key: str,
     ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_requirement(requirement_id)
+        if self._row_exists("requirements", "requirement_id", requirement_id):
+            raise ValueError(f"requirement_id already exists: {requirement_id}")
+        self._require_packet(packet_id)
         now = utc_now_iso()
         requirement = {
             "requirement_id": requirement_id,
@@ -85,6 +91,20 @@ class RequirementRegistry:
         status: str,
         idempotency_key: str,
     ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_acceptance_criterion(acceptance_criterion_id)
+        if self._row_exists(
+            "acceptance_criteria", "acceptance_criterion_id", acceptance_criterion_id
+        ):
+            raise ValueError(
+                f"acceptance_criterion_id already exists: {acceptance_criterion_id}"
+            )
+        packet = self._require_packet(packet_id)
+        requirement = self._require_requirement(requirement_id)
+        if requirement["packet_id"] != packet_id:
+            raise ValueError("acceptance criterion requirement must belong to the same packet")
+        if acceptance_criterion_id not in packet["acceptance_criteria_ids"]:
+            raise ValueError("acceptance criterion id must be listed in the packet")
         now = utc_now_iso()
         criterion = {
             "acceptance_criterion_id": acceptance_criterion_id,
@@ -145,3 +165,22 @@ class RequirementRegistry:
         if row is None:
             raise KeyError(f"Unknown acceptance criterion: {acceptance_criterion_id}")
         return dict(row)
+
+    def _require_packet(self, packet_id: str) -> dict[str, object]:
+        try:
+            return PacketService(self.store).get_packet(packet_id)
+        except KeyError as exc:
+            raise ValueError(f"Unknown packet: {packet_id}") from exc
+
+    def _require_requirement(self, requirement_id: str) -> dict[str, object]:
+        try:
+            return self.get_requirement(requirement_id)
+        except KeyError as exc:
+            raise ValueError(f"Unknown requirement: {requirement_id}") from exc
+
+    def _row_exists(self, table: str, key_column: str, key_value: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                f"select 1 from {table} where {key_column} = ?", (key_value,)
+            ).fetchone()
+        return row is not None

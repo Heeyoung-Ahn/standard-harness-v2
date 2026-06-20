@@ -22,16 +22,39 @@ class CloseoutService:
         rationale: str,
         idempotency_key: str,
     ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_closeout(closeout_id)
+        if self._closeout_exists(closeout_id):
+            raise ValueError(f"closeout_id already exists: {closeout_id}")
         packet = PacketService(self.store).get_packet(packet_id)
         source_watermark = self.store.latest_event_seq()
         claims = self._supported_claims(packet_id)
         gate_results = self._passing_gate_results(packet_id)
         evidence_ids = sorted({evidence_id for claim in claims for evidence_id in claim["evidence_ids"]})
         diagnostics: list[str] = []
+        registered_acceptance_ids = self._registered_acceptance_ids(packet_id)
+        supported_acceptance_ids = {
+            str(claim["acceptance_criterion_id"]) for claim in claims
+        }
+        for acceptance_id in packet["acceptance_criteria_ids"]:
+            if acceptance_id not in registered_acceptance_ids:
+                _add_diagnostic(diagnostics, "unregistered_acceptance_criterion")
+            if acceptance_id not in supported_acceptance_ids:
+                _add_diagnostic(diagnostics, "missing_supported_claim")
         if not claims:
-            diagnostics.append("missing_evidence")
+            _add_diagnostic(diagnostics, "missing_evidence")
+        for claim in claims:
+            if not claim["evidence_ids"] or not all(
+                self._evidence_is_passed(packet_id, evidence_id)
+                for evidence_id in claim["evidence_ids"]
+            ):
+                _add_diagnostic(diagnostics, "missing_evidence")
         if not gate_results:
-            diagnostics.append("missing_gate_pass")
+            _add_diagnostic(diagnostics, "missing_gate_pass")
+        checked_claim_ids = {claim_id for gate in gate_results for claim_id in gate["checked_claim_ids"]}
+        required_claim_ids = {str(claim["claim_id"]) for claim in claims}
+        if gate_results and not required_claim_ids.issubset(checked_claim_ids):
+            _add_diagnostic(diagnostics, "missing_gate_claim_coverage")
         decision_status = "closed" if not diagnostics else "blocked"
         closeout = {
             "closeout_id": closeout_id,
@@ -123,4 +146,41 @@ class CloseoutService:
                 "select * from gate_results where packet_id = ? and status = 'pass'",
                 (packet_id,),
             ).fetchall()
-        return [dict(row) for row in rows]
+        results = []
+        for row in rows:
+            result = dict(row)
+            result["checked_claim_ids"] = json.loads(result.pop("checked_claim_ids_json"))
+            result["evidence_ids"] = json.loads(result.pop("evidence_ids_json"))
+            results.append(result)
+        return results
+
+    def _registered_acceptance_ids(self, packet_id: str) -> set[str]:
+        with self.store.connection() as conn:
+            rows = conn.execute(
+                "select acceptance_criterion_id from acceptance_criteria where packet_id = ?",
+                (packet_id,),
+            ).fetchall()
+        return {row["acceptance_criterion_id"] for row in rows}
+
+    def _evidence_is_passed(self, packet_id: str, evidence_id: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                """
+                select result_status from evidence
+                where packet_id = ? and evidence_id = ?
+                """,
+                (packet_id, evidence_id),
+            ).fetchone()
+        return row is not None and row["result_status"] == "passed"
+
+    def _closeout_exists(self, closeout_id: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                "select 1 from closeouts where closeout_id = ?", (closeout_id,)
+            ).fetchone()
+        return row is not None
+
+
+def _add_diagnostic(diagnostics: list[str], diagnostic_id: str) -> None:
+    if diagnostic_id not in diagnostics:
+        diagnostics.append(diagnostic_id)
