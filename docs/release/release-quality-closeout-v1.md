@@ -8,7 +8,8 @@ This closeout covers the MVP-only release-quality scope: `REL-000`, `KFIX-001`, 
 
 - Local workflow file exists at `.github/workflows/ci.yml`.
 - Local full test command passed.
-- Remote GitHub Actions verification is blocked until changes are pushed and GitHub authentication is available.
+- Release-quality commit was pushed to `main`.
+- Remote GitHub Actions UI/status verification is blocked until GitHub CLI authentication or browser-authenticated inspection is available.
 
 ## README Status
 
@@ -55,6 +56,12 @@ gh is not available on PATH.
 python -m unittest discover -s tests
 Ran 49 tests
 OK
+```
+
+## Pushed Commit
+
+```text
+5a44093 release: complete MVP quality hardening
 ```
 
 ## MVP Use Scope

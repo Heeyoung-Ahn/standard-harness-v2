@@ -191,7 +191,8 @@ Observed status:
 
 ```text
 .github/workflows/ci.yml exists locally.
-Remote GitHub Actions verification is blocked until changes are pushed and GitHub authentication is available.
+Release-quality commit 5a44093 was pushed to main.
+Remote GitHub Actions UI/status verification is blocked until GitHub CLI authentication or browser-authenticated inspection is available.
 ```
 
 Issue title:
