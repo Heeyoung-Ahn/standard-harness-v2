@@ -2,7 +2,7 @@
 
 > **Status:** V2.1 canonical work plan and Codex execution baseline  
 > **Scope:** requirements + architecture + implementation plan  
-> **Primary baseline:** `docs/requirements/Standard_Harness_통합_요구사항_v0.2.md`  
+> **Primary baseline:** `docs/requirements/standard-harness-integrated-requirements-v0.2.md`  
 > **Working rule:** V2.1 is driven by v0.2 HR requirements and current repository implementation. Spreadsheet candidate requirements are not used as an intake basis for this plan.
 > **Filename:** `docs/requirements/standard-harness-v2-1-integrated-work-plan.md`
 
@@ -33,7 +33,7 @@ V2.1 작업은 새 기능을 임의로 추가하는 작업이 아니다. v0.2에
 
 | 구분 | 파일 | 역할 |
 |---|---|---|
-| Primary requirements | `docs/requirements/Standard_Harness_통합_요구사항_v0.2.md` | V2.1 요구사항 원천 |
+| Primary requirements | `docs/requirements/standard-harness-integrated-requirements-v0.2.md` | V2.1 요구사항 원천 |
 | Canonical work plan | `docs/requirements/standard-harness-v2-1-integrated-work-plan.md` | V2.1 요구사항·아키텍처·구현계획 정본 |
 | Entry contract | `AGENTS.md` | Codex 진입 시 반드시 읽어야 하는 제품 방향 및 V2.1 기준 |
 | Architecture inputs | `docs/architecture/standard-harness-architecture-guide-v1.md`, `docs/architecture/standard-harness-repository-topology-v1.md` | 현재 architecture baseline |

@@ -28,7 +28,7 @@ The v2 product is grounded in:
 
 - the user's 16 core harness principles below,
 - the V2.1 canonical work plan in `docs/requirements/standard-harness-v2-1-integrated-work-plan.md`,
-- the v0.2 integrated requirements in `docs/requirements/Standard_Harness_통합_요구사항_v0.2.md`,
+- the v0.2 integrated requirements in `docs/requirements/standard-harness-integrated-requirements-v0.2.md`,
 - the LLM-derived good-harness and bad-harness criteria,
 - the 260-requirement final-product baseline in `docs/requirements/`,
 - the architecture and repository topology contracts in `docs/architecture/`.
@@ -87,7 +87,7 @@ Before starting any XP:
 
 1. Read `docs/requirements/standard-harness-v2-1-integrated-work-plan.md`.
 2. Read the relevant HR sections in
-   `docs/requirements/Standard_Harness_통합_요구사항_v0.2.md`.
+   `docs/requirements/standard-harness-integrated-requirements-v0.2.md`.
 3. Run `git status --short` and record the starting state.
 4. Run `python -m unittest discover -s tests` and record the result.
 5. If baseline tests fail or hang before the XP changes, stop and report the

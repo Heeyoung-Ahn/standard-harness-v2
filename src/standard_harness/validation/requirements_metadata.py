@@ -360,7 +360,7 @@ class RequirementsMetadataValidator:
         return {item["id"] for item in index.get("requirements", []) if isinstance(item, dict)}
 
     def _v02_hr_ids(self) -> set[str]:
-        path = self.repo_root / "docs" / "requirements" / "Standard_Harness_통합_요구사항_v0.2.md"
+        path = self.repo_root / "docs" / "requirements" / "standard-harness-integrated-requirements-v0.2.md"
         if not path.exists():
             return set()
         text = path.read_text(encoding="utf-8")

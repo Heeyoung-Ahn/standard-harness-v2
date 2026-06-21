@@ -38,7 +38,7 @@
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
-        "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md"
+        "docs/requirements/standard-harness-integrated-requirements-v0.2.md"
       ],
       "targetArtifacts": {
         "policy": [
@@ -64,7 +64,7 @@
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
-        "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md"
+        "docs/requirements/standard-harness-integrated-requirements-v0.2.md"
       ],
       "targetArtifacts": {
         "policy": [

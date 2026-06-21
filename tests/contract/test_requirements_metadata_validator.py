@@ -37,9 +37,13 @@ REQUIRED_SKILLS = {
     "SKILL-FRICTION-ANALYSIS",
 }
 
+CANONICAL_V02_REQUIREMENTS_SOURCE = (
+    "docs/requirements/standard-harness-integrated-requirements-v0.2.md"
+)
+
 
 def _v02_hr_ids() -> set[str]:
-    text = (ROOT / "docs" / "requirements" / "Standard_Harness_통합_요구사항_v0.2.md").read_text(
+    text = (ROOT / CANONICAL_V02_REQUIREMENTS_SOURCE).read_text(
         encoding="utf-8"
     )
     return set(re.findall(r"^### (HR-[0-9]{3}[A-Z]?)\.", text, flags=re.MULTILINE))
@@ -135,6 +139,17 @@ class RequirementsMetadataValidatorTests(unittest.TestCase):
         for item in repository.requirements_index()["requirements"]:
             with self.subTest(requirement=item["id"]):
                 self.assertTrue((ROOT / item["source"]).exists(), item["source"])
+
+    def test_requirement_source_paths_use_ascii_canonical_v02_file(self):
+        from standard_harness.requirements.metadata import RequirementsMetadataRepository
+
+        repository = RequirementsMetadataRepository(ROOT)
+        sources = {item["source"] for item in repository.requirements_index()["requirements"]}
+
+        self.assertEqual({CANONICAL_V02_REQUIREMENTS_SOURCE}, sources)
+        for source in sources:
+            with self.subTest(source=source):
+                source.encode("ascii")
 
     def test_xp00_release_blocking_diagnostics_are_consistent(self):
         from standard_harness.requirements.metadata import RequirementsMetadataRepository
