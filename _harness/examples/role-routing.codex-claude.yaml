@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "0.2.0",
+  "exampleOnly": true,
+  "roles": {
+    "developer": {"primaryProvider": "codex", "fallbackProviders": ["claude", "manual-handoff"]},
+    "reviewer": {"primaryProvider": "claude", "fallbackProviders": ["codex", "manual-handoff"]}
+  }
+}

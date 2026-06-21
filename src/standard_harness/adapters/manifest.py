@@ -32,6 +32,9 @@ class AdapterManifest:
     permission_roots: list[str]
     known_limitations: list[str]
     failure_modes: list[str]
+    provider: str | None = None
+    capabilities: dict[str, Any] | None = None
+    restricted_write_zones: list[str] | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "AdapterManifest":
@@ -49,6 +52,9 @@ class AdapterManifest:
             permission_roots=_string_list(data, "permission_roots"),
             known_limitations=_string_list(data, "known_limitations"),
             failure_modes=_string_list(data, "failure_modes"),
+            provider=data.get("provider"),
+            capabilities=data.get("capabilities"),
+            restricted_write_zones=data.get("restricted_write_zones"),
         )
 
 

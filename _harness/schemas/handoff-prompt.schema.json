@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["role", "packetId", "instructions", "contextPack", "evidenceMode"],
+  "properties": {
+    "role": {"type": "string"},
+    "packetId": {"type": "string"},
+    "instructions": {"type": "string"},
+    "contextPack": {"type": "object"},
+    "evidenceMode": {"const": "MANUAL_ONLY"}
+  }
+}

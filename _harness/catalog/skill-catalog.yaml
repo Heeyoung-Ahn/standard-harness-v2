@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "0.2.0",
+  "skills": [
+    {
+      "id": "SKILL-TDD-IMPLEMENTATION",
+      "taskTypes": ["test-driven-implementation"],
+      "purpose": "Guide RED-GREEN-REFACTOR implementation workflow.",
+      "owner": "harness",
+      "source": "v2-native-internal",
+      "permissionScope": {"allowedWriteZones": ["product", "_ops/evidence/**"]},
+      "inputSchema": "_harness/schemas/skill-execution.schema.json",
+      "outputSchema": "_harness/schemas/skill-execution.schema.json",
+      "evidenceContract": {"required": true, "evidenceType": "skill-execution"},
+      "fallbackBehavior": "manual-handoff",
+      "validationCommand": "python -m unittest tests.contract.test_skill_router_evidence_contract",
+      "hrTrace": ["HR-130R", "HR-131R"],
+      "xpTrace": ["XP-07"],
+      "v1ReferenceDisposition": "reference-only",
+      "runtimeSources": ["src/standard_harness/skills/internal/registry.py"]
+    }
+  ]
+}

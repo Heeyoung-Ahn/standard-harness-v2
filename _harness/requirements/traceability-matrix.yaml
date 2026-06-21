@@ -339,21 +339,49 @@
       "hrId": "HR-020R",
       "xpOwner": "XP-07",
       "files": [
-        "planned:xp_07:HR-020R"
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
       "validators": [
-        "handoff-router-validator"
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
       ],
       "gates": [
-        "handoff-gate"
+        "handoff-gate",
+        "skill-router-gate"
       ],
       "evidenceTypes": [
-        "provider-capability-manifest"
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
       ],
       "tests": [
-        "tests.contract.test_xp_07_planned_contract"
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
       ],
       "releaseBlocking": true
     },
@@ -361,21 +389,49 @@
       "hrId": "HR-021R",
       "xpOwner": "XP-07",
       "files": [
-        "planned:xp_07:HR-021R"
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
       "validators": [
-        "role-routing-validator"
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
       ],
       "gates": [
-        "handoff-gate"
+        "handoff-gate",
+        "skill-router-gate"
       ],
       "evidenceTypes": [
-        "role-routing-policy"
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
       ],
       "tests": [
-        "tests.contract.test_xp_07_planned_contract"
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
       ],
       "releaseBlocking": true
     },
@@ -383,21 +439,49 @@
       "hrId": "HR-022R",
       "xpOwner": "XP-07",
       "files": [
-        "planned:xp_07:HR-022R"
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
       "validators": [
-        "handoff-protocol-validator"
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
       ],
       "gates": [
-        "handoff-gate"
+        "handoff-gate",
+        "skill-router-gate"
       ],
       "evidenceTypes": [
-        "adjudication-record"
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
       ],
       "tests": [
-        "tests.contract.test_xp_07_planned_contract"
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
       ],
       "releaseBlocking": true
     },
@@ -405,21 +489,49 @@
       "hrId": "HR-023R",
       "xpOwner": "XP-07",
       "files": [
-        "planned:xp_07:HR-023R"
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
       "validators": [
-        "handoff-router-validator"
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
       ],
       "gates": [
-        "handoff-gate"
+        "handoff-gate",
+        "skill-router-gate"
       ],
       "evidenceTypes": [
-        "manual-handoff-evidence"
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
       ],
       "tests": [
-        "tests.contract.test_xp_07_planned_contract"
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
       ],
       "releaseBlocking": true
     },
@@ -1756,23 +1868,49 @@
       "hrId": "HR-130R",
       "xpOwner": "XP-00",
       "files": [
-        "_harness/catalog/minimum-required-skills.yaml"
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
       "policies": [
-        "minimum-required-skills"
+        "_harness/policies/role-routing.yaml"
       ],
       "validators": [
-        "requirements-metadata-validator"
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
       ],
       "gates": [
-        "requirements-baseline-gate"
+        "handoff-gate",
+        "skill-router-gate"
       ],
       "evidenceTypes": [
-        "skill-catalog-seed"
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
       ],
       "tests": [
-        "tests.contract.test_requirements_metadata_validator"
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
       ],
       "releaseBlocking": true
     },
@@ -1780,23 +1918,49 @@
       "hrId": "HR-131R",
       "xpOwner": "XP-00",
       "files": [
-        "_harness/catalog/minimum-required-skills.yaml"
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
       "policies": [
-        "minimum-required-skills"
+        "_harness/policies/role-routing.yaml"
       ],
       "validators": [
-        "requirements-metadata-validator"
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
       ],
       "gates": [
-        "requirements-baseline-gate"
+        "handoff-gate",
+        "skill-router-gate"
       ],
       "evidenceTypes": [
-        "skill-evidence-contract-seed"
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
       ],
       "tests": [
-        "tests.contract.test_requirements_metadata_validator"
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
       ],
       "releaseBlocking": true
     },

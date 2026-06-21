@@ -441,98 +441,330 @@
     {
       "hrId": "HR-020R",
       "title": "Core is provider neutral",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-07",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/handoff-prompt.schema.json",
+          "_harness/schemas/skill-catalog.schema.json",
+          "_harness/schemas/skill-execution.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/role-routing.yaml"
+        ],
+        "catalog": [
+          "_harness/catalog/skill-catalog.yaml"
+        ],
         "validator": [
-          "handoff-router-validator"
+          "src/standard_harness/handoff/prompts.py",
+          "src/standard_harness/skills/catalog.py",
+          "src/standard_harness/skills/router.py"
         ],
         "gate": [
-          "handoff-gate"
-        ],
-        "evidence": [
-          "provider-capability-manifest"
+          "handoff-gate",
+          "skill-router-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_07_planned_contract"
+          "tests/contract/test_role_routing_policy.py",
+          "tests/contract/test_handoff_prompt_contract.py",
+          "tests/contract/test_manual_handoff_evidence_classification.py",
+          "tests/contract/test_skill_catalog_contract.py",
+          "tests/contract/test_required_skill_implementation_registry.py",
+          "tests/contract/test_skill_router_evidence_contract.py",
+          "tests/contract/test_v1_skill_reference_traceability.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-07",
+      "migrationCompatibility": [
+        "Existing adapter manifests map to provider capability manifests with optional provider/capability fields.",
+        "Existing role cards remain role authority records and are linked by role-routing policy.",
+        "Manual handoff intake defaults to MANUAL_ONLY evidence.",
+        "v1 skill behavior is reference-only and not a runtime source."
+      ],
+      "releaseBlockingValidators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "releaseBlockingGates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "diagnostics": [
+        "required_skill_not_cataloged",
+        "manual_handoff_required",
+        "provider_route_unavailable",
+        "skill_route_bypasses_gate"
+      ],
+      "waiverPolicy": "Provider-specific behavior cannot be required by core. Required skills must route through catalog and evidence contract.",
+      "enforcementPoint": "handoff prompt generation, skill routing, manual evidence intake",
+      "frictionMetricBehavior": [
+        "Emit manual_handoff_required or required_skill_not_cataloged when blocked.",
+        "Emit role_route_count, handoff_prompt_generated, and skill_route_count metrics by role and task type."
+      ]
     },
     {
       "hrId": "HR-021R",
       "title": "Role routing is policy-managed",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-07",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/handoff-prompt.schema.json",
+          "_harness/schemas/skill-catalog.schema.json",
+          "_harness/schemas/skill-execution.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/role-routing.yaml"
+        ],
+        "catalog": [
+          "_harness/catalog/skill-catalog.yaml"
+        ],
         "validator": [
-          "role-routing-validator"
+          "src/standard_harness/handoff/prompts.py",
+          "src/standard_harness/skills/catalog.py",
+          "src/standard_harness/skills/router.py"
         ],
         "gate": [
-          "handoff-gate"
-        ],
-        "evidence": [
-          "role-routing-policy"
+          "handoff-gate",
+          "skill-router-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_07_planned_contract"
+          "tests/contract/test_role_routing_policy.py",
+          "tests/contract/test_handoff_prompt_contract.py",
+          "tests/contract/test_manual_handoff_evidence_classification.py",
+          "tests/contract/test_skill_catalog_contract.py",
+          "tests/contract/test_required_skill_implementation_registry.py",
+          "tests/contract/test_skill_router_evidence_contract.py",
+          "tests/contract/test_v1_skill_reference_traceability.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-07",
+      "migrationCompatibility": [
+        "Existing adapter manifests map to provider capability manifests with optional provider/capability fields.",
+        "Existing role cards remain role authority records and are linked by role-routing policy.",
+        "Manual handoff intake defaults to MANUAL_ONLY evidence.",
+        "v1 skill behavior is reference-only and not a runtime source."
+      ],
+      "releaseBlockingValidators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "releaseBlockingGates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "diagnostics": [
+        "required_skill_not_cataloged",
+        "manual_handoff_required",
+        "provider_route_unavailable",
+        "skill_route_bypasses_gate"
+      ],
+      "waiverPolicy": "Provider-specific behavior cannot be required by core. Required skills must route through catalog and evidence contract.",
+      "enforcementPoint": "handoff prompt generation, skill routing, manual evidence intake",
+      "frictionMetricBehavior": [
+        "Emit manual_handoff_required or required_skill_not_cataloged when blocked.",
+        "Emit role_route_count, handoff_prompt_generated, and skill_route_count metrics by role and task type."
+      ]
     },
     {
       "hrId": "HR-022R",
       "title": "LLM meetings are evidence protocol",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-07",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/handoff-prompt.schema.json",
+          "_harness/schemas/skill-catalog.schema.json",
+          "_harness/schemas/skill-execution.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/role-routing.yaml"
+        ],
+        "catalog": [
+          "_harness/catalog/skill-catalog.yaml"
+        ],
         "validator": [
-          "handoff-protocol-validator"
+          "src/standard_harness/handoff/prompts.py",
+          "src/standard_harness/skills/catalog.py",
+          "src/standard_harness/skills/router.py"
         ],
         "gate": [
-          "handoff-gate"
-        ],
-        "evidence": [
-          "adjudication-record"
+          "handoff-gate",
+          "skill-router-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_07_planned_contract"
+          "tests/contract/test_role_routing_policy.py",
+          "tests/contract/test_handoff_prompt_contract.py",
+          "tests/contract/test_manual_handoff_evidence_classification.py",
+          "tests/contract/test_skill_catalog_contract.py",
+          "tests/contract/test_required_skill_implementation_registry.py",
+          "tests/contract/test_skill_router_evidence_contract.py",
+          "tests/contract/test_v1_skill_reference_traceability.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-07",
+      "migrationCompatibility": [
+        "Existing adapter manifests map to provider capability manifests with optional provider/capability fields.",
+        "Existing role cards remain role authority records and are linked by role-routing policy.",
+        "Manual handoff intake defaults to MANUAL_ONLY evidence.",
+        "v1 skill behavior is reference-only and not a runtime source."
+      ],
+      "releaseBlockingValidators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "releaseBlockingGates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "diagnostics": [
+        "required_skill_not_cataloged",
+        "manual_handoff_required",
+        "provider_route_unavailable",
+        "skill_route_bypasses_gate"
+      ],
+      "waiverPolicy": "Provider-specific behavior cannot be required by core. Required skills must route through catalog and evidence contract.",
+      "enforcementPoint": "handoff prompt generation, skill routing, manual evidence intake",
+      "frictionMetricBehavior": [
+        "Emit manual_handoff_required or required_skill_not_cataloged when blocked.",
+        "Emit role_route_count, handoff_prompt_generated, and skill_route_count metrics by role and task type."
+      ]
     },
     {
       "hrId": "HR-023R",
       "title": "V1 prefers handoff-first orchestration",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-07",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/handoff-prompt.schema.json",
+          "_harness/schemas/skill-catalog.schema.json",
+          "_harness/schemas/skill-execution.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/role-routing.yaml"
+        ],
+        "catalog": [
+          "_harness/catalog/skill-catalog.yaml"
+        ],
         "validator": [
-          "handoff-router-validator"
+          "src/standard_harness/handoff/prompts.py",
+          "src/standard_harness/skills/catalog.py",
+          "src/standard_harness/skills/router.py"
         ],
         "gate": [
-          "handoff-gate"
-        ],
-        "evidence": [
-          "manual-handoff-evidence"
+          "handoff-gate",
+          "skill-router-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_07_planned_contract"
+          "tests/contract/test_role_routing_policy.py",
+          "tests/contract/test_handoff_prompt_contract.py",
+          "tests/contract/test_manual_handoff_evidence_classification.py",
+          "tests/contract/test_skill_catalog_contract.py",
+          "tests/contract/test_required_skill_implementation_registry.py",
+          "tests/contract/test_skill_router_evidence_contract.py",
+          "tests/contract/test_v1_skill_reference_traceability.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-07",
+      "migrationCompatibility": [
+        "Existing adapter manifests map to provider capability manifests with optional provider/capability fields.",
+        "Existing role cards remain role authority records and are linked by role-routing policy.",
+        "Manual handoff intake defaults to MANUAL_ONLY evidence.",
+        "v1 skill behavior is reference-only and not a runtime source."
+      ],
+      "releaseBlockingValidators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "releaseBlockingGates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "diagnostics": [
+        "required_skill_not_cataloged",
+        "manual_handoff_required",
+        "provider_route_unavailable",
+        "skill_route_bypasses_gate"
+      ],
+      "waiverPolicy": "Provider-specific behavior cannot be required by core. Required skills must route through catalog and evidence contract.",
+      "enforcementPoint": "handoff prompt generation, skill routing, manual evidence intake",
+      "frictionMetricBehavior": [
+        "Emit manual_handoff_required or required_skill_not_cataloged when blocked.",
+        "Emit role_route_count, handoff_prompt_generated, and skill_route_count metrics by role and task type."
+      ]
     },
     {
       "hrId": "HR-030R",
@@ -2430,44 +2662,162 @@
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
-        "src/standard_harness/roles/skill_policy.py"
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
       ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/handoff-prompt.schema.json",
+          "_harness/schemas/skill-catalog.schema.json",
+          "_harness/schemas/skill-execution.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/role-routing.yaml"
+        ],
         "catalog": [
-          "_harness/catalog/minimum-required-skills.yaml"
+          "_harness/catalog/skill-catalog.yaml"
         ],
         "validator": [
-          "src/standard_harness/validation/requirements_metadata.py"
+          "src/standard_harness/handoff/prompts.py",
+          "src/standard_harness/skills/catalog.py",
+          "src/standard_harness/skills/router.py"
+        ],
+        "gate": [
+          "handoff-gate",
+          "skill-router-gate"
         ],
         "tests": [
-          "tests/contract/test_requirements_metadata_validator.py"
+          "tests/contract/test_role_routing_policy.py",
+          "tests/contract/test_handoff_prompt_contract.py",
+          "tests/contract/test_manual_handoff_evidence_classification.py",
+          "tests/contract/test_skill_catalog_contract.py",
+          "tests/contract/test_required_skill_implementation_registry.py",
+          "tests/contract/test_skill_router_evidence_contract.py",
+          "tests/contract/test_v1_skill_reference_traceability.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-00"
+      "lastUpdatedByPacket": "XP-07",
+      "migrationCompatibility": [
+        "Existing adapter manifests map to provider capability manifests with optional provider/capability fields.",
+        "Existing role cards remain role authority records and are linked by role-routing policy.",
+        "Manual handoff intake defaults to MANUAL_ONLY evidence.",
+        "v1 skill behavior is reference-only and not a runtime source."
+      ],
+      "releaseBlockingValidators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "releaseBlockingGates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "diagnostics": [
+        "required_skill_not_cataloged",
+        "manual_handoff_required",
+        "provider_route_unavailable",
+        "skill_route_bypasses_gate"
+      ],
+      "waiverPolicy": "Provider-specific behavior cannot be required by core. Required skills must route through catalog and evidence contract.",
+      "enforcementPoint": "handoff prompt generation, skill routing, manual evidence intake",
+      "frictionMetricBehavior": [
+        "Emit manual_handoff_required or required_skill_not_cataloged when blocked.",
+        "Emit role_route_count, handoff_prompt_generated, and skill_route_count metrics by role and task type."
+      ]
     },
     {
       "hrId": "HR-131R",
       "title": "Skill usage manifest and evidence",
-      "coverageStatus": "partial",
+      "coverageStatus": "complete",
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
-        "src/standard_harness/roles/skill_policy.py"
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "src/standard_harness/handoff/prompts.py",
+        "src/standard_harness/handoff/intake.py",
+        "src/standard_harness/skills/catalog.py",
+        "src/standard_harness/skills/router.py",
+        "src/standard_harness/skills/internal/registry.py",
+        "src/standard_harness/adapters/manifest.py",
+        "src/standard_harness/cli/main.py"
       ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/handoff-prompt.schema.json",
+          "_harness/schemas/skill-catalog.schema.json",
+          "_harness/schemas/skill-execution.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/role-routing.yaml"
+        ],
         "catalog": [
-          "_harness/catalog/minimum-required-skills.yaml"
+          "_harness/catalog/skill-catalog.yaml"
         ],
         "validator": [
-          "src/standard_harness/validation/requirements_metadata.py"
+          "src/standard_harness/handoff/prompts.py",
+          "src/standard_harness/skills/catalog.py",
+          "src/standard_harness/skills/router.py"
+        ],
+        "gate": [
+          "handoff-gate",
+          "skill-router-gate"
         ],
         "tests": [
-          "tests/contract/test_requirements_metadata_validator.py"
+          "tests/contract/test_role_routing_policy.py",
+          "tests/contract/test_handoff_prompt_contract.py",
+          "tests/contract/test_manual_handoff_evidence_classification.py",
+          "tests/contract/test_skill_catalog_contract.py",
+          "tests/contract/test_required_skill_implementation_registry.py",
+          "tests/contract/test_skill_router_evidence_contract.py",
+          "tests/contract/test_v1_skill_reference_traceability.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-00"
+      "lastUpdatedByPacket": "XP-07",
+      "migrationCompatibility": [
+        "Existing adapter manifests map to provider capability manifests with optional provider/capability fields.",
+        "Existing role cards remain role authority records and are linked by role-routing policy.",
+        "Manual handoff intake defaults to MANUAL_ONLY evidence.",
+        "v1 skill behavior is reference-only and not a runtime source."
+      ],
+      "releaseBlockingValidators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "releaseBlockingGates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "diagnostics": [
+        "required_skill_not_cataloged",
+        "manual_handoff_required",
+        "provider_route_unavailable",
+        "skill_route_bypasses_gate"
+      ],
+      "waiverPolicy": "Provider-specific behavior cannot be required by core. Required skills must route through catalog and evidence contract.",
+      "enforcementPoint": "handoff prompt generation, skill routing, manual evidence intake",
+      "frictionMetricBehavior": [
+        "Emit manual_handoff_required or required_skill_not_cataloged when blocked.",
+        "Emit role_route_count, handoff_prompt_generated, and skill_route_count metrics by role and task type."
+      ]
     },
     {
       "hrId": "HR-150R",

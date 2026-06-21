@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "role-routing-policy",
+  "roles": {
+    "developer": {
+      "primaryProvider": "policy-selected",
+      "fallbackProviders": ["manual-handoff"],
+      "allowedWriteZones": ["product", "_ops/evidence/**"],
+      "requiredOutputs": ["implementation evidence", "test evidence"]
+    },
+    "reviewer": {
+      "primaryProvider": "policy-selected",
+      "fallbackProviders": ["manual-handoff"],
+      "allowedWriteZones": ["_ops/evidence/**"],
+      "requiredOutputs": ["independent review evidence"]
+    },
+    "tester": {
+      "primaryProvider": "policy-selected",
+      "fallbackProviders": ["manual-handoff"],
+      "allowedWriteZones": ["_ops/evidence/**", "tests/**"],
+      "requiredOutputs": ["test command evidence"]
+    }
+  },
+  "frictionSignalBehavior": "emit manual_handoff_required when provider route is unavailable",
+  "metricSignalBehavior": "emit role_route_count by role and provider disposition"
+}

@@ -42,6 +42,8 @@ COMMANDS = (
     "context",
     "starter-check",
     "project-completion",
+    "handoff-prompt",
+    "skill-route",
     "validate",
 )
 
