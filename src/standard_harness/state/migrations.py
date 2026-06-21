@@ -633,6 +633,24 @@ create table if not exists human_control_snapshots (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists cloud_orchestrations (
+  orchestration_run_id text primary key,
+  packet_id text not null,
+  actor_id text not null,
+  actor_role text not null,
+  remote_environment_id text not null,
+  permission_roots_json text not null,
+  input_snapshot_hash text not null,
+  adapter_run_ids_json text not null,
+  status text not null,
+  failure_classification text,
+  diagnostic_ids_json text not null,
+  evidence_output_json text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 

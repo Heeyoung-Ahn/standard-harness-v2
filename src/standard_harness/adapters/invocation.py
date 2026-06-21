@@ -114,6 +114,9 @@ class AdapterInvocationLedger:
         result["evidence_provenance"] = json.loads(result.pop("evidence_provenance_json"))
         return result
 
+    def invocation_exists(self, adapter_run_id: str) -> bool:
+        return self._invocation_exists(adapter_run_id) or self._event_identity_exists(adapter_run_id)
+
     def _invocation_exists(self, adapter_run_id: str) -> bool:
         with self.store.connection() as conn:
             row = conn.execute(

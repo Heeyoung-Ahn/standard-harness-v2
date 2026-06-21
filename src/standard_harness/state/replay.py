@@ -9,6 +9,7 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "cloud_orchestrations",
     "human_control_snapshots",
     "operational_memory_snapshots",
     "cost_records",
@@ -1139,6 +1140,37 @@ def _insert_human_control_snapshot(conn, row, payload: dict[str, Any]) -> None:
     )
 
 
+def _insert_cloud_orchestration(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into cloud_orchestrations (
+          orchestration_run_id, packet_id, actor_id, actor_role,
+          remote_environment_id, permission_roots_json, input_snapshot_hash,
+          adapter_run_ids_json, status, failure_classification,
+          diagnostic_ids_json, evidence_output_json, source_watermark,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["orchestration_run_id"],
+            payload["packet_id"],
+            payload["actor_id"],
+            payload["actor_role"],
+            payload["remote_environment_id"],
+            json.dumps(payload["permission_roots"], sort_keys=True),
+            payload["input_snapshot_hash"],
+            json.dumps(payload["adapter_run_ids"], sort_keys=True),
+            payload["status"],
+            payload.get("failure_classification"),
+            json.dumps(payload["diagnostic_ids"], sort_keys=True),
+            json.dumps(payload["evidence_output"], sort_keys=True),
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -1189,4 +1221,5 @@ HANDLERS = {
     "cost.recorded": _insert_cost_record,
     "operational_memory.generated": _insert_operational_memory,
     "human_control.snapshot_generated": _insert_human_control_snapshot,
+    "cloud.orchestration_recorded": _insert_cloud_orchestration,
 }
