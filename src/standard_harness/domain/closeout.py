@@ -13,6 +13,7 @@ from standard_harness.policy.bundles import PolicyBundleService
 from standard_harness.policy.release import ReleasePolicyBoundary
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
+from standard_harness.validation.challenge_gate import ChallengeGateValidator
 
 
 class CloseoutService:
@@ -42,6 +43,8 @@ class CloseoutService:
         evidence_ids = sorted({evidence_id for claim in claims for evidence_id in claim["evidence_ids"]})
         diagnostics: list[str] = []
         for diagnostic_id in self._packet_kernel_diagnostics(packet):
+            _add_diagnostic(diagnostics, diagnostic_id)
+        for diagnostic_id in self._challenge_gate_diagnostics(packet_id):
             _add_diagnostic(diagnostics, diagnostic_id)
         registered_acceptance_ids = self._registered_acceptance_ids(packet_id)
         supported_acceptance_ids = {
@@ -372,6 +375,16 @@ class CloseoutService:
             if expected is not None and gate_profile_version != expected:
                 diagnostics.append("missing_gate_profile")
         return diagnostics
+
+    def _challenge_gate_diagnostics(self, packet_id: str) -> list[str]:
+        try:
+            return ChallengeGateValidator.load(self.store.harness_root).diagnostics_for_store(
+                store=self.store,
+                repo_root=self.store.harness_root,
+                packet_id=packet_id,
+            )
+        except FileNotFoundError:
+            return ["missing_challenge_gate_policy"]
 
 
 def _add_diagnostic(diagnostics: list[str], diagnostic_id: str) -> None:

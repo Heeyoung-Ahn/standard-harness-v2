@@ -1152,10 +1152,23 @@
       "hrId": "HR-150R",
       "xpOwner": "XP-01A",
       "files": [
-        "planned:xp_01a:HR-150R"
+        "_harness/policies/challenge-gate.yaml",
+        "_harness/schemas/human-decision.schema.json",
+        "_ops/decisions/records/.gitkeep",
+        "src/standard_harness/reviews/adjudication.py",
+        "src/standard_harness/memory/human_control_snapshot.py",
+        "src/standard_harness/validation/challenge_gate.py",
+        "src/standard_harness/validation/human_decision.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "human-decision.schema.json"
+      ],
+      "policies": [
+        "challenge-gate",
+        "p0-policy"
+      ],
       "validators": [
         "challenge-gate-validator"
       ],
@@ -1166,7 +1179,8 @@
         "challenge-review"
       ],
       "tests": [
-        "tests.contract.test_xp_01a_planned_contract"
+        "tests.contract.test_challenge_gate_applicability",
+        "tests.contract.test_challenge_review_required_for_p0_exception"
       ],
       "releaseBlocking": true
     },
@@ -1174,10 +1188,22 @@
       "hrId": "HR-151R",
       "xpOwner": "XP-01A",
       "files": [
-        "planned:xp_01a:HR-151R"
+        "_harness/policies/challenge-gate.yaml",
+        "_harness/schemas/human-decision.schema.json",
+        "_ops/decisions/records/.gitkeep",
+        "src/standard_harness/reviews/adjudication.py",
+        "src/standard_harness/memory/human_control_snapshot.py",
+        "src/standard_harness/validation/challenge_gate.py",
+        "src/standard_harness/validation/human_decision.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "human-decision.schema.json"
+      ],
+      "policies": [
+        "challenge-gate"
+      ],
       "validators": [
         "challenge-gate-validator"
       ],
@@ -1185,10 +1211,13 @@
         "challenge-gate"
       ],
       "evidenceTypes": [
-        "challenge-review"
+        "challenge-review",
+        "decision-record",
+        "gate-result"
       ],
       "tests": [
-        "tests.contract.test_xp_01a_planned_contract"
+        "tests.contract.test_challenge_gate_applicability",
+        "tests.contract.test_challenge_review_required_for_p0_exception"
       ],
       "releaseBlocking": true
     },
@@ -1196,10 +1225,23 @@
       "hrId": "HR-152",
       "xpOwner": "XP-01A",
       "files": [
-        "planned:xp_01a:HR-152"
+        "_harness/policies/challenge-gate.yaml",
+        "_harness/schemas/human-decision.schema.json",
+        "_ops/decisions/records/.gitkeep",
+        "src/standard_harness/reviews/adjudication.py",
+        "src/standard_harness/memory/human_control_snapshot.py",
+        "src/standard_harness/validation/challenge_gate.py",
+        "src/standard_harness/validation/human_decision.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "human-decision.schema.json"
+      ],
+      "policies": [
+        "p0-policy",
+        "challenge-gate"
+      ],
       "validators": [
         "human-decision-validator"
       ],
@@ -1210,7 +1252,7 @@
         "human-decision-record"
       ],
       "tests": [
-        "tests.contract.test_xp_01a_planned_contract"
+        "tests.contract.test_human_decision_non_overridable_items"
       ],
       "releaseBlocking": true
     },

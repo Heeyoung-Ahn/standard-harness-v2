@@ -1231,13 +1231,26 @@
     {
       "hrId": "HR-150R",
       "title": "User requests are not automatically approved truth",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01A",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/challenge-gate.yaml",
+        "_harness/schemas/human-decision.schema.json",
+        "_ops/decisions/records/.gitkeep",
+        "src/standard_harness/reviews/adjudication.py",
+        "src/standard_harness/memory/human_control_snapshot.py",
+        "src/standard_harness/validation/challenge_gate.py",
+        "src/standard_harness/validation/human_decision.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/challenge-gate.yaml"
+        ],
         "validator": [
-          "challenge-gate-validator"
+          "src/standard_harness/validation/challenge_gate.py"
         ],
         "gate": [
           "challenge-gate"
@@ -1246,46 +1259,73 @@
           "challenge-review"
         ],
         "tests": [
-          "tests.contract.test_xp_01a_planned_contract"
+          "tests/contract/test_challenge_gate_applicability.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01A"
     },
     {
       "hrId": "HR-151R",
       "title": "Challenge gate is P0-Conditional",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01A",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/challenge-gate.yaml",
+        "_harness/schemas/human-decision.schema.json",
+        "_ops/decisions/records/.gitkeep",
+        "src/standard_harness/reviews/adjudication.py",
+        "src/standard_harness/memory/human_control_snapshot.py",
+        "src/standard_harness/validation/challenge_gate.py",
+        "src/standard_harness/validation/human_decision.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/challenge-gate.yaml"
+        ],
         "validator": [
-          "challenge-gate-validator"
+          "src/standard_harness/validation/challenge_gate.py"
         ],
         "gate": [
           "challenge-gate"
         ],
         "evidence": [
-          "challenge-review"
+          "challenge-review",
+          "decision-record"
         ],
         "tests": [
-          "tests.contract.test_xp_01a_planned_contract"
+          "tests/contract/test_challenge_gate_applicability.py",
+          "tests/contract/test_challenge_review_required_for_p0_exception.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01A"
     },
     {
       "hrId": "HR-152",
       "title": "Human decision cannot override non-overridable items",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01A",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/p0-policy.yaml",
+        "_harness/schemas/human-decision.schema.json",
+        "src/standard_harness/validation/human_decision.py",
+        "src/standard_harness/memory/human_control_snapshot.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/human-decision.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/p0-policy.yaml",
+          "_harness/policies/challenge-gate.yaml"
+        ],
         "validator": [
-          "human-decision-validator"
+          "src/standard_harness/validation/human_decision.py"
         ],
         "gate": [
           "challenge-gate"
@@ -1294,11 +1334,11 @@
           "human-decision-record"
         ],
         "tests": [
-          "tests.contract.test_xp_01a_planned_contract"
+          "tests/contract/test_human_decision_non_overridable_items.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01A"
     },
     {
       "hrId": "HR-160R",
@@ -1682,7 +1722,10 @@
     "legacyConformanceFiles": "read-only legacy inputs, not canonical V2.1 coverage",
     "schemaMigration": "none for XP-00",
     "xp01PacketKernel": "Existing packet rows retain legacy columns; XP-01 adds v0.2 metadata columns with defaults, maps risk_class to risk_level, change_zones to changeZones semantics, ready_for_closeout to closeout_pending, and leaves event replay/audit compatible with older payloads.",
-    "xp01GateResults": "Existing gate_result rows receive default policyVersion, gateProfileVersion=migrated_unknown, validatorVersion=harness-validator@0.2.0, evaluatedAtCommit=unknown, and empty risks/unknowns/requiredActions during migration."
+    "xp01GateResults": "Existing gate_result rows receive default policyVersion, gateProfileVersion=migrated_unknown, validatorVersion=harness-validator@0.2.0, evaluatedAtCommit=unknown, and empty risks/unknowns/requiredActions during migration.",
+    "xp01aChallengeGate": "Existing challenge, independent_review, and adjudication rows remain valid review evidence. XP-01A adds optional packet_id, triggers, decision_id, and reviewed_checks fields to challenge payloads without requiring a DB table migration.",
+    "xp01aHumanControl": "Human control snapshots remain projections only; HR-152 non-overridable items are exposed as non-delegable projection content and do not become override authority.",
+    "xp01aWaivers": "Waiver evaluation remains valid and HR-152 non-overridable human decision limits are enforced through human-decision-validator rather than by weakening waiver behavior."
   },
   "releaseBlockingValidators": [
     {
@@ -1730,6 +1773,29 @@
       ],
       "waivable": true,
       "enforcementPoint": "validate, closeout when N/A is used"
+    },
+    {
+      "validator": "challenge-gate-validator",
+      "gateId": "challenge-gate",
+      "diagnosticIds": [
+        "missing_challenge_review",
+        "missing_human_decision_record",
+        "missing_challenge_review_check",
+        "invalid_challenge_trigger"
+      ],
+      "waivable": false,
+      "enforcementPoint": "validate, closeout"
+    },
+    {
+      "validator": "human-decision-validator",
+      "gateId": "challenge-gate",
+      "diagnosticIds": [
+        "invalid_human_decision",
+        "non_overridable_override",
+        "missing_follow_up_packet"
+      ],
+      "waivable": false,
+      "enforcementPoint": "human decision intake, validate"
     }
   ],
   "frictionMetricBehavior": {
@@ -1738,6 +1804,8 @@
     "improvement": "XP-00A adds a base improvement-candidate schema seed only; recurring detection and proposal lifecycle remain XP-09-owned.",
     "starterPromotion": "XP-00A adds a starter-promotion-candidate seed schema only; starter promotion registry and aggregation remain XP-09-owned.",
     "xp01Friction": "Packet schema, gate profile, and N/A validators emit or reserve missing_e2e, packet_scope_creep, docs_implementation_mismatch, missing_closeout, and boundary_violation friction signals when blocked. XP-09 remains responsible for aggregation.",
-    "xp01Metric": "Gate profile selection, packet schema validation, gate result metadata recording, and N/A decision validation emit or reserve count metrics. XP-09 remains responsible for success metric aggregation."
+    "xp01Metric": "Gate profile selection, packet schema validation, gate result metadata recording, and N/A decision validation emit or reserve count metrics. XP-09 remains responsible for success metric aggregation.",
+    "xp01aFriction": "Challenge gate and human decision validators emit or reserve unsafe_user_instruction_conflict, missed_review, missing_evidence, and missing_closeout friction signals when blocked. XP-09 remains responsible for aggregation.",
+    "xp01aMetric": "Challenge gate evaluation and human decision validation emit or reserve challenge_gate_evaluated, challenge_gate_blocked, and human_decision_validated count metrics. XP-09 remains responsible for aggregation."
   }
 }

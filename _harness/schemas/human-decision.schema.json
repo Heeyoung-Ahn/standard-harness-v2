@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-v2.1/human-decision.schema.json",
+  "title": "Standard Harness V2.1 Human Decision",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "decisionId",
+    "packetId",
+    "gate",
+    "decisionType",
+    "rationale",
+    "acceptedRisk",
+    "approver",
+    "expiresAt",
+    "followUpPacketRequired",
+    "followUpPacketId"
+  ],
+  "properties": {
+    "decisionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packetId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gate": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decisionType": {
+      "enum": [
+        "risk-acceptance",
+        "scope-decision",
+        "manual-evidence-acceptance",
+        "p0-exception-review"
+      ]
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "acceptedRisk": {
+      "type": "string"
+    },
+    "approver": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expiresAt": {
+      "type": "string"
+    },
+    "followUpPacketRequired": {
+      "type": "boolean"
+    },
+    "followUpPacketId": {
+      "type": "string"
+    },
+    "requestedOverrides": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

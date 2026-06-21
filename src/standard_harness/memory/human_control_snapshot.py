@@ -9,6 +9,17 @@ from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 
 
+HR152_NON_OVERRIDABLE_ITEMS = [
+    "missing_packet",
+    "invalid_packet_state_transition",
+    "product_packet_modifying__harness",
+    "missing_closeout_report",
+    "unrecorded_completion_claim",
+    "critical_security_blocker_without_mitigation_or_followup",
+    "sensitive_evidence_written_to_wiki",
+]
+
+
 class HumanControlSnapshotService:
     def __init__(self, store: HarnessStore):
         self.store = store
@@ -33,7 +44,8 @@ class HumanControlSnapshotService:
                 "release_decision",
                 "waiver_approval",
                 "requirement_rejection",
-            ],
+            ]
+            + HR152_NON_OVERRIDABLE_ITEMS,
             "active_waivers": self._active_waivers(effective_evaluated_at),
             "challenged_items": self._challenged_items(),
             "blocked_gates": self._blocked_gates(),

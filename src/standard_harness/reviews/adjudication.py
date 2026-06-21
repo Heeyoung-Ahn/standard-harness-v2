@@ -20,10 +20,18 @@ class ChallengeReviewService:
         reviewer_role: str,
         rationale: str,
         idempotency_key: str,
+        packet_id: str | None = None,
+        triggers: list[str] | None = None,
+        decision_id: str | None = None,
+        reviewed_checks: list[str] | None = None,
     ) -> dict[str, Any]:
         record = {
             "challenge_id": challenge_id,
             "challenged_item_id": challenged_item_id,
+            "packet_id": packet_id,
+            "triggers": triggers or [],
+            "decision_id": decision_id,
+            "reviewed_checks": reviewed_checks or [],
             "reviewer_role": reviewer_role,
             "rationale": rationale,
             "status": "open",

@@ -11,6 +11,7 @@ from standard_harness.domain.packets import LIFECYCLE_STATES
 from standard_harness.policy.gate_profiles import GateProfilePolicy
 from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.state.store import HarnessStore
+from standard_harness.validation.challenge_gate import ChallengeGateValidator
 from standard_harness.validation.diagnostics import DiagnosticRecord
 from standard_harness.validation.readiness import ReadinessService
 from standard_harness.validation.requirements_metadata import RequirementsMetadataValidator
@@ -65,6 +66,7 @@ class ValidationService:
         diagnostics.extend(self._completion_diagnostics(packet_id))
         diagnostics.extend(self._gate_activation_diagnostics(packet_id))
         diagnostics.extend(self._approval_diagnostics(packet_id))
+        diagnostics.extend(self._challenge_gate_diagnostics(packet_id))
         return diagnostics
 
     def validate_projection(self, packet_id: str) -> list[dict[str, Any]]:
@@ -400,6 +402,31 @@ class ValidationService:
                 field="approval_record_id",
             )
         ]
+
+    def _challenge_gate_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:
+        diagnostics = []
+        try:
+            diagnostic_ids = ChallengeGateValidator.load(self.repo_root).diagnostics_for_store(
+                store=self.store,
+                repo_root=self.repo_root,
+                packet_id=packet_id,
+            )
+        except FileNotFoundError:
+            diagnostic_ids = ["missing_challenge_gate_policy"]
+        for diagnostic_id in diagnostic_ids:
+            diagnostics.append(
+                _diagnostic(
+                    error_code=diagnostic_id,
+                    category="challenge",
+                    message=f"Challenge gate blocks packet validation: {diagnostic_id}",
+                    repair_hint="Provide challenge review evidence and decision record for triggered user-request or P0 exception challenges.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="challenge-gate",
+                )
+            )
+        return diagnostics
 
 
 def _diagnostic(
