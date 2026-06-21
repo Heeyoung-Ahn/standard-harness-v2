@@ -579,6 +579,60 @@ create table if not exists threat_models (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists pmo_projections (
+  pmo_projection_id text primary key,
+  source_event_range text not null,
+  source_watermark integer not null,
+  packet_counts_json text not null,
+  blocked_packets_json text not null,
+  open_risks_json text not null,
+  milestone_summary_json text not null,
+  projection_summary_json text not null default '{}',
+  dependency_summary_json text not null,
+  diagnostic_summary_json text not null,
+  freshness_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists cost_records (
+  cost_record_id text primary key,
+  packet_id text not null,
+  tool_name text not null,
+  operation_type text not null,
+  usage_quantity real not null,
+  usage_unit text not null,
+  cost_estimate real not null,
+  risk_tier text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists operational_memory_snapshots (
+  memory_snapshot_id text primary key,
+  source text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  entries_json text not null,
+  freshness_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists human_control_snapshots (
+  snapshot_id text primary key,
+  source_event_range text not null,
+  source_watermark integer not null,
+  pending_approvals_json text not null,
+  non_delegable_decisions_json text not null,
+  active_waivers_json text not null,
+  challenged_items_json text not null,
+  blocked_gates_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 
@@ -602,6 +656,7 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
     )
     _ensure_column(conn, "closeouts", "review_bundle_id", "text")
     _ensure_column(conn, "closeouts", "policy_bundle_version", "text")
+    _ensure_column(conn, "pmo_projections", "projection_summary_json", "text not null default '{}'")
     _ensure_column(conn, "artifacts", "content_hash", "text")
     _ensure_column(conn, "artifacts", "content_hash_algorithm", "text")
     checksum = sha256_text(SCHEMA_SQL)

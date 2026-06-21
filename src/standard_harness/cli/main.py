@@ -16,6 +16,7 @@ from standard_harness.domain.evidence import EvidenceService
 from standard_harness.domain.gates import GateService
 from standard_harness.domain.packets import PacketService
 from standard_harness.domain.requirements import RequirementRegistry
+from standard_harness.memory.operational import OperationalMemoryService
 from standard_harness.projection.current_context import CurrentContextProjection
 from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.state.store import HarnessStore, resolve_harness_root
@@ -560,7 +561,8 @@ def _handle_context(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
     parser.add_argument("--packet-id", required=True)
     parsed = parser.parse_args(argv)
     projection = CurrentContextProjection(store).generate(packet_id=parsed.packet_id)
-    return {"projection": projection}
+    memory_entries = OperationalMemoryService(store).preview_entries(packet_id=parsed.packet_id)
+    return {"projection": projection, "memory_entries": memory_entries}
 
 
 def _handle_starter_check(store: HarnessStore, argv: list[str]) -> dict[str, Any]:

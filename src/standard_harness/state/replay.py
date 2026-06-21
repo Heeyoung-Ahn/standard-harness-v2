@@ -9,6 +9,10 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "human_control_snapshots",
+    "operational_memory_snapshots",
+    "cost_records",
+    "pmo_projections",
     "threat_models",
     "waivers",
     "ip_license_records",
@@ -1035,6 +1039,106 @@ def _insert_threat_model(conn, row, payload: dict[str, Any]) -> None:
     )
 
 
+def _insert_pmo_projection(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into pmo_projections (
+          pmo_projection_id, source_event_range, source_watermark,
+          packet_counts_json, blocked_packets_json, open_risks_json,
+          milestone_summary_json, projection_summary_json, dependency_summary_json,
+          diagnostic_summary_json, freshness_status, trace_event_id,
+          trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["pmo_projection_id"],
+            payload["source_event_range"],
+            payload["source_watermark"],
+            json.dumps(payload["packet_counts"], sort_keys=True),
+            json.dumps(payload["blocked_packets"], sort_keys=True),
+            json.dumps(payload["open_risks"], sort_keys=True),
+            json.dumps(payload["milestone_summary"], sort_keys=True),
+            json.dumps(payload.get("projection_summary", {}), sort_keys=True),
+            json.dumps(payload["dependency_summary"], sort_keys=True),
+            json.dumps(payload["diagnostic_summary"], sort_keys=True),
+            payload["freshness_status"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_cost_record(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into cost_records (
+          cost_record_id, packet_id, tool_name, operation_type,
+          usage_quantity, usage_unit, cost_estimate, risk_tier,
+          source_watermark, trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["cost_record_id"],
+            payload["packet_id"],
+            payload["tool_name"],
+            payload["operation_type"],
+            payload["usage_quantity"],
+            payload["usage_unit"],
+            payload["cost_estimate"],
+            payload["risk_tier"],
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_operational_memory(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into operational_memory_snapshots (
+          memory_snapshot_id, source, source_event_range, source_watermark,
+          entries_json, freshness_status, trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["memory_snapshot_id"],
+            payload["source"],
+            payload["source_event_range"],
+            payload["source_watermark"],
+            json.dumps(payload["entries"], sort_keys=True),
+            payload["freshness_status"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_human_control_snapshot(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into human_control_snapshots (
+          snapshot_id, source_event_range, source_watermark,
+          pending_approvals_json, non_delegable_decisions_json,
+          active_waivers_json, challenged_items_json, blocked_gates_json,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["snapshot_id"],
+            payload["source_event_range"],
+            payload["source_watermark"],
+            json.dumps(payload["pending_approvals"], sort_keys=True),
+            json.dumps(payload["non_delegable_decisions"], sort_keys=True),
+            json.dumps(payload["active_waivers"], sort_keys=True),
+            json.dumps(payload["challenged_items"], sort_keys=True),
+            json.dumps(payload["blocked_gates"], sort_keys=True),
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -1081,4 +1185,8 @@ HANDLERS = {
     "ip_license.recorded": _insert_ip_license_record,
     "waiver.recorded": _insert_waiver,
     "threat_model.recorded": _insert_threat_model,
+    "pmo.projection_generated": _insert_pmo_projection,
+    "cost.recorded": _insert_cost_record,
+    "operational_memory.generated": _insert_operational_memory,
+    "human_control.snapshot_generated": _insert_human_control_snapshot,
 }

@@ -128,6 +128,10 @@ def _empty_snapshot(event_seq: int) -> dict[str, Any]:
         "ip_license_records": {},
         "waivers": {},
         "threat_models": {},
+        "pmo_projections": {},
+        "cost_records": {},
+        "operational_memory_snapshots": {},
+        "human_control_snapshots": {},
     }
 
 
@@ -235,6 +239,14 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
         snapshot["waivers"][payload["waiver_id"]] = dict(payload)
     elif event_type == "threat_model.recorded":
         snapshot["threat_models"][payload["threat_model_id"]] = dict(payload)
+    elif event_type == "pmo.projection_generated":
+        snapshot["pmo_projections"][payload["pmo_projection_id"]] = dict(payload)
+    elif event_type == "cost.recorded":
+        snapshot["cost_records"][payload["cost_record_id"]] = dict(payload)
+    elif event_type == "operational_memory.generated":
+        snapshot["operational_memory_snapshots"][payload["memory_snapshot_id"]] = dict(payload)
+    elif event_type == "human_control.snapshot_generated":
+        snapshot["human_control_snapshots"][payload["snapshot_id"]] = dict(payload)
 
 
 def _checksum_payload(snapshot: dict[str, Any]) -> dict[str, Any]:
