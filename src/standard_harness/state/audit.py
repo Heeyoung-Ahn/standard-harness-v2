@@ -144,7 +144,9 @@ def _empty_snapshot(event_seq: int) -> dict[str, Any]:
 def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None:
     event_type = row["event_type"]
     if event_type == "packet.created":
-        snapshot["packets"][payload["packet_id"]] = dict(payload)
+        packet = dict(payload)
+        packet["lifecycle_state"] = _normalize_lifecycle_state(str(packet["lifecycle_state"]))
+        snapshot["packets"][payload["packet_id"]] = packet
     elif event_type == "packet.approved":
         snapshot["approval_records"][payload["approval_record_id"]] = dict(payload)
         packet = snapshot["packets"].get(payload["packet_id"])
@@ -155,7 +157,7 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
     elif event_type == "packet.transitioned":
         packet = snapshot["packets"].get(payload["packet_id"])
         if packet:
-            packet["lifecycle_state"] = payload["to_state"]
+            packet["lifecycle_state"] = _normalize_lifecycle_state(str(payload["to_state"]))
             packet["updated_at"] = row["occurred_at"]
     elif event_type == "requirement.registered":
         snapshot["requirements"][payload["requirement_id"]] = dict(payload)
@@ -269,3 +271,9 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
 
 def _checksum_payload(snapshot: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in snapshot.items() if key != "restore_checksum"}
+
+
+def _normalize_lifecycle_state(lifecycle_state: str) -> str:
+    if lifecycle_state == "ready_for_closeout":
+        return "closeout_pending"
+    return lifecycle_state

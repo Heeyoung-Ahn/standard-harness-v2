@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-v2.1/na-decision.schema.json",
+  "title": "Standard Harness V2.1 Rule-Based N/A Decision",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "packetId",
+    "gate",
+    "status",
+    "allowedByRule",
+    "rationale",
+    "substituteChecks",
+    "approvedBy",
+    "cannotBeUsedWhen",
+    "policyVersion",
+    "gateProfileVersion"
+  ],
+  "properties": {
+    "packetId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packetType": {
+      "type": "string"
+    },
+    "gate": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "const": "N/A_RECORDED"
+    },
+    "allowedByRule": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "substituteChecks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "approvedBy": {
+      "type": "object",
+      "required": [
+        "role"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "cannotBeUsedWhen": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "policyVersion": {
+      "const": "0.2.0"
+    },
+    "gateProfileVersion": {
+      "type": "string"
+    }
+  }
+}

@@ -150,12 +150,19 @@ class GateService:
         requirement_level: str,
         rationale: str,
         idempotency_key: str,
+        policy_version: str | None = None,
+        gate_profile_version: str | None = None,
+        validator_version: str = "harness-validator@0.2.0",
+        evaluated_at_commit: str = "unknown",
+        risks: list[str] | None = None,
+        unknowns: list[str] | None = None,
+        required_actions: list[str] | None = None,
     ) -> dict[str, object]:
         if self.store.event_for_idempotency_key(idempotency_key) is not None:
             return self.get_gate_result(gate_result_id)
         if self._row_exists("gate_results", "gate_result_id", gate_result_id):
             raise ValueError(f"gate_result_id already exists: {gate_result_id}")
-        self._require_packet(packet_id)
+        packet = self._require_packet(packet_id)
         gate = self.get_gate(gate_id)
         if gate["packet_id"] != packet_id:
             raise ValueError("gate result must belong to the same packet")
@@ -176,6 +183,13 @@ class GateService:
             "status": status,
             "requirement_level": requirement_level,
             "rationale": rationale,
+            "policy_version": policy_version or str(packet["policy_version"]),
+            "gate_profile_version": gate_profile_version or str(packet["gate_profile_version"]),
+            "validator_version": validator_version,
+            "evaluated_at_commit": evaluated_at_commit,
+            "risks": risks or [],
+            "unknowns": unknowns or [],
+            "required_actions": required_actions or [],
             "source_event_range": f"1-{watermark}",
             "source_watermark": watermark,
         }
@@ -195,8 +209,10 @@ class GateService:
                 insert or ignore into gate_results (
                   gate_result_id, gate_id, packet_id, checked_claim_ids_json,
                   evidence_ids_json, status, requirement_level, rationale,
+                  policy_version, gate_profile_version, validator_version,
+                  evaluated_at_commit, risks_json, unknowns_json, required_actions_json,
                   source_event_range, source_watermark
-                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     gate_result_id,
@@ -207,6 +223,13 @@ class GateService:
                     status,
                     requirement_level,
                     rationale,
+                    result["policy_version"],
+                    result["gate_profile_version"],
+                    result["validator_version"],
+                    result["evaluated_at_commit"],
+                    json.dumps(result["risks"], sort_keys=True),
+                    json.dumps(result["unknowns"], sort_keys=True),
+                    json.dumps(result["required_actions"], sort_keys=True),
                     result["source_event_range"],
                     watermark,
                 ),
@@ -242,6 +265,9 @@ class GateService:
         result = dict(row)
         result["checked_claim_ids"] = json.loads(result.pop("checked_claim_ids_json"))
         result["evidence_ids"] = json.loads(result.pop("evidence_ids_json"))
+        result["risks"] = json.loads(result.pop("risks_json", "[]"))
+        result["unknowns"] = json.loads(result.pop("unknowns_json", "[]"))
+        result["required_actions"] = json.loads(result.pop("required_actions_json", "[]"))
         return result
 
     def _gate_is_active(self, gate_id: str, packet_id: str) -> bool:

@@ -5,8 +5,10 @@ from __future__ import annotations
 import json
 
 from standard_harness.domain.packets import PacketService
+from standard_harness.domain.packets import LIFECYCLE_STATES
 from standard_harness.gitops.drift import FilesystemDriftService
 from standard_harness.integrity.verification import SignatureVerificationService
+from standard_harness.policy.gate_profiles import GateProfilePolicy
 from standard_harness.policy.bundles import PolicyBundleService
 from standard_harness.policy.release import ReleasePolicyBoundary
 from standard_harness.state.events import utc_now_iso
@@ -39,6 +41,8 @@ class CloseoutService:
         gate_results = self._passing_gate_results(packet_id)
         evidence_ids = sorted({evidence_id for claim in claims for evidence_id in claim["evidence_ids"]})
         diagnostics: list[str] = []
+        for diagnostic_id in self._packet_kernel_diagnostics(packet):
+            _add_diagnostic(diagnostics, diagnostic_id)
         registered_acceptance_ids = self._registered_acceptance_ids(packet_id)
         supported_acceptance_ids = {
             str(claim["acceptance_criterion_id"]) for claim in claims
@@ -350,6 +354,24 @@ class CloseoutService:
                 """
             ).fetchone()
         return row is not None
+
+    def _packet_kernel_diagnostics(self, packet: dict[str, object]) -> list[str]:
+        diagnostics = []
+        if str(packet["lifecycle_state"]) not in LIFECYCLE_STATES:
+            diagnostics.extend(["invalid_packet_schema", "invalid_state_transition"])
+        gate_profile_version = str(packet.get("gate_profile_version", ""))
+        if not gate_profile_version:
+            diagnostics.extend(["invalid_packet_schema", "missing_gate_profile"])
+        else:
+            try:
+                expected = GateProfilePolicy.load(self.store.harness_root).profile_version(
+                    str(packet.get("packet_type", "docs-only"))
+                )
+            except (FileNotFoundError, KeyError, ValueError):
+                expected = None
+            if expected is not None and gate_profile_version != expected:
+                diagnostics.append("missing_gate_profile")
+        return diagnostics
 
 
 def _add_diagnostic(diagnostics: list[str], diagnostic_id: str) -> None:

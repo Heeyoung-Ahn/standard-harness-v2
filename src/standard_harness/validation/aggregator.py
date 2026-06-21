@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Any
 
 from standard_harness.projection.current_context import CurrentContextProjection
+from standard_harness.domain.packets import LIFECYCLE_STATES
+from standard_harness.policy.gate_profiles import GateProfilePolicy
 from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.state.store import HarnessStore
 from standard_harness.validation.diagnostics import DiagnosticRecord
@@ -58,7 +60,8 @@ class ValidationService:
         return diagnostics
 
     def validate_packet(self, packet_id: str) -> list[dict[str, Any]]:
-        diagnostics = list(ReadinessService(self.store).check_packet(packet_id)["diagnostics"])
+        diagnostics = self._packet_schema_diagnostics(packet_id)
+        diagnostics.extend(ReadinessService(self.store).check_packet(packet_id)["diagnostics"])
         diagnostics.extend(self._completion_diagnostics(packet_id))
         diagnostics.extend(self._gate_activation_diagnostics(packet_id))
         diagnostics.extend(self._approval_diagnostics(packet_id))
@@ -236,6 +239,106 @@ class ValidationService:
                         packet_id=packet_id,
                     )
                 )
+        return diagnostics
+
+    def _packet_schema_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:
+        diagnostics = []
+        with self.store.connection() as conn:
+            packet = conn.execute(
+                """
+                select packet_id, packet_type, lifecycle_state, gate_profile_version
+                from packets
+                where packet_id = ?
+                """,
+                (packet_id,),
+            ).fetchone()
+        if packet is None:
+            return [
+                _diagnostic(
+                    error_code="invalid_packet_schema",
+                    category="packet",
+                    message="Packet row is missing.",
+                    repair_hint="Create the packet through PacketService before validation.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                )
+            ]
+
+        packet_type = str(packet["packet_type"])
+        gate_profile_version = str(packet["gate_profile_version"])
+        if str(packet["lifecycle_state"]) not in LIFECYCLE_STATES:
+            diagnostics.append(
+                _diagnostic(
+                    error_code="invalid_state_transition",
+                    category="packet",
+                    message="Packet lifecycle state is not allowed by the v0.2 state machine.",
+                    repair_hint="Move the packet through an allowed v0.2 lifecycle state.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="lifecycle_state",
+                    expected_value="v0.2 lifecycle state",
+                    actual_value=str(packet["lifecycle_state"]),
+                )
+            )
+            diagnostics.append(
+                _diagnostic(
+                    error_code="invalid_packet_schema",
+                    category="packet",
+                    message="Packet schema metadata is invalid.",
+                    repair_hint="Repair packet lifecycle, type, and gate profile metadata.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                )
+            )
+        try:
+            policy = GateProfilePolicy.load(self.repo_root)
+            expected_profile = policy.profile_version(packet_type)
+        except (FileNotFoundError, KeyError, ValueError):
+            expected_profile = None
+        if not gate_profile_version:
+            diagnostics.append(
+                _diagnostic(
+                    error_code="missing_gate_profile",
+                    category="gate",
+                    message="Packet gate profile version is missing.",
+                    repair_hint="Set packet.gate_profile_version from the packet type gate profile.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="gate_profile_version",
+                    expected_value=f"{packet_type}@1",
+                    actual_value="",
+                )
+            )
+            diagnostics.append(
+                _diagnostic(
+                    error_code="invalid_packet_schema",
+                    category="packet",
+                    message="Packet schema metadata is invalid.",
+                    repair_hint="Repair packet lifecycle, type, and gate profile metadata.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                )
+            )
+        elif expected_profile is not None and gate_profile_version != expected_profile:
+            diagnostics.append(
+                _diagnostic(
+                    error_code="missing_gate_profile",
+                    category="gate",
+                    message="Packet gate profile version does not match packet type policy.",
+                    repair_hint="Select the gate profile version defined for the packet type.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="gate_profile_version",
+                    expected_value=expected_profile,
+                    actual_value=gate_profile_version,
+                )
+            )
         return diagnostics
 
     def _gate_activation_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:

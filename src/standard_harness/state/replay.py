@@ -143,30 +143,52 @@ class StateReplayService:
 
 
 def _insert_packet(conn, _row, payload: dict[str, Any]) -> None:
+    packet_type = payload.get("packet_type", "docs-only")
+    risk_class = payload["risk_class"]
+    closeout_criteria = payload["closeout_criteria"]
     conn.execute(
         """
         insert or replace into packets (
-          packet_id, title, objective, risk_class, lifecycle_state, approval_state,
-          packet_version, scope_summary, out_of_scope_summary, change_zones_json,
-          acceptance_criteria_ids_json, evidence_requirements_json,
-          closeout_criteria_json, approval_required, approval_record_id,
+          packet_id, title, objective, packet_type, risk_class, risk_level,
+          maturity_level, lifecycle_state, approval_state, packet_version,
+          scope_summary, out_of_scope_summary, scope_json, out_of_scope_json,
+          depends_on_json, change_zones_json, locks_json,
+          acceptance_criteria_ids_json, evidence_requirements_json, test_plan_json,
+          e2e_test_gate_json, review_plan_json, security_review_plan_json,
+          refactor_review_plan_json, closeout_plan_json, closeout_criteria_json,
+          policy_version, gate_profile_version, approval_required, approval_record_id,
           owner, created_at, updated_at
-        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             payload["packet_id"],
             payload["title"],
             payload["objective"],
-            payload["risk_class"],
-            payload["lifecycle_state"],
+            packet_type,
+            risk_class,
+            payload.get("risk_level", risk_class),
+            payload.get("maturity_level", "L1"),
+            _normalize_lifecycle_state(payload["lifecycle_state"]),
             payload["approval_state"],
             payload["packet_version"],
             payload["scope_summary"],
             payload["out_of_scope_summary"],
+            json.dumps(payload.get("scope", [payload["scope_summary"]]), sort_keys=True),
+            json.dumps(payload.get("out_of_scope", [payload["out_of_scope_summary"]]), sort_keys=True),
+            json.dumps(payload.get("depends_on", []), sort_keys=True),
             json.dumps(payload["change_zones"], sort_keys=True),
+            json.dumps(payload.get("locks", []), sort_keys=True),
             json.dumps(payload["acceptance_criteria_ids"], sort_keys=True),
             json.dumps(payload["evidence_requirements"], sort_keys=True),
-            json.dumps(payload["closeout_criteria"], sort_keys=True),
+            json.dumps(payload.get("test_plan", []), sort_keys=True),
+            json.dumps(payload.get("e2e_test_gate"), sort_keys=True),
+            json.dumps(payload.get("review_plan", {}), sort_keys=True),
+            json.dumps(payload.get("security_review_plan", {}), sort_keys=True),
+            json.dumps(payload.get("refactor_review_plan", {}), sort_keys=True),
+            json.dumps(payload.get("closeout_plan", {"criteria": closeout_criteria}), sort_keys=True),
+            json.dumps(closeout_criteria, sort_keys=True),
+            payload.get("policy_version", "0.2.0"),
+            payload.get("gate_profile_version", f"{packet_type}@1"),
             1 if payload["approval_required"] else 0,
             payload.get("approval_record_id"),
             payload["owner"],
@@ -212,7 +234,7 @@ def _approve_packet(conn, row, payload: dict[str, Any]) -> None:
 def _transition_packet(conn, row, payload: dict[str, Any]) -> None:
     conn.execute(
         "update packets set lifecycle_state = ?, updated_at = ? where packet_id = ?",
-        (payload["to_state"], row["occurred_at"], payload["packet_id"]),
+        (_normalize_lifecycle_state(payload["to_state"]), row["occurred_at"], payload["packet_id"]),
     )
 
 
@@ -403,8 +425,10 @@ def _insert_gate_result(conn, _row, payload: dict[str, Any]) -> None:
         insert or replace into gate_results (
           gate_result_id, gate_id, packet_id, checked_claim_ids_json,
           evidence_ids_json, status, requirement_level, rationale,
+          policy_version, gate_profile_version, validator_version,
+          evaluated_at_commit, risks_json, unknowns_json, required_actions_json,
           source_event_range, source_watermark
-        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             payload["gate_result_id"],
@@ -415,6 +439,13 @@ def _insert_gate_result(conn, _row, payload: dict[str, Any]) -> None:
             payload["status"],
             payload["requirement_level"],
             payload["rationale"],
+            payload.get("policy_version", "0.2.0"),
+            payload.get("gate_profile_version", "migrated_unknown"),
+            payload.get("validator_version", "harness-validator@0.2.0"),
+            payload.get("evaluated_at_commit", "unknown"),
+            json.dumps(payload.get("risks", []), sort_keys=True),
+            json.dumps(payload.get("unknowns", []), sort_keys=True),
+            json.dumps(payload.get("required_actions", []), sort_keys=True),
             payload["source_event_range"],
             payload["source_watermark"],
         ),
@@ -1305,6 +1336,12 @@ def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
     return f"1-{source_watermark}"
+
+
+def _normalize_lifecycle_state(lifecycle_state: str) -> str:
+    if lifecycle_state == "ready_for_closeout":
+        return "closeout_pending"
+    return lifecycle_state
 
 
 HANDLERS = {

@@ -10,15 +10,26 @@ from standard_harness.state.store import HarnessStore
 
 
 LIFECYCLE_STATES = {
+    "proposed",
+    "challenge_required",
     "planned",
-    "approved",
+    "ready",
     "in_progress",
     "blocked",
-    "ready_for_closeout",
+    "implemented",
+    "tested",
+    "e2e_verified",
+    "reviewed",
+    "closeout_pending",
     "closed",
     "reopened",
+    "cancelled",
     "superseded",
+    "reverted",
 }
+
+DEFAULT_POLICY_VERSION = "0.2.0"
+DEFAULT_MATURITY_LEVEL = "L1"
 
 
 class PacketService:
@@ -32,8 +43,8 @@ class PacketService:
         title: str,
         objective: str,
         risk_class: str,
-        scope_summary: str,
-        out_of_scope_summary: str,
+        scope_summary: str | None = None,
+        out_of_scope_summary: str | None = None,
         change_zones: list[str],
         acceptance_criteria_ids: list[str],
         evidence_requirements: list[str],
@@ -41,26 +52,64 @@ class PacketService:
         owner: str,
         idempotency_key: str,
         approval_required: bool = True,
+        packet_type: str = "docs-only",
+        risk_level: str | None = None,
+        maturity_level: str = DEFAULT_MATURITY_LEVEL,
+        scope: list[str] | None = None,
+        out_of_scope: list[str] | None = None,
+        depends_on: list[str] | None = None,
+        locks: list[str] | None = None,
+        test_plan: list[str] | None = None,
+        e2e_test_gate: dict[str, object] | None = None,
+        review_plan: dict[str, object] | None = None,
+        security_review_plan: dict[str, object] | None = None,
+        refactor_review_plan: dict[str, object] | None = None,
+        closeout_plan: dict[str, object] | None = None,
+        policy_version: str = DEFAULT_POLICY_VERSION,
+        gate_profile_version: str | None = None,
     ) -> dict[str, object]:
         if self.store.event_for_idempotency_key(idempotency_key) is not None:
             return self.get_packet(packet_id)
         if self._packet_exists(packet_id):
             raise ValueError(f"packet_id already exists: {packet_id}")
+        scope_items = scope if scope is not None else ([scope_summary] if scope_summary else [])
+        out_of_scope_items = (
+            out_of_scope if out_of_scope is not None else ([out_of_scope_summary] if out_of_scope_summary else [])
+        )
+        scope_summary_value = scope_summary or (scope_items[0] if scope_items else "")
+        out_of_scope_summary_value = (
+            out_of_scope_summary or (out_of_scope_items[0] if out_of_scope_items else "")
+        )
         now = utc_now_iso()
         packet = {
             "packet_id": packet_id,
             "title": title,
             "objective": objective,
+            "packet_type": packet_type,
             "risk_class": risk_class,
+            "risk_level": risk_level or risk_class,
+            "maturity_level": maturity_level,
             "lifecycle_state": "planned",
             "approval_state": "pending" if approval_required else "not_required",
             "packet_version": 1,
-            "scope_summary": scope_summary,
-            "out_of_scope_summary": out_of_scope_summary,
+            "scope_summary": scope_summary_value,
+            "out_of_scope_summary": out_of_scope_summary_value,
+            "scope": scope_items,
+            "out_of_scope": out_of_scope_items,
+            "depends_on": depends_on or [],
             "change_zones": change_zones,
+            "locks": locks or [],
             "acceptance_criteria_ids": acceptance_criteria_ids,
             "evidence_requirements": evidence_requirements,
+            "test_plan": test_plan or [],
+            "e2e_test_gate": e2e_test_gate,
+            "review_plan": review_plan or {},
+            "security_review_plan": security_review_plan or {},
+            "refactor_review_plan": refactor_review_plan or {},
+            "closeout_plan": closeout_plan or {"criteria": closeout_criteria},
             "closeout_criteria": closeout_criteria,
+            "policy_version": policy_version,
+            "gate_profile_version": gate_profile_version or f"{packet_type}@1",
             "approval_required": approval_required,
             "approval_record_id": None,
             "owner": owner,
@@ -82,12 +131,16 @@ class PacketService:
             conn.execute(
                 """
                 insert or ignore into packets (
-                  packet_id, title, objective, risk_class, lifecycle_state, approval_state,
-                  packet_version, scope_summary, out_of_scope_summary, change_zones_json,
-                  acceptance_criteria_ids_json, evidence_requirements_json,
-                  closeout_criteria_json, approval_required, approval_record_id,
+                  packet_id, title, objective, packet_type, risk_class, risk_level,
+                  maturity_level, lifecycle_state, approval_state, packet_version,
+                  scope_summary, out_of_scope_summary, scope_json, out_of_scope_json,
+                  depends_on_json, change_zones_json, locks_json,
+                  acceptance_criteria_ids_json, evidence_requirements_json, test_plan_json,
+                  e2e_test_gate_json, review_plan_json, security_review_plan_json,
+                  refactor_review_plan_json, closeout_plan_json, closeout_criteria_json,
+                  policy_version, gate_profile_version, approval_required, approval_record_id,
                   owner, created_at, updated_at
-                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 _packet_row_values(packet),
             )
@@ -181,6 +234,7 @@ class PacketService:
     ) -> dict[str, object]:
         if self.store.event_for_idempotency_key(idempotency_key) is not None:
             return self.get_packet(packet_id)
+        lifecycle_state = _normalize_lifecycle_state(lifecycle_state)
         if lifecycle_state not in LIFECYCLE_STATES:
             raise ValueError(f"Invalid lifecycle state: {lifecycle_state}")
         if lifecycle_state == "closed":
@@ -243,16 +297,31 @@ def _packet_row_values(packet: dict[str, object]) -> tuple[object, ...]:
         packet["packet_id"],
         packet["title"],
         packet["objective"],
+        packet["packet_type"],
         packet["risk_class"],
+        packet["risk_level"],
+        packet["maturity_level"],
         packet["lifecycle_state"],
         packet["approval_state"],
         packet["packet_version"],
         packet["scope_summary"],
         packet["out_of_scope_summary"],
+        json.dumps(packet["scope"], sort_keys=True),
+        json.dumps(packet["out_of_scope"], sort_keys=True),
+        json.dumps(packet["depends_on"], sort_keys=True),
         json.dumps(packet["change_zones"], sort_keys=True),
+        json.dumps(packet["locks"], sort_keys=True),
         json.dumps(packet["acceptance_criteria_ids"], sort_keys=True),
         json.dumps(packet["evidence_requirements"], sort_keys=True),
+        json.dumps(packet["test_plan"], sort_keys=True),
+        json.dumps(packet["e2e_test_gate"], sort_keys=True),
+        json.dumps(packet["review_plan"], sort_keys=True),
+        json.dumps(packet["security_review_plan"], sort_keys=True),
+        json.dumps(packet["refactor_review_plan"], sort_keys=True),
+        json.dumps(packet["closeout_plan"], sort_keys=True),
         json.dumps(packet["closeout_criteria"], sort_keys=True),
+        packet["policy_version"],
+        packet["gate_profile_version"],
         1 if packet["approval_required"] else 0,
         packet["approval_record_id"],
         packet["owner"],
@@ -262,9 +331,33 @@ def _packet_row_values(packet: dict[str, object]) -> tuple[object, ...]:
 
 
 def _packet_from_row(row: dict[str, object]) -> dict[str, object]:
+    row["lifecycle_state"] = _normalize_lifecycle_state(str(row["lifecycle_state"]))
+    row.setdefault("packet_type", "docs-only")
+    row.setdefault("risk_level", row["risk_class"])
+    row.setdefault("maturity_level", DEFAULT_MATURITY_LEVEL)
+    row.setdefault("policy_version", DEFAULT_POLICY_VERSION)
+    row.setdefault("gate_profile_version", f"{row['packet_type']}@1")
+    row["scope"] = json.loads(str(row.pop("scope_json", json.dumps([row["scope_summary"]]))))
+    row["out_of_scope"] = json.loads(
+        str(row.pop("out_of_scope_json", json.dumps([row["out_of_scope_summary"]])))
+    )
+    row["depends_on"] = json.loads(str(row.pop("depends_on_json", "[]")))
     row["change_zones"] = json.loads(str(row.pop("change_zones_json")))
+    row["locks"] = json.loads(str(row.pop("locks_json", "[]")))
     row["acceptance_criteria_ids"] = json.loads(str(row.pop("acceptance_criteria_ids_json")))
     row["evidence_requirements"] = json.loads(str(row.pop("evidence_requirements_json")))
+    row["test_plan"] = json.loads(str(row.pop("test_plan_json", "[]")))
+    row["e2e_test_gate"] = json.loads(str(row.pop("e2e_test_gate_json", "null")))
+    row["review_plan"] = json.loads(str(row.pop("review_plan_json", "{}")))
+    row["security_review_plan"] = json.loads(str(row.pop("security_review_plan_json", "{}")))
+    row["refactor_review_plan"] = json.loads(str(row.pop("refactor_review_plan_json", "{}")))
+    row["closeout_plan"] = json.loads(str(row.pop("closeout_plan_json", "{}")))
     row["closeout_criteria"] = json.loads(str(row.pop("closeout_criteria_json")))
     row["approval_required"] = bool(row["approval_required"])
     return row
+
+
+def _normalize_lifecycle_state(lifecycle_state: str) -> str:
+    if lifecycle_state == "ready_for_closeout":
+        return "closeout_pending"
+    return lifecycle_state

@@ -393,61 +393,81 @@
     {
       "hrId": "HR-030R",
       "title": "All implementation work proceeds by packet",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/packet.schema.json",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/packet.schema.json"
+        ],
         "validator": [
-          "packet-schema-validator"
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "packet-kernel-gate"
         ],
-        "evidence": [
-          "packet-record"
-        ],
         "tests": [
-          "tests.contract.test_xp_01_planned_contract"
+          "tests/contract/test_v02_packet_schema.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01"
     },
     {
       "hrId": "HR-031R",
       "title": "Packet lifecycle is state-machine managed",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/packet.schema.json",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/packet.schema.json"
+        ],
         "validator": [
-          "packet-state-validator"
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "packet-kernel-gate"
         ],
-        "evidence": [
-          "packet-state-transition"
-        ],
         "tests": [
-          "tests.contract.test_xp_01_planned_contract"
+          "tests/contract/test_v02_packet_schema.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01"
     },
     {
       "hrId": "HR-032R",
       "title": "Parallel execution is metadata-only in v1",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/packet.schema.json",
+        "src/standard_harness/domain/packets.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/packet.schema.json"
+        ],
         "validator": [
-          "parallel-metadata-validator"
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "packet-kernel-gate"
@@ -456,22 +476,28 @@
           "dag-lock-metadata"
         ],
         "tests": [
-          "tests.contract.test_xp_01_planned_contract"
+          "tests/contract/test_v02_packet_schema.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01"
     },
     {
       "hrId": "HR-033R",
       "title": "Parallel execution requires isolated workspace",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/packet.schema.json",
+        "src/standard_harness/domain/packets.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/packet.schema.json"
+        ],
         "validator": [
-          "parallel-metadata-validator"
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "packet-kernel-gate"
@@ -480,11 +506,11 @@
           "workspace-isolation-record"
         ],
         "tests": [
-          "tests.contract.test_xp_01_planned_contract"
+          "tests/contract/test_v02_packet_schema.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01"
     },
     {
       "hrId": "HR-040R",
@@ -681,13 +707,23 @@
     {
       "hrId": "HR-052",
       "title": "Packet types have gate profiles",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/gate-profiles.yaml",
+        "src/standard_harness/policy/gate_profiles.py",
+        "src/standard_harness/domain/gates.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/gate-profiles.yaml"
+        ],
+        "schema": [
+          "_harness/schemas/gate-result.schema.json"
+        ],
         "validator": [
-          "gate-profile-validator"
+          "src/standard_harness/policy/gate_profiles.py"
         ],
         "gate": [
           "packet-kernel-gate"
@@ -696,22 +732,32 @@
           "gate-profile-policy"
         ],
         "tests": [
-          "tests.contract.test_xp_01_planned_contract"
+          "tests/contract/test_gate_profile_applicability.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01"
     },
     {
       "hrId": "HR-053",
       "title": "Gate N/A is rule-based",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/na-decision.schema.json",
+        "_harness/policies/gate-profiles.yaml",
+        "src/standard_harness/validation/na_decisions.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/na-decision.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/gate-profiles.yaml"
+        ],
         "validator": [
-          "na-decision-validator"
+          "src/standard_harness/validation/na_decisions.py"
         ],
         "gate": [
           "packet-kernel-gate"
@@ -720,11 +766,11 @@
           "na-decision"
         ],
         "tests": [
-          "tests.contract.test_xp_01_planned_contract"
+          "tests/contract/test_rule_based_na_decision.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01"
     },
     {
       "hrId": "HR-060R",
@@ -1549,46 +1595,62 @@
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
-        "src/standard_harness/validation/aggregator.py"
+        "src/standard_harness/validation/requirements_metadata.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/validation/na_decisions.py"
       ],
       "targetArtifacts": {
         "validator": [
-          "src/standard_harness/validation/requirements_metadata.py"
+          "src/standard_harness/validation/requirements_metadata.py",
+          "src/standard_harness/validation/aggregator.py",
+          "src/standard_harness/validation/na_decisions.py"
         ],
         "gate": [
-          "requirements-baseline-gate"
+          "requirements-baseline-gate",
+          "packet-kernel-gate"
         ],
         "tests": [
           "tests/contract/test_requirements_metadata_validator.py",
-          "tests/contract/test_non_goal_guardrails.py"
+          "tests/contract/test_v02_packet_schema.py",
+          "tests/contract/test_gate_profile_applicability.py",
+          "tests/contract/test_rule_based_na_decision.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-00"
+      "lastUpdatedByPacket": "XP-01"
     },
     {
       "hrId": "HR-191",
       "title": "Validator results are recorded as gate results",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-01",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/gate-result.schema.json",
+        "src/standard_harness/domain/gates.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/gate-result.schema.json"
+        ],
         "validator": [
-          "validator-catalog-validator"
+          "src/standard_harness/domain/gates.py"
         ],
         "gate": [
+          "packet-kernel-gate",
           "v21-conformance-gate"
         ],
         "evidence": [
           "gate-result"
         ],
         "tests": [
-          "tests.contract.test_xp_01_planned_contract"
+          "tests/contract/test_gate_profile_applicability.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-01"
     },
     {
       "hrId": "HR-200",
@@ -1618,7 +1680,9 @@
   "migrationCompatibility": {
     "existingRequirementRows": "remain valid and map to partial HR coverage until metadata-backed HR rows are added",
     "legacyConformanceFiles": "read-only legacy inputs, not canonical V2.1 coverage",
-    "schemaMigration": "none for XP-00"
+    "schemaMigration": "none for XP-00",
+    "xp01PacketKernel": "Existing packet rows retain legacy columns; XP-01 adds v0.2 metadata columns with defaults, maps risk_class to risk_level, change_zones to changeZones semantics, ready_for_closeout to closeout_pending, and leaves event replay/audit compatible with older payloads.",
+    "xp01GateResults": "Existing gate_result rows receive default policyVersion, gateProfileVersion=migrated_unknown, validatorVersion=harness-validator@0.2.0, evaluatedAtCommit=unknown, and empty risks/unknowns/requiredActions during migration."
   },
   "releaseBlockingValidators": [
     {
@@ -1635,12 +1699,45 @@
       ],
       "waivable": false,
       "enforcementPoint": "validate"
+    },
+    {
+      "validator": "packet-schema-validator",
+      "gateId": "packet-kernel-gate",
+      "diagnosticIds": [
+        "invalid_packet_schema",
+        "invalid_state_transition",
+        "missing_gate_profile"
+      ],
+      "waivable": false,
+      "enforcementPoint": "validate, closeout"
+    },
+    {
+      "validator": "gate-profile-validator",
+      "gateId": "packet-kernel-gate",
+      "diagnosticIds": [
+        "missing_gate_profile"
+      ],
+      "waivable": false,
+      "enforcementPoint": "validate, closeout"
+    },
+    {
+      "validator": "na-decision-validator",
+      "gateId": "packet-kernel-gate",
+      "diagnosticIds": [
+        "invalid_na_decision",
+        "invalid_na_rule",
+        "missing_na_substitute_check"
+      ],
+      "waivable": true,
+      "enforcementPoint": "validate, closeout when N/A is used"
     }
   ],
   "frictionMetricBehavior": {
     "friction": "XP-00A keeps friction.signal as the runtime friction event schema and links improvement-candidate seed records to repeated friction conversion without implementing XP-09 aggregation.",
     "metric": "XP-00A keeps metric.signal as the runtime metric event schema and links starter-promotion candidate seed records to metric or friction evidence without implementing XP-09 promotion.",
     "improvement": "XP-00A adds a base improvement-candidate schema seed only; recurring detection and proposal lifecycle remain XP-09-owned.",
-    "starterPromotion": "XP-00A adds a starter-promotion-candidate seed schema only; starter promotion registry and aggregation remain XP-09-owned."
+    "starterPromotion": "XP-00A adds a starter-promotion-candidate seed schema only; starter promotion registry and aggregation remain XP-09-owned.",
+    "xp01Friction": "Packet schema, gate profile, and N/A validators emit or reserve missing_e2e, packet_scope_creep, docs_implementation_mismatch, missing_closeout, and boundary_violation friction signals when blocked. XP-09 remains responsible for aggregation.",
+    "xp01Metric": "Gate profile selection, packet schema validation, gate result metadata recording, and N/A decision validation emit or reserve count metrics. XP-09 remains responsible for success metric aggregation."
   }
 }

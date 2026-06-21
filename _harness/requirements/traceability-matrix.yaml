@@ -371,10 +371,19 @@
       "hrId": "HR-030R",
       "xpOwner": "XP-01",
       "files": [
-        "planned:xp_01:HR-030R"
+        "_harness/schemas/packet.schema.json",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "packet.schema.json"
+      ],
+      "policies": [
+        "gate-profiles"
+      ],
       "validators": [
         "packet-schema-validator"
       ],
@@ -385,7 +394,7 @@
         "packet-record"
       ],
       "tests": [
-        "tests.contract.test_xp_01_planned_contract"
+        "tests.contract.test_v02_packet_schema"
       ],
       "releaseBlocking": true
     },
@@ -393,9 +402,16 @@
       "hrId": "HR-031R",
       "xpOwner": "XP-01",
       "files": [
-        "planned:xp_01:HR-031R"
+        "_harness/schemas/packet.schema.json",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "packet.schema.json"
+      ],
       "policies": [],
       "validators": [
         "packet-state-validator"
@@ -407,7 +423,7 @@
         "packet-state-transition"
       ],
       "tests": [
-        "tests.contract.test_xp_01_planned_contract"
+        "tests.contract.test_v02_packet_schema"
       ],
       "releaseBlocking": true
     },
@@ -415,9 +431,14 @@
       "hrId": "HR-032R",
       "xpOwner": "XP-01",
       "files": [
-        "planned:xp_01:HR-032R"
+        "_harness/schemas/packet.schema.json",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "packet.schema.json"
+      ],
       "policies": [],
       "validators": [
         "parallel-metadata-validator"
@@ -429,7 +450,7 @@
         "dag-lock-metadata"
       ],
       "tests": [
-        "tests.contract.test_xp_01_planned_contract"
+        "tests.contract.test_v02_packet_schema"
       ],
       "releaseBlocking": true
     },
@@ -437,9 +458,14 @@
       "hrId": "HR-033R",
       "xpOwner": "XP-01",
       "files": [
-        "planned:xp_01:HR-033R"
+        "_harness/schemas/packet.schema.json",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "packet.schema.json"
+      ],
       "policies": [],
       "validators": [
         "parallel-metadata-validator"
@@ -451,7 +477,7 @@
         "workspace-isolation-record"
       ],
       "tests": [
-        "tests.contract.test_xp_01_planned_contract"
+        "tests.contract.test_v02_packet_schema"
       ],
       "releaseBlocking": true
     },
@@ -635,10 +661,18 @@
       "hrId": "HR-052",
       "xpOwner": "XP-01",
       "files": [
-        "planned:xp_01:HR-052"
+        "_harness/policies/gate-profiles.yaml",
+        "src/standard_harness/policy/gate_profiles.py",
+        "src/standard_harness/domain/gates.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "gate-result.schema.json"
+      ],
+      "policies": [
+        "gate-profiles"
+      ],
       "validators": [
         "gate-profile-validator"
       ],
@@ -649,7 +683,7 @@
         "gate-profile-policy"
       ],
       "tests": [
-        "tests.contract.test_xp_01_planned_contract"
+        "tests.contract.test_gate_profile_applicability"
       ],
       "releaseBlocking": true
     },
@@ -657,10 +691,16 @@
       "hrId": "HR-053",
       "xpOwner": "XP-01",
       "files": [
-        "planned:xp_01:HR-053"
+        "_harness/schemas/na-decision.schema.json",
+        "_harness/policies/gate-profiles.yaml",
+        "src/standard_harness/validation/na_decisions.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "na-decision.schema.json"
+      ],
+      "policies": [
+        "gate-profiles"
+      ],
       "validators": [
         "na-decision-validator"
       ],
@@ -671,7 +711,7 @@
         "na-decision"
       ],
       "tests": [
-        "tests.contract.test_xp_01_planned_contract"
+        "tests.contract.test_rule_based_na_decision"
       ],
       "releaseBlocking": true
     },
@@ -1443,25 +1483,37 @@
       "xpOwner": "XP-00",
       "files": [
         "src/standard_harness/validation/requirements_metadata.py",
-        "src/standard_harness/validation/aggregator.py"
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/validation/na_decisions.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "packet.schema.json",
+        "gate-result.schema.json",
+        "na-decision.schema.json"
+      ],
       "policies": [
         "p0-policy",
-        "non-goal-guardrails"
+        "non-goal-guardrails",
+        "gate-profiles"
       ],
       "validators": [
-        "requirements-metadata-validator"
+        "requirements-metadata-validator",
+        "packet-schema-validator",
+        "gate-profile-validator",
+        "na-decision-validator"
       ],
       "gates": [
-        "requirements-baseline-gate"
+        "requirements-baseline-gate",
+        "packet-kernel-gate"
       ],
       "evidenceTypes": [
         "validator-result"
       ],
       "tests": [
         "tests.contract.test_requirements_metadata_validator",
-        "tests.contract.test_non_goal_guardrails"
+        "tests.contract.test_v02_packet_schema",
+        "tests.contract.test_gate_profile_applicability",
+        "tests.contract.test_rule_based_na_decision"
       ],
       "releaseBlocking": true
     },
@@ -1469,21 +1521,30 @@
       "hrId": "HR-191",
       "xpOwner": "XP-01",
       "files": [
-        "planned:xp_01:HR-191"
+        "_harness/schemas/gate-result.schema.json",
+        "src/standard_harness/domain/gates.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "gate-result.schema.json"
+      ],
+      "policies": [
+        "gate-profiles"
+      ],
       "validators": [
         "validator-catalog-validator"
       ],
       "gates": [
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "packet-kernel-gate"
       ],
       "evidenceTypes": [
         "gate-result"
       ],
       "tests": [
-        "tests.contract.test_xp_01_planned_contract"
+        "tests.contract.test_gate_profile_applicability"
       ],
       "releaseBlocking": true
     },

@@ -46,16 +46,31 @@ create table if not exists packets (
   packet_id text primary key,
   title text not null,
   objective text not null,
+  packet_type text not null default 'docs-only',
   risk_class text not null,
+  risk_level text not null default '',
+  maturity_level text not null default 'L1',
   lifecycle_state text not null,
   approval_state text not null,
   packet_version integer not null,
   scope_summary text not null,
   out_of_scope_summary text not null,
+  scope_json text not null default '[]',
+  out_of_scope_json text not null default '[]',
+  depends_on_json text not null default '[]',
   change_zones_json text not null,
+  locks_json text not null default '[]',
   acceptance_criteria_ids_json text not null,
   evidence_requirements_json text not null,
+  test_plan_json text not null default '[]',
+  e2e_test_gate_json text not null default 'null',
+  review_plan_json text not null default '{}',
+  security_review_plan_json text not null default '{}',
+  refactor_review_plan_json text not null default '{}',
+  closeout_plan_json text not null default '{}',
   closeout_criteria_json text not null,
+  policy_version text not null default '0.2.0',
+  gate_profile_version text not null default 'docs-only@1',
   approval_required integer not null,
   approval_record_id text,
   owner text not null,
@@ -197,6 +212,13 @@ create table if not exists gate_results (
   status text not null,
   requirement_level text not null,
   rationale text not null,
+  policy_version text not null default '0.2.0',
+  gate_profile_version text not null default 'migrated_unknown',
+  validator_version text not null default 'harness-validator@0.2.0',
+  evaluated_at_commit text not null default 'unknown',
+  risks_json text not null default '[]',
+  unknowns_json text not null default '[]',
+  required_actions_json text not null default '[]',
   source_event_range text not null,
   source_watermark integer not null
 );
@@ -745,6 +767,73 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
     _ensure_column(conn, "pmo_projections", "projection_summary_json", "text not null default '{}'")
     _ensure_column(conn, "artifacts", "content_hash", "text")
     _ensure_column(conn, "artifacts", "content_hash_algorithm", "text")
+    _ensure_column(conn, "packets", "packet_type", "text not null default 'docs-only'")
+    _ensure_column(conn, "packets", "risk_level", "text not null default ''")
+    _ensure_column(conn, "packets", "maturity_level", "text not null default 'L1'")
+    _ensure_column(conn, "packets", "scope_json", "text not null default '[]'")
+    _ensure_column(conn, "packets", "out_of_scope_json", "text not null default '[]'")
+    _ensure_column(conn, "packets", "depends_on_json", "text not null default '[]'")
+    _ensure_column(conn, "packets", "locks_json", "text not null default '[]'")
+    _ensure_column(conn, "packets", "test_plan_json", "text not null default '[]'")
+    _ensure_column(conn, "packets", "e2e_test_gate_json", "text not null default 'null'")
+    _ensure_column(conn, "packets", "review_plan_json", "text not null default '{}'")
+    _ensure_column(conn, "packets", "security_review_plan_json", "text not null default '{}'")
+    _ensure_column(conn, "packets", "refactor_review_plan_json", "text not null default '{}'")
+    _ensure_column(conn, "packets", "closeout_plan_json", "text not null default '{}'")
+    _ensure_column(conn, "packets", "policy_version", "text not null default '0.2.0'")
+    _ensure_column(
+        conn, "packets", "gate_profile_version", "text not null default 'docs-only@1'"
+    )
+    conn.execute("update packets set risk_level = risk_class where risk_level = ''")
+    conn.execute(
+        """
+        update packets
+        set scope_json = json_array(scope_summary)
+        where scope_json = '[]' and scope_summary != ''
+        """
+    )
+    conn.execute(
+        """
+        update packets
+        set out_of_scope_json = json_array(out_of_scope_summary)
+        where out_of_scope_json = '[]' and out_of_scope_summary != ''
+        """
+    )
+    conn.execute(
+        """
+        update packets
+        set closeout_plan_json = json_object('criteria', json(closeout_criteria_json))
+        where closeout_plan_json = '{}'
+        """
+    )
+    conn.execute(
+        """
+        update packets
+        set lifecycle_state = 'closeout_pending'
+        where lifecycle_state = 'ready_for_closeout'
+        """
+    )
+    _ensure_column(conn, "gate_results", "policy_version", "text not null default '0.2.0'")
+    _ensure_column(
+        conn,
+        "gate_results",
+        "gate_profile_version",
+        "text not null default 'migrated_unknown'",
+    )
+    _ensure_column(
+        conn,
+        "gate_results",
+        "validator_version",
+        "text not null default 'harness-validator@0.2.0'",
+    )
+    _ensure_column(
+        conn, "gate_results", "evaluated_at_commit", "text not null default 'unknown'"
+    )
+    _ensure_column(conn, "gate_results", "risks_json", "text not null default '[]'")
+    _ensure_column(conn, "gate_results", "unknowns_json", "text not null default '[]'")
+    _ensure_column(
+        conn, "gate_results", "required_actions_json", "text not null default '[]'"
+    )
     checksum = sha256_text(SCHEMA_SQL)
     conn.execute(
         """

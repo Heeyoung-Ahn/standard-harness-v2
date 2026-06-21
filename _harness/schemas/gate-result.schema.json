@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-v2.1/gate-result.schema.json",
+  "title": "Standard Harness V2.1 Gate Result",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "packetId",
+    "gate",
+    "status",
+    "policyVersion",
+    "gateProfileVersion",
+    "validatorVersion",
+    "evaluatedAtCommit",
+    "evidence",
+    "risks",
+    "unknowns",
+    "requiredActions"
+  ],
+  "properties": {
+    "packetId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gate": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "WARNING",
+        "N/A_RECORDED",
+        "STALE",
+        "SUPERSEDED",
+        "HUMAN_DECISION_REQUIRED"
+      ]
+    },
+    "policyVersion": {
+      "const": "0.2.0"
+    },
+    "gateProfileVersion": {
+      "type": "string"
+    },
+    "validatorVersion": {
+      "type": "string"
+    },
+    "evaluatedAtCommit": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array"
+    },
+    "unknowns": {
+      "type": "array"
+    },
+    "requiredActions": {
+      "type": "array"
+    }
+  }
+}
