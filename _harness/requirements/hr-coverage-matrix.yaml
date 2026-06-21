@@ -2584,159 +2584,253 @@
     {
       "hrId": "HR-160R",
       "title": "Harness has token and context budget policy",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-06",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "src/standard_harness/context/authority.py",
+        "src/standard_harness/context/packs.py",
+        "src/standard_harness/context/budget.py",
+        "src/standard_harness/validation/context_budget.py",
+        "src/standard_harness/projection/current_context.py",
+        "src/standard_harness/reviews/routing.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/context-authority.yaml",
+          "_harness/policies/token-budget.yaml"
+        ],
         "validator": [
-          "context-budget-validator"
+          "src/standard_harness/context/authority.py",
+          "src/standard_harness/validation/context_budget.py"
         ],
         "gate": [
+          "context-authority-gate",
           "context-budget-gate"
         ],
-        "evidence": [
-          "token-budget-policy"
-        ],
         "tests": [
-          "tests.contract.test_xp_06_planned_contract"
+          "tests/contract/test_context_authority_labels.py",
+          "tests/contract/test_role_specific_context_pack.py",
+          "tests/contract/test_token_context_budget_validator.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-06",
+      "migrationCompatibility": [
+        "Existing current_context projection remains source context and now carries authority label metadata.",
+        "Existing ContextRouter stale and untrusted override diagnostics map to authority override diagnostics.",
+        "Role-specific context packs are additive and do not provide full repo context by default."
+      ],
+      "releaseBlockingValidators": [
+        "context-authority-validator",
+        "context-budget-validator"
+      ],
+      "releaseBlockingGates": [
+        "context-authority-gate",
+        "context-budget-gate"
+      ],
+      "diagnostics": [
+        "context_budget_exceeded",
+        "large_file_not_summarized",
+        "untrusted_authority_override",
+        "stale_context"
+      ],
+      "waiverPolicy": "Stale or untrusted content cannot override policy, packet instructions, gate results, or decisions.",
+      "enforcementPoint": "context pack generation, handoff, validate",
+      "frictionMetricBehavior": [
+        "Emit context_budget_exceeded, large_file_not_summarized, stale_context, or untrusted_authority_override when blocked.",
+        "Emit context_pack_token_estimate, context_authority_label_count, and context_budget_validation_count by role."
+      ]
     },
     {
       "hrId": "HR-161R",
       "title": "Agents receive role-specific context packs",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-06",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "src/standard_harness/context/authority.py",
+        "src/standard_harness/context/packs.py",
+        "src/standard_harness/context/budget.py",
+        "src/standard_harness/validation/context_budget.py",
+        "src/standard_harness/projection/current_context.py",
+        "src/standard_harness/reviews/routing.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/context-authority.yaml",
+          "_harness/policies/token-budget.yaml"
+        ],
         "validator": [
-          "context-budget-validator"
+          "src/standard_harness/context/authority.py",
+          "src/standard_harness/validation/context_budget.py"
         ],
         "gate": [
+          "context-authority-gate",
           "context-budget-gate"
         ],
-        "evidence": [
-          "role-context-pack"
-        ],
         "tests": [
-          "tests.contract.test_xp_06_planned_contract"
+          "tests/contract/test_context_authority_labels.py",
+          "tests/contract/test_role_specific_context_pack.py",
+          "tests/contract/test_token_context_budget_validator.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-06",
+      "migrationCompatibility": [
+        "Existing current_context projection remains source context and now carries authority label metadata.",
+        "Existing ContextRouter stale and untrusted override diagnostics map to authority override diagnostics.",
+        "Role-specific context packs are additive and do not provide full repo context by default."
+      ],
+      "releaseBlockingValidators": [
+        "context-authority-validator",
+        "context-budget-validator"
+      ],
+      "releaseBlockingGates": [
+        "context-authority-gate",
+        "context-budget-gate"
+      ],
+      "diagnostics": [
+        "context_budget_exceeded",
+        "large_file_not_summarized",
+        "untrusted_authority_override",
+        "stale_context"
+      ],
+      "waiverPolicy": "Stale or untrusted content cannot override policy, packet instructions, gate results, or decisions.",
+      "enforcementPoint": "context pack generation, handoff, validate",
+      "frictionMetricBehavior": [
+        "Emit context_budget_exceeded, large_file_not_summarized, stale_context, or untrusted_authority_override when blocked.",
+        "Emit context_pack_token_estimate, context_authority_label_count, and context_budget_validation_count by role."
+      ]
     },
     {
       "hrId": "HR-162",
       "title": "Harness has context authority model",
-      "coverageStatus": "partial",
-      "xpOwner": "XP-08A/XP-06",
-      "implementationDisposition": "modify",
+      "coverageStatus": "complete",
+      "xpOwner": "XP-06",
+      "implementationDisposition": "create",
       "currentImplementation": [
-        "_harness/policies/evidence-classification.yaml",
-        "src/standard_harness/security/evidence_classification.py",
-        "src/standard_harness/validation/sensitive_evidence.py",
-        "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/state/migrations.py",
-        "src/standard_harness/state/replay.py",
-        "src/standard_harness/state/audit.py",
-        "src/standard_harness/security/redaction.py"
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "src/standard_harness/context/authority.py",
+        "src/standard_harness/context/packs.py",
+        "src/standard_harness/context/budget.py",
+        "src/standard_harness/validation/context_budget.py",
+        "src/standard_harness/projection/current_context.py",
+        "src/standard_harness/reviews/routing.py"
       ],
       "targetArtifacts": {
         "policy": [
-          "_harness/policies/evidence-classification.yaml"
+          "_harness/policies/context-authority.yaml",
+          "_harness/policies/token-budget.yaml"
         ],
         "validator": [
-          "src/standard_harness/validation/sensitive_evidence.py"
+          "src/standard_harness/context/authority.py",
+          "src/standard_harness/validation/context_budget.py"
         ],
         "gate": [
-          "sensitive-evidence-gate"
+          "context-authority-gate",
+          "context-budget-gate"
         ],
         "tests": [
-          "tests/contract/test_sensitive_evidence_classification.py",
-          "tests/evals/test_secret_evidence_registration_blocked.py"
+          "tests/contract/test_context_authority_labels.py",
+          "tests/contract/test_role_specific_context_pack.py",
+          "tests/contract/test_token_context_budget_validator.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-08A",
+      "lastUpdatedByPacket": "XP-06",
       "migrationCompatibility": [
-        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
-        "SECRET evidence is blocked before evidence.registered event persistence.",
-        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+        "Existing current_context projection remains source context and now carries authority label metadata.",
+        "Existing ContextRouter stale and untrusted override diagnostics map to authority override diagnostics.",
+        "Role-specific context packs are additive and do not provide full repo context by default."
       ],
       "releaseBlockingValidators": [
-        "sensitive-evidence-validator"
+        "context-authority-validator",
+        "context-budget-validator"
       ],
       "releaseBlockingGates": [
-        "sensitive-evidence-gate"
+        "context-authority-gate",
+        "context-budget-gate"
       ],
       "diagnostics": [
-        "secret_evidence_registered",
-        "sensitive_wiki_promotion"
+        "context_budget_exceeded",
+        "large_file_not_summarized",
+        "untrusted_authority_override",
+        "stale_context"
       ],
-      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
-      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "waiverPolicy": "Stale or untrusted content cannot override policy, packet instructions, gate results, or decisions.",
+      "enforcementPoint": "context pack generation, handoff, validate",
       "frictionMetricBehavior": [
-        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
-        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+        "Emit context_budget_exceeded, large_file_not_summarized, stale_context, or untrusted_authority_override when blocked.",
+        "Emit context_pack_token_estimate, context_authority_label_count, and context_budget_validation_count by role."
       ]
     },
     {
       "hrId": "HR-163",
       "title": "Untrusted content has no instruction authority",
-      "coverageStatus": "partial",
-      "xpOwner": "XP-08A/XP-06",
-      "implementationDisposition": "modify",
+      "coverageStatus": "complete",
+      "xpOwner": "XP-06",
+      "implementationDisposition": "create",
       "currentImplementation": [
-        "_harness/policies/evidence-classification.yaml",
-        "src/standard_harness/security/evidence_classification.py",
-        "src/standard_harness/validation/sensitive_evidence.py",
-        "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/state/migrations.py",
-        "src/standard_harness/state/replay.py",
-        "src/standard_harness/state/audit.py",
-        "src/standard_harness/security/redaction.py"
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "src/standard_harness/context/authority.py",
+        "src/standard_harness/context/packs.py",
+        "src/standard_harness/context/budget.py",
+        "src/standard_harness/validation/context_budget.py",
+        "src/standard_harness/projection/current_context.py",
+        "src/standard_harness/reviews/routing.py"
       ],
       "targetArtifacts": {
         "policy": [
-          "_harness/policies/evidence-classification.yaml"
+          "_harness/policies/context-authority.yaml",
+          "_harness/policies/token-budget.yaml"
         ],
         "validator": [
-          "src/standard_harness/validation/sensitive_evidence.py"
+          "src/standard_harness/context/authority.py",
+          "src/standard_harness/validation/context_budget.py"
         ],
         "gate": [
-          "sensitive-evidence-gate"
+          "context-authority-gate",
+          "context-budget-gate"
         ],
         "tests": [
-          "tests/contract/test_sensitive_evidence_classification.py",
-          "tests/evals/test_secret_evidence_registration_blocked.py"
+          "tests/contract/test_context_authority_labels.py",
+          "tests/contract/test_role_specific_context_pack.py",
+          "tests/contract/test_token_context_budget_validator.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-08A",
+      "lastUpdatedByPacket": "XP-06",
       "migrationCompatibility": [
-        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
-        "SECRET evidence is blocked before evidence.registered event persistence.",
-        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+        "Existing current_context projection remains source context and now carries authority label metadata.",
+        "Existing ContextRouter stale and untrusted override diagnostics map to authority override diagnostics.",
+        "Role-specific context packs are additive and do not provide full repo context by default."
       ],
       "releaseBlockingValidators": [
-        "sensitive-evidence-validator"
+        "context-authority-validator",
+        "context-budget-validator"
       ],
       "releaseBlockingGates": [
-        "sensitive-evidence-gate"
+        "context-authority-gate",
+        "context-budget-gate"
       ],
       "diagnostics": [
-        "secret_evidence_registered",
-        "sensitive_wiki_promotion"
+        "context_budget_exceeded",
+        "large_file_not_summarized",
+        "untrusted_authority_override",
+        "stale_context"
       ],
-      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
-      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "waiverPolicy": "Stale or untrusted content cannot override policy, packet instructions, gate results, or decisions.",
+      "enforcementPoint": "context pack generation, handoff, validate",
       "frictionMetricBehavior": [
-        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
-        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+        "Emit context_budget_exceeded, large_file_not_summarized, stale_context, or untrusted_authority_override when blocked.",
+        "Emit context_pack_token_estimate, context_authority_label_count, and context_budget_validation_count by role."
       ]
     },
     {

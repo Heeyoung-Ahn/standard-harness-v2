@@ -40,6 +40,7 @@ class ContextRouter:
         return {
             "status": "blocked" if diagnostics else "accepted",
             "diagnostic_codes": diagnostics,
+            "authority_diagnostics": diagnostics,
             "rejected_overrides": rejected,
             "authority_precedence": projection.get("authority_precedence", []),
         }

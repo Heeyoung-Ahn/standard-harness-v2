@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "context-authority-policy",
+  "tiers": [
+    {"tier": "policy", "rank": 1, "patterns": ["_harness/policies/**"], "mayInstruct": true},
+    {"tier": "decision-record", "rank": 2, "patterns": ["_ops/decisions/records/**"], "mayInstruct": true},
+    {"tier": "wiki-current-conventions", "rank": 3, "patterns": ["_ops/wiki/current-conventions.md"], "mayInstruct": false},
+    {"tier": "wiki-architecture", "rank": 4, "patterns": ["_ops/wiki/architecture.md"], "mayInstruct": false},
+    {"tier": "active-context", "rank": 5, "patterns": ["_ops/active-context/**"], "mayInstruct": false},
+    {"tier": "product", "rank": 6, "patterns": ["product/**", "src/**", "docs/**"], "mayInstruct": false},
+    {"tier": "evidence-report", "rank": 7, "patterns": ["_ops/evidence/**"], "mayInstruct": false},
+    {"tier": "generated-summary", "rank": 8, "patterns": ["_ops/wiki/skill-facing-index.md"], "mayInstruct": false}
+  ],
+  "defaultTier": "untrusted-content",
+  "frictionSignalBehavior": "emit untrusted_authority_override or stale_context when lower-authority context attempts to instruct",
+  "metricSignalBehavior": "emit context_authority_label_count by tier and role"
+}

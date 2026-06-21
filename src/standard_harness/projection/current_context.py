@@ -45,6 +45,22 @@ class CurrentContextProjection:
                 "generated_projection",
                 "untrusted_content",
             ],
+            "authority_label_precedence": [
+                "_harness/policies/**",
+                "_ops/decisions/records/**",
+                "_ops/wiki/current-conventions.md",
+                "_ops/wiki/architecture.md",
+                "_ops/active-context/**",
+                "product docs/source comments",
+                "evidence reports",
+                "LLM-generated summaries",
+            ],
+            "context_authority_labels": {
+                "policy": {"rank": 1, "mayInstruct": True},
+                "decision-record": {"rank": 2, "mayInstruct": True},
+                "evidence-report": {"rank": 7, "mayInstruct": False},
+                "generated-summary": {"rank": 8, "mayInstruct": False},
+            },
             "packet": packet,
         }
         projection["dependency_digest"] = _dependency_digest(projection)
