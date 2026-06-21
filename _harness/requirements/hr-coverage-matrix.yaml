@@ -86,7 +86,7 @@
     {
       "hrId": "HR-004",
       "title": "V1 baseline",
-      "coverageStatus": "partial",
+      "coverageStatus": "complete",
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
@@ -104,7 +104,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-00"
+      "lastUpdatedByPacket": "XP-10"
     },
     {
       "hrId": "HR-005",
@@ -155,7 +155,7 @@
     {
       "hrId": "HR-007",
       "title": "Harness invariants",
-      "coverageStatus": "partial",
+      "coverageStatus": "complete",
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
@@ -173,7 +173,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-00"
+      "lastUpdatedByPacket": "XP-10"
     },
     {
       "hrId": "HR-008",
@@ -3914,52 +3914,94 @@
     {
       "hrId": "HR-190R",
       "title": "Deterministic validators",
-      "coverageStatus": "partial",
+      "coverageStatus": "complete",
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
         "src/standard_harness/validation/requirements_metadata.py",
         "src/standard_harness/validation/aggregator.py",
-        "src/standard_harness/validation/na_decisions.py"
+        "src/standard_harness/validation/na_decisions.py",
+        "_harness/policies/validator-catalog.yaml",
+        "src/standard_harness/validation/catalog.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/completion/final_gate.py",
+        "docs/release/v21-conformance-report.md",
+        "docs/release/release-quality-closeout-v1.md"
       ],
       "targetArtifacts": {
         "validator": [
           "src/standard_harness/validation/requirements_metadata.py",
           "src/standard_harness/validation/aggregator.py",
-          "src/standard_harness/validation/na_decisions.py"
+          "src/standard_harness/validation/na_decisions.py",
+          "src/standard_harness/validation/catalog.py",
+          "src/standard_harness/completion/v21_conformance.py"
         ],
         "gate": [
           "requirements-baseline-gate",
-          "packet-kernel-gate"
+          "packet-kernel-gate",
+          "v21-conformance-gate"
         ],
         "tests": [
           "tests/contract/test_requirements_metadata_validator.py",
           "tests/contract/test_v02_packet_schema.py",
           "tests/contract/test_gate_profile_applicability.py",
-          "tests/contract/test_rule_based_na_decision.py"
+          "tests/contract/test_rule_based_na_decision.py",
+          "tests/contract/test_validator_catalog_hr190_coverage.py",
+          "tests/contract/test_v21_full_conformance_gate.py"
+        ],
+        "policy": [
+          "_harness/policies/validator-catalog.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-01"
+      "lastUpdatedByPacket": "XP-10",
+      "releaseBlockingValidators": [
+        "v21-conformance-validator",
+        "validator-catalog-validator"
+      ],
+      "releaseBlockingGates": [
+        "v21-conformance-gate"
+      ],
+      "diagnostics": [
+        "incomplete_hr_coverage",
+        "missing_hr190_validator",
+        "missing_hr191_gate_metadata",
+        "missing_hr200_metrics"
+      ],
+      "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
+      "enforcementPoint": "v21-conformance-gate",
+      "frictionMetricBehavior": [
+        "Emit v21_conformance_blocked when release conformance fails.",
+        "Emit v21_conformance_evaluated metric by status."
+      ]
     },
     {
       "hrId": "HR-191",
       "title": "Validator results are recorded as gate results",
       "coverageStatus": "complete",
-      "xpOwner": "XP-01",
+      "xpOwner": "XP-10",
       "implementationDisposition": "create",
       "currentImplementation": [
         "_harness/schemas/gate-result.schema.json",
         "src/standard_harness/domain/gates.py",
         "src/standard_harness/state/migrations.py",
-        "src/standard_harness/state/replay.py"
+        "src/standard_harness/state/replay.py",
+        "_harness/policies/validator-catalog.yaml",
+        "src/standard_harness/validation/catalog.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/completion/final_gate.py",
+        "docs/release/v21-conformance-report.md",
+        "docs/release/release-quality-closeout-v1.md"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/gate-result.schema.json"
         ],
         "validator": [
-          "src/standard_harness/domain/gates.py"
+          "src/standard_harness/domain/gates.py",
+          "src/standard_harness/validation/catalog.py",
+          "src/standard_harness/completion/v21_conformance.py"
         ],
         "gate": [
           "packet-kernel-gate",
@@ -3969,17 +4011,41 @@
           "gate-result"
         ],
         "tests": [
-          "tests/contract/test_gate_profile_applicability.py"
+          "tests/contract/test_gate_profile_applicability.py",
+          "tests/contract/test_validator_catalog_hr190_coverage.py",
+          "tests/contract/test_v21_full_conformance_gate.py"
+        ],
+        "policy": [
+          "_harness/policies/validator-catalog.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-01"
+      "lastUpdatedByPacket": "XP-10",
+      "releaseBlockingValidators": [
+        "v21-conformance-validator",
+        "validator-catalog-validator"
+      ],
+      "releaseBlockingGates": [
+        "v21-conformance-gate"
+      ],
+      "diagnostics": [
+        "incomplete_hr_coverage",
+        "missing_hr190_validator",
+        "missing_hr191_gate_metadata",
+        "missing_hr200_metrics"
+      ],
+      "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
+      "enforcementPoint": "v21-conformance-gate",
+      "frictionMetricBehavior": [
+        "Emit v21_conformance_blocked when release conformance fails.",
+        "Emit v21_conformance_evaluated metric by status."
+      ]
     },
     {
       "hrId": "HR-200",
       "title": "Harness measures effectiveness and cost",
       "coverageStatus": "complete",
-      "xpOwner": "XP-09",
+      "xpOwner": "XP-09/XP-10",
       "implementationDisposition": "create",
       "currentImplementation": [
         "src/standard_harness/self_improvement/recurring.py",
@@ -3989,7 +4055,14 @@
         "_ops/backlog/harness-improvement-backlog.md",
         "src/standard_harness/self_improvement/proposals.py",
         "src/standard_harness/domain/packets.py",
-        "src/standard_harness/completion/coverage.py"
+        "src/standard_harness/completion/coverage.py",
+        "_harness/policies/validator-catalog.yaml",
+        "src/standard_harness/validation/catalog.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/completion/final_gate.py",
+        "docs/release/v21-conformance-report.md",
+        "docs/release/release-quality-closeout-v1.md"
       ],
       "targetArtifacts": {
         "schema": [
@@ -3998,21 +4071,29 @@
         "validator": [
           "src/standard_harness/self_improvement/recurring.py",
           "src/standard_harness/self_improvement/starter_promotion.py",
-          "src/standard_harness/metrics/success.py"
+          "src/standard_harness/metrics/success.py",
+          "src/standard_harness/validation/catalog.py",
+          "src/standard_harness/completion/v21_conformance.py"
         ],
         "gate": [
-          "compound-engineering-gate"
+          "compound-engineering-gate",
+          "v21-conformance-gate"
         ],
         "tests": [
           "tests/contract/test_recurring_friction_detector.py",
           "tests/contract/test_success_metrics_report.py",
           "tests/contract/test_starter_promotion_candidate_registry.py",
           "tests/contract/test_compound_event_replay_compatibility.py",
-          "tests/evals/test_compound_engineering_required_for_v1_completion.py"
+          "tests/evals/test_compound_engineering_required_for_v1_completion.py",
+          "tests/contract/test_validator_catalog_hr190_coverage.py",
+          "tests/contract/test_v21_full_conformance_gate.py"
+        ],
+        "policy": [
+          "_harness/policies/validator-catalog.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-09",
+      "lastUpdatedByPacket": "XP-10",
       "migrationCompatibility": [
         "Existing friction_records map to friction.signal records.",
         "Existing improvement proposals retain disposition and can feed starter promotion candidates.",
@@ -4021,22 +4102,31 @@
       "releaseBlockingValidators": [
         "recurring-friction-detector",
         "success-metrics-reporter",
-        "starter-promotion-candidate-validator"
+        "starter-promotion-candidate-validator",
+        "v21-conformance-validator",
+        "validator-catalog-validator"
       ],
       "releaseBlockingGates": [
-        "compound-engineering-gate"
+        "compound-engineering-gate",
+        "v21-conformance-gate"
       ],
       "diagnostics": [
         "recurring_friction_detected",
         "missing_success_metrics_report",
         "missing_starter_promotion_candidate",
-        "missing_starter_promotion_evidence"
+        "missing_starter_promotion_evidence",
+        "incomplete_hr_coverage",
+        "missing_hr190_validator",
+        "missing_hr191_gate_metadata",
+        "missing_hr200_metrics"
       ],
-      "waiverPolicy": "V2.1 cannot complete without recurring friction detector, HR-200 metrics report, and evidence-linked starter promotion candidate registry.",
-      "enforcementPoint": "compound aggregation, starter promotion registry, final completion gate",
+      "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
+      "enforcementPoint": "v21-conformance-gate",
       "frictionMetricBehavior": [
         "Emit recurring_friction_detected and missing_starter_promotion_evidence when blocked.",
-        "Emit recurring_friction_count, starter_promotion_candidate_count, and success_metrics_report_generated metrics."
+        "Emit recurring_friction_count, starter_promotion_candidate_count, and success_metrics_report_generated metrics.",
+        "Emit v21_conformance_blocked when release conformance fails.",
+        "Emit v21_conformance_evaluated metric by status."
       ]
     }
   ],

@@ -80,3 +80,7 @@ The release-quality MVP supports local, CLI-based, low-risk packet operation wit
 - Retention, redaction, and audit automation
 - PMO projections
 - Cloud orchestration
+# V2.1 Note
+
+`docs/release/v21-conformance-report.md` is the V2.1 release conformance artifact.
+This v1 closeout remains historical release evidence.

@@ -2610,7 +2610,13 @@
       "files": [
         "src/standard_harness/validation/requirements_metadata.py",
         "src/standard_harness/validation/aggregator.py",
-        "src/standard_harness/validation/na_decisions.py"
+        "src/standard_harness/validation/na_decisions.py",
+        "_harness/policies/validator-catalog.yaml",
+        "src/standard_harness/validation/catalog.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/completion/final_gate.py",
+        "docs/release/v21-conformance-report.md",
+        "docs/release/release-quality-closeout-v1.md"
       ],
       "schemas": [
         "packet.schema.json",
@@ -2620,63 +2626,82 @@
       "policies": [
         "p0-policy",
         "non-goal-guardrails",
-        "gate-profiles"
+        "gate-profiles",
+        "_harness/policies/validator-catalog.yaml"
       ],
       "validators": [
         "requirements-metadata-validator",
         "packet-schema-validator",
         "gate-profile-validator",
-        "na-decision-validator"
+        "na-decision-validator",
+        "v21-conformance-validator",
+        "validator-catalog-validator"
       ],
       "gates": [
         "requirements-baseline-gate",
-        "packet-kernel-gate"
+        "packet-kernel-gate",
+        "v21-conformance-gate"
       ],
       "evidenceTypes": [
-        "validator-result"
+        "validator-result",
+        "v21-conformance-report"
       ],
       "tests": [
         "tests.contract.test_requirements_metadata_validator",
         "tests.contract.test_v02_packet_schema",
         "tests.contract.test_gate_profile_applicability",
-        "tests.contract.test_rule_based_na_decision"
+        "tests.contract.test_rule_based_na_decision",
+        "tests.contract.test_validator_catalog_hr190_coverage",
+        "tests.contract.test_v21_full_conformance_gate"
       ],
       "releaseBlocking": true
     },
     {
       "hrId": "HR-191",
-      "xpOwner": "XP-01",
+      "xpOwner": "XP-10",
       "files": [
         "_harness/schemas/gate-result.schema.json",
         "src/standard_harness/domain/gates.py",
         "src/standard_harness/state/migrations.py",
         "src/standard_harness/state/replay.py",
-        "src/standard_harness/state/audit.py"
+        "src/standard_harness/state/audit.py",
+        "_harness/policies/validator-catalog.yaml",
+        "src/standard_harness/validation/catalog.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/completion/final_gate.py",
+        "docs/release/v21-conformance-report.md",
+        "docs/release/release-quality-closeout-v1.md"
       ],
       "schemas": [
         "gate-result.schema.json"
       ],
       "policies": [
-        "gate-profiles"
+        "gate-profiles",
+        "_harness/policies/validator-catalog.yaml"
       ],
       "validators": [
-        "validator-catalog-validator"
+        "validator-catalog-validator",
+        "v21-conformance-validator"
       ],
       "gates": [
         "v21-conformance-gate",
         "packet-kernel-gate"
       ],
       "evidenceTypes": [
-        "gate-result"
+        "gate-result",
+        "v21-conformance-report"
       ],
       "tests": [
-        "tests.contract.test_gate_profile_applicability"
+        "tests.contract.test_gate_profile_applicability",
+        "tests.contract.test_validator_catalog_hr190_coverage",
+        "tests.contract.test_v21_full_conformance_gate"
       ],
       "releaseBlocking": true
     },
     {
       "hrId": "HR-200",
-      "xpOwner": "XP-09",
+      "xpOwner": "XP-09/XP-10",
       "files": [
         "src/standard_harness/self_improvement/recurring.py",
         "src/standard_harness/self_improvement/starter_promotion.py",
@@ -2685,32 +2710,47 @@
         "_ops/backlog/harness-improvement-backlog.md",
         "src/standard_harness/self_improvement/proposals.py",
         "src/standard_harness/domain/packets.py",
-        "src/standard_harness/completion/coverage.py"
+        "src/standard_harness/completion/coverage.py",
+        "_harness/policies/validator-catalog.yaml",
+        "src/standard_harness/validation/catalog.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/completion/final_gate.py",
+        "docs/release/v21-conformance-report.md",
+        "docs/release/release-quality-closeout-v1.md"
       ],
       "schemas": [
         "_harness/schemas/starter-promotion-candidate.schema.json"
       ],
-      "policies": [],
+      "policies": [
+        "_harness/policies/validator-catalog.yaml"
+      ],
       "validators": [
         "recurring-friction-detector",
         "success-metrics-reporter",
-        "starter-promotion-candidate-validator"
+        "starter-promotion-candidate-validator",
+        "v21-conformance-validator",
+        "validator-catalog-validator"
       ],
       "gates": [
-        "compound-engineering-gate"
+        "compound-engineering-gate",
+        "v21-conformance-gate"
       ],
       "evidenceTypes": [
         "friction.signal",
         "improvement.candidate",
         "starter-promotion-candidate",
-        "success-metrics-report"
+        "success-metrics-report",
+        "v21-conformance-report"
       ],
       "tests": [
         "tests.contract.test_recurring_friction_detector",
         "tests.contract.test_success_metrics_report",
         "tests.contract.test_starter_promotion_candidate_registry",
         "tests.contract.test_compound_event_replay_compatibility",
-        "tests.evals.test_compound_engineering_required_for_v1_completion"
+        "tests.evals.test_compound_engineering_required_for_v1_completion",
+        "tests.contract.test_validator_catalog_hr190_coverage",
+        "tests.contract.test_v21_full_conformance_gate"
       ],
       "releaseBlocking": true
     }

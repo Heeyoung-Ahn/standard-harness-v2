@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "validator-catalog",
+  "validators": [
+    {
+      "validatorId": "requirements-metadata-validator",
+      "hrIds": ["HR-190R"],
+      "gateId": "requirements-baseline-gate",
+      "releaseBlocking": true
+    },
+    {
+      "validatorId": "v21-conformance-validator",
+      "hrIds": ["HR-190R", "HR-191", "HR-200"],
+      "gateId": "v21-conformance-gate",
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "v21-conformance-gate",
+        "validatorId": "v21-conformance-validator",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    }
+  ]
+}

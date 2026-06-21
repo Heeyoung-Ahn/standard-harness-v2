@@ -6,6 +6,7 @@ import json
 from typing import Any
 
 from standard_harness.completion.coverage import ProjectCompletionCoverage
+from standard_harness.completion.v21_conformance import V21ConformanceGate
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 
@@ -71,6 +72,9 @@ class ProjectCompletionGateService:
                 _result_values(record, event["event_id"], event["event_seq"]),
             )
         return self.get_result(completion_result_id)
+
+    def evaluate_v21_conformance(self, *, repo_root: str) -> dict[str, Any]:
+        return V21ConformanceGate(repo_root).evaluate()
 
     def get_result(self, completion_result_id: str) -> dict[str, Any]:
         with self.store.connection() as conn:

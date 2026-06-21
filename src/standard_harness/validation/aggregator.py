@@ -9,6 +9,7 @@ from typing import Any
 from standard_harness.projection.current_context import CurrentContextProjection
 from standard_harness.domain.packets import LIFECYCLE_STATES
 from standard_harness.domain.packets import PacketService
+from standard_harness.completion.v21_conformance import V21ConformanceGate
 from standard_harness.evidence.trust import EvidenceTrustPolicy
 from standard_harness.policy.gate_profiles import GateProfilePolicy
 from standard_harness.starter.contamination import StarterContaminationChecker
@@ -49,6 +50,19 @@ class ValidationService:
 
     def validate_requirements_metadata(self) -> list[dict[str, Any]]:
         return RequirementsMetadataValidator(self.repo_root).validate()
+
+    def validate_v21_conformance(self) -> list[dict[str, Any]]:
+        result = V21ConformanceGate(self.repo_root).evaluate()
+        return [
+            _diagnostic(
+                error_code=diagnostic_id,
+                category="conformance",
+                message=f"V2.1 conformance gate blocks release: {diagnostic_id}",
+                repair_hint="Complete cumulative HR coverage, validator catalog, gate metadata, and Compound Engineering metrics.",
+                field="v21-conformance-gate",
+            )
+            for diagnostic_id in result["diagnostic_ids"]
+        ]
 
     def validate_state(self) -> list[dict[str, Any]]:
         diagnostics = []
