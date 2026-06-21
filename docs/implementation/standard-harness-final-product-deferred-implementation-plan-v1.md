@@ -63,6 +63,34 @@ FP-12 high-integrity signing, retention, redaction, and audit
 FP-13 final conformance report and release tagging
 ```
 
+## Requirement Coverage Addendum
+
+External review of the MVP requirement report identified several final-product requirements that need more explicit workstream coverage. Treat these sub-slices as binding additions to the FP workstreams above; do not create separate release branches unless a workstream becomes too large to review safely.
+
+```text
+FP-01A atomic event/materialization and recovery protocol
+FP-01B point-in-time audit, backup, and restore protocol
+FP-07A LLM work product classification and decision-influencing report controls
+FP-07B role cards, role contracts, and skill policy enforcement hooks
+FP-07C challenge review, independent review, and adjudication lifecycle
+FP-08A filesystem drift detection minimum before advanced Git reconciliation
+FP-09A waiver and exception lifecycle
+FP-09B security review gate and harness threat model
+FP-09C Data/BI/Finance profile
+FP-10A operational memory and human control snapshot
+FP-13A friction capture and failure-to-eval promotion
+FP-13B inheritance traceability matrix
+FP-13C docs command inventory and manual freshness gate
+```
+
+Coverage requirements:
+
+- `SH-LLM-001`, `SH-LLM-002`, and `SH-LLM-003` must be implemented through FP-05, FP-07, FP-09, FP-10, and FP-13 coverage, not left as unmapped narrative requirements.
+- `SH-HUMAN-004` must distinguish packet-level approval records from non-delegable human decision enforcement for SSOT approval, architecture changes, security/data policy, high/critical risk acceptance, Core requirement removal, and project completion.
+- `SH-DEGRADE-001` must cover unavailable optional providers, browser tools, cloud execution, dashboards, and remote agents with explicit blocked/manual fallback diagnostics. Local-only operation by itself is not sufficient.
+- `SH-DOG-002` final-product coverage must include replay rebuild, waiver expiry and revocation, malicious adapter output, path escape, filesystem drift reconciliation, stale evidence propagation, and non-waivable gate enforcement.
+- `SH-INHERIT-001` through `SH-INHERIT-004` must be closed by an inheritance traceability matrix, not by general conformance prose alone.
+
 ## Conformance Release Targets
 
 ### Standard Conformance Target
@@ -148,10 +176,25 @@ src/standard_harness/
     __init__.py
     bundles.py
     routing.py
+  llm/
+    __init__.py
+    work_products.py
+    report_claims.py
+  roles/
+    __init__.py
+    cards.py
+    skill_policy.py
+  waivers/
+    __init__.py
+    lifecycle.py
   pmo/
     __init__.py
     projections.py
     cost.py
+  memory/
+    __init__.py
+    operational.py
+    human_control_snapshot.py
   dashboard/
     __init__.py
     read_model.py
@@ -166,6 +209,14 @@ src/standard_harness/
     __init__.py
     policies.py
     audit.py
+  docsops/
+    __init__.py
+    command_inventory.py
+    freshness.py
+  self_improvement/
+    __init__.py
+    friction.py
+    proposals.py
 ```
 
 Add tables through `src/standard_harness/state/migrations.py`. Every materialized table must be traceable to append-only events.
@@ -456,6 +507,24 @@ Run:
 git add src/standard_harness/state/replay.py src/standard_harness/state/compatibility.py src/standard_harness/state/migrations.py src/standard_harness/state/store.py tests/contract/test_state_replay_compatibility.py
 git commit -m "feat: add state replay and compatibility policy"
 ```
+
+### FP-01 Addendum: Recovery and Point-in-Time Audit
+
+FP-01 must also close `FP-01A` and `FP-01B`.
+
+Add or extend:
+
+- `src/standard_harness/state/recovery.py`
+- `tests/contract/test_state_recovery_protocol.py`
+- `tests/contract/test_point_in_time_audit.py`
+
+Tests must prove:
+
+- event append and materialized state updates are atomic from the public API perspective
+- interrupted materialization is detected and produces a recovery report instead of silent success
+- point-in-time audit can reconstruct packet, requirement, evidence, claim, gate, and closeout state from events
+- backup/restore preserves event ordering, projection checksums, and schema compatibility metadata
+- stale or partially rebuilt projections block closeout and final conformance claims
 
 ## FP-02: SSOT Extraction and Requirement Registration Lifecycle
 
@@ -1163,6 +1232,29 @@ git add src/standard_harness/workflow src/standard_harness/reviews src/standard_
 git commit -m "feat: add workflow orchestration and review bundles"
 ```
 
+### FP-07 Addendum: LLM Governance, Role Cards, and Adjudication
+
+FP-07 must also close `FP-07A`, `FP-07B`, and `FP-07C`.
+
+Add or extend:
+
+- `src/standard_harness/llm/work_products.py`
+- `src/standard_harness/llm/report_claims.py`
+- `src/standard_harness/roles/cards.py`
+- `src/standard_harness/roles/skill_policy.py`
+- `tests/contract/test_llm_work_product_governance.py`
+- `tests/contract/test_role_cards_skill_policy.py`
+- `tests/contract/test_challenge_review_adjudication.py`
+
+Tests must prove:
+
+- LLM outputs are classified as work product, recommendation, claim, or proposed state transition before they influence the harness
+- natural-language intent cannot mutate canonical state without an explicit command, validated actor, and persisted event
+- decision-influencing reports separate observation, inference, assumption, recommendation, confidence, and human decision fields
+- role cards define permitted actions, forbidden decisions, escalation duties, and required review evidence
+- skill policy can add stricter local rules but cannot bypass core harness invariants
+- challenge review records independent reviewer assignment, challenged item, adjudication outcome, and follow-up events
+
 ## FP-08: Advanced Git Reconciliation
 
 **Files:**
@@ -1250,6 +1342,22 @@ Run:
 git add src/standard_harness/gitops src/standard_harness/domain/closeout.py src/standard_harness/state/migrations.py tests/contract/test_git_reconciliation.py tests/integration/test_git_reconciliation_closeout_block.py
 git commit -m "feat: add advanced git reconciliation"
 ```
+
+### FP-08 Addendum: Filesystem Drift Minimum
+
+FP-08 must also close `FP-08A`.
+
+Add or extend:
+
+- `src/standard_harness/gitops/drift.py`
+- `tests/contract/test_filesystem_drift_minimum.py`
+
+Tests must prove:
+
+- packet-owned files are checked for untracked, modified, deleted, and moved states before closeout
+- generated artifact registry entries are compared against filesystem reality
+- unresolved filesystem drift blocks closeout with machine-readable remediation guidance
+- drift checks work even when advanced Git branch reconciliation is not available
 
 ## FP-09: Policy Bundles, Profiles, Dependency, Security, Privacy, and IP Governance
 
@@ -1362,6 +1470,28 @@ git add src/standard_harness/policy src/standard_harness/security tests/contract
 git commit -m "feat: add policy profile and security governance"
 ```
 
+### FP-09 Addendum: Waivers, Threat Model, and Regulated Profiles
+
+FP-09 must also close `FP-09A`, `FP-09B`, and `FP-09C`.
+
+Add or extend:
+
+- `src/standard_harness/policy/waivers.py`
+- `src/standard_harness/security/threat_model.py`
+- `src/standard_harness/policy/data_profile.py`
+- `tests/contract/test_waiver_lifecycle.py`
+- `tests/contract/test_security_review_gate.py`
+- `tests/contract/test_data_bi_finance_profile.py`
+
+Tests must prove:
+
+- waivers have approver, scope, expiration, revocation, compensating control, and affected gate metadata
+- expired or revoked waivers are ignored by gate evaluation
+- non-waivable gates cannot be bypassed by profile or local policy
+- threat model records assets, trust boundaries, attacker assumptions, abuse cases, and mitigation status
+- security review gates block release when required threat-model mitigations are open
+- Data, BI, and Finance profiles define stronger evidence, retention, privacy, and human approval requirements than the base profile
+
 ## FP-10: PMO Projections, Cost Tracking, and Dashboard Read Model
 
 **Files:**
@@ -1447,6 +1577,24 @@ Run:
 git add src/standard_harness/pmo src/standard_harness/dashboard tests/contract/test_pmo_projection.py tests/contract/test_cost_tracking.py tests/integration/test_dashboard_read_model.py
 git commit -m "feat: add PMO and dashboard read models"
 ```
+
+### FP-10 Addendum: Operational Memory and Human Control Snapshot
+
+FP-10 must also close `FP-10A`.
+
+Add or extend:
+
+- `src/standard_harness/memory/operational.py`
+- `src/standard_harness/memory/human_control_snapshot.py`
+- `tests/contract/test_operational_memory.py`
+- `tests/contract/test_human_control_snapshot.py`
+
+Tests must prove:
+
+- operational memory is derived from canonical events and never becomes a competing source of truth
+- dashboard and context outputs disclose whether memory entries are observation, decision, risk, or follow-up
+- human control snapshots list pending approvals, non-delegable decisions, active waivers, challenged items, and blocked gates
+- stale memory snapshots are rejected when newer canonical events exist
 
 ## FP-11: Cloud Orchestration Contract
 
@@ -1677,6 +1825,30 @@ git push origin v1.0.0
 ```
 
 If Human Owner does not approve, do not create the tag.
+
+### FP-13 Addendum: Self-Improvement, Inheritance, and Docs Freshness
+
+FP-13 must also close `FP-13A`, `FP-13B`, and `FP-13C`.
+
+Add or extend:
+
+- `src/standard_harness/self_improvement/friction.py`
+- `src/standard_harness/self_improvement/proposals.py`
+- `src/standard_harness/docsops/command_inventory.py`
+- `src/standard_harness/docsops/freshness.py`
+- `docs/release/final-product-inheritance-traceability-matrix-v1.md`
+- `docs/release/final-product-docs-command-inventory-v1.md`
+- `tests/contract/test_self_improvement_lifecycle.py`
+- `tests/contract/test_inheritance_traceability_matrix.py`
+- `tests/contract/test_docs_command_inventory.py`
+
+Tests and release evidence must prove:
+
+- friction records can be promoted to improvement proposals with owner, rationale, linked evidence, and disposition
+- failed or repeated manual work can be converted into an eval/test proposal
+- the inheritance traceability matrix maps MVP, release-quality, KFIX, and final-product plan items to requirement IDs
+- every documented command has an executable inventory entry or an explicit manual-only reason
+- stale command documentation blocks final release until refreshed or formally waived
 
 ## Cross-Workstream Gates
 
