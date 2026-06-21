@@ -9,6 +9,9 @@
 - GitHub Actions CI workflow.
 - Root README with setup, CLI, validation, and starter payload guidance.
 - Release tag policy, MVP completion note, and deferred work issue plan.
+- Final-product conformance report, inheritance traceability matrix, and docs command inventory.
+- Final-product self-improvement friction and proposal lifecycle.
+- Final-product state replay, recovery, SSOT, diff, completion, adapter, runtime, workflow, git, policy, PMO, cloud, and high-integrity services.
 
 ## 0.1.0-mvp
 

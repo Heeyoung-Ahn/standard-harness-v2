@@ -136,6 +136,8 @@ def _empty_snapshot(event_seq: int) -> dict[str, Any]:
         "integrity_signatures": {},
         "retention_policies": {},
         "redaction_events": {},
+        "friction_records": {},
+        "improvement_proposals": {},
     }
 
 
@@ -259,6 +261,10 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
         snapshot["retention_policies"][payload["retention_policy_id"]] = dict(payload)
     elif event_type == "redaction.recorded":
         snapshot["redaction_events"][payload["redaction_event_id"]] = dict(payload)
+    elif event_type == "friction_recorded":
+        snapshot["friction_records"][payload["friction_record_id"]] = dict(payload)
+    elif event_type == "improvement_proposal_created":
+        snapshot["improvement_proposals"][payload["proposal_id"]] = dict(payload)
 
 
 def _checksum_payload(snapshot: dict[str, Any]) -> dict[str, Any]:

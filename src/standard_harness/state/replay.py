@@ -9,6 +9,8 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "improvement_proposals",
+    "friction_records",
     "redaction_events",
     "retention_policies",
     "integrity_signatures",
@@ -1249,6 +1251,56 @@ def _insert_redaction_event(conn, row, payload: dict[str, Any]) -> None:
     )
 
 
+def _insert_friction_record(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into friction_records (
+          friction_record_id, friction_type, owner, evidence_ids_json,
+          occurrence_count, status, source, source_watermark,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["friction_record_id"],
+            payload["friction_type"],
+            payload["owner"],
+            json.dumps(payload["evidence_ids"], sort_keys=True),
+            payload["occurrence_count"],
+            payload["status"],
+            payload["source"],
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_improvement_proposal(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into improvement_proposals (
+          proposal_id, friction_record_id, proposal_type, owner,
+          rationale, linked_evidence_ids_json, disposition,
+          target_packet_required, source_watermark, trace_event_id,
+          trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["proposal_id"],
+            payload["friction_record_id"],
+            payload["proposal_type"],
+            payload["owner"],
+            payload["rationale"],
+            json.dumps(payload["linked_evidence_ids"], sort_keys=True),
+            payload["disposition"],
+            1 if payload["target_packet_required"] else 0,
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -1303,4 +1355,6 @@ HANDLERS = {
     "integrity.signature_recorded": _insert_integrity_signature,
     "retention.policy_recorded": _insert_retention_policy,
     "redaction.recorded": _insert_redaction_event,
+    "friction_recorded": _insert_friction_record,
+    "improvement_proposal_created": _insert_improvement_proposal,
 }

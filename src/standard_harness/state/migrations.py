@@ -692,6 +692,33 @@ create table if not exists redaction_events (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists friction_records (
+  friction_record_id text primary key,
+  friction_type text not null,
+  owner text not null,
+  evidence_ids_json text not null,
+  occurrence_count integer not null,
+  status text not null,
+  source text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists improvement_proposals (
+  proposal_id text primary key,
+  friction_record_id text not null,
+  proposal_type text not null,
+  owner text not null,
+  rationale text not null,
+  linked_evidence_ids_json text not null,
+  disposition text not null,
+  target_packet_required integer not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 
