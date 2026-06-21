@@ -119,6 +119,9 @@ def _empty_snapshot(event_seq: int) -> dict[str, Any]:
         "challenges": {},
         "independent_reviews": {},
         "adjudications": {},
+        "git_snapshots": {},
+        "git_reconciliations": {},
+        "filesystem_drifts": {},
     }
 
 
@@ -203,6 +206,17 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
         snapshot["independent_reviews"][payload["review_id"]] = dict(payload)
     elif event_type == "adjudication_recorded":
         snapshot["adjudications"][payload["adjudication_id"]] = dict(payload)
+    elif event_type == "git.snapshot_recorded":
+        snapshot["git_snapshots"][payload["git_snapshot_id"]] = dict(payload)
+    elif event_type == "git.reconciliation_recorded":
+        snapshot["git_reconciliations"][payload["reconciliation_id"]] = dict(payload)
+    elif event_type == "filesystem_drift_detected":
+        snapshot["filesystem_drifts"][payload["drift_record_id"]] = dict(payload)
+    elif event_type == "filesystem_drift_resolved":
+        for drift_record_id in payload["drift_record_ids"]:
+            drift = snapshot["filesystem_drifts"].get(drift_record_id)
+            if drift:
+                drift["resolution_status"] = payload["resolution_status"]
 
 
 def _checksum_payload(snapshot: dict[str, Any]) -> dict[str, Any]:

@@ -9,6 +9,9 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "filesystem_drifts",
+    "git_reconciliations",
+    "git_snapshots",
     "adjudications",
     "independent_reviews",
     "challenges",
@@ -267,8 +270,9 @@ def _insert_artifact(conn, _row, payload: dict[str, Any]) -> None:
         """
         insert or replace into artifacts (
           artifact_id, artifact_type, path, owner, lifecycle_status,
-          source_reference, packet_id, created_at, updated_at
-        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          source_reference, packet_id, content_hash, content_hash_algorithm,
+          created_at, updated_at
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             payload["artifact_id"],
@@ -278,6 +282,8 @@ def _insert_artifact(conn, _row, payload: dict[str, Any]) -> None:
             payload["lifecycle_status"],
             payload["source_reference"],
             payload["packet_id"],
+            payload.get("content_hash"),
+            payload.get("content_hash_algorithm"),
             payload["created_at"],
             payload["updated_at"],
         ),
@@ -785,6 +791,96 @@ def _insert_payload_record(table: str, key_column: str):
     return handler
 
 
+def _insert_git_snapshot(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into git_snapshots (
+          git_snapshot_id, repo_root, branch_name, commit_id, worktree_path,
+          tracked_changes_json, untracked_files_json, ignored_files_json,
+          source_watermark, trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["git_snapshot_id"],
+            payload["repo_root"],
+            payload["branch_name"],
+            payload["commit_id"],
+            payload["worktree_path"],
+            json.dumps(payload["tracked_changes"], sort_keys=True),
+            json.dumps(payload["untracked_files"], sort_keys=True),
+            json.dumps(payload["ignored_files"], sort_keys=True),
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_git_reconciliation(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into git_reconciliations (
+          reconciliation_id, packet_id, git_snapshot_id, branch_name, commit_id,
+          classifications_json, unresolved_classifications_json,
+          source_event_range, source_watermark, trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["reconciliation_id"],
+            payload["packet_id"],
+            payload["git_snapshot_id"],
+            payload["branch_name"],
+            payload["commit_id"],
+            json.dumps(payload["classifications"], sort_keys=True),
+            json.dumps(payload["unresolved_classifications"], sort_keys=True),
+            payload["source_event_range"],
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_filesystem_drift(conn, row, payload: dict[str, Any]) -> None:
+    source_watermark = int(row["event_seq"]) - 1
+    conn.execute(
+        """
+        insert into filesystem_drifts (
+          drift_record_id, drift_id, packet_id, artifact_id, path, drift_type,
+          remediation_json, resolution_status, source, source_event_range,
+          source_watermark, trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["drift_record_id"],
+            payload["drift_id"],
+            payload["packet_id"],
+            payload.get("artifact_id"),
+            payload["path"],
+            payload["drift_type"],
+            json.dumps(payload["remediation"], sort_keys=True),
+            payload["resolution_status"],
+            payload["source"],
+            "0-0" if source_watermark <= 0 else f"1-{source_watermark}",
+            source_watermark,
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _resolve_filesystem_drift(conn, _row, payload: dict[str, Any]) -> None:
+    for drift_record_id in payload["drift_record_ids"]:
+        conn.execute(
+            """
+            update filesystem_drifts
+            set resolution_status = ?
+            where drift_record_id = ? and packet_id = ?
+            """,
+            (payload["resolution_status"], drift_record_id, payload["packet_id"]),
+        )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -821,4 +917,8 @@ HANDLERS = {
     "challenge_opened": _insert_payload_record("challenges", "challenge_id"),
     "independent_review_recorded": _insert_payload_record("independent_reviews", "review_id"),
     "adjudication_recorded": _insert_payload_record("adjudications", "adjudication_id"),
+    "git.snapshot_recorded": _insert_git_snapshot,
+    "git.reconciliation_recorded": _insert_git_reconciliation,
+    "filesystem_drift_detected": _insert_filesystem_drift,
+    "filesystem_drift_resolved": _resolve_filesystem_drift,
 }

@@ -111,6 +111,8 @@ create table if not exists artifacts (
   lifecycle_status text not null,
   source_reference text not null,
   packet_id text not null,
+  content_hash text,
+  content_hash_algorithm text,
   created_at text not null,
   updated_at text not null
 );
@@ -453,6 +455,50 @@ create table if not exists adjudications (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists git_snapshots (
+  git_snapshot_id text primary key,
+  repo_root text not null,
+  branch_name text not null,
+  commit_id text not null,
+  worktree_path text not null,
+  tracked_changes_json text not null,
+  untracked_files_json text not null,
+  ignored_files_json text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists git_reconciliations (
+  reconciliation_id text primary key,
+  packet_id text not null,
+  git_snapshot_id text not null,
+  branch_name text not null,
+  commit_id text not null,
+  classifications_json text not null,
+  unresolved_classifications_json text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists filesystem_drifts (
+  drift_record_id text primary key,
+  drift_id text not null,
+  packet_id text not null,
+  artifact_id text,
+  path text not null,
+  drift_type text not null,
+  remediation_json text not null,
+  resolution_status text not null,
+  source text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 
@@ -475,6 +521,8 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
         "text not null default ''",
     )
     _ensure_column(conn, "closeouts", "review_bundle_id", "text")
+    _ensure_column(conn, "artifacts", "content_hash", "text")
+    _ensure_column(conn, "artifacts", "content_hash_algorithm", "text")
     checksum = sha256_text(SCHEMA_SQL)
     conn.execute(
         """

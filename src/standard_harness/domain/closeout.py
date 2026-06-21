@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 
 from standard_harness.domain.packets import PacketService
+from standard_harness.gitops.drift import FilesystemDriftService
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 
@@ -28,6 +29,7 @@ class CloseoutService:
         if self._closeout_exists(closeout_id):
             raise ValueError(f"closeout_id already exists: {closeout_id}")
         packet = PacketService(self.store).get_packet(packet_id)
+        self._record_pre_closeout_drift(packet_id)
         source_watermark = self.store.latest_event_seq()
         claims = self._supported_claims(packet_id)
         gate_results = self._passing_gate_results(packet_id)
@@ -63,6 +65,8 @@ class CloseoutService:
         ):
             _add_diagnostic(diagnostics, diagnostic_id)
         for diagnostic_id in self._recovery_diagnostics():
+            _add_diagnostic(diagnostics, diagnostic_id)
+        for diagnostic_id in self._filesystem_drift_diagnostics(packet_id):
             _add_diagnostic(diagnostics, diagnostic_id)
         decision_status = "closed" if not diagnostics else "blocked"
         closeout = {
@@ -292,6 +296,27 @@ class CloseoutService:
                 """
             ).fetchone()
         return int(row["seq"])
+
+    def _filesystem_drift_diagnostics(self, packet_id: str) -> list[str]:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                """
+                select 1 from filesystem_drifts
+                where packet_id = ? and resolution_status = 'open'
+                limit 1
+                """,
+                (packet_id,),
+            ).fetchone()
+        return ["filesystem_drift_unresolved"] if row is not None else []
+
+    def _record_pre_closeout_drift(self, packet_id: str) -> None:
+        drift_id = f"pre-closeout-{packet_id}-{self.store.latest_event_seq()}"
+        FilesystemDriftService(self.store).detect_packet_drift(
+            drift_id=drift_id,
+            packet_id=packet_id,
+            repo_root=self.store.harness_root,
+            idempotency_key=f"pre-closeout-drift-{drift_id}",
+        )
 
 
 def _add_diagnostic(diagnostics: list[str], diagnostic_id: str) -> None:
