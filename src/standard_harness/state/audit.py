@@ -106,6 +106,7 @@ def _empty_snapshot(event_seq: int) -> dict[str, Any]:
         "closeouts": {},
         "projections": {},
         "starter_manifest_entries": {},
+        "requirement_registration_diffs": {},
     }
 
 
@@ -127,6 +128,13 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
             packet["updated_at"] = row["occurred_at"]
     elif event_type == "requirement.registered":
         snapshot["requirements"][payload["requirement_id"]] = dict(payload)
+    elif event_type == "requirement.transitioned":
+        requirement = snapshot["requirements"].get(payload["requirement_id"])
+        if requirement:
+            requirement["status"] = payload["to_status"]
+            requirement["decision_record_id"] = payload.get("decision_record_id")
+            requirement["decision_rationale"] = payload.get("decision_rationale")
+            requirement["updated_at"] = payload["updated_at"]
     elif event_type == "acceptance_criterion.registered":
         snapshot["acceptance_criteria"][payload["acceptance_criterion_id"]] = dict(payload)
     elif event_type == "artifact.registered":
@@ -151,6 +159,14 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
         snapshot["projections"][payload["projection_id"]] = dict(payload)
     elif event_type == "starter.entry_registered":
         snapshot["starter_manifest_entries"][payload["path"]] = dict(payload)
+    elif event_type == "ssot.registration_diff_recorded":
+        snapshot["requirement_registration_diffs"][payload["diff_id"]] = dict(payload)
+    elif event_type == "ssot.registration_diff_transitioned":
+        diff = snapshot["requirement_registration_diffs"].get(payload["diff_id"])
+        if diff:
+            diff["promotion_state"] = payload["to_promotion_state"]
+            diff["decision_record_id"] = payload.get("decision_record_id")
+            diff["decision_rationale"] = payload.get("decision_rationale")
 
 
 def _checksum_payload(snapshot: dict[str, Any]) -> dict[str, Any]:

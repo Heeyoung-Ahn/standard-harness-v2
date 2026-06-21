@@ -9,6 +9,7 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "requirement_registration_diffs",
     "starter_manifest_entries",
     "projections",
     "closeouts",
@@ -190,8 +191,9 @@ def _insert_requirement(conn, _row, payload: dict[str, Any]) -> None:
         insert or replace into requirements (
           requirement_id, version, source_doc, status, classification,
           risk_classification, acceptance_criteria_json,
-          completion_classification, packet_id, created_at, updated_at
-        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          completion_classification, packet_id, decision_record_id,
+          decision_rationale, created_at, updated_at
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             payload["requirement_id"],
@@ -203,8 +205,27 @@ def _insert_requirement(conn, _row, payload: dict[str, Any]) -> None:
             json.dumps(payload["acceptance_criteria"], sort_keys=True),
             payload["completion_classification"],
             payload["packet_id"],
+            payload.get("decision_record_id"),
+            payload.get("decision_rationale"),
             payload["created_at"],
             payload["updated_at"],
+        ),
+    )
+
+
+def _transition_requirement(conn, _row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        update requirements
+        set status = ?, decision_record_id = ?, decision_rationale = ?, updated_at = ?
+        where requirement_id = ?
+        """,
+        (
+            payload["to_status"],
+            payload.get("decision_record_id"),
+            payload.get("decision_rationale"),
+            payload["updated_at"],
+            payload["requirement_id"],
         ),
     )
 
@@ -455,6 +476,48 @@ def _insert_starter_manifest_entry(conn, row, payload: dict[str, Any]) -> None:
     )
 
 
+def _insert_registration_diff(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert or replace into requirement_registration_diffs (
+          diff_id, source_doc, entries_json, promotion_state,
+          decision_record_id, decision_rationale,
+          source_event_range, source_watermark, created_at,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["diff_id"],
+            payload["source_doc"],
+            json.dumps(payload["entries"], sort_keys=True),
+            payload["promotion_state"],
+            payload.get("decision_record_id"),
+            payload.get("decision_rationale"),
+            payload["source_event_range"],
+            payload["source_watermark"],
+            payload["created_at"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _transition_registration_diff(conn, _row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        update requirement_registration_diffs
+        set promotion_state = ?, decision_record_id = ?, decision_rationale = ?
+        where diff_id = ?
+        """,
+        (
+            payload["to_promotion_state"],
+            payload.get("decision_record_id"),
+            payload.get("decision_rationale"),
+            payload["diff_id"],
+        ),
+    )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -466,6 +529,7 @@ HANDLERS = {
     "packet.approved": _approve_packet,
     "packet.transitioned": _transition_packet,
     "requirement.registered": _insert_requirement,
+    "requirement.transitioned": _transition_requirement,
     "acceptance_criterion.registered": _insert_acceptance_criterion,
     "artifact.registered": _insert_artifact,
     "evidence.registered": _insert_evidence,
@@ -476,4 +540,6 @@ HANDLERS = {
     "closeout.decided": _insert_closeout,
     "projection.generated": _insert_projection,
     "starter.entry_registered": _insert_starter_manifest_entry,
+    "ssot.registration_diff_recorded": _insert_registration_diff,
+    "ssot.registration_diff_transitioned": _transition_registration_diff,
 }

@@ -87,6 +87,8 @@ create table if not exists requirements (
   acceptance_criteria_json text not null,
   completion_classification text not null,
   packet_id text not null,
+  decision_record_id text,
+  decision_rationale text,
   created_at text not null,
   updated_at text not null
 );
@@ -289,11 +291,29 @@ create table if not exists restore_verifications (
   verified_event_id text not null,
   verified_at text not null
 );
+
+create table if not exists requirement_registration_diffs (
+  diff_id text primary key,
+  source_doc text not null,
+  entries_json text not null,
+  promotion_state text not null,
+  decision_record_id text,
+  decision_rationale text,
+  source_event_range text not null,
+  source_watermark integer not null,
+  created_at text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 
 def apply_migrations(conn: sqlite3.Connection) -> None:
     conn.executescript(SCHEMA_SQL)
+    _ensure_column(conn, "requirements", "decision_record_id", "text")
+    _ensure_column(conn, "requirements", "decision_rationale", "text")
+    _ensure_column(conn, "requirement_registration_diffs", "decision_record_id", "text")
+    _ensure_column(conn, "requirement_registration_diffs", "decision_rationale", "text")
     checksum = sha256_text(SCHEMA_SQL)
     conn.execute(
         """
@@ -308,3 +328,9 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
 
 def schema_version() -> str:
     return SCHEMA_VERSION
+
+
+def _ensure_column(conn: sqlite3.Connection, table: str, column: str, declaration: str) -> None:
+    existing = {row["name"] for row in conn.execute(f"pragma table_info({table})").fetchall()}
+    if column not in existing:
+        conn.execute(f"alter table {table} add column {column} {declaration}")

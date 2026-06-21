@@ -9,6 +9,10 @@ from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 
 
+REQUIREMENT_STATUSES = {"proposed", "approved", "superseded", "rejected", "deferred", "retired"}
+DECISION_REQUIRED_STATUSES = {"rejected", "deferred", "retired", "superseded"}
+
+
 class RequirementRegistry:
     def __init__(self, store: HarnessStore):
         self.store = store
@@ -29,6 +33,10 @@ class RequirementRegistry:
     ) -> dict[str, object]:
         if self.store.event_for_idempotency_key(idempotency_key) is not None:
             return self.get_requirement(requirement_id)
+        if status not in REQUIREMENT_STATUSES:
+            raise ValueError(f"Invalid requirement status: {status}")
+        if status in DECISION_REQUIRED_STATUSES:
+            raise ValueError(f"status={status} requires transition_requirement with decision_record_id")
         if self._row_exists("requirements", "requirement_id", requirement_id):
             raise ValueError(f"requirement_id already exists: {requirement_id}")
         self._require_packet(packet_id)
@@ -43,6 +51,8 @@ class RequirementRegistry:
             "acceptance_criteria": acceptance_criteria,
             "completion_classification": completion_classification,
             "packet_id": packet_id,
+            "decision_record_id": None,
+            "decision_rationale": None,
             "created_at": now,
             "updated_at": now,
         }
@@ -62,8 +72,9 @@ class RequirementRegistry:
                 insert or ignore into requirements (
                   requirement_id, version, source_doc, status, classification,
                   risk_classification, acceptance_criteria_json,
-                  completion_classification, packet_id, created_at, updated_at
-                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  completion_classification, packet_id, decision_record_id,
+                  decision_rationale, created_at, updated_at
+                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     requirement_id,
@@ -75,9 +86,57 @@ class RequirementRegistry:
                     json.dumps(acceptance_criteria, sort_keys=True),
                     completion_classification,
                     packet_id,
+                    None,
+                    None,
                     now,
                     now,
                 ),
+            )
+        return self.get_requirement(requirement_id)
+
+    def transition_requirement(
+        self,
+        *,
+        requirement_id: str,
+        status: str,
+        decision_record_id: str,
+        rationale: str,
+        idempotency_key: str,
+    ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_requirement(requirement_id)
+        if status not in REQUIREMENT_STATUSES:
+            raise ValueError(f"Invalid requirement status: {status}")
+        if status in DECISION_REQUIRED_STATUSES and not decision_record_id:
+            raise ValueError(f"status={status} requires decision_record_id")
+        requirement = self.get_requirement(requirement_id)
+        now = utc_now_iso()
+        payload = {
+            "requirement_id": requirement_id,
+            "from_status": requirement["status"],
+            "to_status": status,
+            "decision_record_id": decision_record_id or None,
+            "decision_rationale": rationale,
+            "updated_at": now,
+        }
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="requirement.transitioned",
+                actor_id="planner",
+                actor_role="Planner",
+                authority_basis="requirement lifecycle transition",
+                idempotency_key=idempotency_key,
+                packet_id=str(requirement["packet_id"]),
+                payload=payload,
+                conn=conn,
+            )
+            conn.execute(
+                """
+                update requirements
+                set status = ?, decision_record_id = ?, decision_rationale = ?, updated_at = ?
+                where requirement_id = ?
+                """,
+                (status, decision_record_id or None, rationale, now, requirement_id),
             )
         return self.get_requirement(requirement_id)
 
