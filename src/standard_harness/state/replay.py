@@ -9,6 +9,7 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "project_completion_results",
     "ssot_change_impacts",
     "requirement_registration_diffs",
     "starter_manifest_entries",
@@ -553,6 +554,33 @@ def _insert_ssot_impact(conn, row, payload: dict[str, Any]) -> None:
     )
 
 
+def _insert_project_completion_result(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert or replace into project_completion_results (
+          completion_result_id, scope, requirement_id, status,
+          requirement_counts_json, diagnostic_ids_json, diagnostics_json,
+          source_event_range, source_watermark, evaluated_at,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["completion_result_id"],
+            payload["scope"],
+            payload.get("requirement_id"),
+            payload["status"],
+            json.dumps(payload["requirement_counts"], sort_keys=True),
+            json.dumps(payload["diagnostic_ids"], sort_keys=True),
+            json.dumps(payload["diagnostics"], sort_keys=True),
+            payload["source_event_range"],
+            payload["source_watermark"],
+            payload["evaluated_at"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -578,4 +606,5 @@ HANDLERS = {
     "ssot.registration_diff_recorded": _insert_registration_diff,
     "ssot.registration_diff_transitioned": _transition_registration_diff,
     "ssot.impact_recorded": _insert_ssot_impact,
+    "project_completion.evaluated": _insert_project_completion_result,
 }

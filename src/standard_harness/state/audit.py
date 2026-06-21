@@ -108,6 +108,7 @@ def _empty_snapshot(event_seq: int) -> dict[str, Any]:
         "starter_manifest_entries": {},
         "requirement_registration_diffs": {},
         "ssot_change_impacts": {},
+        "project_completion_results": {},
     }
 
 
@@ -170,6 +171,8 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
             diff["decision_rationale"] = payload.get("decision_rationale")
     elif event_type == "ssot.impact_recorded":
         snapshot["ssot_change_impacts"][payload["impact_id"]] = dict(payload)
+    elif event_type == "project_completion.evaluated":
+        snapshot["project_completion_results"][payload["completion_result_id"]] = dict(payload)
 
 
 def _checksum_payload(snapshot: dict[str, Any]) -> dict[str, Any]:

@@ -323,6 +323,21 @@ create table if not exists ssot_change_impacts (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists project_completion_results (
+  completion_result_id text primary key,
+  scope text not null,
+  requirement_id text,
+  status text not null,
+  requirement_counts_json text not null,
+  diagnostic_ids_json text not null,
+  diagnostics_json text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  evaluated_at text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 

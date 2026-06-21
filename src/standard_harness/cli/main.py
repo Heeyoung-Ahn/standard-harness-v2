@@ -9,6 +9,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable, Sequence
 
+from standard_harness.completion.final_gate import ProjectCompletionGateService
 from standard_harness.domain.artifacts import ArtifactRegistry
 from standard_harness.domain.closeout import CloseoutService
 from standard_harness.domain.evidence import EvidenceService
@@ -39,6 +40,7 @@ COMMANDS = (
     "closeout",
     "context",
     "starter-check",
+    "project-completion",
     "validate",
 )
 
@@ -153,6 +155,23 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             print(json.dumps({"diagnostics": diagnostics}, sort_keys=True))
         return 0 if not diagnostics else 1
+
+    if args.command == "project-completion":
+        store = HarnessStore(resolve_harness_root(args.harness_root))
+        try:
+            completion = _handle_project_completion(store, command_args)
+        except Exception as exc:  # noqa: BLE001 - CLI must convert domain errors to diagnostics.
+            if args.json_output:
+                print(_error_response("command_failed", str(exc), args.command))
+            else:
+                print(str(exc), file=sys.stderr)
+            return 1
+        payload = {"status": completion["status"], "completion": completion}
+        if args.json_output:
+            print(json.dumps(payload, sort_keys=True))
+        else:
+            print(json.dumps(completion, sort_keys=True))
+        return 0 if completion["status"] == "complete" else 1
 
     handlers: dict[str, Callable[[HarnessStore, list[str]], dict[str, Any]]] = {
         "packet-create": _handle_packet_create,
@@ -556,6 +575,37 @@ def _handle_starter_check(store: HarnessStore, argv: list[str]) -> dict[str, Any
         paths = _csv(parsed.paths)
         diagnostics = checker.check_paths(paths)
     return {"starter": {"status": "ok" if not diagnostics else "blocked", "diagnostics": diagnostics}}
+
+
+def _handle_project_completion(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("project-completion")
+    parser.add_argument("--all", action="store_true")
+    parser.add_argument("--requirement-id", default=None)
+    parser.add_argument("--completion-result-id", default=None)
+    parser.add_argument("--idempotency-key", default=None)
+    parsed = parser.parse_args(argv)
+    if parsed.all == bool(parsed.requirement_id):
+        raise ValueError("project-completion requires exactly one of --all or --requirement-id")
+    completion_result_id = parsed.completion_result_id or _default_completion_result_id(
+        all_requirements=parsed.all,
+        requirement_id=parsed.requirement_id,
+        source_watermark=store.latest_event_seq(),
+    )
+    idempotency_key = parsed.idempotency_key or completion_result_id
+    return ProjectCompletionGateService(store).record_result(
+        completion_result_id=completion_result_id,
+        idempotency_key=idempotency_key,
+        all_requirements=parsed.all,
+        requirement_id=parsed.requirement_id,
+    )
+
+
+def _default_completion_result_id(
+    *, all_requirements: bool, requirement_id: str | None, source_watermark: int
+) -> str:
+    scope = "all" if all_requirements else str(requirement_id)
+    normalized = scope.replace(" ", "-").replace("/", "-").replace("\\", "-")
+    return f"project-completion-{normalized}-{source_watermark}"
 
 
 def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any]]:
