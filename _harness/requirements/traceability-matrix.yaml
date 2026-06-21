@@ -485,10 +485,22 @@
       "hrId": "HR-040R",
       "xpOwner": "XP-02",
       "files": [
-        "planned:xp_02:HR-040R"
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
       ],
       "schemas": [],
-      "policies": [],
+      "policies": [
+        "evidence-trust-policy"
+      ],
       "validators": [
         "test-plan-validator"
       ],
@@ -499,7 +511,7 @@
         "test-plan"
       ],
       "tests": [
-        "tests.contract.test_xp_02_planned_contract"
+        "tests.contract.test_test_plan_first_gate"
       ],
       "releaseBlocking": true
     },
@@ -507,10 +519,24 @@
       "hrId": "HR-041R",
       "xpOwner": "XP-02",
       "files": [
-        "planned:xp_02:HR-041R"
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "evidence.schema.json"
+      ],
+      "policies": [
+        "evidence-trust-policy"
+      ],
       "validators": [
         "evidence-trust-validator"
       ],
@@ -521,7 +547,9 @@
         "trusted-test-evidence"
       ],
       "tests": [
-        "tests.contract.test_xp_02_planned_contract"
+        "tests.contract.test_evidence_trust_model_v02",
+        "tests.contract.test_evidence_trust_migration_compatibility",
+        "tests.evals.test_manual_only_evidence_cannot_closeout"
       ],
       "releaseBlocking": true
     },
@@ -529,12 +557,24 @@
       "hrId": "HR-042R",
       "xpOwner": "XP-02",
       "files": [
-        "planned:xp_02:HR-042R"
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
       ],
       "schemas": [],
-      "policies": [],
+      "policies": [
+        "evidence-trust-policy"
+      ],
       "validators": [
-        "test-materiality-validator"
+        "test-plan-validator"
       ],
       "gates": [
         "test-gate"
@@ -543,7 +583,7 @@
         "test-result"
       ],
       "tests": [
-        "tests.contract.test_xp_02_planned_contract"
+        "tests.contract.test_test_plan_first_gate"
       ],
       "releaseBlocking": true
     },
@@ -551,10 +591,24 @@
       "hrId": "HR-043",
       "xpOwner": "XP-02",
       "files": [
-        "planned:xp_02:HR-043"
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "evidence.schema.json"
+      ],
+      "policies": [
+        "evidence-trust-policy"
+      ],
       "validators": [
         "evidence-trust-validator"
       ],
@@ -565,7 +619,9 @@
         "evidence-record"
       ],
       "tests": [
-        "tests.contract.test_xp_02_planned_contract"
+        "tests.contract.test_evidence_trust_model_v02",
+        "tests.contract.test_evidence_trust_migration_compatibility",
+        "tests.evals.test_manual_only_evidence_cannot_closeout"
       ],
       "releaseBlocking": true
     },
@@ -573,10 +629,24 @@
       "hrId": "HR-044",
       "xpOwner": "XP-02",
       "files": [
-        "planned:xp_02:HR-044"
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "evidence.schema.json"
+      ],
+      "policies": [
+        "evidence-trust-policy"
+      ],
       "validators": [
         "evidence-trust-validator"
       ],
@@ -587,7 +657,9 @@
         "evidence-trust-policy"
       ],
       "tests": [
-        "tests.contract.test_xp_02_planned_contract"
+        "tests.contract.test_evidence_trust_model_v02",
+        "tests.contract.test_evidence_trust_migration_compatibility",
+        "tests.evals.test_manual_only_evidence_cannot_closeout"
       ],
       "releaseBlocking": true
     },
@@ -595,21 +667,38 @@
       "hrId": "HR-045",
       "xpOwner": "XP-02",
       "files": [
-        "planned:xp_02:HR-045"
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "evidence.schema.json"
+      ],
+      "policies": [
+        "evidence-trust-policy"
+      ],
       "validators": [
-        "claim-ledger-validator"
+        "claim-ledger-validator",
+        "evidence-trust-validator"
       ],
       "gates": [
-        "closeout-gate"
+        "closeout-gate",
+        "evidence-trust-gate"
       ],
       "evidenceTypes": [
         "claim-ledger"
       ],
       "tests": [
-        "tests.contract.test_xp_02_planned_contract"
+        "tests.contract.test_evidence_claims",
+        "tests.evals.test_manual_only_evidence_cannot_closeout"
       ],
       "releaseBlocking": true
     },

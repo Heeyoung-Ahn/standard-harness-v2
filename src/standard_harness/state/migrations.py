@@ -136,7 +136,16 @@ create table if not exists evidence (
   evidence_id text primary key,
   packet_id text not null,
   claim_id text,
+  evidence_type text not null default 'command-log',
+  producer_role text not null default 'tester',
+  producer_provider text not null default 'local',
+  produced_via text not null default 'manual-handoff',
   command_or_tool text not null,
+  command text not null default '',
+  exit_code integer not null default 0,
+  base_commit text,
+  head_commit text,
+  workspace_id text,
   runner text not null,
   timestamp text not null,
   cwd_or_execution_context text not null,
@@ -145,6 +154,9 @@ create table if not exists evidence (
   content_hash text not null,
   content_hash_algorithm text not null,
   result_status text not null,
+  validation_status text not null default 'RECORDED',
+  trust_status text not null default 'RECORDED',
+  claims_json text not null default '[]',
   rationale text not null
 );
 
@@ -767,6 +779,50 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
     _ensure_column(conn, "pmo_projections", "projection_summary_json", "text not null default '{}'")
     _ensure_column(conn, "artifacts", "content_hash", "text")
     _ensure_column(conn, "artifacts", "content_hash_algorithm", "text")
+    _ensure_column(conn, "evidence", "evidence_type", "text not null default 'command-log'")
+    _ensure_column(conn, "evidence", "producer_role", "text not null default 'tester'")
+    _ensure_column(conn, "evidence", "producer_provider", "text not null default 'local'")
+    _ensure_column(conn, "evidence", "produced_via", "text not null default 'manual-handoff'")
+    _ensure_column(conn, "evidence", "command", "text not null default ''")
+    _ensure_column(conn, "evidence", "exit_code", "integer not null default 0")
+    _ensure_column(conn, "evidence", "base_commit", "text")
+    _ensure_column(conn, "evidence", "head_commit", "text")
+    _ensure_column(conn, "evidence", "workspace_id", "text")
+    _ensure_column(conn, "evidence", "validation_status", "text not null default 'RECORDED'")
+    _ensure_column(conn, "evidence", "trust_status", "text not null default 'RECORDED'")
+    _ensure_column(conn, "evidence", "claims_json", "text not null default '[]'")
+    conn.execute("update evidence set command = command_or_tool where command = ''")
+    conn.execute(
+        """
+        update evidence
+        set validation_status = case
+          when result_status = 'passed' then 'STRUCTURALLY_VALID'
+          when result_status = 'stale' then 'STALE'
+          when result_status in ('failed', 'blocked') then 'INVALID'
+          else 'RECORDED'
+        end
+        where validation_status = 'RECORDED'
+        """
+    )
+    conn.execute(
+        """
+        update evidence
+        set trust_status = case
+          when result_status = 'passed' then 'MANUAL_ONLY'
+          when result_status = 'stale' then 'STALE'
+          when result_status in ('failed', 'blocked') then 'INVALID'
+          else 'RECORDED'
+        end
+        where trust_status = 'RECORDED'
+        """
+    )
+    conn.execute(
+        """
+        update evidence
+        set workspace_id = packet_id
+        where workspace_id is null
+        """
+    )
     _ensure_column(conn, "packets", "packet_type", "text not null default 'docs-only'")
     _ensure_column(conn, "packets", "risk_level", "text not null default ''")
     _ensure_column(conn, "packets", "maturity_level", "text not null default 'L1'")

@@ -6,6 +6,9 @@ import json
 
 from standard_harness.domain.packets import PacketService
 from standard_harness.domain.requirements import RequirementRegistry
+from standard_harness.evidence.trust import EvidenceTrustPolicy
+from standard_harness.evidence.trust import TRUST_STATUSES
+from standard_harness.evidence.trust import VALIDATION_STATUSES
 from standard_harness.state.events import HASH_ALGORITHM, sha256_text, utc_now_iso
 from standard_harness.state.store import HarnessStore
 
@@ -33,6 +36,16 @@ class EvidenceService:
         result_status: str,
         rationale: str,
         idempotency_key: str,
+        evidence_type: str = "command-log",
+        producer_role: str = "tester",
+        producer_provider: str = "local",
+        produced_via: str = "manual-handoff",
+        exit_code: int | None = None,
+        base_commit: str | None = None,
+        head_commit: str | None = None,
+        workspace_id: str | None = None,
+        trust_status: str | None = None,
+        validation_status: str | None = None,
     ) -> dict[str, object]:
         if self.store.event_for_idempotency_key(idempotency_key) is not None:
             return self.get_evidence(evidence_id)
@@ -45,13 +58,37 @@ class EvidenceService:
                 raise ValueError("evidence claim must belong to the same packet")
         if result_status not in EVIDENCE_STATUSES:
             raise ValueError(f"Invalid evidence status: {result_status}")
+        trust_policy = EvidenceTrustPolicy()
+        effective_validation_status = validation_status or trust_policy.derive_validation_status(
+            result_status
+        )
+        effective_trust_status = trust_status or trust_policy.derive_trust_status(
+            result_status=result_status,
+            produced_via=produced_via,
+            base_commit=base_commit,
+            head_commit=head_commit,
+            workspace_id=workspace_id,
+        )
+        if effective_validation_status not in VALIDATION_STATUSES:
+            raise ValueError(f"Invalid evidence validation status: {effective_validation_status}")
+        if effective_trust_status not in TRUST_STATUSES:
+            raise ValueError(f"Invalid evidence trust status: {effective_trust_status}")
         timestamp = utc_now_iso()
         content_hash = sha256_text(content)
         evidence = {
             "evidence_id": evidence_id,
             "packet_id": packet_id,
             "claim_id": claim_id,
+            "evidence_type": evidence_type,
+            "producer_role": producer_role,
+            "producer_provider": producer_provider,
+            "produced_via": produced_via,
             "command_or_tool": command_or_tool,
+            "command": command_or_tool,
+            "exit_code": exit_code if exit_code is not None else (0 if result_status == "passed" else 1),
+            "base_commit": base_commit,
+            "head_commit": head_commit,
+            "workspace_id": workspace_id or packet_id,
             "runner": runner,
             "timestamp": timestamp,
             "cwd_or_execution_context": cwd_or_execution_context,
@@ -60,6 +97,9 @@ class EvidenceService:
             "content_hash": content_hash,
             "content_hash_algorithm": HASH_ALGORITHM,
             "result_status": result_status,
+            "validation_status": effective_validation_status,
+            "trust_status": effective_trust_status,
+            "claims": [claim_id] if claim_id else [],
             "rationale": rationale,
         }
         with self.store.transaction() as conn:
@@ -76,17 +116,28 @@ class EvidenceService:
             conn.execute(
                 """
                 insert or ignore into evidence (
-                  evidence_id, packet_id, claim_id, command_or_tool, runner,
+                  evidence_id, packet_id, claim_id, evidence_type, producer_role,
+                  producer_provider, produced_via, command_or_tool, command,
+                  exit_code, base_commit, head_commit, workspace_id, runner,
                   timestamp, cwd_or_execution_context, environment_fingerprint,
                   artifact_path, content_hash, content_hash_algorithm,
-                  result_status, rationale
-                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  result_status, validation_status, trust_status, claims_json, rationale
+                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     evidence_id,
                     packet_id,
                     claim_id,
+                    evidence_type,
+                    producer_role,
+                    producer_provider,
+                    produced_via,
                     command_or_tool,
+                    command_or_tool,
+                    evidence["exit_code"],
+                    base_commit,
+                    head_commit,
+                    evidence["workspace_id"],
                     runner,
                     timestamp,
                     cwd_or_execution_context,
@@ -95,6 +146,9 @@ class EvidenceService:
                     content_hash,
                     HASH_ALGORITHM,
                     result_status,
+                    effective_validation_status,
+                    effective_trust_status,
+                    json.dumps(evidence["claims"], sort_keys=True),
                     rationale,
                 ),
             )
@@ -180,7 +234,38 @@ class EvidenceService:
             row = conn.execute("select * from evidence where evidence_id = ?", (evidence_id,)).fetchone()
         if row is None:
             raise KeyError(f"Unknown evidence: {evidence_id}")
-        return dict(row)
+        evidence = dict(row)
+        evidence.setdefault("evidence_type", "command-log")
+        evidence.setdefault("producer_role", "tester")
+        evidence.setdefault("producer_provider", "local")
+        evidence.setdefault("produced_via", "manual-handoff")
+        evidence.setdefault("command", evidence.get("command_or_tool", ""))
+        evidence.setdefault("exit_code", 0 if evidence.get("result_status") == "passed" else 1)
+        evidence.setdefault("base_commit", None)
+        evidence.setdefault("head_commit", None)
+        evidence.setdefault("workspace_id", evidence.get("packet_id"))
+        trust_policy = EvidenceTrustPolicy()
+        if evidence.get("command") == "":
+            evidence["command"] = evidence.get("command_or_tool", "")
+        if evidence.get("validation_status") == "RECORDED" and evidence.get("result_status") != "not_applicable":
+            evidence["validation_status"] = trust_policy.derive_validation_status(
+                str(evidence.get("result_status"))
+            )
+        if evidence.get("trust_status") == "RECORDED" and evidence.get("result_status") == "passed":
+            evidence["trust_status"] = trust_policy.derive_trust_status(
+                result_status=str(evidence.get("result_status")),
+                produced_via=str(evidence.get("produced_via")),
+                base_commit=evidence.get("base_commit"),
+                head_commit=evidence.get("head_commit"),
+                workspace_id=evidence.get("workspace_id"),
+            )
+        evidence.setdefault(
+            "validation_status",
+            trust_policy.derive_validation_status(str(evidence.get("result_status"))),
+        )
+        evidence.setdefault("trust_status", "MANUAL_ONLY")
+        evidence["claims"] = json.loads(str(evidence.pop("claims_json", "[]")))
+        return evidence
 
     def get_claim(self, claim_id: str) -> dict[str, object]:
         with self.store.connection() as conn:

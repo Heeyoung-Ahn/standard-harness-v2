@@ -8,12 +8,14 @@ from standard_harness.domain.packets import PacketService
 from standard_harness.domain.packets import LIFECYCLE_STATES
 from standard_harness.gitops.drift import FilesystemDriftService
 from standard_harness.integrity.verification import SignatureVerificationService
+from standard_harness.evidence.trust import EvidenceTrustPolicy
 from standard_harness.policy.gate_profiles import GateProfilePolicy
 from standard_harness.policy.bundles import PolicyBundleService
 from standard_harness.policy.release import ReleasePolicyBoundary
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 from standard_harness.validation.challenge_gate import ChallengeGateValidator
+from standard_harness.validation.evidence_trust import packet_requires_trusted_evidence
 
 
 class CloseoutService:
@@ -63,6 +65,14 @@ class CloseoutService:
                 for evidence_id in claim["evidence_ids"]
             ):
                 _add_diagnostic(diagnostics, "missing_evidence")
+        if self._requires_trusted_evidence(packet):
+            if not evidence_ids:
+                _add_diagnostic(diagnostics, "missing_trusted_evidence")
+            for evidence_id in evidence_ids:
+                if not self._evidence_is_trusted_for_closeout(packet_id, evidence_id):
+                    _add_diagnostic(diagnostics, "missing_trusted_evidence")
+                    if self._evidence_is_manual_only(packet_id, evidence_id):
+                        _add_diagnostic(diagnostics, "manual_only_evidence")
         if not gate_results:
             _add_diagnostic(diagnostics, "missing_gate_pass")
         checked_claim_ids = {claim_id for gate in gate_results for claim_id in gate["checked_claim_ids"]}
@@ -206,6 +216,33 @@ class CloseoutService:
                 (packet_id, evidence_id),
             ).fetchone()
         return row is not None and row["result_status"] == "passed"
+
+    def _evidence_is_trusted_for_closeout(self, packet_id: str, evidence_id: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                """
+                select * from evidence
+                where packet_id = ? and evidence_id = ?
+                """,
+                (packet_id, evidence_id),
+            ).fetchone()
+        if row is None:
+            return False
+        return EvidenceTrustPolicy().can_closeout(dict(row))
+
+    def _evidence_is_manual_only(self, packet_id: str, evidence_id: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                """
+                select trust_status from evidence
+                where packet_id = ? and evidence_id = ?
+                """,
+                (packet_id, evidence_id),
+            ).fetchone()
+        return row is not None and row["trust_status"] == "MANUAL_ONLY"
+
+    def _requires_trusted_evidence(self, packet: dict[str, object]) -> bool:
+        return packet_requires_trusted_evidence(packet)
 
     def _closeout_exists(self, closeout_id: str) -> bool:
         with self.store.connection() as conn:

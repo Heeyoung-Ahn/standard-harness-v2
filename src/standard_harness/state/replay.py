@@ -329,20 +329,40 @@ def _insert_artifact(conn, _row, payload: dict[str, Any]) -> None:
 
 
 def _insert_evidence(conn, _row, payload: dict[str, Any]) -> None:
+    result_status = payload["result_status"]
+    validation_status = payload.get("validation_status") or _derive_validation_status(result_status)
+    trust_status = payload.get("trust_status") or _derive_trust_status(
+        result_status=result_status,
+        produced_via=payload.get("produced_via", "manual-handoff"),
+        base_commit=payload.get("base_commit"),
+        head_commit=payload.get("head_commit"),
+        workspace_id=payload.get("workspace_id") or payload["packet_id"],
+    )
     conn.execute(
         """
         insert or replace into evidence (
-          evidence_id, packet_id, claim_id, command_or_tool, runner,
+          evidence_id, packet_id, claim_id, evidence_type, producer_role,
+          producer_provider, produced_via, command_or_tool, command,
+          exit_code, base_commit, head_commit, workspace_id, runner,
           timestamp, cwd_or_execution_context, environment_fingerprint,
           artifact_path, content_hash, content_hash_algorithm,
-          result_status, rationale
-        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          result_status, validation_status, trust_status, claims_json, rationale
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             payload["evidence_id"],
             payload["packet_id"],
             payload.get("claim_id"),
+            payload.get("evidence_type", "command-log"),
+            payload.get("producer_role", "tester"),
+            payload.get("producer_provider", "local"),
+            payload.get("produced_via", "manual-handoff"),
             payload["command_or_tool"],
+            payload.get("command", payload["command_or_tool"]),
+            payload.get("exit_code", 0 if result_status == "passed" else 1),
+            payload.get("base_commit"),
+            payload.get("head_commit"),
+            payload.get("workspace_id") or payload["packet_id"],
             payload["runner"],
             payload["timestamp"],
             payload["cwd_or_execution_context"],
@@ -350,7 +370,10 @@ def _insert_evidence(conn, _row, payload: dict[str, Any]) -> None:
             payload["artifact_path"],
             payload["content_hash"],
             payload["content_hash_algorithm"],
-            payload["result_status"],
+            result_status,
+            validation_status,
+            trust_status,
+            json.dumps(payload.get("claims", []), sort_keys=True),
             payload["rationale"],
         ),
     )
@@ -1342,6 +1365,35 @@ def _normalize_lifecycle_state(lifecycle_state: str) -> str:
     if lifecycle_state == "ready_for_closeout":
         return "closeout_pending"
     return lifecycle_state
+
+
+def _derive_validation_status(result_status: str) -> str:
+    if result_status == "passed":
+        return "STRUCTURALLY_VALID"
+    if result_status == "stale":
+        return "STALE"
+    if result_status in {"failed", "blocked"}:
+        return "INVALID"
+    return "RECORDED"
+
+
+def _derive_trust_status(
+    *,
+    result_status: str,
+    produced_via: str,
+    base_commit: str | None,
+    head_commit: str | None,
+    workspace_id: str | None,
+) -> str:
+    if result_status != "passed":
+        return _derive_validation_status(result_status)
+    if produced_via == "harness-reproduction" and base_commit and head_commit and workspace_id:
+        return "REPRODUCED_BY_HARNESS"
+    if produced_via == "trusted-ci" and base_commit and head_commit and workspace_id:
+        return "TRUSTED_CI"
+    if produced_via == "human-accepted-manual":
+        return "MANUAL_ACCEPTED_BY_HUMAN"
+    return "MANUAL_ONLY"
 
 
 HANDLERS = {

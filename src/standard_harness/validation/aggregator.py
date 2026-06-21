@@ -8,13 +8,18 @@ from typing import Any
 
 from standard_harness.projection.current_context import CurrentContextProjection
 from standard_harness.domain.packets import LIFECYCLE_STATES
+from standard_harness.domain.packets import PacketService
+from standard_harness.evidence.trust import EvidenceTrustPolicy
 from standard_harness.policy.gate_profiles import GateProfilePolicy
 from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.state.store import HarnessStore
 from standard_harness.validation.challenge_gate import ChallengeGateValidator
 from standard_harness.validation.diagnostics import DiagnosticRecord
+from standard_harness.validation.evidence_trust import packet_requires_trusted_evidence
 from standard_harness.validation.readiness import ReadinessService
 from standard_harness.validation.requirements_metadata import RequirementsMetadataValidator
+from standard_harness.validation.test_plan import TestPlanValidator
+from standard_harness.validation.test_plan import packet_requires_test_plan
 
 
 class ValidationService:
@@ -62,8 +67,10 @@ class ValidationService:
 
     def validate_packet(self, packet_id: str) -> list[dict[str, Any]]:
         diagnostics = self._packet_schema_diagnostics(packet_id)
+        diagnostics.extend(self._test_plan_diagnostics(packet_id))
         diagnostics.extend(ReadinessService(self.store).check_packet(packet_id)["diagnostics"])
         diagnostics.extend(self._completion_diagnostics(packet_id))
+        diagnostics.extend(self._evidence_trust_diagnostics(packet_id))
         diagnostics.extend(self._gate_activation_diagnostics(packet_id))
         diagnostics.extend(self._approval_diagnostics(packet_id))
         diagnostics.extend(self._challenge_gate_diagnostics(packet_id))
@@ -131,6 +138,104 @@ class ValidationService:
         if self.starter_root.exists():
             paths = [str(path) for path in self.starter_root.rglob("*") if path.is_file()]
             diagnostics.extend(StarterContaminationChecker().check_paths(paths))
+        return diagnostics
+
+    def _test_plan_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:
+        packet = PacketService(self.store).get_packet(packet_id)
+        if not packet_requires_test_plan(packet):
+            return []
+        raw_test_plan = packet.get("test_plan", [])
+        if not raw_test_plan:
+            return [
+                _diagnostic(
+                    error_code="missing_test_plan",
+                    category="test-plan",
+                    message="Code or runtime packet requires a test plan before implementation.",
+                    repair_hint="Populate packet.test_plan with commands or structured test-plan fields.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="test_plan",
+                    expected_value="non_empty",
+                    actual_value="empty",
+                ),
+                _diagnostic(
+                    error_code="test_plan_first_gate",
+                    category="test-plan",
+                    message="Test-plan-first gate is not satisfied.",
+                    repair_hint="Define acceptance criteria, behaviors under test, test types, commands, E2E applicability, N/A conditions, and substitutes.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="test_plan",
+                ),
+            ]
+        if isinstance(raw_test_plan, dict):
+            result = TestPlanValidator().validate(raw_test_plan)
+            if result["status"] == "blocked":
+                return [
+                    _diagnostic(
+                        error_code="test_plan_first_gate",
+                        category="test-plan",
+                        message="Structured test plan is missing required v0.2 fields.",
+                        repair_hint="Complete every required test-plan field.",
+                        affected_entity_type="packet",
+                        affected_entity_id=packet_id,
+                        packet_id=packet_id,
+                        field="test_plan",
+                    )
+                ]
+        return []
+
+    def _evidence_trust_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:
+        packet = PacketService(self.store).get_packet(packet_id)
+        if not packet_requires_trusted_evidence(packet):
+            return []
+        with self.store.connection() as conn:
+            evidence_rows = conn.execute(
+                """
+                select distinct e.*
+                from claims c
+                join json_each(c.evidence_ids_json) ce
+                join evidence e on e.evidence_id = ce.value and e.packet_id = c.packet_id
+                where c.packet_id = ? and c.support_status = 'supported'
+                """,
+                (packet_id,),
+            ).fetchall()
+        if not evidence_rows:
+            return []
+        trust = EvidenceTrustPolicy()
+        diagnostics = []
+        if not any(trust.can_closeout(dict(row)) for row in evidence_rows):
+            diagnostics.append(
+                _diagnostic(
+                    error_code="missing_trusted_evidence",
+                    category="evidence",
+                    message="Code or runtime packet lacks trusted closeout evidence.",
+                    repair_hint="Reproduce test evidence through the harness or trusted CI before closeout.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="trust_status",
+                    expected_value="REPRODUCED_BY_HARNESS or TRUSTED_CI",
+                    actual_value="not_trusted",
+                )
+            )
+        if any(trust.is_manual_only(dict(row)) for row in evidence_rows):
+            diagnostics.append(
+                _diagnostic(
+                    error_code="manual_only_evidence",
+                    category="evidence",
+                    message="Manual-only evidence cannot close code or runtime behavior changes.",
+                    repair_hint="Replace manual-only evidence with harness-reproduced or trusted CI evidence.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="trust_status",
+                    expected_value="trusted",
+                    actual_value="MANUAL_ONLY",
+                )
+            )
         return diagnostics
 
     def _completion_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:

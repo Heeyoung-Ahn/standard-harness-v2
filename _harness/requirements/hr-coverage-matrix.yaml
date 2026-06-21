@@ -515,146 +515,278 @@
     {
       "hrId": "HR-040R",
       "title": "Implementation is test-plan-first",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-02",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/evidence.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/evidence-trust-policy.yaml"
+        ],
         "validator": [
-          "test-plan-validator"
+          "src/standard_harness/validation/evidence_trust.py",
+          "src/standard_harness/validation/test_plan.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "test-plan-gate"
-        ],
-        "evidence": [
-          "test-plan"
+          "test-plan-gate",
+          "evidence-trust-gate",
+          "closeout-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_02_planned_contract"
+          "tests/contract/test_evidence_trust_model_v02.py",
+          "tests/contract/test_test_plan_first_gate.py",
+          "tests/contract/test_evidence_trust_migration_compatibility.py",
+          "tests/evals/test_manual_only_evidence_cannot_closeout.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-02"
     },
     {
       "hrId": "HR-041R",
       "title": "Closeout requires trusted test evidence",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-02",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/evidence.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/evidence-trust-policy.yaml"
+        ],
         "validator": [
-          "evidence-trust-validator"
+          "src/standard_harness/validation/evidence_trust.py",
+          "src/standard_harness/validation/test_plan.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "evidence-trust-gate"
-        ],
-        "evidence": [
-          "trusted-test-evidence"
+          "test-plan-gate",
+          "evidence-trust-gate",
+          "closeout-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_02_planned_contract"
+          "tests/contract/test_evidence_trust_model_v02.py",
+          "tests/contract/test_test_plan_first_gate.py",
+          "tests/contract/test_evidence_trust_migration_compatibility.py",
+          "tests/evals/test_manual_only_evidence_cannot_closeout.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-02"
     },
     {
       "hrId": "HR-042R",
       "title": "Tests verify real feature meaning",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-02",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/evidence.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/evidence-trust-policy.yaml"
+        ],
         "validator": [
-          "test-materiality-validator"
+          "src/standard_harness/validation/evidence_trust.py",
+          "src/standard_harness/validation/test_plan.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "test-gate"
-        ],
-        "evidence": [
-          "test-result"
+          "test-plan-gate",
+          "evidence-trust-gate",
+          "closeout-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_02_planned_contract"
+          "tests/contract/test_evidence_trust_model_v02.py",
+          "tests/contract/test_test_plan_first_gate.py",
+          "tests/contract/test_evidence_trust_migration_compatibility.py",
+          "tests/evals/test_manual_only_evidence_cannot_closeout.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-02"
     },
     {
       "hrId": "HR-043",
       "title": "Evidence has trust status",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-02",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/evidence.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/evidence-trust-policy.yaml"
+        ],
         "validator": [
-          "evidence-trust-validator"
+          "src/standard_harness/validation/evidence_trust.py",
+          "src/standard_harness/validation/test_plan.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "evidence-trust-gate"
-        ],
-        "evidence": [
-          "evidence-record"
+          "test-plan-gate",
+          "evidence-trust-gate",
+          "closeout-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_02_planned_contract"
+          "tests/contract/test_evidence_trust_model_v02.py",
+          "tests/contract/test_test_plan_first_gate.py",
+          "tests/contract/test_evidence_trust_migration_compatibility.py",
+          "tests/evals/test_manual_only_evidence_cannot_closeout.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-02"
     },
     {
       "hrId": "HR-044",
       "title": "Evidence trust statuses are enumerated",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-02",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/evidence.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/evidence-trust-policy.yaml"
+        ],
         "validator": [
-          "evidence-trust-validator"
+          "src/standard_harness/validation/evidence_trust.py",
+          "src/standard_harness/validation/test_plan.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "evidence-trust-gate"
-        ],
-        "evidence": [
-          "evidence-trust-policy"
+          "test-plan-gate",
+          "evidence-trust-gate",
+          "closeout-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_02_planned_contract"
+          "tests/contract/test_evidence_trust_model_v02.py",
+          "tests/contract/test_test_plan_first_gate.py",
+          "tests/contract/test_evidence_trust_migration_compatibility.py",
+          "tests/evals/test_manual_only_evidence_cannot_closeout.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-02"
     },
     {
       "hrId": "HR-045",
       "title": "Claim ledger is closeout input",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-02",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/validation/test_plan.py",
+        "src/standard_harness/validation/evidence_trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/validation/aggregator.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/evidence.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/evidence-trust-policy.yaml"
+        ],
         "validator": [
-          "claim-ledger-validator"
+          "src/standard_harness/validation/evidence_trust.py",
+          "src/standard_harness/validation/test_plan.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
+          "test-plan-gate",
+          "evidence-trust-gate",
           "closeout-gate"
         ],
-        "evidence": [
-          "claim-ledger"
-        ],
         "tests": [
-          "tests.contract.test_xp_02_planned_contract"
+          "tests/contract/test_evidence_trust_model_v02.py",
+          "tests/contract/test_test_plan_first_gate.py",
+          "tests/contract/test_evidence_trust_migration_compatibility.py",
+          "tests/evals/test_manual_only_evidence_cannot_closeout.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-02"
     },
     {
       "hrId": "HR-050R",
@@ -1725,7 +1857,10 @@
     "xp01GateResults": "Existing gate_result rows receive default policyVersion, gateProfileVersion=migrated_unknown, validatorVersion=harness-validator@0.2.0, evaluatedAtCommit=unknown, and empty risks/unknowns/requiredActions during migration.",
     "xp01aChallengeGate": "Existing challenge, independent_review, and adjudication rows remain valid review evidence. XP-01A adds optional packet_id, triggers, decision_id, and reviewed_checks fields to challenge payloads without requiring a DB table migration.",
     "xp01aHumanControl": "Human control snapshots remain projections only; HR-152 non-overridable items are exposed as non-delegable projection content and do not become override authority.",
-    "xp01aWaivers": "Waiver evaluation remains valid and HR-152 non-overridable human decision limits are enforced through human-decision-validator rather than by weakening waiver behavior."
+    "xp01aWaivers": "Waiver evaluation remains valid and HR-152 non-overridable human decision limits are enforced through human-decision-validator rather than by weakening waiver behavior.",
+    "xp02EvidenceTrust": "Existing evidence.result_status='passed' remains structurally valid but migrates to validationStatus=STRUCTURALLY_VALID and trustStatus=MANUAL_ONLY unless reproduced by harness or trusted CI metadata is present.",
+    "xp02ClaimLedger": "Existing supported claim rows remain readable; code/runtime closeout now requires linked trusted evidence before closeout can be closed.",
+    "xp02Closeout": "Docs-only and existing low-risk non-code flows remain compatible; code/runtime packets enforce trusted evidence and test-plan-first diagnostics at validate and closeout."
   },
   "releaseBlockingValidators": [
     {
@@ -1796,6 +1931,38 @@
       ],
       "waivable": false,
       "enforcementPoint": "human decision intake, validate"
+    },
+    {
+      "validator": "test-plan-validator",
+      "gateId": "test-plan-gate",
+      "diagnosticIds": [
+        "missing_test_plan",
+        "test_plan_first_gate"
+      ],
+      "waivable": false,
+      "enforcementPoint": "validate, closeout"
+    },
+    {
+      "validator": "evidence-trust-validator",
+      "gateId": "evidence-trust-gate",
+      "diagnosticIds": [
+        "missing_trusted_evidence",
+        "manual_only_evidence",
+        "invalid_evidence_validation_status"
+      ],
+      "waivable": false,
+      "enforcementPoint": "validate, closeout"
+    },
+    {
+      "validator": "claim-ledger-validator",
+      "gateId": "closeout-gate",
+      "diagnosticIds": [
+        "missing_supported_claim",
+        "missing_gate_claim_coverage",
+        "unsupported_claim_ledger"
+      ],
+      "waivable": false,
+      "enforcementPoint": "validate, closeout"
     }
   ],
   "frictionMetricBehavior": {
@@ -1806,6 +1973,8 @@
     "xp01Friction": "Packet schema, gate profile, and N/A validators emit or reserve missing_e2e, packet_scope_creep, docs_implementation_mismatch, missing_closeout, and boundary_violation friction signals when blocked. XP-09 remains responsible for aggregation.",
     "xp01Metric": "Gate profile selection, packet schema validation, gate result metadata recording, and N/A decision validation emit or reserve count metrics. XP-09 remains responsible for success metric aggregation.",
     "xp01aFriction": "Challenge gate and human decision validators emit or reserve unsafe_user_instruction_conflict, missed_review, missing_evidence, and missing_closeout friction signals when blocked. XP-09 remains responsible for aggregation.",
-    "xp01aMetric": "Challenge gate evaluation and human decision validation emit or reserve challenge_gate_evaluated, challenge_gate_blocked, and human_decision_validated count metrics. XP-09 remains responsible for aggregation."
+    "xp01aMetric": "Challenge gate evaluation and human decision validation emit or reserve challenge_gate_evaluated, challenge_gate_blocked, and human_decision_validated count metrics. XP-09 remains responsible for aggregation.",
+    "xp02Friction": "Test-plan and evidence trust validators emit or reserve missing_evidence, missing_closeout, manual_rework, and docs_implementation_mismatch friction signals when blocked. XP-09 remains responsible for aggregation.",
+    "xp02Metric": "Evidence trust records reserve trusted_evidence_ratio, closeout_claim_ledger_coverage, test_plan_validated, and evidence_trust_validated metrics. XP-09 remains responsible for aggregation."
   }
 }

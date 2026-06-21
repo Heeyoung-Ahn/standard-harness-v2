@@ -173,7 +173,32 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
     elif event_type == "artifact.registered":
         snapshot["artifacts"][payload["artifact_id"]] = dict(payload)
     elif event_type == "evidence.registered":
-        snapshot["evidence"][payload["evidence_id"]] = dict(payload)
+        evidence = dict(payload)
+        evidence.setdefault("evidence_type", "command-log")
+        evidence.setdefault("producer_role", "tester")
+        evidence.setdefault("producer_provider", "local")
+        evidence.setdefault("produced_via", "manual-handoff")
+        evidence.setdefault("command", evidence.get("command_or_tool", ""))
+        evidence.setdefault("exit_code", 0 if evidence.get("result_status") == "passed" else 1)
+        evidence.setdefault("base_commit", None)
+        evidence.setdefault("head_commit", None)
+        evidence.setdefault("workspace_id", evidence.get("packet_id"))
+        evidence.setdefault(
+            "validation_status",
+            _derive_validation_status(str(evidence.get("result_status"))),
+        )
+        evidence.setdefault(
+            "trust_status",
+            _derive_trust_status(
+                result_status=str(evidence.get("result_status")),
+                produced_via=str(evidence.get("produced_via")),
+                base_commit=evidence.get("base_commit"),
+                head_commit=evidence.get("head_commit"),
+                workspace_id=evidence.get("workspace_id"),
+            ),
+        )
+        evidence.setdefault("claims", [])
+        snapshot["evidence"][payload["evidence_id"]] = evidence
     elif event_type == "claim.recorded":
         snapshot["claims"][payload["claim_id"]] = dict(payload)
     elif event_type == "gate.declared":
@@ -277,3 +302,32 @@ def _normalize_lifecycle_state(lifecycle_state: str) -> str:
     if lifecycle_state == "ready_for_closeout":
         return "closeout_pending"
     return lifecycle_state
+
+
+def _derive_validation_status(result_status: str) -> str:
+    if result_status == "passed":
+        return "STRUCTURALLY_VALID"
+    if result_status == "stale":
+        return "STALE"
+    if result_status in {"failed", "blocked"}:
+        return "INVALID"
+    return "RECORDED"
+
+
+def _derive_trust_status(
+    *,
+    result_status: str,
+    produced_via: str,
+    base_commit: str | None,
+    head_commit: str | None,
+    workspace_id: str | None,
+) -> str:
+    if result_status != "passed":
+        return _derive_validation_status(result_status)
+    if produced_via == "harness-reproduction" and base_commit and head_commit and workspace_id:
+        return "REPRODUCED_BY_HARNESS"
+    if produced_via == "trusted-ci" and base_commit and head_commit and workspace_id:
+        return "TRUSTED_CI"
+    if produced_via == "human-accepted-manual":
+        return "MANUAL_ACCEPTED_BY_HUMAN"
+    return "MANUAL_ONLY"
