@@ -9,6 +9,7 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "ssot_change_impacts",
     "requirement_registration_diffs",
     "starter_manifest_entries",
     "projections",
@@ -518,6 +519,40 @@ def _transition_registration_diff(conn, _row, payload: dict[str, Any]) -> None:
     )
 
 
+def _insert_ssot_impact(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert or replace into ssot_change_impacts (
+          impact_id, requirement_id, change_class,
+          impacted_packet_ids_json, impacted_acceptance_criterion_ids_json,
+          impacted_claim_ids_json, impacted_evidence_ids_json,
+          impacted_gate_ids_json, impacted_projection_ids_json, review_status,
+          source_event_range, source_watermark, created_at,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["impact_id"],
+            payload["requirement_id"],
+            payload["change_class"],
+            json.dumps(payload["impacted_packet_ids"], sort_keys=True),
+            json.dumps(
+                payload.get("impacted_acceptance_criterion_ids", []), sort_keys=True
+            ),
+            json.dumps(payload["impacted_claim_ids"], sort_keys=True),
+            json.dumps(payload["impacted_evidence_ids"], sort_keys=True),
+            json.dumps(payload["impacted_gate_ids"], sort_keys=True),
+            json.dumps(payload["impacted_projection_ids"], sort_keys=True),
+            payload["review_status"],
+            payload["source_event_range"],
+            payload["source_watermark"],
+            payload["created_at"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -542,4 +577,5 @@ HANDLERS = {
     "starter.entry_registered": _insert_starter_manifest_entry,
     "ssot.registration_diff_recorded": _insert_registration_diff,
     "ssot.registration_diff_transitioned": _transition_registration_diff,
+    "ssot.impact_recorded": _insert_ssot_impact,
 }

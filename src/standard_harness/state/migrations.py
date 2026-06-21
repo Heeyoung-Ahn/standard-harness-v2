@@ -305,6 +305,24 @@ create table if not exists requirement_registration_diffs (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists ssot_change_impacts (
+  impact_id text primary key,
+  requirement_id text not null,
+  change_class text not null,
+  impacted_packet_ids_json text not null,
+  impacted_acceptance_criterion_ids_json text not null,
+  impacted_claim_ids_json text not null,
+  impacted_evidence_ids_json text not null,
+  impacted_gate_ids_json text not null,
+  impacted_projection_ids_json text not null,
+  review_status text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  created_at text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 
@@ -314,6 +332,12 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
     _ensure_column(conn, "requirements", "decision_rationale", "text")
     _ensure_column(conn, "requirement_registration_diffs", "decision_record_id", "text")
     _ensure_column(conn, "requirement_registration_diffs", "decision_rationale", "text")
+    _ensure_column(
+        conn,
+        "ssot_change_impacts",
+        "impacted_acceptance_criterion_ids_json",
+        "text not null default '[]'",
+    )
     checksum = sha256_text(SCHEMA_SQL)
     conn.execute(
         """
