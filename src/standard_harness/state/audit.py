@@ -109,6 +109,7 @@ def _empty_snapshot(event_seq: int) -> dict[str, Any]:
         "requirement_registration_diffs": {},
         "ssot_change_impacts": {},
         "project_completion_results": {},
+        "adapter_invocations": {},
     }
 
 
@@ -173,6 +174,8 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
         snapshot["ssot_change_impacts"][payload["impact_id"]] = dict(payload)
     elif event_type == "project_completion.evaluated":
         snapshot["project_completion_results"][payload["completion_result_id"]] = dict(payload)
+    elif event_type == "adapter.invocation_recorded":
+        snapshot["adapter_invocations"][payload["adapter_run_id"]] = dict(payload)
 
 
 def _checksum_payload(snapshot: dict[str, Any]) -> dict[str, Any]:

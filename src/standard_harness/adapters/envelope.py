@@ -22,6 +22,7 @@ FORBIDDEN_DIRECT_MUTATION_FIELDS = {
     "direct_state_write",
     "database_update",
 }
+DIRECT_WRITE_EVENT_TYPES = {"sqlite.write", "database.write", "state.mutate", "direct_state_write"}
 
 
 @dataclass(frozen=True)
@@ -45,6 +46,11 @@ class AdapterOutputEnvelope:
         event_request = data["event_request"]
         if not isinstance(event_request, dict) or "event_type" not in event_request:
             raise ValueError("Adapter envelope must request an event with event_type")
+        event_type = event_request["event_type"]
+        if not isinstance(event_type, str) or not event_type:
+            raise ValueError("Adapter envelope event_type must be a non-empty string")
+        if event_type in DIRECT_WRITE_EVENT_TYPES:
+            raise ValueError("Adapter envelope requests direct state mutation")
         evidence_provenance = data["evidence_provenance"]
         if not isinstance(evidence_provenance, dict):
             raise ValueError("Adapter envelope evidence_provenance must be an object")

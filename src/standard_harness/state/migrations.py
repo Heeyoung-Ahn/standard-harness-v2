@@ -338,6 +338,26 @@ create table if not exists project_completion_results (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists adapter_invocations (
+  adapter_run_id text primary key,
+  adapter_id text not null,
+  adapter_version text not null,
+  input_snapshot_hash text not null,
+  permission_roots_json text not null,
+  artifact_manifest_json text not null,
+  event_request_json text not null,
+  failure_classification text,
+  evidence_provenance_json text not null,
+  timeout_seconds integer not null,
+  retry_count integer not null,
+  cancel_status text not null,
+  idempotency_key text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 
@@ -352,6 +372,12 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
         "ssot_change_impacts",
         "impacted_acceptance_criterion_ids_json",
         "text not null default '[]'",
+    )
+    _ensure_column(
+        conn,
+        "adapter_invocations",
+        "idempotency_key",
+        "text not null default ''",
     )
     checksum = sha256_text(SCHEMA_SQL)
     conn.execute(

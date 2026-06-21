@@ -9,6 +9,7 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "adapter_invocations",
     "project_completion_results",
     "ssot_change_impacts",
     "requirement_registration_diffs",
@@ -581,6 +582,42 @@ def _insert_project_completion_result(conn, row, payload: dict[str, Any]) -> Non
     )
 
 
+def _insert_adapter_invocation(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into adapter_invocations (
+          adapter_run_id, adapter_id, adapter_version,
+          input_snapshot_hash, permission_roots_json,
+          artifact_manifest_json, event_request_json,
+          failure_classification, evidence_provenance_json,
+          timeout_seconds, retry_count, cancel_status,
+          idempotency_key,
+          source_event_range, source_watermark,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["adapter_run_id"],
+            payload["adapter_id"],
+            payload["adapter_version"],
+            payload["input_snapshot_hash"],
+            json.dumps(payload["permission_roots"], sort_keys=True),
+            json.dumps(payload["artifact_manifest"], sort_keys=True),
+            json.dumps(payload["event_request"], sort_keys=True),
+            payload.get("failure_classification"),
+            json.dumps(payload["evidence_provenance"], sort_keys=True),
+            payload["timeout_seconds"],
+            payload["retry_count"],
+            payload["cancel_status"],
+            payload.get("idempotency_key", row["idempotency_key"]),
+            payload["source_event_range"],
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -607,4 +644,5 @@ HANDLERS = {
     "ssot.registration_diff_transitioned": _transition_registration_diff,
     "ssot.impact_recorded": _insert_ssot_impact,
     "project_completion.evaluated": _insert_project_completion_result,
+    "adapter.invocation_recorded": _insert_adapter_invocation,
 }
