@@ -110,6 +110,15 @@ def _empty_snapshot(event_seq: int) -> dict[str, Any]:
         "ssot_change_impacts": {},
         "project_completion_results": {},
         "adapter_invocations": {},
+        "workflow_runs": {},
+        "review_bundles": {},
+        "llm_work_products": {},
+        "decision_claims": {},
+        "role_cards": {},
+        "skill_policy_evaluations": {},
+        "challenges": {},
+        "independent_reviews": {},
+        "adjudications": {},
     }
 
 
@@ -176,6 +185,24 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
         snapshot["project_completion_results"][payload["completion_result_id"]] = dict(payload)
     elif event_type == "adapter.invocation_recorded":
         snapshot["adapter_invocations"][payload["adapter_run_id"]] = dict(payload)
+    elif event_type == "workflow.run_recorded":
+        snapshot["workflow_runs"][payload["workflow_run_id"]] = dict(payload)
+    elif event_type == "review_bundle.created":
+        snapshot["review_bundles"][payload["review_bundle_id"]] = dict(payload)
+    elif event_type == "llm_work_product_classified":
+        snapshot["llm_work_products"][payload["work_product_id"]] = dict(payload)
+    elif event_type == "decision_claim_extracted":
+        snapshot["decision_claims"][payload["decision_claim_id"]] = dict(payload)
+    elif event_type == "role_card_registered":
+        snapshot["role_cards"][payload["role_id"]] = dict(payload)
+    elif event_type == "skill_policy_evaluated":
+        snapshot["skill_policy_evaluations"][payload["evaluation_id"]] = dict(payload)
+    elif event_type == "challenge_opened":
+        snapshot["challenges"][payload["challenge_id"]] = dict(payload)
+    elif event_type == "independent_review_recorded":
+        snapshot["independent_reviews"][payload["review_id"]] = dict(payload)
+    elif event_type == "adjudication_recorded":
+        snapshot["adjudications"][payload["adjudication_id"]] = dict(payload)
 
 
 def _checksum_payload(snapshot: dict[str, Any]) -> dict[str, Any]:

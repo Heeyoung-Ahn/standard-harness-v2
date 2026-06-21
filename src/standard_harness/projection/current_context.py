@@ -37,6 +37,14 @@ class CurrentContextProjection:
             "source_watermark": source_watermark,
             "freshness_status": "fresh",
             "stale_consumer_behavior": STALE_CONSUMER_BEHAVIOR,
+            "authority_precedence": [
+                "canonical_events",
+                "approved_ssot",
+                "packet_state",
+                "gate_results",
+                "generated_projection",
+                "untrusted_content",
+            ],
             "packet": packet,
         }
         projection["dependency_digest"] = _dependency_digest(projection)

@@ -208,6 +208,7 @@ create table if not exists closeouts (
   gate_result_ids_json text not null,
   evidence_ids_json text not null,
   diagnostic_ids_json text not null,
+  review_bundle_id text,
   source_event_range text not null,
   source_watermark integer not null,
   authority_basis text not null,
@@ -358,6 +359,100 @@ create table if not exists adapter_invocations (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists workflow_runs (
+  workflow_run_id text primary key,
+  packet_id text not null,
+  phase text not null,
+  actor_role text not null,
+  input_projection_id text,
+  source_watermark integer not null,
+  status text not null,
+  retry_count integer not null,
+  blocker_diagnostic_ids_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists review_bundles (
+  review_bundle_id text primary key,
+  packet_id text not null,
+  packet_version integer not null,
+  requirement_snapshot_json text not null,
+  acceptance_criteria_snapshot_json text not null,
+  evidence_manifest_snapshot_json text not null,
+  adapter_model_identity text not null,
+  source_watermark integer not null,
+  freshness_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists llm_work_products (
+  work_product_id text primary key,
+  content text not null,
+  work_product_type text not null,
+  claim_type text not null,
+  confidence text not null,
+  human_decision_required integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists decision_claims (
+  decision_claim_id text primary key,
+  report_id text not null,
+  observation text not null,
+  inference text not null,
+  assumption text not null,
+  recommendation text not null,
+  confidence text not null,
+  human_decision_required integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists role_cards (
+  role_id text primary key,
+  permitted_actions_json text not null,
+  forbidden_decisions_json text not null,
+  escalation_duties_json text not null,
+  required_review_evidence_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists skill_policy_evaluations (
+  evaluation_id text primary key,
+  role_id text not null,
+  action text not null,
+  local_policy_json text not null,
+  policy_result text not null,
+  diagnostic_ids_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists challenges (
+  challenge_id text primary key,
+  payload_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists independent_reviews (
+  review_id text primary key,
+  payload_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists adjudications (
+  adjudication_id text primary key,
+  payload_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 
@@ -379,6 +474,7 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
         "idempotency_key",
         "text not null default ''",
     )
+    _ensure_column(conn, "closeouts", "review_bundle_id", "text")
     checksum = sha256_text(SCHEMA_SQL)
     conn.execute(
         """

@@ -9,6 +9,15 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "adjudications",
+    "independent_reviews",
+    "challenges",
+    "skill_policy_evaluations",
+    "role_cards",
+    "decision_claims",
+    "llm_work_products",
+    "review_bundles",
+    "workflow_runs",
     "adapter_invocations",
     "project_completion_results",
     "ssot_change_impacts",
@@ -396,9 +405,9 @@ def _insert_closeout(conn, _row, payload: dict[str, Any]) -> None:
         insert or replace into closeouts (
           closeout_id, packet_id, packet_version, decision_status,
           checked_claim_ids_json, gate_result_ids_json, evidence_ids_json,
-          diagnostic_ids_json, source_event_range, source_watermark,
+          diagnostic_ids_json, review_bundle_id, source_event_range, source_watermark,
           authority_basis, decided_at, rationale
-        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             payload["closeout_id"],
@@ -409,6 +418,7 @@ def _insert_closeout(conn, _row, payload: dict[str, Any]) -> None:
             json.dumps(payload["gate_result_ids"], sort_keys=True),
             json.dumps(payload["evidence_ids"], sort_keys=True),
             json.dumps(payload["diagnostic_ids"], sort_keys=True),
+            payload.get("review_bundle_id"),
             payload["source_event_range"],
             payload["source_watermark"],
             payload["authority_basis"],
@@ -618,6 +628,163 @@ def _insert_adapter_invocation(conn, row, payload: dict[str, Any]) -> None:
     )
 
 
+def _insert_workflow_run(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into workflow_runs (
+          workflow_run_id, packet_id, phase, actor_role, input_projection_id,
+          source_watermark, status, retry_count, blocker_diagnostic_ids_json,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["workflow_run_id"],
+            payload["packet_id"],
+            payload["phase"],
+            payload["actor_role"],
+            payload.get("input_projection_id"),
+            payload["source_watermark"],
+            payload["status"],
+            payload["retry_count"],
+            json.dumps(payload["blocker_diagnostic_ids"], sort_keys=True),
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_review_bundle(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into review_bundles (
+          review_bundle_id, packet_id, packet_version,
+          requirement_snapshot_json, acceptance_criteria_snapshot_json,
+          evidence_manifest_snapshot_json, adapter_model_identity,
+          source_watermark, freshness_status, trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["review_bundle_id"],
+            payload["packet_id"],
+            payload["packet_version"],
+            json.dumps(payload["requirement_snapshot"], sort_keys=True),
+            json.dumps(payload["acceptance_criteria_snapshot"], sort_keys=True),
+            json.dumps(payload["evidence_manifest_snapshot"], sort_keys=True),
+            payload["adapter_model_identity"],
+            payload["source_watermark"],
+            payload["freshness_status"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_llm_work_product(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into llm_work_products (
+          work_product_id, content, work_product_type, claim_type,
+          confidence, human_decision_required, trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["work_product_id"],
+            payload["content"],
+            payload["work_product_type"],
+            payload["claim_type"],
+            payload["confidence"],
+            payload["human_decision_required"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_decision_claim(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into decision_claims (
+          decision_claim_id, report_id, observation, inference,
+          assumption, recommendation, confidence, human_decision_required,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["decision_claim_id"],
+            payload["report_id"],
+            payload["observation"],
+            payload["inference"],
+            payload["assumption"],
+            payload["recommendation"],
+            payload["confidence"],
+            payload["human_decision_required"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_role_card(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into role_cards (
+          role_id, permitted_actions_json, forbidden_decisions_json,
+          escalation_duties_json, required_review_evidence_json,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["role_id"],
+            json.dumps(payload["permitted_actions"], sort_keys=True),
+            json.dumps(payload["forbidden_decisions"], sort_keys=True),
+            json.dumps(payload["escalation_duties"], sort_keys=True),
+            json.dumps(payload["required_review_evidence"], sort_keys=True),
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_skill_policy_evaluation(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into skill_policy_evaluations (
+          evaluation_id, role_id, action, local_policy_json,
+          policy_result, diagnostic_ids_json, trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["evaluation_id"],
+            payload["role_id"],
+            payload["action"],
+            json.dumps(payload["local_policy"], sort_keys=True),
+            payload["policy_result"],
+            json.dumps(payload["diagnostic_ids"], sort_keys=True),
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_payload_record(table: str, key_column: str):
+    def handler(conn, row, payload: dict[str, Any]) -> None:
+        conn.execute(
+            f"""
+            insert into {table} (
+              {key_column}, payload_json, trace_event_id, trace_event_seq
+            ) values (?, ?, ?, ?)
+            """,
+            (
+                payload[key_column],
+                json.dumps(payload, sort_keys=True),
+                row["event_id"],
+                row["event_seq"],
+            ),
+        )
+
+    return handler
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -645,4 +812,13 @@ HANDLERS = {
     "ssot.impact_recorded": _insert_ssot_impact,
     "project_completion.evaluated": _insert_project_completion_result,
     "adapter.invocation_recorded": _insert_adapter_invocation,
+    "workflow.run_recorded": _insert_workflow_run,
+    "review_bundle.created": _insert_review_bundle,
+    "llm_work_product_classified": _insert_llm_work_product,
+    "decision_claim_extracted": _insert_decision_claim,
+    "role_card_registered": _insert_role_card,
+    "skill_policy_evaluated": _insert_skill_policy_evaluation,
+    "challenge_opened": _insert_payload_record("challenges", "challenge_id"),
+    "independent_review_recorded": _insert_payload_record("independent_reviews", "review_id"),
+    "adjudication_recorded": _insert_payload_record("adjudications", "adjudication_id"),
 }
