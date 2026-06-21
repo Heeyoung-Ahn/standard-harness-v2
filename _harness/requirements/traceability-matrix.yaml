@@ -1747,32 +1747,41 @@
       "hrId": "HR-119R",
       "xpOwner": "XP-00",
       "files": [
-        "_harness/schemas/friction-signal.schema.json",
-        "_harness/schemas/metric-signal.schema.json",
-        "_harness/schemas/improvement-candidate.schema.json",
-        "_harness/schemas/starter-promotion-candidate.seed.schema.json"
+        "src/standard_harness/self_improvement/recurring.py",
+        "src/standard_harness/self_improvement/starter_promotion.py",
+        "src/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "src/standard_harness/self_improvement/proposals.py",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/completion/coverage.py"
       ],
       "schemas": [
-        "friction-signal.schema.json",
-        "metric-signal.schema.json",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
         "improvement-candidate.schema.json",
         "starter-promotion-candidate.seed.schema.json"
       ],
       "policies": [],
       "validators": [
-        "requirements-metadata-validator"
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
       ],
       "gates": [
-        "requirements-baseline-gate"
+        "compound-engineering-gate"
       ],
       "evidenceTypes": [
-        "friction-signal",
-        "metric-signal",
-        "improvement-candidate",
-        "starter-promotion-candidate-seed"
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
       ],
       "tests": [
-        "tests.contract.test_requirements_metadata_validator"
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
       ],
       "releaseBlocking": true
     },
@@ -1780,21 +1789,39 @@
       "hrId": "HR-120R",
       "xpOwner": "XP-09",
       "files": [
-        "planned:xp_09:HR-120R"
+        "src/standard_harness/self_improvement/recurring.py",
+        "src/standard_harness/self_improvement/starter_promotion.py",
+        "src/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "src/standard_harness/self_improvement/proposals.py",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/completion/coverage.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json"
+      ],
       "policies": [],
       "validators": [
-        "friction-signal-validator"
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
       ],
       "gates": [
-        "compound-telemetry-gate"
+        "compound-engineering-gate"
       ],
       "evidenceTypes": [
-        "friction-signal"
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
       ],
       "tests": [
-        "tests.contract.test_xp_09_planned_contract"
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
       ],
       "releaseBlocking": true
     },
@@ -1802,21 +1829,39 @@
       "hrId": "HR-121R",
       "xpOwner": "XP-09",
       "files": [
-        "planned:xp_09:HR-121R"
+        "src/standard_harness/self_improvement/recurring.py",
+        "src/standard_harness/self_improvement/starter_promotion.py",
+        "src/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "src/standard_harness/self_improvement/proposals.py",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/completion/coverage.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json"
+      ],
       "policies": [],
       "validators": [
-        "recurring-friction-validator"
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
       ],
       "gates": [
-        "compound-telemetry-gate"
+        "compound-engineering-gate"
       ],
       "evidenceTypes": [
-        "improvement-candidate"
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
       ],
       "tests": [
-        "tests.contract.test_xp_09_planned_contract"
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
       ],
       "releaseBlocking": true
     },
@@ -1824,21 +1869,39 @@
       "hrId": "HR-123R",
       "xpOwner": "XP-09",
       "files": [
-        "planned:xp_09:HR-123R"
+        "src/standard_harness/self_improvement/recurring.py",
+        "src/standard_harness/self_improvement/starter_promotion.py",
+        "src/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "src/standard_harness/self_improvement/proposals.py",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/completion/coverage.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json"
+      ],
       "policies": [],
       "validators": [
-        "improvement-proposal-validator"
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
       ],
       "gates": [
-        "compound-telemetry-gate"
+        "compound-engineering-gate"
       ],
       "evidenceTypes": [
-        "human-approved-harness-packet"
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
       ],
       "tests": [
-        "tests.contract.test_xp_09_planned_contract"
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
       ],
       "releaseBlocking": true
     },
@@ -1846,21 +1909,39 @@
       "hrId": "HR-124R",
       "xpOwner": "XP-09",
       "files": [
-        "planned:xp_09:HR-124R"
+        "src/standard_harness/self_improvement/recurring.py",
+        "src/standard_harness/self_improvement/starter_promotion.py",
+        "src/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "src/standard_harness/self_improvement/proposals.py",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/completion/coverage.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json"
+      ],
       "policies": [],
       "validators": [
-        "starter-promotion-validator"
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
       ],
       "gates": [
-        "compound-telemetry-gate"
+        "compound-engineering-gate"
       ],
       "evidenceTypes": [
-        "starter-promotion-candidate"
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
       ],
       "tests": [
-        "tests.contract.test_xp_09_planned_contract"
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
       ],
       "releaseBlocking": true
     },
@@ -2597,21 +2678,39 @@
       "hrId": "HR-200",
       "xpOwner": "XP-09",
       "files": [
-        "planned:xp_09:HR-200"
+        "src/standard_harness/self_improvement/recurring.py",
+        "src/standard_harness/self_improvement/starter_promotion.py",
+        "src/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "src/standard_harness/self_improvement/proposals.py",
+        "src/standard_harness/domain/packets.py",
+        "src/standard_harness/completion/coverage.py"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json"
+      ],
       "policies": [],
       "validators": [
-        "success-metrics-validator"
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
       ],
       "gates": [
-        "compound-telemetry-gate"
+        "compound-engineering-gate"
       ],
       "evidenceTypes": [
-        "metric-signal"
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
       ],
       "tests": [
-        "tests.contract.test_xp_09_planned_contract"
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
       ],
       "releaseBlocking": true
     }

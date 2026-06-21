@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Starter Promotion Candidate",
+  "type": "object",
+  "required": ["candidateId", "sourceImprovementId", "evidenceIds", "promotionRationale"],
+  "properties": {
+    "candidateId": {"type": "string"},
+    "sourceImprovementId": {"type": "string"},
+    "evidenceIds": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "promotionRationale": {"type": "string"}
+  }
+}
