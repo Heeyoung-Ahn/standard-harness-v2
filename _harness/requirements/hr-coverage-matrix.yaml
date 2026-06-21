@@ -935,84 +935,272 @@
     {
       "hrId": "HR-050R",
       "title": "Web changes require real browser validation",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-04",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
+        ],
         "validator": [
-          "e2e-applicability-validator"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
-          "e2e-gate"
-        ],
-        "evidence": [
-          "browser-evidence-bundle"
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
+          "ai-review-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_04_planned_contract"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-051R",
       "title": "Every packet records E2E applicability",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-04",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
+        ],
         "validator": [
-          "e2e-applicability-validator"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
-          "e2e-gate"
-        ],
-        "evidence": [
-          "e2e-applicability-decision"
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
+          "ai-review-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_04_planned_contract"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-052",
       "title": "Packet types have gate profiles",
       "coverageStatus": "complete",
-      "xpOwner": "XP-01",
+      "xpOwner": "XP-04",
       "implementationDisposition": "create",
       "currentImplementation": [
-        "_harness/policies/gate-profiles.yaml",
-        "src/standard_harness/policy/gate_profiles.py",
-        "src/standard_harness/domain/gates.py"
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
       ],
       "targetArtifacts": {
-        "policy": [
-          "_harness/policies/gate-profiles.yaml"
-        ],
         "schema": [
-          "_harness/schemas/gate-result.schema.json"
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
         ],
         "validator": [
-          "src/standard_harness/policy/gate_profiles.py"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
-          "packet-kernel-gate"
-        ],
-        "evidence": [
-          "gate-profile-policy"
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
+          "ai-review-gate"
         ],
         "tests": [
-          "tests/contract/test_gate_profile_applicability.py"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-01"
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-053",
@@ -1051,170 +1239,632 @@
     {
       "hrId": "HR-060R",
       "title": "Harness reviews domain boundaries and responsibilities",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-04",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
+        ],
         "validator": [
-          "refactor-review-validator"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
-          "refactor-review-gate"
-        ],
-        "evidence": [
-          "domain-boundary-review"
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
+          "ai-review-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_04_planned_contract"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-061R",
       "title": "DDD is applied without over-enforcement",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-04",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
+        ],
         "validator": [
-          "refactor-review-validator"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
-          "refactor-review-gate"
-        ],
-        "evidence": [
-          "domain-boundary-review"
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
+          "ai-review-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_04_planned_contract"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-070R",
       "title": "Every packet has requirements applicability review",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-04",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
+        ],
         "validator": [
-          "requirements-review-validator"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
-          "requirements-review-gate"
-        ],
-        "evidence": [
-          "requirements-review"
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
+          "ai-review-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_04_planned_contract"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-071R",
       "title": "Security review is trigger-based hard gate",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-04",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
+        ],
         "validator": [
-          "security-review-validator"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
-          "security-review-gate"
-        ],
-        "evidence": [
-          "security-review"
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
+          "ai-review-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_04_planned_contract"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-080R",
       "title": "AI independent review is supported",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-04",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
+        ],
         "validator": [
-          "ai-review-validator"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
           "ai-review-gate"
         ],
-        "evidence": [
-          "ai-review"
-        ],
         "tests": [
-          "tests.contract.test_xp_04_planned_contract"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-081R",
       "title": "AI review cannot replace deterministic tests",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-04",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
+        ],
         "validator": [
-          "ai-review-validator"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
           "ai-review-gate"
         ],
-        "evidence": [
-          "deterministic-evidence"
-        ],
         "tests": [
-          "tests.contract.test_xp_04_planned_contract"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-090R",
       "title": "Code-change closeout includes refactor review",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-04",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "src/standard_harness/validation/e2e_applicability.py",
+        "src/standard_harness/validation/requirements_review.py",
+        "src/standard_harness/validation/security_review.py",
+        "src/standard_harness/domain/boundaries.py",
+        "src/standard_harness/validation/refactor_review.py",
+        "src/standard_harness/validation/ai_review.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/runtime/browser_contract.py",
+        "src/standard_harness/evidence/runtime.py",
+        "src/standard_harness/security/threat_model.py",
+        "src/standard_harness/reviews/bundles.py"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/e2e-applicability.schema.json",
+          "_harness/schemas/browser-evidence-bundle.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/security-triggers.yaml",
+          "_harness/policies/domain-boundaries.yaml"
+        ],
         "validator": [
-          "refactor-review-validator"
+          "src/standard_harness/validation/e2e_applicability.py",
+          "src/standard_harness/validation/requirements_review.py",
+          "src/standard_harness/validation/security_review.py",
+          "src/standard_harness/validation/refactor_review.py",
+          "src/standard_harness/validation/ai_review.py"
         ],
         "gate": [
-          "refactor-review-gate"
-        ],
-        "evidence": [
-          "refactor-review"
+          "e2e-applicability-gate",
+          "requirements-review-gate",
+          "security-review-gate",
+          "refactor-review-gate",
+          "ai-review-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_04_planned_contract"
+          "tests/contract/test_e2e_applicability_gate.py",
+          "tests/contract/test_security_trigger_applicability.py",
+          "tests/contract/test_refactor_domain_boundary_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-04",
+      "migrationCompatibility": [
+        "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
+        "Existing threat model records become security review evidence only when trigger applicability passes.",
+        "Closeout integration is additive and only evaluates XP-04 review gates when packet closeout_plan.reviewGates is present."
+      ],
+      "releaseBlockingValidators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "releaseBlockingGates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "diagnostics": [
+        "missing_e2e_applicability",
+        "e2e_required",
+        "security_review_required",
+        "requirements_review_required",
+        "domain_boundary_review_required",
+        "refactor_review_required",
+        "missing_follow_up_refactor_packet",
+        "ai_review_cannot_replace_deterministic_evidence"
+      ],
+      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
+      "enforcementPoint": "gate profile, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
+        "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics."
+      ]
     },
     {
       "hrId": "HR-100R",

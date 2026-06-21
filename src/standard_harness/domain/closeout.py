@@ -17,8 +17,13 @@ from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 from standard_harness.validation.boundary import BoundaryValidator
 from standard_harness.validation.boundary import boundary_input_from_packet
+from standard_harness.validation.ai_review import AIReviewValidator
 from standard_harness.validation.challenge_gate import ChallengeGateValidator
+from standard_harness.validation.e2e_applicability import E2EApplicabilityValidator
 from standard_harness.validation.evidence_trust import packet_requires_trusted_evidence
+from standard_harness.validation.refactor_review import RefactorReviewValidator
+from standard_harness.validation.requirements_review import RequirementsReviewValidator
+from standard_harness.validation.security_review import SecurityReviewValidator
 
 
 class CloseoutService:
@@ -83,6 +88,8 @@ class CloseoutService:
         if gate_results and not required_claim_ids.issubset(checked_claim_ids):
             _add_diagnostic(diagnostics, "missing_gate_claim_coverage")
         for diagnostic_id in self._boundary_diagnostics(packet):
+            _add_diagnostic(diagnostics, diagnostic_id)
+        for diagnostic_id in self._review_gate_diagnostics(packet):
             _add_diagnostic(diagnostics, diagnostic_id)
         for diagnostic_id in self._projection_diagnostics(packet_id):
             _add_diagnostic(diagnostics, diagnostic_id)
@@ -258,6 +265,35 @@ class CloseoutService:
         except (OSError, ValueError):
             return ["invalid_zone_mapping"]
         return list(result["diagnostic_ids"])
+
+    def _review_gate_diagnostics(self, packet: dict[str, object]) -> list[str]:
+        closeout_plan = packet.get("closeout_plan")
+        if not isinstance(closeout_plan, dict):
+            return []
+        review_gates = closeout_plan.get("reviewGates") or closeout_plan.get("review_gates")
+        if not isinstance(review_gates, dict):
+            return []
+        diagnostics: list[str] = []
+        e2e_input = review_gates.get("e2eApplicability")
+        if isinstance(e2e_input, dict):
+            diagnostics.extend(E2EApplicabilityValidator().evaluate(e2e_input)["diagnostic_ids"])
+        requirements_input = review_gates.get("requirementsReview")
+        if isinstance(requirements_input, dict):
+            diagnostics.extend(RequirementsReviewValidator().evaluate(requirements_input)["diagnostic_ids"])
+        security_input = review_gates.get("securityReview")
+        if isinstance(security_input, dict):
+            diagnostics.extend(
+                SecurityReviewValidator.from_repo(Path.cwd()).evaluate(security_input)["diagnostic_ids"]
+            )
+        refactor_input = review_gates.get("refactorReview")
+        if isinstance(refactor_input, dict):
+            diagnostics.extend(
+                RefactorReviewValidator.from_repo(Path.cwd()).evaluate(refactor_input)["diagnostic_ids"]
+            )
+        ai_input = review_gates.get("aiReview")
+        if isinstance(ai_input, dict):
+            diagnostics.extend(AIReviewValidator().evaluate(ai_input)["diagnostic_ids"])
+        return diagnostics
 
     def _closeout_exists(self, closeout_id: str) -> bool:
         with self.store.connection() as conn:
