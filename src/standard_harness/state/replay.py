@@ -9,6 +9,9 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "redaction_events",
+    "retention_policies",
+    "integrity_signatures",
     "cloud_orchestrations",
     "human_control_snapshots",
     "operational_memory_snapshots",
@@ -1171,6 +1174,81 @@ def _insert_cloud_orchestration(conn, row, payload: dict[str, Any]) -> None:
     )
 
 
+def _insert_integrity_signature(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into integrity_signatures (
+          signature_id, signed_entity_type, signed_entity_id, algorithm, key_id,
+          payload_hash, signature_value, signed_at, signer_id, source_watermark,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["signature_id"],
+            payload["signed_entity_type"],
+            payload["signed_entity_id"],
+            payload["algorithm"],
+            payload["key_id"],
+            payload["payload_hash"],
+            payload["signature_value"],
+            payload["signed_at"],
+            payload["signer_id"],
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_retention_policy(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into retention_policies (
+          retention_policy_id, artifact_class, retention_minimum_days,
+          purge_rule, archive_rule, regeneration_expectation,
+          approval_required, source_watermark, trace_event_id,
+          trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["retention_policy_id"],
+            payload["artifact_class"],
+            payload["retention_minimum_days"],
+            payload["purge_rule"],
+            payload["archive_rule"],
+            payload["regeneration_expectation"],
+            1 if payload["approval_required"] else 0,
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_redaction_event(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into redaction_events (
+          redaction_event_id, entity_type, entity_id, field,
+          redaction_reason, redacted_hash, actor_id, source_watermark,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["redaction_event_id"],
+            payload["entity_type"],
+            payload["entity_id"],
+            payload["field"],
+            payload["redaction_reason"],
+            payload["redacted_hash"],
+            payload["actor_id"],
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -1222,4 +1300,7 @@ HANDLERS = {
     "operational_memory.generated": _insert_operational_memory,
     "human_control.snapshot_generated": _insert_human_control_snapshot,
     "cloud.orchestration_recorded": _insert_cloud_orchestration,
+    "integrity.signature_recorded": _insert_integrity_signature,
+    "retention.policy_recorded": _insert_retention_policy,
+    "redaction.recorded": _insert_redaction_event,
 }

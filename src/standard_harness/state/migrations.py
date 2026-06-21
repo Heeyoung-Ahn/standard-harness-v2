@@ -651,6 +651,47 @@ create table if not exists cloud_orchestrations (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists integrity_signatures (
+  signature_id text primary key,
+  signed_entity_type text not null,
+  signed_entity_id text not null,
+  algorithm text not null,
+  key_id text not null,
+  payload_hash text not null,
+  signature_value text not null,
+  signed_at text not null,
+  signer_id text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists retention_policies (
+  retention_policy_id text primary key,
+  artifact_class text not null,
+  retention_minimum_days integer not null,
+  purge_rule text not null,
+  archive_rule text not null,
+  regeneration_expectation text not null,
+  approval_required integer not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists redaction_events (
+  redaction_event_id text primary key,
+  entity_type text not null,
+  entity_id text not null,
+  field text not null,
+  redaction_reason text not null,
+  redacted_hash text not null,
+  actor_id text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 

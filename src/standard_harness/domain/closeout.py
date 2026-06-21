@@ -6,6 +6,7 @@ import json
 
 from standard_harness.domain.packets import PacketService
 from standard_harness.gitops.drift import FilesystemDriftService
+from standard_harness.integrity.verification import SignatureVerificationService
 from standard_harness.policy.bundles import PolicyBundleService
 from standard_harness.policy.release import ReleasePolicyBoundary
 from standard_harness.state.events import utc_now_iso
@@ -72,6 +73,8 @@ class CloseoutService:
         for diagnostic_id in self._filesystem_drift_diagnostics(packet_id):
             _add_diagnostic(diagnostics, diagnostic_id)
         for diagnostic_id in ReleasePolicyBoundary(self.store).diagnostics(packet_id=packet_id):
+            _add_diagnostic(diagnostics, diagnostic_id)
+        for diagnostic_id in self._high_integrity_diagnostics(packet_id):
             _add_diagnostic(diagnostics, diagnostic_id)
         decision_status = "closed" if not diagnostics else "blocked"
         closeout = {
@@ -325,6 +328,28 @@ class CloseoutService:
             repo_root=self.store.harness_root,
             idempotency_key=f"pre-closeout-drift-{drift_id}",
         )
+
+    def _high_integrity_diagnostics(self, packet_id: str) -> list[str]:
+        if not self._high_integrity_active():
+            return []
+        verifier = SignatureVerificationService(self.store)
+        diagnostics = []
+        if verifier.missing_packet_event_signatures(packet_id):
+            diagnostics.append("missing_signature")
+        if verifier.invalid_packet_event_signatures(packet_id):
+            diagnostics.append("invalid_signature")
+        return diagnostics
+
+    def _high_integrity_active(self) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                """
+                select 1 from profile_activations
+                where profile_id = 'high-integrity' and status = 'active'
+                limit 1
+                """
+            ).fetchone()
+        return row is not None
 
 
 def _add_diagnostic(diagnostics: list[str], diagnostic_id: str) -> None:
