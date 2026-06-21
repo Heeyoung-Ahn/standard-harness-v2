@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://standard-harness.local/schemas/starter-promotion-candidate.seed.schema.json",
+  "title": "Standard Harness starter promotion candidate seed",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eventType",
+    "candidateId",
+    "sourceXp",
+    "source",
+    "proposedChange",
+    "expectedBenefit",
+    "risk",
+    "requiresHarnessPacket",
+    "promotionStatus"
+  ],
+  "properties": {
+    "eventType": {"const": "starter-promotion.candidate.seed"},
+    "candidateId": {"type": "string"},
+    "sourceXp": {"type": "string", "pattern": "^XP-[0-9]{2}[A-Z]?$"},
+    "source": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": {"type": "string", "enum": ["friction", "metric", "harness-packet-closeout"]},
+        "id": {"type": "string"}
+      }
+    },
+    "proposedChange": {"type": "string"},
+    "expectedBenefit": {"type": "string"},
+    "risk": {"type": "string"},
+    "requiresHarnessPacket": {"type": "boolean"},
+    "promotionStatus": {"type": "string", "enum": ["proposed", "accepted", "rejected", "promoted", "superseded"]}
+  }
+}

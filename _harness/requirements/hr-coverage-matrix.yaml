@@ -5,18 +5,1615 @@
   "ownerXp": "XP-00",
   "legacyInputPolicy": "standard-harness-conformance-map-v1.md and standard-harness-conformance-trace-v1.csv are legacy inputs only",
   "coverage": [
-    {"hrId": "HR-001V", "title": "Harness operating-system-style control layer", "coverageStatus": "complete", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["docs/requirements/standard-harness-v2-1-integrated-work-plan.md"], "targetArtifacts": {"metadata": ["_harness/requirements/requirements-index.yaml"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "gate": ["requirements-baseline-gate"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": false, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-002", "title": "Harness goals", "coverageStatus": "complete", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["docs/requirements/Standard_Harness_integrated_requirements_v0.2.md"], "targetArtifacts": {"policy": ["_harness/policies/p0-policy.yaml"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "gate": ["requirements-baseline-gate"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-003", "title": "Non-goals", "coverageStatus": "complete", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["docs/requirements/Standard_Harness_integrated_requirements_v0.2.md"], "targetArtifacts": {"policy": ["_harness/policies/non-goal-guardrails.yaml"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "gate": ["requirements-baseline-gate"], "tests": ["tests/contract/test_non_goal_guardrails.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-004", "title": "V1 baseline", "coverageStatus": "partial", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["docs/requirements/standard-harness-conformance-map-v1.md"], "targetArtifacts": {"metadata": ["_harness/requirements/hr-coverage-matrix.yaml"], "gate": ["requirements-baseline-gate"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-005", "title": "Requirements metadata", "coverageStatus": "complete", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["src/standard_harness/domain/requirements.py"], "targetArtifacts": {"metadata": ["_harness/requirements/requirements-index.yaml"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-006", "title": "Traceability matrix", "coverageStatus": "complete", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["docs/requirements/standard-harness-conformance-trace-v1.csv"], "targetArtifacts": {"metadata": ["_harness/requirements/traceability-matrix.yaml"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-007", "title": "Harness invariants", "coverageStatus": "partial", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["src/standard_harness/completion/final_gate.py"], "targetArtifacts": {"policy": ["_harness/policies/p0-policy.yaml"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-008", "title": "P0 Always and Conditional split", "coverageStatus": "complete", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["src/standard_harness/completion/coverage.py"], "targetArtifacts": {"policy": ["_harness/policies/p0-policy.yaml"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-119R", "title": "Compound Engineering Harness required", "coverageStatus": "partial", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["src/standard_harness/self_improvement/friction.py"], "targetArtifacts": {"schema": ["_harness/schemas/friction-signal.schema.json", "_harness/schemas/metric-signal.schema.json"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-130R", "title": "Skill router extension interface", "coverageStatus": "partial", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["src/standard_harness/roles/skill_policy.py"], "targetArtifacts": {"catalog": ["_harness/catalog/minimum-required-skills.yaml"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-131R", "title": "Skill usage manifest and evidence", "coverageStatus": "partial", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["src/standard_harness/roles/skill_policy.py"], "targetArtifacts": {"catalog": ["_harness/catalog/minimum-required-skills.yaml"], "validator": ["src/standard_harness/validation/requirements_metadata.py"], "tests": ["tests/contract/test_requirements_metadata_validator.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"},
-    {"hrId": "HR-190R", "title": "Deterministic validators", "coverageStatus": "partial", "xpOwner": "XP-00", "implementationDisposition": "create", "currentImplementation": ["src/standard_harness/validation/aggregator.py"], "targetArtifacts": {"validator": ["src/standard_harness/validation/requirements_metadata.py"], "gate": ["requirements-baseline-gate"], "tests": ["tests/contract/test_requirements_metadata_validator.py", "tests/contract/test_non_goal_guardrails.py"]}, "releaseBlocking": true, "lastUpdatedByPacket": "XP-00"}
+    {
+      "hrId": "HR-001V",
+      "title": "Harness operating-system-style control layer",
+      "coverageStatus": "complete",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "docs/requirements/standard-harness-v2-1-integrated-work-plan.md"
+      ],
+      "targetArtifacts": {
+        "metadata": [
+          "_harness/requirements/requirements-index.yaml"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "gate": [
+          "requirements-baseline-gate"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": false,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-002",
+      "title": "Harness goals",
+      "coverageStatus": "complete",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md"
+      ],
+      "targetArtifacts": {
+        "policy": [
+          "_harness/policies/p0-policy.yaml"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "gate": [
+          "requirements-baseline-gate"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-003",
+      "title": "Non-goals",
+      "coverageStatus": "complete",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md"
+      ],
+      "targetArtifacts": {
+        "policy": [
+          "_harness/policies/non-goal-guardrails.yaml"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "gate": [
+          "requirements-baseline-gate"
+        ],
+        "tests": [
+          "tests/contract/test_non_goal_guardrails.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-004",
+      "title": "V1 baseline",
+      "coverageStatus": "partial",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "docs/requirements/standard-harness-conformance-map-v1.md"
+      ],
+      "targetArtifacts": {
+        "metadata": [
+          "_harness/requirements/hr-coverage-matrix.yaml"
+        ],
+        "gate": [
+          "requirements-baseline-gate"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-005",
+      "title": "Requirements metadata",
+      "coverageStatus": "complete",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "src/standard_harness/domain/requirements.py"
+      ],
+      "targetArtifacts": {
+        "metadata": [
+          "_harness/requirements/requirements-index.yaml"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-006",
+      "title": "Traceability matrix",
+      "coverageStatus": "complete",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "docs/requirements/standard-harness-conformance-trace-v1.csv"
+      ],
+      "targetArtifacts": {
+        "metadata": [
+          "_harness/requirements/traceability-matrix.yaml"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-007",
+      "title": "Harness invariants",
+      "coverageStatus": "partial",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "src/standard_harness/completion/final_gate.py"
+      ],
+      "targetArtifacts": {
+        "policy": [
+          "_harness/policies/p0-policy.yaml"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-008",
+      "title": "P0 Always and Conditional split",
+      "coverageStatus": "complete",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "src/standard_harness/completion/coverage.py"
+      ],
+      "targetArtifacts": {
+        "policy": [
+          "_harness/policies/p0-policy.yaml"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-010R",
+      "title": "Repository uses logical zones",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-03",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "boundary-validator"
+        ],
+        "gate": [
+          "boundary-gate"
+        ],
+        "evidence": [
+          "boundary-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_03_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-011R",
+      "title": "Harness system is not contaminated by product artifacts",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-03",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "boundary-validator"
+        ],
+        "gate": [
+          "boundary-gate"
+        ],
+        "evidence": [
+          "boundary-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_03_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-012R",
+      "title": "Harness changes require harness packet types",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-03",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "boundary-validator"
+        ],
+        "gate": [
+          "boundary-gate"
+        ],
+        "evidence": [
+          "boundary-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_03_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-013",
+      "title": "Boundary validator uses git diff",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-03",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "boundary-validator"
+        ],
+        "gate": [
+          "boundary-gate"
+        ],
+        "evidence": [
+          "git-diff-boundary-result"
+        ],
+        "tests": [
+          "tests.contract.test_xp_03_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-020R",
+      "title": "Core is provider neutral",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-07",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "handoff-router-validator"
+        ],
+        "gate": [
+          "handoff-gate"
+        ],
+        "evidence": [
+          "provider-capability-manifest"
+        ],
+        "tests": [
+          "tests.contract.test_xp_07_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-021R",
+      "title": "Role routing is policy-managed",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-07",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "role-routing-validator"
+        ],
+        "gate": [
+          "handoff-gate"
+        ],
+        "evidence": [
+          "role-routing-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_07_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-022R",
+      "title": "LLM meetings are evidence protocol",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-07",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "handoff-protocol-validator"
+        ],
+        "gate": [
+          "handoff-gate"
+        ],
+        "evidence": [
+          "adjudication-record"
+        ],
+        "tests": [
+          "tests.contract.test_xp_07_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-023R",
+      "title": "V1 prefers handoff-first orchestration",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-07",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "handoff-router-validator"
+        ],
+        "gate": [
+          "handoff-gate"
+        ],
+        "evidence": [
+          "manual-handoff-evidence"
+        ],
+        "tests": [
+          "tests.contract.test_xp_07_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-030R",
+      "title": "All implementation work proceeds by packet",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "packet-schema-validator"
+        ],
+        "gate": [
+          "packet-kernel-gate"
+        ],
+        "evidence": [
+          "packet-record"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-031R",
+      "title": "Packet lifecycle is state-machine managed",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "packet-state-validator"
+        ],
+        "gate": [
+          "packet-kernel-gate"
+        ],
+        "evidence": [
+          "packet-state-transition"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-032R",
+      "title": "Parallel execution is metadata-only in v1",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "parallel-metadata-validator"
+        ],
+        "gate": [
+          "packet-kernel-gate"
+        ],
+        "evidence": [
+          "dag-lock-metadata"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-033R",
+      "title": "Parallel execution requires isolated workspace",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "parallel-metadata-validator"
+        ],
+        "gate": [
+          "packet-kernel-gate"
+        ],
+        "evidence": [
+          "workspace-isolation-record"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-040R",
+      "title": "Implementation is test-plan-first",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-02",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "test-plan-validator"
+        ],
+        "gate": [
+          "test-plan-gate"
+        ],
+        "evidence": [
+          "test-plan"
+        ],
+        "tests": [
+          "tests.contract.test_xp_02_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-041R",
+      "title": "Closeout requires trusted test evidence",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-02",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "evidence-trust-validator"
+        ],
+        "gate": [
+          "evidence-trust-gate"
+        ],
+        "evidence": [
+          "trusted-test-evidence"
+        ],
+        "tests": [
+          "tests.contract.test_xp_02_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-042R",
+      "title": "Tests verify real feature meaning",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-02",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "test-materiality-validator"
+        ],
+        "gate": [
+          "test-gate"
+        ],
+        "evidence": [
+          "test-result"
+        ],
+        "tests": [
+          "tests.contract.test_xp_02_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-043",
+      "title": "Evidence has trust status",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-02",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "evidence-trust-validator"
+        ],
+        "gate": [
+          "evidence-trust-gate"
+        ],
+        "evidence": [
+          "evidence-record"
+        ],
+        "tests": [
+          "tests.contract.test_xp_02_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-044",
+      "title": "Evidence trust statuses are enumerated",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-02",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "evidence-trust-validator"
+        ],
+        "gate": [
+          "evidence-trust-gate"
+        ],
+        "evidence": [
+          "evidence-trust-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_02_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-045",
+      "title": "Claim ledger is closeout input",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-02",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "claim-ledger-validator"
+        ],
+        "gate": [
+          "closeout-gate"
+        ],
+        "evidence": [
+          "claim-ledger"
+        ],
+        "tests": [
+          "tests.contract.test_xp_02_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-050R",
+      "title": "Web changes require real browser validation",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-04",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "e2e-applicability-validator"
+        ],
+        "gate": [
+          "e2e-gate"
+        ],
+        "evidence": [
+          "browser-evidence-bundle"
+        ],
+        "tests": [
+          "tests.contract.test_xp_04_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-051R",
+      "title": "Every packet records E2E applicability",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-04",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "e2e-applicability-validator"
+        ],
+        "gate": [
+          "e2e-gate"
+        ],
+        "evidence": [
+          "e2e-applicability-decision"
+        ],
+        "tests": [
+          "tests.contract.test_xp_04_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-052",
+      "title": "Packet types have gate profiles",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "gate-profile-validator"
+        ],
+        "gate": [
+          "packet-kernel-gate"
+        ],
+        "evidence": [
+          "gate-profile-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-053",
+      "title": "Gate N/A is rule-based",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "na-decision-validator"
+        ],
+        "gate": [
+          "packet-kernel-gate"
+        ],
+        "evidence": [
+          "na-decision"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-060R",
+      "title": "Harness reviews domain boundaries and responsibilities",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-04",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "refactor-review-validator"
+        ],
+        "gate": [
+          "refactor-review-gate"
+        ],
+        "evidence": [
+          "domain-boundary-review"
+        ],
+        "tests": [
+          "tests.contract.test_xp_04_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-061R",
+      "title": "DDD is applied without over-enforcement",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-04",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "refactor-review-validator"
+        ],
+        "gate": [
+          "refactor-review-gate"
+        ],
+        "evidence": [
+          "domain-boundary-review"
+        ],
+        "tests": [
+          "tests.contract.test_xp_04_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-070R",
+      "title": "Every packet has requirements applicability review",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-04",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "requirements-review-validator"
+        ],
+        "gate": [
+          "requirements-review-gate"
+        ],
+        "evidence": [
+          "requirements-review"
+        ],
+        "tests": [
+          "tests.contract.test_xp_04_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-071R",
+      "title": "Security review is trigger-based hard gate",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-04",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "security-review-validator"
+        ],
+        "gate": [
+          "security-review-gate"
+        ],
+        "evidence": [
+          "security-review"
+        ],
+        "tests": [
+          "tests.contract.test_xp_04_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-080R",
+      "title": "AI independent review is supported",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-04",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "ai-review-validator"
+        ],
+        "gate": [
+          "ai-review-gate"
+        ],
+        "evidence": [
+          "ai-review"
+        ],
+        "tests": [
+          "tests.contract.test_xp_04_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-081R",
+      "title": "AI review cannot replace deterministic tests",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-04",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "ai-review-validator"
+        ],
+        "gate": [
+          "ai-review-gate"
+        ],
+        "evidence": [
+          "deterministic-evidence"
+        ],
+        "tests": [
+          "tests.contract.test_xp_04_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-090R",
+      "title": "Code-change closeout includes refactor review",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-04",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "refactor-review-validator"
+        ],
+        "gate": [
+          "refactor-review-gate"
+        ],
+        "evidence": [
+          "refactor-review"
+        ],
+        "tests": [
+          "tests.contract.test_xp_04_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-100R",
+      "title": "Documenter creates closeout and proposal, not direct Wiki edits",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-05",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "closeout-documenter-validator"
+        ],
+        "gate": [
+          "closeout-gate"
+        ],
+        "evidence": [
+          "closeout-report"
+        ],
+        "tests": [
+          "tests.contract.test_xp_05_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-101R",
+      "title": "Closeout report has required fields",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-05",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "closeout-validator"
+        ],
+        "gate": [
+          "closeout-gate"
+        ],
+        "evidence": [
+          "closeout-report"
+        ],
+        "tests": [
+          "tests.contract.test_xp_05_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-102R",
+      "title": "Closed state requires closeout",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-05",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "closeout-validator"
+        ],
+        "gate": [
+          "closeout-gate"
+        ],
+        "evidence": [
+          "closeout-report"
+        ],
+        "tests": [
+          "tests.contract.test_xp_05_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-110R",
+      "title": "Wiki updates use evidence-backed proposal/apply flow",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-08A",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "wiki-proposal-validator"
+        ],
+        "gate": [
+          "wiki-proposal-gate"
+        ],
+        "evidence": [
+          "wiki-update-proposal"
+        ],
+        "tests": [
+          "tests.contract.test_xp_08a_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-111R",
+      "title": "Wiki entries have types",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-05",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "wiki-proposal-validator"
+        ],
+        "gate": [
+          "wiki-proposal-gate"
+        ],
+        "evidence": [
+          "wiki-entry"
+        ],
+        "tests": [
+          "tests.contract.test_xp_05_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-119R",
+      "title": "Compound Engineering Harness required",
+      "coverageStatus": "partial",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "src/standard_harness/self_improvement/friction.py"
+      ],
+      "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/friction-signal.schema.json",
+          "_harness/schemas/metric-signal.schema.json",
+          "_harness/schemas/improvement-candidate.schema.json",
+          "_harness/schemas/starter-promotion-candidate.seed.schema.json"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-120R",
+      "title": "Harness observes friction",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-09",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "friction-signal-validator"
+        ],
+        "gate": [
+          "compound-telemetry-gate"
+        ],
+        "evidence": [
+          "friction-signal"
+        ],
+        "tests": [
+          "tests.contract.test_xp_09_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-121R",
+      "title": "Repeated friction becomes improvement candidate",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-09",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "recurring-friction-validator"
+        ],
+        "gate": [
+          "compound-telemetry-gate"
+        ],
+        "evidence": [
+          "improvement-candidate"
+        ],
+        "tests": [
+          "tests.contract.test_xp_09_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-123R",
+      "title": "Harness self-improvement is proposal based",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-09",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "improvement-proposal-validator"
+        ],
+        "gate": [
+          "compound-telemetry-gate"
+        ],
+        "evidence": [
+          "human-approved-harness-packet"
+        ],
+        "tests": [
+          "tests.contract.test_xp_09_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-124R",
+      "title": "Starter promotion candidates link to compound evidence",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-09",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "starter-promotion-validator"
+        ],
+        "gate": [
+          "compound-telemetry-gate"
+        ],
+        "evidence": [
+          "starter-promotion-candidate"
+        ],
+        "tests": [
+          "tests.contract.test_xp_09_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-130R",
+      "title": "Skill router extension interface",
+      "coverageStatus": "partial",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "src/standard_harness/roles/skill_policy.py"
+      ],
+      "targetArtifacts": {
+        "catalog": [
+          "_harness/catalog/minimum-required-skills.yaml"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-131R",
+      "title": "Skill usage manifest and evidence",
+      "coverageStatus": "partial",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "src/standard_harness/roles/skill_policy.py"
+      ],
+      "targetArtifacts": {
+        "catalog": [
+          "_harness/catalog/minimum-required-skills.yaml"
+        ],
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-150R",
+      "title": "User requests are not automatically approved truth",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01A",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "challenge-gate-validator"
+        ],
+        "gate": [
+          "challenge-gate"
+        ],
+        "evidence": [
+          "challenge-review"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01a_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-151R",
+      "title": "Challenge gate is P0-Conditional",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01A",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "challenge-gate-validator"
+        ],
+        "gate": [
+          "challenge-gate"
+        ],
+        "evidence": [
+          "challenge-review"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01a_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-152",
+      "title": "Human decision cannot override non-overridable items",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01A",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "human-decision-validator"
+        ],
+        "gate": [
+          "challenge-gate"
+        ],
+        "evidence": [
+          "human-decision-record"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01a_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-160R",
+      "title": "Harness has token and context budget policy",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-06",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "context-budget-validator"
+        ],
+        "gate": [
+          "context-budget-gate"
+        ],
+        "evidence": [
+          "token-budget-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_06_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-161R",
+      "title": "Agents receive role-specific context packs",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-06",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "context-budget-validator"
+        ],
+        "gate": [
+          "context-budget-gate"
+        ],
+        "evidence": [
+          "role-context-pack"
+        ],
+        "tests": [
+          "tests.contract.test_xp_06_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-162",
+      "title": "Harness has context authority model",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-08A",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "context-authority-validator"
+        ],
+        "gate": [
+          "context-budget-gate"
+        ],
+        "evidence": [
+          "context-authority-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_08a_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-163",
+      "title": "Untrusted content has no instruction authority",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-08A",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "context-authority-validator"
+        ],
+        "gate": [
+          "context-budget-gate"
+        ],
+        "evidence": [
+          "context-authority-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_08a_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-170R",
+      "title": "Harness generates and manages maintenance documents",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-08",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "manual-command-validator"
+        ],
+        "gate": [
+          "manual-command-gate"
+        ],
+        "evidence": [
+          "manual-runbook"
+        ],
+        "tests": [
+          "tests.contract.test_xp_08_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-171R",
+      "title": "Human manuals are accurate and executable",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-08",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "manual-command-validator"
+        ],
+        "gate": [
+          "manual-command-gate"
+        ],
+        "evidence": [
+          "manual-command-inventory"
+        ],
+        "tests": [
+          "tests.contract.test_xp_08_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-172R",
+      "title": "Documented commands are validated",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-08",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "manual-command-validator"
+        ],
+        "gate": [
+          "manual-command-gate"
+        ],
+        "evidence": [
+          "manual-command-result"
+        ],
+        "tests": [
+          "tests.contract.test_xp_08_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-180R",
+      "title": "Agents have file access permissions",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-03",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "permission-boundary-validator"
+        ],
+        "gate": [
+          "boundary-gate"
+        ],
+        "evidence": [
+          "permission-policy"
+        ],
+        "tests": [
+          "tests.contract.test_xp_03_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-181R",
+      "title": "Product agents cannot modify harness system",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-03",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "permission-boundary-validator"
+        ],
+        "gate": [
+          "boundary-gate"
+        ],
+        "evidence": [
+          "boundary-validation-result"
+        ],
+        "tests": [
+          "tests.contract.test_xp_03_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-182R",
+      "title": "Starter promotion validates product trace removal",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-03",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "starter-contamination-validator"
+        ],
+        "gate": [
+          "starter-promotion-gate"
+        ],
+        "evidence": [
+          "starter-contamination-scan"
+        ],
+        "tests": [
+          "tests.contract.test_xp_03_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-185",
+      "title": "Evidence and handoff context protect sensitive information",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-08A",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "sensitive-evidence-validator"
+        ],
+        "gate": [
+          "sensitive-evidence-gate"
+        ],
+        "evidence": [
+          "evidence-classification"
+        ],
+        "tests": [
+          "tests.contract.test_xp_08a_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-186",
+      "title": "Evidence classification exists",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-08A",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "sensitive-evidence-validator"
+        ],
+        "gate": [
+          "sensitive-evidence-gate"
+        ],
+        "evidence": [
+          "evidence-classification"
+        ],
+        "tests": [
+          "tests.contract.test_xp_08a_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-190R",
+      "title": "Deterministic validators",
+      "coverageStatus": "partial",
+      "xpOwner": "XP-00",
+      "implementationDisposition": "create",
+      "currentImplementation": [
+        "src/standard_harness/validation/aggregator.py"
+      ],
+      "targetArtifacts": {
+        "validator": [
+          "src/standard_harness/validation/requirements_metadata.py"
+        ],
+        "gate": [
+          "requirements-baseline-gate"
+        ],
+        "tests": [
+          "tests/contract/test_requirements_metadata_validator.py",
+          "tests/contract/test_non_goal_guardrails.py"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": "XP-00"
+    },
+    {
+      "hrId": "HR-191",
+      "title": "Validator results are recorded as gate results",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-01",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "validator-catalog-validator"
+        ],
+        "gate": [
+          "v21-conformance-gate"
+        ],
+        "evidence": [
+          "gate-result"
+        ],
+        "tests": [
+          "tests.contract.test_xp_01_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    },
+    {
+      "hrId": "HR-200",
+      "title": "Harness measures effectiveness and cost",
+      "coverageStatus": "missing",
+      "xpOwner": "XP-09",
+      "implementationDisposition": "create",
+      "currentImplementation": [],
+      "targetArtifacts": {
+        "validator": [
+          "success-metrics-validator"
+        ],
+        "gate": [
+          "compound-telemetry-gate"
+        ],
+        "evidence": [
+          "metric-signal"
+        ],
+        "tests": [
+          "tests.contract.test_xp_09_planned_contract"
+        ]
+      },
+      "releaseBlocking": true,
+      "lastUpdatedByPacket": null
+    }
   ],
   "migrationCompatibility": {
     "existingRequirementRows": "remain valid and map to partial HR coverage until metadata-backed HR rows are added",
@@ -24,10 +1621,26 @@
     "schemaMigration": "none for XP-00"
   },
   "releaseBlockingValidators": [
-    {"validator": "requirements-metadata-validator", "gateId": "requirements-baseline-gate", "diagnosticIds": ["missing_hr_metadata", "missing_traceability", "missing_hr_coverage", "missing_p0_policy", "non_goal_guardrail_missing", "missing_skill_catalog", "missing_telemetry_schema"], "waivable": false, "enforcementPoint": "validate"}
+    {
+      "validator": "requirements-metadata-validator",
+      "gateId": "requirements-baseline-gate",
+      "diagnosticIds": [
+        "missing_hr_metadata",
+        "missing_traceability",
+        "missing_hr_coverage",
+        "missing_p0_policy",
+        "non_goal_guardrail_missing",
+        "missing_skill_catalog",
+        "missing_telemetry_schema"
+      ],
+      "waivable": false,
+      "enforcementPoint": "validate"
+    }
   ],
   "frictionMetricBehavior": {
-    "friction": "XP-00 defines friction.signal schema and records docs_drift, docs_implementation_mismatch, missing_evidence, boundary_violation, token_overuse, and all HR-120 observation targets as allowed signalType values for later validators.",
-    "metric": "XP-00 defines metric.signal schema for later XP metrics. XP-00 itself emits no runtime metric event because it adds schemas and metadata only."
+    "friction": "XP-00A keeps friction.signal as the runtime friction event schema and links improvement-candidate seed records to repeated friction conversion without implementing XP-09 aggregation.",
+    "metric": "XP-00A keeps metric.signal as the runtime metric event schema and links starter-promotion candidate seed records to metric or friction evidence without implementing XP-09 promotion.",
+    "improvement": "XP-00A adds a base improvement-candidate schema seed only; recurring detection and proposal lifecycle remain XP-09-owned.",
+    "starterPromotion": "XP-00A adds a starter-promotion-candidate seed schema only; starter promotion registry and aggregation remain XP-09-owned."
   }
 }

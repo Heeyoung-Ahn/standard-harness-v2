@@ -4,79 +4,1557 @@
   "baseline": "Standard Harness integrated requirements v0.2",
   "baselineVersion": "0.2.0",
   "ownerXp": "XP-00",
-  "excludedIntake": ["spreadsheet candidate requirements"],
+  "excludedIntake": [
+    "spreadsheet candidate requirements"
+  ],
   "legacyInputs": [
     "docs/requirements/standard-harness-conformance-map-v1.md",
     "docs/requirements/standard-harness-conformance-trace-v1.csv"
   ],
   "legacyInputPolicy": "legacy_conformance_inputs_are_not_canonical_v21_coverage",
   "requirements": [
-    {"id": "HR-001V", "title": "Harness targets an operating-system-style control layer", "type": "vision", "priority": "Vision", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["requirements-index", "traceability-matrix"], "exceptionAllowed": false, "closeoutBlocking": false},
-    {"id": "HR-002", "title": "Harness goals are packet, evidence, boundary, review, memory, and friction-loop control", "type": "policy", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["p0-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-003", "title": "Non-goals are hard guardrails", "type": "policy", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["non-goal-guardrails"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-004", "title": "V1 baseline includes L0, L1, L4 and handoff-oriented L2", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["hr-coverage-matrix"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-005", "title": "Every requirement has machine-readable metadata", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["requirements-index"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-006", "title": "Requirement traceability matrix links HR to artifacts and evidence", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["traceability-matrix"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-007", "title": "Harness invariants are explicit and non-waivable where marked P0", "type": "policy", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["p0-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-008", "title": "P0 is split into Always and Conditional gates", "type": "policy", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["p0-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-010R", "title": "Repository uses logical zones", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["boundary-validator"], "gates": ["boundary-gate"]}, "requiredEvidence": ["boundary-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-011R", "title": "Harness system is not contaminated by product artifacts", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["boundary-validator"], "gates": ["boundary-gate"]}, "requiredEvidence": ["boundary-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-012R", "title": "Harness changes require harness packet types", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["boundary-validator"], "gates": ["boundary-gate"]}, "requiredEvidence": ["boundary-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-013", "title": "Boundary validator uses git diff", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["boundary-validator"], "gates": ["boundary-gate"]}, "requiredEvidence": ["git-diff-boundary-result"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-020R", "title": "Core is provider neutral", "type": "functional", "priority": "P1", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["handoff-router-validator"], "gates": ["handoff-gate"]}, "requiredEvidence": ["provider-capability-manifest"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-021R", "title": "Role routing is policy-managed", "type": "functional", "priority": "P1", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["role-routing-validator"], "gates": ["handoff-gate"]}, "requiredEvidence": ["role-routing-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-022R", "title": "LLM meetings are evidence protocol", "type": "functional", "priority": "P1", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["handoff-protocol-validator"], "gates": ["handoff-gate"]}, "requiredEvidence": ["adjudication-record"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-023R", "title": "V1 prefers handoff-first orchestration", "type": "functional", "priority": "P1", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["handoff-router-validator"], "gates": ["handoff-gate"]}, "requiredEvidence": ["manual-handoff-evidence"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-030R", "title": "All implementation work proceeds by packet", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["packet-schema-validator"], "gates": ["packet-kernel-gate"]}, "requiredEvidence": ["packet-record"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-031R", "title": "Packet lifecycle is state-machine managed", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["packet-state-validator"], "gates": ["packet-kernel-gate"]}, "requiredEvidence": ["packet-state-transition"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-032R", "title": "Parallel execution is metadata-only in v1", "type": "functional", "priority": "P0-Always", "maturityLevel": "L3", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["parallel-metadata-validator"], "gates": ["packet-kernel-gate"]}, "requiredEvidence": ["dag-lock-metadata"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-033R", "title": "Parallel execution requires isolated workspace", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L3", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["parallel-metadata-validator"], "gates": ["packet-kernel-gate"]}, "requiredEvidence": ["workspace-isolation-record"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-040R", "title": "Implementation is test-plan-first", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["test-plan-validator"], "gates": ["test-plan-gate"]}, "requiredEvidence": ["test-plan"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-041R", "title": "Closeout requires trusted test evidence", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["evidence-trust-validator"], "gates": ["evidence-trust-gate"]}, "requiredEvidence": ["trusted-test-evidence"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-042R", "title": "Tests verify real feature meaning", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["test-materiality-validator"], "gates": ["test-gate"]}, "requiredEvidence": ["test-result"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-043", "title": "Evidence has trust status", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["evidence-trust-validator"], "gates": ["evidence-trust-gate"]}, "requiredEvidence": ["evidence-record"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-044", "title": "Evidence trust statuses are enumerated", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["evidence-trust-validator"], "gates": ["evidence-trust-gate"]}, "requiredEvidence": ["evidence-trust-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-045", "title": "Claim ledger is closeout input", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["claim-ledger-validator"], "gates": ["closeout-gate"]}, "requiredEvidence": ["claim-ledger"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-050R", "title": "Web changes require real browser validation", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["e2e-applicability-validator"], "gates": ["e2e-gate"]}, "requiredEvidence": ["browser-evidence-bundle"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-051R", "title": "Every packet records E2E applicability", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["e2e-applicability-validator"], "gates": ["e2e-gate"]}, "requiredEvidence": ["e2e-applicability-decision"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-052", "title": "Packet types have gate profiles", "type": "functional", "priority": "P0-Always", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["gate-profile-validator"], "gates": ["packet-kernel-gate"]}, "requiredEvidence": ["gate-profile-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-053", "title": "Gate N/A is rule-based", "type": "functional", "priority": "P0-Always", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["na-decision-validator"], "gates": ["packet-kernel-gate"]}, "requiredEvidence": ["na-decision"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-060R", "title": "Harness reviews domain boundaries and responsibilities", "type": "functional", "priority": "P1", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["refactor-review-validator"], "gates": ["refactor-review-gate"]}, "requiredEvidence": ["domain-boundary-review"], "exceptionAllowed": true, "closeoutBlocking": true},
-    {"id": "HR-061R", "title": "DDD is applied without over-enforcement", "type": "functional", "priority": "P1", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["refactor-review-validator"], "gates": ["refactor-review-gate"]}, "requiredEvidence": ["domain-boundary-review"], "exceptionAllowed": true, "closeoutBlocking": true},
-    {"id": "HR-070R", "title": "Every packet has requirements applicability review", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-review-validator"], "gates": ["requirements-review-gate"]}, "requiredEvidence": ["requirements-review"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-071R", "title": "Security review is trigger-based hard gate", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["security-review-validator"], "gates": ["security-review-gate"]}, "requiredEvidence": ["security-review"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-080R", "title": "AI independent review is supported", "type": "functional", "priority": "P1", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["ai-review-validator"], "gates": ["ai-review-gate"]}, "requiredEvidence": ["ai-review"], "exceptionAllowed": true, "closeoutBlocking": true},
-    {"id": "HR-081R", "title": "AI review cannot replace deterministic tests", "type": "policy", "priority": "P0-Always", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["ai-review-validator"], "gates": ["ai-review-gate"]}, "requiredEvidence": ["deterministic-evidence"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-090R", "title": "Code-change closeout includes refactor review", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["refactor-review-validator"], "gates": ["refactor-review-gate"]}, "requiredEvidence": ["refactor-review"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-100R", "title": "Documenter creates closeout and proposal, not direct Wiki edits", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["closeout-documenter-validator"], "gates": ["closeout-gate"]}, "requiredEvidence": ["closeout-report"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-101R", "title": "Closeout report has required fields", "type": "functional", "priority": "P0-Always", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["closeout-validator"], "gates": ["closeout-gate"]}, "requiredEvidence": ["closeout-report"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-102R", "title": "Closed state requires closeout", "type": "functional", "priority": "P0-Always", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["closeout-validator"], "gates": ["closeout-gate"]}, "requiredEvidence": ["closeout-report"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-110R", "title": "Wiki updates use evidence-backed proposal/apply flow", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["wiki-proposal-validator"], "gates": ["wiki-proposal-gate"]}, "requiredEvidence": ["wiki-update-proposal"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-111R", "title": "Wiki entries have types", "type": "functional", "priority": "P1", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["wiki-proposal-validator"], "gates": ["wiki-proposal-gate"]}, "requiredEvidence": ["wiki-entry"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-119R", "title": "Compound Engineering Harness is required", "type": "functional", "priority": "P0-Always", "maturityLevel": "L4", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["friction-signal-schema", "metric-signal-schema"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-120R", "title": "Harness observes friction", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L4", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["friction-signal-validator"], "gates": ["compound-telemetry-gate"]}, "requiredEvidence": ["friction-signal"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-121R", "title": "Repeated friction becomes improvement candidate", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L4", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["recurring-friction-validator"], "gates": ["compound-telemetry-gate"]}, "requiredEvidence": ["improvement-candidate"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-123R", "title": "Harness self-improvement is proposal based", "type": "policy", "priority": "P0-Always", "maturityLevel": "L4", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["improvement-proposal-validator"], "gates": ["compound-telemetry-gate"]}, "requiredEvidence": ["human-approved-harness-packet"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-124R", "title": "Starter promotion candidates link to compound evidence", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L4", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["starter-promotion-validator"], "gates": ["compound-telemetry-gate"]}, "requiredEvidence": ["starter-promotion-candidate"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-130R", "title": "Skill router is extension interface", "type": "functional", "priority": "P1", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["minimum-required-skills"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-131R", "title": "Skill usage leaves manifest and evidence", "type": "functional", "priority": "P1", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["minimum-required-skills"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-150R", "title": "User requests are not automatically approved truth", "type": "policy", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["challenge-gate-validator"], "gates": ["challenge-gate"]}, "requiredEvidence": ["challenge-review"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-151R", "title": "Challenge gate is P0-Conditional", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["challenge-gate-validator"], "gates": ["challenge-gate"]}, "requiredEvidence": ["challenge-review"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-152", "title": "Human decision cannot override non-overridable items", "type": "policy", "priority": "P0-Always", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["human-decision-validator"], "gates": ["challenge-gate"]}, "requiredEvidence": ["human-decision-record"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-160R", "title": "Harness has token and context budget policy", "type": "policy", "priority": "P1", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["context-budget-validator"], "gates": ["context-budget-gate"]}, "requiredEvidence": ["token-budget-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-161R", "title": "Agents receive role-specific context packs", "type": "functional", "priority": "P1", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["context-budget-validator"], "gates": ["context-budget-gate"]}, "requiredEvidence": ["role-context-pack"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-162", "title": "Harness has context authority model", "type": "policy", "priority": "P0-Conditional", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["context-authority-validator"], "gates": ["context-budget-gate"]}, "requiredEvidence": ["context-authority-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-163", "title": "Untrusted content has no instruction authority", "type": "policy", "priority": "P0-Conditional", "maturityLevel": "L2", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["context-authority-validator"], "gates": ["context-budget-gate"]}, "requiredEvidence": ["context-authority-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-170R", "title": "Harness generates and manages maintenance documents", "type": "functional", "priority": "P1", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["manual-command-validator"], "gates": ["manual-command-gate"]}, "requiredEvidence": ["manual-runbook"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-171R", "title": "Human manuals are accurate and executable", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["manual-command-validator"], "gates": ["manual-command-gate"]}, "requiredEvidence": ["manual-command-inventory"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-172R", "title": "Documented commands are validated", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["manual-command-validator"], "gates": ["manual-command-gate"]}, "requiredEvidence": ["manual-command-result"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-180R", "title": "Agents have file access permissions", "type": "policy", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["permission-boundary-validator"], "gates": ["boundary-gate"]}, "requiredEvidence": ["permission-policy"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-181R", "title": "Product agents cannot modify harness system", "type": "policy", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["permission-boundary-validator"], "gates": ["boundary-gate"]}, "requiredEvidence": ["boundary-validation-result"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-182R", "title": "Starter promotion validates product trace removal", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["starter-contamination-validator"], "gates": ["starter-promotion-gate"]}, "requiredEvidence": ["starter-contamination-scan"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-185", "title": "Evidence and handoff context protect sensitive information", "type": "policy", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["sensitive-evidence-validator"], "gates": ["sensitive-evidence-gate"]}, "requiredEvidence": ["evidence-classification"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-186", "title": "Evidence classification exists", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L1", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["sensitive-evidence-validator"], "gates": ["sensitive-evidence-gate"]}, "requiredEvidence": ["evidence-classification"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-190R", "title": "Deterministic validators exist independent of AI judgment", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["requirements-metadata-validator"], "gates": ["requirements-baseline-gate"]}, "requiredEvidence": ["requirements-metadata-validator"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-191", "title": "Validator results are recorded as gate results", "type": "functional", "priority": "P0-Always", "maturityLevel": "L0", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["validator-catalog-validator"], "gates": ["v21-conformance-gate"]}, "requiredEvidence": ["gate-result"], "exceptionAllowed": false, "closeoutBlocking": true},
-    {"id": "HR-200", "title": "Harness measures effectiveness and cost", "type": "functional", "priority": "P0-Conditional", "maturityLevel": "L4", "source": "docs/requirements/Standard_Harness_integrated_requirements_v0.2.md", "status": "active", "version": "0.2.0", "verification": {"validators": ["success-metrics-validator"], "gates": ["compound-telemetry-gate"]}, "requiredEvidence": ["metric-signal"], "exceptionAllowed": false, "closeoutBlocking": true}
+    {
+      "id": "HR-001V",
+      "title": "Harness targets an operating-system-style control layer",
+      "type": "vision",
+      "priority": "Vision",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "requirements-index",
+        "traceability-matrix"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": false
+    },
+    {
+      "id": "HR-002",
+      "title": "Harness goals are packet, evidence, boundary, review, memory, and friction-loop control",
+      "type": "policy",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "p0-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-003",
+      "title": "Non-goals are hard guardrails",
+      "type": "policy",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "non-goal-guardrails"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-004",
+      "title": "V1 baseline includes L0, L1, L4 and handoff-oriented L2",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "hr-coverage-matrix"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-005",
+      "title": "Every requirement has machine-readable metadata",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "requirements-index"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-006",
+      "title": "Requirement traceability matrix links HR to artifacts and evidence",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "traceability-matrix"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-007",
+      "title": "Harness invariants are explicit and non-waivable where marked P0",
+      "type": "policy",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "p0-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-008",
+      "title": "P0 is split into Always and Conditional gates",
+      "type": "policy",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "p0-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-010R",
+      "title": "Repository uses logical zones",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "boundary-validator"
+        ],
+        "gates": [
+          "boundary-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "boundary-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-011R",
+      "title": "Harness system is not contaminated by product artifacts",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "boundary-validator"
+        ],
+        "gates": [
+          "boundary-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "boundary-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-012R",
+      "title": "Harness changes require harness packet types",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "boundary-validator"
+        ],
+        "gates": [
+          "boundary-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "boundary-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-013",
+      "title": "Boundary validator uses git diff",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "boundary-validator"
+        ],
+        "gates": [
+          "boundary-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "git-diff-boundary-result"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-020R",
+      "title": "Core is provider neutral",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "handoff-router-validator"
+        ],
+        "gates": [
+          "handoff-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "provider-capability-manifest"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-021R",
+      "title": "Role routing is policy-managed",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "role-routing-validator"
+        ],
+        "gates": [
+          "handoff-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "role-routing-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-022R",
+      "title": "LLM meetings are evidence protocol",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "handoff-protocol-validator"
+        ],
+        "gates": [
+          "handoff-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "adjudication-record"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-023R",
+      "title": "V1 prefers handoff-first orchestration",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "handoff-router-validator"
+        ],
+        "gates": [
+          "handoff-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "manual-handoff-evidence"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-030R",
+      "title": "All implementation work proceeds by packet",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "packet-schema-validator"
+        ],
+        "gates": [
+          "packet-kernel-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "packet-record"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-031R",
+      "title": "Packet lifecycle is state-machine managed",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "packet-state-validator"
+        ],
+        "gates": [
+          "packet-kernel-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "packet-state-transition"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-032R",
+      "title": "Parallel execution is metadata-only in v1",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L3",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "parallel-metadata-validator"
+        ],
+        "gates": [
+          "packet-kernel-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "dag-lock-metadata"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-033R",
+      "title": "Parallel execution requires isolated workspace",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L3",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "parallel-metadata-validator"
+        ],
+        "gates": [
+          "packet-kernel-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "workspace-isolation-record"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-040R",
+      "title": "Implementation is test-plan-first",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "test-plan-validator"
+        ],
+        "gates": [
+          "test-plan-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "test-plan"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-041R",
+      "title": "Closeout requires trusted test evidence",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "evidence-trust-validator"
+        ],
+        "gates": [
+          "evidence-trust-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "trusted-test-evidence"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-042R",
+      "title": "Tests verify real feature meaning",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "test-materiality-validator"
+        ],
+        "gates": [
+          "test-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "test-result"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-043",
+      "title": "Evidence has trust status",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "evidence-trust-validator"
+        ],
+        "gates": [
+          "evidence-trust-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "evidence-record"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-044",
+      "title": "Evidence trust statuses are enumerated",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "evidence-trust-validator"
+        ],
+        "gates": [
+          "evidence-trust-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "evidence-trust-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-045",
+      "title": "Claim ledger is closeout input",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "claim-ledger-validator"
+        ],
+        "gates": [
+          "closeout-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "claim-ledger"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-050R",
+      "title": "Web changes require real browser validation",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "e2e-applicability-validator"
+        ],
+        "gates": [
+          "e2e-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "browser-evidence-bundle"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-051R",
+      "title": "Every packet records E2E applicability",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "e2e-applicability-validator"
+        ],
+        "gates": [
+          "e2e-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "e2e-applicability-decision"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-052",
+      "title": "Packet types have gate profiles",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "gate-profile-validator"
+        ],
+        "gates": [
+          "packet-kernel-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "gate-profile-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-053",
+      "title": "Gate N/A is rule-based",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "na-decision-validator"
+        ],
+        "gates": [
+          "packet-kernel-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "na-decision"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-060R",
+      "title": "Harness reviews domain boundaries and responsibilities",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "refactor-review-validator"
+        ],
+        "gates": [
+          "refactor-review-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "domain-boundary-review"
+      ],
+      "exceptionAllowed": true,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-061R",
+      "title": "DDD is applied without over-enforcement",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "refactor-review-validator"
+        ],
+        "gates": [
+          "refactor-review-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "domain-boundary-review"
+      ],
+      "exceptionAllowed": true,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-070R",
+      "title": "Every packet has requirements applicability review",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-review-validator"
+        ],
+        "gates": [
+          "requirements-review-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "requirements-review"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-071R",
+      "title": "Security review is trigger-based hard gate",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "security-review-validator"
+        ],
+        "gates": [
+          "security-review-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "security-review"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-080R",
+      "title": "AI independent review is supported",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "ai-review-validator"
+        ],
+        "gates": [
+          "ai-review-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "ai-review"
+      ],
+      "exceptionAllowed": true,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-081R",
+      "title": "AI review cannot replace deterministic tests",
+      "type": "policy",
+      "priority": "P0-Always",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "ai-review-validator"
+        ],
+        "gates": [
+          "ai-review-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "deterministic-evidence"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-090R",
+      "title": "Code-change closeout includes refactor review",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "refactor-review-validator"
+        ],
+        "gates": [
+          "refactor-review-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "refactor-review"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-100R",
+      "title": "Documenter creates closeout and proposal, not direct Wiki edits",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "closeout-documenter-validator"
+        ],
+        "gates": [
+          "closeout-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "closeout-report"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-101R",
+      "title": "Closeout report has required fields",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "closeout-validator"
+        ],
+        "gates": [
+          "closeout-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "closeout-report"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-102R",
+      "title": "Closed state requires closeout",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "closeout-validator"
+        ],
+        "gates": [
+          "closeout-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "closeout-report"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-110R",
+      "title": "Wiki updates use evidence-backed proposal/apply flow",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "wiki-proposal-validator"
+        ],
+        "gates": [
+          "wiki-proposal-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "wiki-update-proposal"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-111R",
+      "title": "Wiki entries have types",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "wiki-proposal-validator"
+        ],
+        "gates": [
+          "wiki-proposal-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "wiki-entry"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-119R",
+      "title": "Compound Engineering Harness is required",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L4",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "friction-signal-schema",
+        "metric-signal-schema"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-120R",
+      "title": "Harness observes friction",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L4",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "friction-signal-validator"
+        ],
+        "gates": [
+          "compound-telemetry-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "friction-signal"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-121R",
+      "title": "Repeated friction becomes improvement candidate",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L4",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "recurring-friction-validator"
+        ],
+        "gates": [
+          "compound-telemetry-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "improvement-candidate"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-123R",
+      "title": "Harness self-improvement is proposal based",
+      "type": "policy",
+      "priority": "P0-Always",
+      "maturityLevel": "L4",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "improvement-proposal-validator"
+        ],
+        "gates": [
+          "compound-telemetry-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "human-approved-harness-packet"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-124R",
+      "title": "Starter promotion candidates link to compound evidence",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L4",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "starter-promotion-validator"
+        ],
+        "gates": [
+          "compound-telemetry-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "starter-promotion-candidate"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-130R",
+      "title": "Skill router is extension interface",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "minimum-required-skills"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-131R",
+      "title": "Skill usage leaves manifest and evidence",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "minimum-required-skills"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-150R",
+      "title": "User requests are not automatically approved truth",
+      "type": "policy",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "challenge-gate-validator"
+        ],
+        "gates": [
+          "challenge-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "challenge-review"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-151R",
+      "title": "Challenge gate is P0-Conditional",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "challenge-gate-validator"
+        ],
+        "gates": [
+          "challenge-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "challenge-review"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-152",
+      "title": "Human decision cannot override non-overridable items",
+      "type": "policy",
+      "priority": "P0-Always",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "human-decision-validator"
+        ],
+        "gates": [
+          "challenge-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "human-decision-record"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-160R",
+      "title": "Harness has token and context budget policy",
+      "type": "policy",
+      "priority": "P1",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "context-budget-validator"
+        ],
+        "gates": [
+          "context-budget-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "token-budget-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-161R",
+      "title": "Agents receive role-specific context packs",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "context-budget-validator"
+        ],
+        "gates": [
+          "context-budget-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "role-context-pack"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-162",
+      "title": "Harness has context authority model",
+      "type": "policy",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "context-authority-validator"
+        ],
+        "gates": [
+          "context-budget-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "context-authority-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-163",
+      "title": "Untrusted content has no instruction authority",
+      "type": "policy",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L2",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "context-authority-validator"
+        ],
+        "gates": [
+          "context-budget-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "context-authority-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-170R",
+      "title": "Harness generates and manages maintenance documents",
+      "type": "functional",
+      "priority": "P1",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "manual-command-validator"
+        ],
+        "gates": [
+          "manual-command-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "manual-runbook"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-171R",
+      "title": "Human manuals are accurate and executable",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "manual-command-validator"
+        ],
+        "gates": [
+          "manual-command-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "manual-command-inventory"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-172R",
+      "title": "Documented commands are validated",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "manual-command-validator"
+        ],
+        "gates": [
+          "manual-command-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "manual-command-result"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-180R",
+      "title": "Agents have file access permissions",
+      "type": "policy",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "permission-boundary-validator"
+        ],
+        "gates": [
+          "boundary-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "permission-policy"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-181R",
+      "title": "Product agents cannot modify harness system",
+      "type": "policy",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "permission-boundary-validator"
+        ],
+        "gates": [
+          "boundary-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "boundary-validation-result"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-182R",
+      "title": "Starter promotion validates product trace removal",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "starter-contamination-validator"
+        ],
+        "gates": [
+          "starter-promotion-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "starter-contamination-scan"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-185",
+      "title": "Evidence and handoff context protect sensitive information",
+      "type": "policy",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "sensitive-evidence-validator"
+        ],
+        "gates": [
+          "sensitive-evidence-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "evidence-classification"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-186",
+      "title": "Evidence classification exists",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L1",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "sensitive-evidence-validator"
+        ],
+        "gates": [
+          "sensitive-evidence-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "evidence-classification"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-190R",
+      "title": "Deterministic validators exist independent of AI judgment",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "requirements-metadata-validator"
+        ],
+        "gates": [
+          "requirements-baseline-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "requirements-metadata-validator"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-191",
+      "title": "Validator results are recorded as gate results",
+      "type": "functional",
+      "priority": "P0-Always",
+      "maturityLevel": "L0",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "validator-catalog-validator"
+        ],
+        "gates": [
+          "v21-conformance-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "gate-result"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    },
+    {
+      "id": "HR-200",
+      "title": "Harness measures effectiveness and cost",
+      "type": "functional",
+      "priority": "P0-Conditional",
+      "maturityLevel": "L4",
+      "source": "docs/requirements/Standard_Harness_통합_요구사항_v0.2.md",
+      "status": "active",
+      "version": "0.2.0",
+      "verification": {
+        "validators": [
+          "success-metrics-validator"
+        ],
+        "gates": [
+          "compound-telemetry-gate"
+        ]
+      },
+      "requiredEvidence": [
+        "metric-signal"
+      ],
+      "exceptionAllowed": false,
+      "closeoutBlocking": true
+    }
   ]
 }

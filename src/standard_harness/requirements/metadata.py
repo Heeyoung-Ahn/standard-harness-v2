@@ -39,6 +39,14 @@ class RequirementsMetadataRepository:
     def metric_signal_schema(self) -> dict[str, Any]:
         return self._read_jsonish(self.path("schemas", "metric-signal.schema.json"))
 
+    def improvement_candidate_schema(self) -> dict[str, Any]:
+        return self._read_jsonish(self.path("schemas", "improvement-candidate.schema.json"))
+
+    def starter_promotion_candidate_seed_schema(self) -> dict[str, Any]:
+        return self._read_jsonish(
+            self.path("schemas", "starter-promotion-candidate.seed.schema.json")
+        )
+
     def path(self, category: str, filename: str) -> Path:
         return self.repo_root / "_harness" / category / filename
 
@@ -52,6 +60,12 @@ class RequirementsMetadataRepository:
             "minimum-required-skills": self.path("catalog", "minimum-required-skills.yaml"),
             "friction-signal-schema": self.path("schemas", "friction-signal.schema.json"),
             "metric-signal-schema": self.path("schemas", "metric-signal.schema.json"),
+            "improvement-candidate-schema": self.path(
+                "schemas", "improvement-candidate.schema.json"
+            ),
+            "starter-promotion-candidate-seed-schema": self.path(
+                "schemas", "starter-promotion-candidate.seed.schema.json"
+            ),
         }
 
     def _read_jsonish(self, path: Path) -> dict[str, Any]:
@@ -86,4 +100,3 @@ REQUIRED_SKILL_IDS = {
     "SKILL-CONTEXT-PACK-GENERATION",
     "SKILL-FRICTION-ANALYSIS",
 }
-
