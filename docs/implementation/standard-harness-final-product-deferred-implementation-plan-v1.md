@@ -91,6 +91,35 @@ Coverage requirements:
 - `SH-DOG-002` final-product coverage must include replay rebuild, waiver expiry and revocation, malicious adapter output, path escape, filesystem drift reconciliation, stale evidence propagation, and non-waivable gate enforcement.
 - `SH-INHERIT-001` through `SH-INHERIT-004` must be closed by an inheritance traceability matrix, not by general conformance prose alone.
 
+### Addendum Implementation Contract
+
+Before any parent workstream is closed, each addendum sub-slice owned by that workstream must define and implement:
+
+- at least one focused test file named in the parent workstream
+- service/module behavior, not only documentation
+- event types and table/projection fields when state is required
+- CLI or callable API entry points when an operator must trigger the behavior
+- closure evidence references in the refreshed requirement report
+- a documented no-state rationale when no persistent state is required
+
+Minimum addendum implementation details:
+
+| Addendum | Owning FP | Required implementation details |
+| --- | --- | --- |
+| `FP-01A` | `FP-01` | events: `recovery_started`, `projection_rebuilt`, `recovery_blocked`; fields: `source_event_range`, `projection_checksum`, `recovery_status`, `diagnostic_ids`; service: `state.recovery` |
+| `FP-01B` | `FP-01` | events: `backup_created`, `restore_verified`, `audit_snapshot_created`; fields: `snapshot_id`, `event_seq_range`, `schema_version`, `restore_checksum`; service: point-in-time audit API |
+| `FP-07A` | `FP-07` | events: `llm_work_product_classified`, `decision_claim_extracted`; fields: `work_product_type`, `claim_type`, `confidence`, `human_decision_required`; service: `llm.work_products` |
+| `FP-07B` | `FP-07` | events: `role_card_registered`, `skill_policy_evaluated`; fields: `role_id`, `permitted_actions`, `forbidden_decisions`, `policy_result`; service: `roles.cards` and `roles.skill_policy` |
+| `FP-07C` | `FP-07` | events: `challenge_opened`, `independent_review_recorded`, `adjudication_recorded`; fields: `challenged_item_id`, `reviewer_role`, `outcome`, `follow_up_event_ids`; service: review adjudication lifecycle |
+| `FP-08A` | `FP-08` | events: `filesystem_drift_detected`, `filesystem_drift_resolved`; fields: `path`, `drift_type`, `packet_id`, `artifact_id`, `remediation`; service: `gitops.drift` |
+| `FP-09A` | `FP-09` | events: `waiver_requested`, `waiver_approved`, `waiver_revoked`, `waiver_expired`; fields: `scope`, `approver`, `expires_at`, `compensating_control`, `affected_gate_ids`; service: `waivers.lifecycle` |
+| `FP-09B` | `FP-09` | events: `threat_model_registered`, `security_review_gate_result`; fields: `asset`, `trust_boundary`, `abuse_case`, `mitigation_status`, `gate_status`; service: `security.threat_model` |
+| `FP-09C` | `FP-09` | events: `profile_policy_registered`, `profile_policy_evaluated`; fields: `profile_id`, `evidence_policy`, `retention_policy`, `approval_policy`; service: Data/BI/Finance profile policy |
+| `FP-10A` | `FP-10` | events: `operational_memory_snapshot_created`, `human_control_snapshot_created`; fields: `memory_type`, `source_watermark`, `pending_approval_ids`, `blocked_gate_ids`; service: `memory.operational` |
+| `FP-13A` | `FP-13` | events: `friction_recorded`, `improvement_proposal_created`; fields: `friction_type`, `owner`, `evidence_ids`, `disposition`; service: `self_improvement.friction` |
+| `FP-13B` | `FP-13` | artifact: inheritance traceability matrix mapping requirement IDs to MVP, release-quality, KFIX, and final-product implementation evidence |
+| `FP-13C` | `FP-13` | artifact and test: command inventory with executable/manual classification, freshness status, and release-blocking stale command diagnostics |
+
 ## Conformance Release Targets
 
 ### Standard Conformance Target
@@ -244,7 +273,36 @@ Every test must use `tempfile.TemporaryDirectory()` or `--harness-root <tempdir>
 - Create: `docs/implementation/standard-harness-final-product-conformance-slices-v1.md`
 - Create: `tests/contract/test_conformance_trace_coverage.py`
 
-- [ ] **Step 1: Create conformance slice document**
+- [ ] **Step 1: Write conformance trace coverage test**
+
+Create `tests/contract/test_conformance_trace_coverage.py` with tests that verify:
+
+- source trace and final-product requirement report each contain exactly 260 unique requirement IDs
+- every requirement has non-empty final-product workstream mapping
+- every workstream code is `FP-00` through `FP-13` or an explicitly named addendum sub-slice
+- all addendum sub-slices `FP-01A`, `FP-01B`, `FP-07A`, `FP-07B`, `FP-07C`, `FP-08A`, `FP-09A`, `FP-09B`, `FP-09C`, `FP-10A`, `FP-13A`, `FP-13B`, and `FP-13C` are represented in implementation evidence or review notes
+- no row remains `conformance_level=unmapped_review_required` unless `review_resolution_notes` records the final disposition
+- `SH-LLM-001`, `SH-LLM-002`, and `SH-LLM-003` each include `FP-05`, `FP-07`, `FP-09`, `FP-10`, and `FP-13` coverage evidence
+- `SH-HUMAN-004`, `SH-DEGRADE-001`, `SH-DOG-002`, and `SH-INHERIT-001` through `SH-INHERIT-004` have explicit closure evidence requirements
+- `docs/implementation/standard-harness-final-product-conformance-slices-v1.md` exists and describes Kernel, Standard, Advanced, and High-Integrity boundaries
+
+- [ ] **Step 2: Verify RED**
+
+Run:
+
+```powershell
+python -m unittest tests.contract.test_conformance_trace_coverage
+```
+
+Expected:
+
+```text
+FAILED
+```
+
+because the conformance slice document and strengthened integrity checks do not exist before Step 3.
+
+- [ ] **Step 3: Create conformance slice document**
 
 Create `docs/implementation/standard-harness-final-product-conformance-slices-v1.md` with:
 
@@ -253,7 +311,7 @@ Create `docs/implementation/standard-harness-final-product-conformance-slices-v1
 
 ## Purpose
 
-This document maps final-product deferred work into Standard, Advanced, and High-Integrity implementation slices.
+This document maps final-product deferred work into Kernel-preserving Standard, Advanced, and High-Integrity implementation slices.
 
 ## Standard Slice
 
@@ -288,60 +346,6 @@ This document maps final-product deferred work into Standard, Advanced, and High
 
 No Standard, Advanced, or High-Integrity slice may bypass Kernel packet, state, evidence, gate, role, approval, closeout, or completion boundaries.
 ```
-
-- [ ] **Step 2: Write conformance trace coverage test**
-
-Create `tests/contract/test_conformance_trace_coverage.py` with:
-
-```python
-import csv
-import unittest
-from pathlib import Path
-
-
-ROOT = Path(__file__).resolve().parents[2]
-
-
-class ConformanceTraceCoverageTests(unittest.TestCase):
-    def test_deferred_final_product_items_have_implementation_slices(self):
-        trace_path = ROOT / "docs" / "requirements" / "standard-harness-conformance-trace-v1.csv"
-        slice_path = ROOT / "docs" / "implementation" / "standard-harness-final-product-conformance-slices-v1.md"
-        self.assertTrue(slice_path.exists())
-        text = slice_path.read_text(encoding="utf-8")
-        required_terms = [
-            "SSOT extraction",
-            "semantic diff",
-            "adapter contract matrix",
-            "browser",
-            "cloud orchestration",
-            "signing",
-            "Git reconciliation",
-            "dashboard",
-        ]
-        for term in required_terms:
-            self.assertIn(term, text)
-        with trace_path.open(newline="", encoding="utf-8-sig") as handle:
-            rows = list(csv.DictReader(handle))
-        self.assertGreater(len(rows), 0)
-        deferred = [row for row in rows if row["mvp_status"] == "deferred"]
-        self.assertGreater(len(deferred), 0)
-```
-
-- [ ] **Step 3: Verify RED**
-
-Run:
-
-```powershell
-python -m unittest tests.contract.test_conformance_trace_coverage
-```
-
-Expected:
-
-```text
-FAILED
-```
-
-because the conformance slice document does not exist before Step 1.
 
 - [ ] **Step 4: Verify GREEN**
 
@@ -1476,7 +1480,8 @@ FP-09 must also close `FP-09A`, `FP-09B`, and `FP-09C`.
 
 Add or extend:
 
-- `src/standard_harness/policy/waivers.py`
+- `src/standard_harness/waivers/__init__.py`
+- `src/standard_harness/waivers/lifecycle.py`
 - `src/standard_harness/security/threat_model.py`
 - `src/standard_harness/policy/data_profile.py`
 - `tests/contract/test_waiver_lifecycle.py`
@@ -1854,6 +1859,8 @@ Tests and release evidence must prove:
 
 Before closing any workstream:
 
+- run `git status --short` before edits and again before commit
+- keep each workstream diff limited to its declared files unless the plan is updated with the reason
 - run its focused tests
 - run `python -m unittest discover -s tests`
 - ensure no test uses development `.harness/state/harness.sqlite3`
@@ -1861,6 +1868,7 @@ Before closing any workstream:
 - ensure all new materialized records derive from events
 - ensure diagnostics are machine-readable and human-readable
 - update `docs/implementation/standard-harness-final-product-conformance-slices-v1.md` when conformance coverage changes
+- record changed files, focused test result, full test result, closed requirement IDs, closed addendum sub-slices, remaining gaps, and commit hash or commit failure reason
 
 ## Stop Conditions
 
@@ -1871,8 +1879,11 @@ Stop and ask for human decision when:
 - a schema migration cannot preserve existing MVP state
 - a final-product feature would weaken Kernel invariants
 - dashboard or cloud work would become the only audit source
-- signing or retention behavior implies legal, compliance, or enterprise policy decisions
+- signing, retention, privacy, legal, compliance, or enterprise policy behavior requires a policy decision
 - automatic Git repair would change source files without explicit approval
+- final release tag approval is required
+- irreversible Git history changes are required
+- a workstream commit fails or would include unintended files
 
 ## Self-Review Checklist
 
