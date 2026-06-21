@@ -1219,153 +1219,437 @@
     {
       "hrId": "HR-100R",
       "title": "Documenter creates closeout and proposal, not direct Wiki edits",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-05",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/wiki-proposal.schema.json",
+          "_harness/schemas/wiki-page.schema.json",
+          "_harness/schemas/wiki-index.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/wiki-knowledge-policy.yaml"
+        ],
         "validator": [
-          "closeout-documenter-validator"
+          "src/standard_harness/wiki/validator.py",
+          "src/standard_harness/wiki/provenance.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "closeout-gate"
-        ],
-        "evidence": [
-          "closeout-report"
+          "wiki-proposal-gate",
+          "wiki-apply-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_05_planned_contract"
+          "tests/contract/test_closeout_documenter_report.py",
+          "tests/contract/test_wiki_proposal_validator.py",
+          "tests/contract/test_wiki_applier_requires_validated_proposal.py",
+          "tests/contract/test_wiki_page_schema.py",
+          "tests/contract/test_wiki_index_contract.py",
+          "tests/contract/test_wiki_provenance_required.py",
+          "tests/contract/test_skill_facing_index_is_projection_only.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-05",
+      "migrationCompatibility": [
+        "Existing operational memory remains source evidence and is not direct Wiki state.",
+        "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
+        "Existing generated summaries remain low-authority until linked to trusted evidence and applied through validated proposals.",
+        "skill-facing-index.md is projection-only and cannot define, execute, or authorize skills."
+      ],
+      "releaseBlockingValidators": [
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
+      ],
+      "releaseBlockingGates": [
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
+      ],
+      "diagnostics": [
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "stale_context",
+        "docs_drift"
+      ],
+      "waiverPolicy": "Wiki mutation without a validated proposal is not allowed. Skill-facing projections cannot authorize skills.",
+      "enforcementPoint": "validate, wiki proposal, wiki apply, closeout documenter",
+      "frictionMetricBehavior": [
+        "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
+        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics."
+      ]
     },
     {
       "hrId": "HR-101R",
       "title": "Closeout report has required fields",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-05",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/wiki-proposal.schema.json",
+          "_harness/schemas/wiki-page.schema.json",
+          "_harness/schemas/wiki-index.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/wiki-knowledge-policy.yaml"
+        ],
         "validator": [
-          "closeout-validator"
+          "src/standard_harness/wiki/validator.py",
+          "src/standard_harness/wiki/provenance.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "closeout-gate"
-        ],
-        "evidence": [
-          "closeout-report"
+          "wiki-proposal-gate",
+          "wiki-apply-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_05_planned_contract"
+          "tests/contract/test_closeout_documenter_report.py",
+          "tests/contract/test_wiki_proposal_validator.py",
+          "tests/contract/test_wiki_applier_requires_validated_proposal.py",
+          "tests/contract/test_wiki_page_schema.py",
+          "tests/contract/test_wiki_index_contract.py",
+          "tests/contract/test_wiki_provenance_required.py",
+          "tests/contract/test_skill_facing_index_is_projection_only.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-05",
+      "migrationCompatibility": [
+        "Existing operational memory remains source evidence and is not direct Wiki state.",
+        "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
+        "Existing generated summaries remain low-authority until linked to trusted evidence and applied through validated proposals.",
+        "skill-facing-index.md is projection-only and cannot define, execute, or authorize skills."
+      ],
+      "releaseBlockingValidators": [
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
+      ],
+      "releaseBlockingGates": [
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
+      ],
+      "diagnostics": [
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "stale_context",
+        "docs_drift"
+      ],
+      "waiverPolicy": "Wiki mutation without a validated proposal is not allowed. Skill-facing projections cannot authorize skills.",
+      "enforcementPoint": "validate, wiki proposal, wiki apply, closeout documenter",
+      "frictionMetricBehavior": [
+        "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
+        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics."
+      ]
     },
     {
       "hrId": "HR-102R",
       "title": "Closed state requires closeout",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-05",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/wiki-proposal.schema.json",
+          "_harness/schemas/wiki-page.schema.json",
+          "_harness/schemas/wiki-index.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/wiki-knowledge-policy.yaml"
+        ],
         "validator": [
-          "closeout-validator"
+          "src/standard_harness/wiki/validator.py",
+          "src/standard_harness/wiki/provenance.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "closeout-gate"
-        ],
-        "evidence": [
-          "closeout-report"
+          "wiki-proposal-gate",
+          "wiki-apply-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_05_planned_contract"
+          "tests/contract/test_closeout_documenter_report.py",
+          "tests/contract/test_wiki_proposal_validator.py",
+          "tests/contract/test_wiki_applier_requires_validated_proposal.py",
+          "tests/contract/test_wiki_page_schema.py",
+          "tests/contract/test_wiki_index_contract.py",
+          "tests/contract/test_wiki_provenance_required.py",
+          "tests/contract/test_skill_facing_index_is_projection_only.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-05",
+      "migrationCompatibility": [
+        "Existing operational memory remains source evidence and is not direct Wiki state.",
+        "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
+        "Existing generated summaries remain low-authority until linked to trusted evidence and applied through validated proposals.",
+        "skill-facing-index.md is projection-only and cannot define, execute, or authorize skills."
+      ],
+      "releaseBlockingValidators": [
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
+      ],
+      "releaseBlockingGates": [
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
+      ],
+      "diagnostics": [
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "stale_context",
+        "docs_drift"
+      ],
+      "waiverPolicy": "Wiki mutation without a validated proposal is not allowed. Skill-facing projections cannot authorize skills.",
+      "enforcementPoint": "validate, wiki proposal, wiki apply, closeout documenter",
+      "frictionMetricBehavior": [
+        "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
+        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics."
+      ]
     },
     {
       "hrId": "HR-110R",
       "title": "Wiki updates use evidence-backed proposal/apply flow",
-      "coverageStatus": "partial",
-      "xpOwner": "XP-08A/XP-05",
-      "implementationDisposition": "modify",
+      "coverageStatus": "complete",
+      "xpOwner": "XP-05",
+      "implementationDisposition": "create",
       "currentImplementation": [
-        "_harness/policies/evidence-classification.yaml",
-        "src/standard_harness/security/evidence_classification.py",
-        "src/standard_harness/validation/sensitive_evidence.py",
-        "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/state/migrations.py",
-        "src/standard_harness/state/replay.py",
-        "src/standard_harness/state/audit.py",
-        "src/standard_harness/security/redaction.py"
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/wiki-proposal.schema.json",
+          "_harness/schemas/wiki-page.schema.json",
+          "_harness/schemas/wiki-index.schema.json"
+        ],
         "policy": [
-          "_harness/policies/evidence-classification.yaml"
+          "_harness/policies/wiki-knowledge-policy.yaml"
         ],
         "validator": [
-          "src/standard_harness/validation/sensitive_evidence.py"
+          "src/standard_harness/wiki/validator.py",
+          "src/standard_harness/wiki/provenance.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "sensitive-evidence-gate"
+          "wiki-proposal-gate",
+          "wiki-apply-gate"
         ],
         "tests": [
-          "tests/contract/test_sensitive_evidence_classification.py",
-          "tests/evals/test_secret_evidence_registration_blocked.py"
+          "tests/contract/test_closeout_documenter_report.py",
+          "tests/contract/test_wiki_proposal_validator.py",
+          "tests/contract/test_wiki_applier_requires_validated_proposal.py",
+          "tests/contract/test_wiki_page_schema.py",
+          "tests/contract/test_wiki_index_contract.py",
+          "tests/contract/test_wiki_provenance_required.py",
+          "tests/contract/test_skill_facing_index_is_projection_only.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-08A",
+      "lastUpdatedByPacket": "XP-05",
       "migrationCompatibility": [
-        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
-        "SECRET evidence is blocked before evidence.registered event persistence.",
-        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+        "Existing operational memory remains source evidence and is not direct Wiki state.",
+        "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
+        "Existing generated summaries remain low-authority until linked to trusted evidence and applied through validated proposals.",
+        "skill-facing-index.md is projection-only and cannot define, execute, or authorize skills."
       ],
       "releaseBlockingValidators": [
-        "sensitive-evidence-validator"
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
       ],
       "releaseBlockingGates": [
-        "sensitive-evidence-gate"
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
       ],
       "diagnostics": [
-        "secret_evidence_registered",
-        "sensitive_wiki_promotion"
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "stale_context",
+        "docs_drift"
       ],
-      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
-      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "waiverPolicy": "Wiki mutation without a validated proposal is not allowed. Skill-facing projections cannot authorize skills.",
+      "enforcementPoint": "validate, wiki proposal, wiki apply, closeout documenter",
       "frictionMetricBehavior": [
-        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
-        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+        "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
+        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics."
       ]
     },
     {
       "hrId": "HR-111R",
       "title": "Wiki entries have types",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-05",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
+      ],
       "targetArtifacts": {
+        "schema": [
+          "_harness/schemas/wiki-proposal.schema.json",
+          "_harness/schemas/wiki-page.schema.json",
+          "_harness/schemas/wiki-index.schema.json"
+        ],
+        "policy": [
+          "_harness/policies/wiki-knowledge-policy.yaml"
+        ],
         "validator": [
-          "wiki-proposal-validator"
+          "src/standard_harness/wiki/validator.py",
+          "src/standard_harness/wiki/provenance.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "wiki-proposal-gate"
-        ],
-        "evidence": [
-          "wiki-entry"
+          "wiki-proposal-gate",
+          "wiki-apply-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_05_planned_contract"
+          "tests/contract/test_closeout_documenter_report.py",
+          "tests/contract/test_wiki_proposal_validator.py",
+          "tests/contract/test_wiki_applier_requires_validated_proposal.py",
+          "tests/contract/test_wiki_page_schema.py",
+          "tests/contract/test_wiki_index_contract.py",
+          "tests/contract/test_wiki_provenance_required.py",
+          "tests/contract/test_skill_facing_index_is_projection_only.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-05",
+      "migrationCompatibility": [
+        "Existing operational memory remains source evidence and is not direct Wiki state.",
+        "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
+        "Existing generated summaries remain low-authority until linked to trusted evidence and applied through validated proposals.",
+        "skill-facing-index.md is projection-only and cannot define, execute, or authorize skills."
+      ],
+      "releaseBlockingValidators": [
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
+      ],
+      "releaseBlockingGates": [
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
+      ],
+      "diagnostics": [
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "stale_context",
+        "docs_drift"
+      ],
+      "waiverPolicy": "Wiki mutation without a validated proposal is not allowed. Skill-facing projections cannot authorize skills.",
+      "enforcementPoint": "validate, wiki proposal, wiki apply, closeout documenter",
+      "frictionMetricBehavior": [
+        "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
+        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics."
+      ]
     },
     {
       "hrId": "HR-119R",

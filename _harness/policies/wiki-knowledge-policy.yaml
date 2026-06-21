@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "wiki-knowledge-policy",
+  "allowedEntryTypes": [
+    "DECISION",
+    "ASSUMPTION",
+    "DEPRECATED",
+    "FRICTION",
+    "IMPROVEMENT_CANDIDATE"
+  ],
+  "authorityRule": "Generated summaries cannot override requirements, policies, gate results, human decisions, or trusted evidence.",
+  "mutationRule": "Only wiki-applier may write _ops/wiki/** after wiki-proposal-validator validates the proposal.",
+  "skillFacingIndexRule": "skill-facing-index.md is projection only and cannot execute or authorize skills.",
+  "frictionSignalBehavior": "emit docs_drift or stale_context when wiki content is stale, low-authority, generated, or unprovenanced",
+  "metricSignalBehavior": "emit wiki_proposal_validation_count, wiki_apply_count, and wiki_index_page_count"
+}

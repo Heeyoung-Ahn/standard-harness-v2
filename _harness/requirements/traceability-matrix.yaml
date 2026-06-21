@@ -1018,21 +1018,56 @@
       "hrId": "HR-100R",
       "xpOwner": "XP-05",
       "files": [
-        "planned:xp_05:HR-100R"
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
       "validators": [
-        "closeout-documenter-validator"
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
       ],
       "gates": [
-        "closeout-gate"
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
       ],
       "evidenceTypes": [
-        "closeout-report"
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index"
       ],
       "tests": [
-        "tests.contract.test_xp_05_planned_contract"
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only"
       ],
       "releaseBlocking": true
     },
@@ -1040,21 +1075,56 @@
       "hrId": "HR-101R",
       "xpOwner": "XP-05",
       "files": [
-        "planned:xp_05:HR-101R"
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
       "validators": [
-        "closeout-validator"
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
       ],
       "gates": [
-        "closeout-gate"
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
       ],
       "evidenceTypes": [
-        "closeout-report"
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index"
       ],
       "tests": [
-        "tests.contract.test_xp_05_planned_contract"
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only"
       ],
       "releaseBlocking": true
     },
@@ -1062,54 +1132,113 @@
       "hrId": "HR-102R",
       "xpOwner": "XP-05",
       "files": [
-        "planned:xp_05:HR-102R"
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
       "validators": [
-        "closeout-validator"
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
       ],
       "gates": [
-        "closeout-gate"
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
       ],
       "evidenceTypes": [
-        "closeout-report"
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index"
       ],
       "tests": [
-        "tests.contract.test_xp_05_planned_contract"
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only"
       ],
       "releaseBlocking": true
     },
     {
       "hrId": "HR-110R",
-      "xpOwner": "XP-08A/XP-05",
+      "xpOwner": "XP-05",
       "files": [
-        "_harness/policies/evidence-classification.yaml",
-        "src/standard_harness/security/evidence_classification.py",
-        "src/standard_harness/validation/sensitive_evidence.py",
-        "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/state/migrations.py",
-        "src/standard_harness/state/replay.py",
-        "src/standard_harness/state/audit.py",
-        "src/standard_harness/security/redaction.py"
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json"
+      ],
       "policies": [
-        "_harness/policies/evidence-classification.yaml"
+        "_harness/policies/wiki-knowledge-policy.yaml"
       ],
       "validators": [
-        "sensitive-evidence-validator"
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
       ],
       "gates": [
-        "sensitive-evidence-gate"
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
       ],
       "evidenceTypes": [
-        "evidence-classification-result",
-        "secret-scan-result"
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index"
       ],
       "tests": [
-        "tests.contract.test_sensitive_evidence_classification",
-        "tests.evals.test_secret_evidence_registration_blocked"
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only"
       ],
       "releaseBlocking": true
     },
@@ -1117,21 +1246,56 @@
       "hrId": "HR-111R",
       "xpOwner": "XP-05",
       "files": [
-        "planned:xp_05:HR-111R"
+        "src/standard_harness/documenter/closeout_report.py",
+        "src/standard_harness/wiki/proposals.py",
+        "src/standard_harness/wiki/validator.py",
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/wiki/index.py",
+        "src/standard_harness/wiki/provenance.py",
+        "src/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
       ],
-      "schemas": [],
-      "policies": [],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
       "validators": [
-        "wiki-proposal-validator"
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
       ],
       "gates": [
-        "wiki-proposal-gate"
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
       ],
       "evidenceTypes": [
-        "wiki-entry"
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index"
       ],
       "tests": [
-        "tests.contract.test_xp_05_planned_contract"
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only"
       ],
       "releaseBlocking": true
     },

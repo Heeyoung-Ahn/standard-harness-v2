@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Wiki Proposal",
+  "type": "object",
+  "required": [
+    "proposalId",
+    "packetId",
+    "targetPage",
+    "entryType",
+    "sourceTier",
+    "provenance",
+    "owner",
+    "reviewStatus",
+    "relatedHrIds",
+    "relatedXpIds",
+    "evidenceIds",
+    "closeoutId",
+    "content"
+  ],
+  "properties": {
+    "proposalId": {"type": "string"},
+    "packetId": {"type": "string"},
+    "targetPage": {"type": "string"},
+    "entryType": {"type": "string"},
+    "sourceTier": {"type": "string"},
+    "provenance": {"type": "object"},
+    "owner": {"type": "string"},
+    "reviewStatus": {"type": "string"},
+    "relatedHrIds": {"type": "array", "items": {"type": "string"}},
+    "relatedXpIds": {"type": "array", "items": {"type": "string"}},
+    "evidenceIds": {"type": "array", "items": {"type": "string"}},
+    "closeoutId": {"type": "string"},
+    "content": {"type": "string"}
+  }
+}

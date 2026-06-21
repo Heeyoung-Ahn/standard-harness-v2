@@ -22,6 +22,7 @@ from standard_harness.validation.readiness import ReadinessService
 from standard_harness.validation.requirements_metadata import RequirementsMetadataValidator
 from standard_harness.validation.test_plan import TestPlanValidator
 from standard_harness.validation.test_plan import packet_requires_test_plan
+from standard_harness.wiki.validator import WikiProposalValidator
 
 
 class ValidationService:
@@ -71,6 +72,7 @@ class ValidationService:
         diagnostics = self._packet_schema_diagnostics(packet_id)
         diagnostics.extend(self._test_plan_diagnostics(packet_id))
         diagnostics.extend(self._boundary_diagnostics(packet_id))
+        diagnostics.extend(self._wiki_proposal_diagnostics(packet_id))
         diagnostics.extend(ReadinessService(self.store).check_packet(packet_id)["diagnostics"])
         diagnostics.extend(self._completion_diagnostics(packet_id))
         diagnostics.extend(self._evidence_trust_diagnostics(packet_id))
@@ -569,6 +571,31 @@ class ValidationService:
                     affected_entity_id=diagnostic["path"],
                     packet_id=packet_id,
                     field="boundaryValidation.changedFiles",
+                )
+            )
+        return diagnostics
+
+    def _wiki_proposal_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:
+        packet = PacketService(self.store).get_packet(packet_id)
+        closeout_plan = packet.get("closeout_plan")
+        if not isinstance(closeout_plan, dict):
+            return []
+        proposal = closeout_plan.get("wikiProposal") or closeout_plan.get("wiki_proposal")
+        if not isinstance(proposal, dict):
+            return []
+        result = WikiProposalValidator().validate(proposal)
+        diagnostics = []
+        for diagnostic_id in result["diagnostic_ids"]:
+            diagnostics.append(
+                _diagnostic(
+                    error_code=diagnostic_id,
+                    category="wiki",
+                    message=f"Wiki proposal validation blocks packet validation: {diagnostic_id}",
+                    repair_hint="Provide a validated evidence-linked wiki proposal and avoid SECRET/SENSITIVE evidence promotion.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="closeout_plan.wikiProposal",
                 )
             )
         return diagnostics
