@@ -242,6 +242,53 @@ create table if not exists starter_manifest_entries (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists recovery_runs (
+  recovery_id text primary key,
+  reason text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  recovery_status text not null,
+  projection_checksum text not null,
+  rebuilt_tables_json text not null,
+  diagnostic_ids_json text not null,
+  started_event_id text not null,
+  completed_event_id text,
+  recorded_at text not null
+);
+
+create table if not exists audit_snapshots (
+  snapshot_id text primary key,
+  event_seq_range text not null,
+  schema_version text not null,
+  restore_checksum text not null,
+  snapshot_json text not null,
+  created_at text not null
+);
+
+create table if not exists state_backups (
+  backup_id text primary key,
+  backup_path text not null,
+  schema_version text not null,
+  event_seq_range text not null,
+  event_count integer not null,
+  projection_checksum text not null,
+  backup_checksum text not null,
+  created_event_id text not null,
+  created_at text not null
+);
+
+create table if not exists restore_verifications (
+  restore_id text primary key,
+  backup_id text not null,
+  schema_version text not null,
+  restored_event_seq_order_json text not null,
+  projection_checksum text not null,
+  restore_checksum text not null,
+  restore_status text not null,
+  verified_event_id text not null,
+  verified_at text not null
+);
 """
 
 

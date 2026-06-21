@@ -52,16 +52,17 @@ class GateService:
             "source_event_range": f"1-{watermark}",
             "source_watermark": watermark,
         }
-        self.store.append_event(
-            event_type="gate.declared",
-            actor_id="planner",
-            actor_role="Planner",
-            authority_basis="gate declaration",
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            payload=gate,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="gate.declared",
+                actor_id="planner",
+                actor_role="Planner",
+                authority_basis="gate declaration",
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                payload=gate,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into gate_declarations (
@@ -79,7 +80,6 @@ class GateService:
                     watermark,
                 ),
             )
-            conn.commit()
         return self.get_gate(gate_id)
 
     def activate_gate(
@@ -108,16 +108,17 @@ class GateService:
             "source_event_range": f"1-{watermark}",
             "source_watermark": watermark,
         }
-        self.store.append_event(
-            event_type="gate.activated",
-            actor_id="planner",
-            actor_role="Planner",
-            authority_basis="gate activation",
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            payload=activation,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="gate.activated",
+                actor_id="planner",
+                actor_role="Planner",
+                authority_basis="gate activation",
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                payload=activation,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into gate_activations (
@@ -135,7 +136,6 @@ class GateService:
                     watermark,
                 ),
             )
-            conn.commit()
         return self.get_activation(gate_activation_id)
 
     def record_gate_result(
@@ -179,16 +179,17 @@ class GateService:
             "source_event_range": f"1-{watermark}",
             "source_watermark": watermark,
         }
-        self.store.append_event(
-            event_type="gate.result_recorded",
-            actor_id="tester",
-            actor_role="Tester",
-            authority_basis="gate result",
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            payload=result,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="gate.result_recorded",
+                actor_id="tester",
+                actor_role="Tester",
+                authority_basis="gate result",
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                payload=result,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into gate_results (
@@ -210,7 +211,6 @@ class GateService:
                     watermark,
                 ),
             )
-            conn.commit()
         return self.get_gate_result(gate_result_id)
 
     def get_gate(self, gate_id: str) -> dict[str, object]:

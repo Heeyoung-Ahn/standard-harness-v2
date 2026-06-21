@@ -47,6 +47,17 @@ class HarnessStore:
         with closing(self.connect()) as conn:
             yield conn
 
+    @contextmanager
+    def transaction(self) -> Iterator[sqlite3.Connection]:
+        self.initialize()
+        with closing(self.connect()) as conn:
+            try:
+                yield conn
+                conn.commit()
+            except Exception:
+                conn.rollback()
+                raise
+
     def latest_event_seq(self) -> int:
         if not self.db_path.exists():
             return 0
@@ -80,67 +91,47 @@ class HarnessStore:
         source_snapshot: str | None = None,
         causal_event_id: str | None = None,
         causal_order: int | None = None,
+        conn: sqlite3.Connection | None = None,
     ) -> dict[str, Any]:
-        self.initialize()
         payload_json = canonical_json(payload)
         digest = payload_hash(payload)
-        with closing(self.connect()) as conn:
-            existing = conn.execute(
-                "select * from events where idempotency_key = ?", (idempotency_key,)
-            ).fetchone()
-            if existing is not None:
-                return _row_to_event(existing)
-
-            if expected_state_version is not None:
-                current_version = conn.execute(
-                    "select coalesce(max(event_seq), 0) as seq from events"
-                ).fetchone()["seq"]
-                if int(current_version) != expected_state_version:
-                    raise ValueError(
-                        f"expected_state_version mismatch: expected {expected_state_version}, current {current_version}"
-                    )
-
-            event_id = new_event_id()
-            transaction_id = new_transaction_id()
-            occurred_at = utc_now_iso()
-            cursor = conn.execute(
-                """
-                insert into events (
-                  event_id, event_type, schema_version, occurred_at, actor_id, actor_role,
-                  authority_basis, transaction_id, causal_event_id, causal_order, packet_id,
-                  packet_version, expected_state_version, state_version_after, idempotency_key,
-                  source_snapshot, payload_json, payload_hash, payload_hash_algorithm
-                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    event_id,
-                    event_type,
-                    SCHEMA_VERSION,
-                    occurred_at,
-                    actor_id,
-                    actor_role,
-                    authority_basis,
-                    transaction_id,
-                    causal_event_id,
-                    causal_order,
-                    packet_id,
-                    packet_version,
-                    expected_state_version,
-                    None,
-                    idempotency_key,
-                    source_snapshot,
-                    payload_json,
-                    digest,
-                    HASH_ALGORITHM,
-                ),
+        if conn is not None:
+            row = _append_event_row(
+                conn=conn,
+                event_type=event_type,
+                actor_id=actor_id,
+                actor_role=actor_role,
+                authority_basis=authority_basis,
+                idempotency_key=idempotency_key,
+                payload_json=payload_json,
+                digest=digest,
+                packet_id=packet_id,
+                packet_version=packet_version,
+                expected_state_version=expected_state_version,
+                source_snapshot=source_snapshot,
+                causal_event_id=causal_event_id,
+                causal_order=causal_order,
             )
-            event_seq = int(cursor.lastrowid)
-            conn.execute(
-                "update events set state_version_after = ? where event_seq = ?",
-                (event_seq, event_seq),
+            return _row_to_event(row)
+        self.initialize()
+        with closing(self.connect()) as local_conn:
+            row = _append_event_row(
+                conn=local_conn,
+                event_type=event_type,
+                actor_id=actor_id,
+                actor_role=actor_role,
+                authority_basis=authority_basis,
+                idempotency_key=idempotency_key,
+                payload_json=payload_json,
+                digest=digest,
+                packet_id=packet_id,
+                packet_version=packet_version,
+                expected_state_version=expected_state_version,
+                source_snapshot=source_snapshot,
+                causal_event_id=causal_event_id,
+                causal_order=causal_order,
             )
-            conn.commit()
-            row = conn.execute("select * from events where event_seq = ?", (event_seq,)).fetchone()
+            local_conn.commit()
         return _row_to_event(row)
 
 
@@ -157,3 +148,77 @@ def _row_to_event(row: sqlite3.Row) -> dict[str, Any]:
     result = dict(row)
     result["payload"] = json.loads(result.pop("payload_json"))
     return result
+
+
+def _append_event_row(
+    *,
+    conn: sqlite3.Connection,
+    event_type: str,
+    actor_id: str,
+    actor_role: str,
+    authority_basis: str,
+    idempotency_key: str,
+    payload_json: str,
+    digest: str,
+    packet_id: str | None,
+    packet_version: int | None,
+    expected_state_version: int | None,
+    source_snapshot: str | None,
+    causal_event_id: str | None,
+    causal_order: int | None,
+) -> sqlite3.Row:
+    existing = conn.execute(
+        "select * from events where idempotency_key = ?", (idempotency_key,)
+    ).fetchone()
+    if existing is not None:
+        return existing
+
+    if expected_state_version is not None:
+        current_version = conn.execute(
+            "select coalesce(max(event_seq), 0) as seq from events"
+        ).fetchone()["seq"]
+        if int(current_version) != expected_state_version:
+            raise ValueError(
+                f"expected_state_version mismatch: expected {expected_state_version}, current {current_version}"
+            )
+
+    event_id = new_event_id()
+    transaction_id = new_transaction_id()
+    occurred_at = utc_now_iso()
+    cursor = conn.execute(
+        """
+        insert into events (
+          event_id, event_type, schema_version, occurred_at, actor_id, actor_role,
+          authority_basis, transaction_id, causal_event_id, causal_order, packet_id,
+          packet_version, expected_state_version, state_version_after, idempotency_key,
+          source_snapshot, payload_json, payload_hash, payload_hash_algorithm
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            event_id,
+            event_type,
+            SCHEMA_VERSION,
+            occurred_at,
+            actor_id,
+            actor_role,
+            authority_basis,
+            transaction_id,
+            causal_event_id,
+            causal_order,
+            packet_id,
+            packet_version,
+            expected_state_version,
+            None,
+            idempotency_key,
+            source_snapshot,
+            payload_json,
+            digest,
+            HASH_ALGORITHM,
+        ),
+    )
+    event_seq = int(cursor.lastrowid)
+    conn.execute(
+        "update events set state_version_after = ? where event_seq = ?",
+        (event_seq, event_seq),
+    )
+    return conn.execute("select * from events where event_seq = ?", (event_seq,)).fetchone()

@@ -46,16 +46,17 @@ class RequirementRegistry:
             "created_at": now,
             "updated_at": now,
         }
-        self.store.append_event(
-            event_type="requirement.registered",
-            actor_id="planner",
-            actor_role="Planner",
-            authority_basis="manual requirement registration",
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            payload=requirement,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="requirement.registered",
+                actor_id="planner",
+                actor_role="Planner",
+                authority_basis="manual requirement registration",
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                payload=requirement,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into requirements (
@@ -78,7 +79,6 @@ class RequirementRegistry:
                     now,
                 ),
             )
-            conn.commit()
         return self.get_requirement(requirement_id)
 
     def register_acceptance_criterion(
@@ -115,16 +115,17 @@ class RequirementRegistry:
             "created_at": now,
             "updated_at": now,
         }
-        self.store.append_event(
-            event_type="acceptance_criterion.registered",
-            actor_id="planner",
-            actor_role="Planner",
-            authority_basis="manual acceptance registration",
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            payload=criterion,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="acceptance_criterion.registered",
+                actor_id="planner",
+                actor_role="Planner",
+                authority_basis="manual acceptance registration",
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                payload=criterion,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into acceptance_criteria (
@@ -142,7 +143,6 @@ class RequirementRegistry:
                     now,
                 ),
             )
-            conn.commit()
         return self.get_acceptance_criterion(acceptance_criterion_id)
 
     def get_requirement(self, requirement_id: str) -> dict[str, object]:

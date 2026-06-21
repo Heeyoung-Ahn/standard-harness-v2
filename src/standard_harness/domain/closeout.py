@@ -55,6 +55,10 @@ class CloseoutService:
         required_claim_ids = {str(claim["claim_id"]) for claim in claims}
         if gate_results and not required_claim_ids.issubset(checked_claim_ids):
             _add_diagnostic(diagnostics, "missing_gate_claim_coverage")
+        for diagnostic_id in self._projection_diagnostics(packet_id):
+            _add_diagnostic(diagnostics, diagnostic_id)
+        for diagnostic_id in self._recovery_diagnostics():
+            _add_diagnostic(diagnostics, diagnostic_id)
         decision_status = "closed" if not diagnostics else "blocked"
         closeout = {
             "closeout_id": closeout_id,
@@ -71,17 +75,18 @@ class CloseoutService:
             "decided_at": utc_now_iso(),
             "rationale": rationale,
         }
-        self.store.append_event(
-            event_type="closeout.decided",
-            actor_id="reviewer",
-            actor_role="Reviewer",
-            authority_basis=authority_basis,
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            packet_version=int(packet["packet_version"]),
-            payload=closeout,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="closeout.decided",
+                actor_id="reviewer",
+                actor_role="Reviewer",
+                authority_basis=authority_basis,
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                packet_version=int(packet["packet_version"]),
+                payload=closeout,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into closeouts (
@@ -111,7 +116,6 @@ class CloseoutService:
                 "update packets set lifecycle_state = ?, updated_at = ? where packet_id = ?",
                 (decision_status, closeout["decided_at"], packet_id),
             )
-            conn.commit()
         return self.get_closeout(closeout_id)
 
     def get_closeout(self, closeout_id: str) -> dict[str, object]:
@@ -179,6 +183,45 @@ class CloseoutService:
                 "select 1 from closeouts where closeout_id = ?", (closeout_id,)
             ).fetchone()
         return row is not None
+
+    def _projection_diagnostics(self, packet_id: str) -> list[str]:
+        with self.store.connection() as conn:
+            projection = conn.execute(
+                """
+                select source_watermark from projections
+                where packet_id = ? and projection_type = 'current_context'
+                order by trace_event_seq desc limit 1
+                """,
+                (packet_id,),
+            ).fetchone()
+            if projection is None:
+                return []
+            latest_source = conn.execute(
+                """
+                select coalesce(max(event_seq), 0) as seq
+                from events
+                where event_type != 'projection.generated'
+                  and event_type not in (
+                    'recovery_started', 'projection_rebuilt', 'recovery_blocked',
+                    'audit_snapshot_created', 'backup_created', 'restore_verified'
+                  )
+                """
+            ).fetchone()["seq"]
+        if int(projection["source_watermark"]) < int(latest_source):
+            return ["stale_projection"]
+        return []
+
+    def _recovery_diagnostics(self) -> list[str]:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                """
+                select recovery_status from recovery_runs
+                order by recorded_at desc limit 1
+                """
+            ).fetchone()
+        if row is not None and row["recovery_status"] != "rebuilt":
+            return ["blocked_recovery"]
+        return []
 
 
 def _add_diagnostic(diagnostics: list[str], diagnostic_id: str) -> None:

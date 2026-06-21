@@ -43,16 +43,17 @@ class ArtifactRegistry:
             "created_at": now,
             "updated_at": now,
         }
-        self.store.append_event(
-            event_type="artifact.registered",
-            actor_id=owner,
-            actor_role=owner,
-            authority_basis="manual artifact registration",
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            payload=artifact,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="artifact.registered",
+                actor_id=owner,
+                actor_role=owner,
+                authority_basis="manual artifact registration",
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                payload=artifact,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into artifacts (
@@ -72,7 +73,6 @@ class ArtifactRegistry:
                     now,
                 ),
             )
-            conn.commit()
         return self.get_artifact(artifact_id)
 
     def get_artifact(self, artifact_id: str) -> dict[str, object]:

@@ -40,19 +40,20 @@ class CurrentContextProjection:
             "packet": packet,
         }
         projection["dependency_digest"] = _dependency_digest(projection)
-        trace_event = self.store.append_event(
-            event_type="projection.generated",
-            actor_id="projection",
-            actor_role="System",
-            authority_basis="current context projection generation",
-            idempotency_key=f"projection-{projection['projection_id']}",
-            packet_id=packet_id,
-            packet_version=int(packet["packet_version"]),
-            payload=projection,
-        )
-        projection["trace_event_id"] = trace_event["event_id"]
-        projection["trace_event_seq"] = trace_event["event_seq"]
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            trace_event = self.store.append_event(
+                event_type="projection.generated",
+                actor_id="projection",
+                actor_role="System",
+                authority_basis="current context projection generation",
+                idempotency_key=f"projection-{projection['projection_id']}",
+                packet_id=packet_id,
+                packet_version=int(packet["packet_version"]),
+                payload=projection,
+                conn=conn,
+            )
+            projection["trace_event_id"] = trace_event["event_id"]
+            projection["trace_event_seq"] = trace_event["event_seq"]
             conn.execute(
                 """
                 insert into projections (
@@ -80,7 +81,6 @@ class CurrentContextProjection:
                     json.dumps(projection, sort_keys=True),
                 ),
             )
-            conn.commit()
         return projection
 
     def freshness(self, projection: dict[str, Any]) -> dict[str, Any]:
