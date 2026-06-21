@@ -6,6 +6,8 @@ import json
 
 from standard_harness.domain.packets import PacketService
 from standard_harness.gitops.drift import FilesystemDriftService
+from standard_harness.policy.bundles import PolicyBundleService
+from standard_harness.policy.release import ReleasePolicyBoundary
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 
@@ -31,6 +33,7 @@ class CloseoutService:
         packet = PacketService(self.store).get_packet(packet_id)
         self._record_pre_closeout_drift(packet_id)
         source_watermark = self.store.latest_event_seq()
+        policy_bundle_version = PolicyBundleService(self.store).latest_compatible_version()
         claims = self._supported_claims(packet_id)
         gate_results = self._passing_gate_results(packet_id)
         evidence_ids = sorted({evidence_id for claim in claims for evidence_id in claim["evidence_ids"]})
@@ -68,6 +71,8 @@ class CloseoutService:
             _add_diagnostic(diagnostics, diagnostic_id)
         for diagnostic_id in self._filesystem_drift_diagnostics(packet_id):
             _add_diagnostic(diagnostics, diagnostic_id)
+        for diagnostic_id in ReleasePolicyBoundary(self.store).diagnostics(packet_id=packet_id):
+            _add_diagnostic(diagnostics, diagnostic_id)
         decision_status = "closed" if not diagnostics else "blocked"
         closeout = {
             "closeout_id": closeout_id,
@@ -81,6 +86,7 @@ class CloseoutService:
             "source_event_range": f"1-{source_watermark}",
             "source_watermark": source_watermark,
             "authority_basis": authority_basis,
+            "policy_bundle_version": policy_bundle_version,
             "review_bundle_id": review_bundle_id,
             "decided_at": utc_now_iso(),
             "rationale": rationale,
@@ -102,9 +108,9 @@ class CloseoutService:
                 insert or ignore into closeouts (
                   closeout_id, packet_id, packet_version, decision_status,
                   checked_claim_ids_json, gate_result_ids_json, evidence_ids_json,
-                  diagnostic_ids_json, review_bundle_id, source_event_range, source_watermark,
+                  diagnostic_ids_json, policy_bundle_version, review_bundle_id, source_event_range, source_watermark,
                   authority_basis, decided_at, rationale
-                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     closeout_id,
@@ -115,6 +121,7 @@ class CloseoutService:
                     json.dumps(closeout["gate_result_ids"], sort_keys=True),
                     json.dumps(closeout["evidence_ids"], sort_keys=True),
                     json.dumps(closeout["diagnostic_ids"], sort_keys=True),
+                    policy_bundle_version,
                     review_bundle_id,
                     closeout["source_event_range"],
                     source_watermark,
@@ -140,6 +147,7 @@ class CloseoutService:
         result["evidence_ids"] = json.loads(result.pop("evidence_ids_json"))
         result["diagnostic_ids"] = json.loads(result.pop("diagnostic_ids_json"))
         result.setdefault("review_bundle_id", None)
+        result.setdefault("policy_bundle_version", None)
         return result
 
     def _supported_claims(self, packet_id: str) -> list[dict[str, object]]:

@@ -9,6 +9,12 @@ from standard_harness.state.store import HarnessStore
 
 
 MATERIALIZED_TABLES = (
+    "threat_models",
+    "waivers",
+    "ip_license_records",
+    "dependencies",
+    "profile_activations",
+    "policy_bundles",
     "filesystem_drifts",
     "git_reconciliations",
     "git_snapshots",
@@ -411,9 +417,9 @@ def _insert_closeout(conn, _row, payload: dict[str, Any]) -> None:
         insert or replace into closeouts (
           closeout_id, packet_id, packet_version, decision_status,
           checked_claim_ids_json, gate_result_ids_json, evidence_ids_json,
-          diagnostic_ids_json, review_bundle_id, source_event_range, source_watermark,
+          diagnostic_ids_json, policy_bundle_version, review_bundle_id, source_event_range, source_watermark,
           authority_basis, decided_at, rationale
-        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             payload["closeout_id"],
@@ -424,6 +430,7 @@ def _insert_closeout(conn, _row, payload: dict[str, Any]) -> None:
             json.dumps(payload["gate_result_ids"], sort_keys=True),
             json.dumps(payload["evidence_ids"], sort_keys=True),
             json.dumps(payload["diagnostic_ids"], sort_keys=True),
+            payload.get("policy_bundle_version"),
             payload.get("review_bundle_id"),
             payload["source_event_range"],
             payload["source_watermark"],
@@ -881,6 +888,153 @@ def _resolve_filesystem_drift(conn, _row, payload: dict[str, Any]) -> None:
         )
 
 
+def _insert_policy_bundle(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into policy_bundles (
+          policy_bundle_id, version, risk_taxonomy_version,
+          gate_policy_version, validator_policy_version, skill_policy_version,
+          adapter_policy_version, security_data_policy_version,
+          compatibility_status, source_event_range, source_watermark,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["policy_bundle_id"],
+            payload["version"],
+            payload["risk_taxonomy_version"],
+            payload["gate_policy_version"],
+            payload["validator_policy_version"],
+            payload["skill_policy_version"],
+            payload["adapter_policy_version"],
+            payload["security_data_policy_version"],
+            payload["compatibility_status"],
+            payload["source_event_range"],
+            payload["source_watermark"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_profile_activation(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into profile_activations (
+          activation_id, profile_id, status, conflicting_profile_ids_json,
+          diagnostic_ids_json, trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["activation_id"],
+            payload["profile_id"],
+            payload["status"],
+            json.dumps(payload["conflicting_profile_ids"], sort_keys=True),
+            json.dumps(payload["diagnostic_ids"], sort_keys=True),
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_dependency(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into dependencies (
+          dependency_id, name, version, source, license_basis,
+          install_scripts_json, network_behavior, trust_tier, waiver_expiry,
+          rollback_path, intake_status, diagnostic_ids_json,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["dependency_id"],
+            payload["name"],
+            payload["version"],
+            payload["source"],
+            payload["license_basis"],
+            json.dumps(payload["install_scripts"], sort_keys=True),
+            payload["network_behavior"],
+            payload["trust_tier"],
+            payload.get("waiver_expiry"),
+            payload["rollback_path"],
+            payload["intake_status"],
+            json.dumps(payload["diagnostic_ids"], sort_keys=True),
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_ip_license_record(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into ip_license_records (
+          ip_record_id, source, license_or_usage_basis, generated_vs_copied,
+          attribution_need, uncertainty, release_blocking_status,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["ip_record_id"],
+            payload["source"],
+            payload["license_or_usage_basis"],
+            payload["generated_vs_copied"],
+            payload["attribution_need"],
+            payload["uncertainty"],
+            payload["release_blocking_status"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_waiver(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into waivers (
+          waiver_id, approver_id, approver_role, scope, expires_at,
+          compensating_control, affected_gate_ids_json, revocation_status,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["waiver_id"],
+            payload["approver_id"],
+            payload["approver_role"],
+            payload["scope"],
+            payload["expires_at"],
+            payload["compensating_control"],
+            json.dumps(payload["affected_gate_ids"], sort_keys=True),
+            payload["revocation_status"],
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
+def _insert_threat_model(conn, row, payload: dict[str, Any]) -> None:
+    conn.execute(
+        """
+        insert into threat_models (
+          threat_model_id, assets_json, trust_boundaries_json,
+          attacker_assumptions_json, abuse_cases_json, mitigations_json,
+          trace_event_id, trace_event_seq
+        ) values (?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            payload["threat_model_id"],
+            json.dumps(payload["assets"], sort_keys=True),
+            json.dumps(payload["trust_boundaries"], sort_keys=True),
+            json.dumps(payload["attacker_assumptions"], sort_keys=True),
+            json.dumps(payload["abuse_cases"], sort_keys=True),
+            json.dumps(payload["mitigations"], sort_keys=True),
+            row["event_id"],
+            row["event_seq"],
+        ),
+    )
+
+
 def _source_event_range(source_watermark: int) -> str:
     if source_watermark <= 0:
         return "0-0"
@@ -921,4 +1075,10 @@ HANDLERS = {
     "git.reconciliation_recorded": _insert_git_reconciliation,
     "filesystem_drift_detected": _insert_filesystem_drift,
     "filesystem_drift_resolved": _resolve_filesystem_drift,
+    "policy_bundle.registered": _insert_policy_bundle,
+    "profile.activated": _insert_profile_activation,
+    "dependency.recorded": _insert_dependency,
+    "ip_license.recorded": _insert_ip_license_record,
+    "waiver.recorded": _insert_waiver,
+    "threat_model.recorded": _insert_threat_model,
 }

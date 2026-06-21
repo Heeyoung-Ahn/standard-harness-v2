@@ -210,6 +210,7 @@ create table if not exists closeouts (
   gate_result_ids_json text not null,
   evidence_ids_json text not null,
   diagnostic_ids_json text not null,
+  policy_bundle_version text,
   review_bundle_id text,
   source_event_range text not null,
   source_watermark integer not null,
@@ -499,6 +500,85 @@ create table if not exists filesystem_drifts (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists policy_bundles (
+  policy_bundle_id text primary key,
+  version text not null,
+  risk_taxonomy_version text not null,
+  gate_policy_version text not null,
+  validator_policy_version text not null,
+  skill_policy_version text not null,
+  adapter_policy_version text not null,
+  security_data_policy_version text not null,
+  compatibility_status text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists profile_activations (
+  activation_id text primary key,
+  profile_id text not null,
+  status text not null,
+  conflicting_profile_ids_json text not null,
+  diagnostic_ids_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists dependencies (
+  dependency_id text primary key,
+  name text not null,
+  version text not null,
+  source text not null,
+  license_basis text not null,
+  install_scripts_json text not null,
+  network_behavior text not null,
+  trust_tier text not null,
+  waiver_expiry text,
+  rollback_path text not null,
+  intake_status text not null,
+  diagnostic_ids_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists ip_license_records (
+  ip_record_id text primary key,
+  source text not null,
+  license_or_usage_basis text not null,
+  generated_vs_copied text not null,
+  attribution_need text not null,
+  uncertainty text not null,
+  release_blocking_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists waivers (
+  waiver_id text primary key,
+  approver_id text not null,
+  approver_role text not null,
+  scope text not null,
+  expires_at text not null,
+  compensating_control text not null,
+  affected_gate_ids_json text not null,
+  revocation_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists threat_models (
+  threat_model_id text primary key,
+  assets_json text not null,
+  trust_boundaries_json text not null,
+  attacker_assumptions_json text not null,
+  abuse_cases_json text not null,
+  mitigations_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 
@@ -521,6 +601,7 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
         "text not null default ''",
     )
     _ensure_column(conn, "closeouts", "review_bundle_id", "text")
+    _ensure_column(conn, "closeouts", "policy_bundle_version", "text")
     _ensure_column(conn, "artifacts", "content_hash", "text")
     _ensure_column(conn, "artifacts", "content_hash_algorithm", "text")
     checksum = sha256_text(SCHEMA_SQL)

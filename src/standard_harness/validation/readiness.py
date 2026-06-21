@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from standard_harness.domain.packets import PacketService
+from standard_harness.policy.bundles import PolicyBundleService
+from standard_harness.policy.release import ReleasePolicyBoundary
 from standard_harness.state.store import HarnessStore
 from standard_harness.validation.diagnostics import DiagnosticRecord
 
@@ -13,7 +15,22 @@ class ReadinessService:
 
     def check_packet(self, packet_id: str) -> dict[str, object]:
         packet = PacketService(self.store).get_packet(packet_id)
+        policy_bundle_version = PolicyBundleService(self.store).latest_compatible_version()
         diagnostics: list[dict[str, object]] = []
+        for diagnostic_id in ReleasePolicyBoundary(self.store).diagnostics(packet_id=packet_id):
+            diagnostics.append(
+                DiagnosticRecord(
+                    error_code=diagnostic_id,
+                    severity="high",
+                    category="policy",
+                    message=f"Policy boundary blocks readiness: {diagnostic_id}",
+                    repair_hint="Resolve policy bundle, dependency, security, IP, or profile blockers before proceeding.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    freshness_watermark=self.store.latest_event_seq(),
+                ).to_dict()
+            )
 
         required_list_fields = [
             ("change_zones", "missing_change_zones"),
@@ -41,7 +58,11 @@ class ReadinessService:
                 )
 
         if diagnostics:
-            return {"status": "blocked", "diagnostics": diagnostics}
+            return {
+                "status": "blocked",
+                "diagnostics": diagnostics,
+                "policy_bundle_version": policy_bundle_version,
+            }
 
         if packet["approval_required"] and packet["approval_state"] != "approved":
             diagnostics.append(
@@ -60,7 +81,11 @@ class ReadinessService:
                     freshness_watermark=self.store.latest_event_seq(),
                 ).to_dict()
             )
-            return {"status": "hold", "diagnostics": diagnostics}
+            return {
+                "status": "hold",
+                "diagnostics": diagnostics,
+                "policy_bundle_version": policy_bundle_version,
+            }
 
         missing_acceptance_ids = [
             acceptance_id
@@ -86,9 +111,13 @@ class ReadinessService:
                 ).to_dict()
             )
         if diagnostics:
-            return {"status": "blocked", "diagnostics": diagnostics}
+            return {
+                "status": "blocked",
+                "diagnostics": diagnostics,
+                "policy_bundle_version": policy_bundle_version,
+            }
 
-        return {"status": "ready", "diagnostics": []}
+        return {"status": "ready", "diagnostics": [], "policy_bundle_version": policy_bundle_version}
 
     def _acceptance_exists(self, packet_id: str, acceptance_criterion_id: str) -> bool:
         with self.store.connection() as conn:

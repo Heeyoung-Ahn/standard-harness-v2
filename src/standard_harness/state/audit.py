@@ -122,6 +122,12 @@ def _empty_snapshot(event_seq: int) -> dict[str, Any]:
         "git_snapshots": {},
         "git_reconciliations": {},
         "filesystem_drifts": {},
+        "policy_bundles": {},
+        "profile_activations": {},
+        "dependencies": {},
+        "ip_license_records": {},
+        "waivers": {},
+        "threat_models": {},
     }
 
 
@@ -217,6 +223,18 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
             drift = snapshot["filesystem_drifts"].get(drift_record_id)
             if drift:
                 drift["resolution_status"] = payload["resolution_status"]
+    elif event_type == "policy_bundle.registered":
+        snapshot["policy_bundles"][payload["policy_bundle_id"]] = dict(payload)
+    elif event_type == "profile.activated":
+        snapshot["profile_activations"][payload["activation_id"]] = dict(payload)
+    elif event_type == "dependency.recorded":
+        snapshot["dependencies"][payload["dependency_id"]] = dict(payload)
+    elif event_type == "ip_license.recorded":
+        snapshot["ip_license_records"][payload["ip_record_id"]] = dict(payload)
+    elif event_type == "waiver.recorded":
+        snapshot["waivers"][payload["waiver_id"]] = dict(payload)
+    elif event_type == "threat_model.recorded":
+        snapshot["threat_models"][payload["threat_model_id"]] = dict(payload)
 
 
 def _checksum_payload(snapshot: dict[str, Any]) -> dict[str, Any]:
