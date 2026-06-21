@@ -156,6 +156,7 @@ create table if not exists evidence (
   result_status text not null,
   validation_status text not null default 'RECORDED',
   trust_status text not null default 'RECORDED',
+  classification text not null default 'INTERNAL',
   claims_json text not null default '[]',
   rationale text not null
 );
@@ -790,6 +791,7 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
     _ensure_column(conn, "evidence", "workspace_id", "text")
     _ensure_column(conn, "evidence", "validation_status", "text not null default 'RECORDED'")
     _ensure_column(conn, "evidence", "trust_status", "text not null default 'RECORDED'")
+    _ensure_column(conn, "evidence", "classification", "text not null default 'INTERNAL'")
     _ensure_column(conn, "evidence", "claims_json", "text not null default '[]'")
     conn.execute("update evidence set command = command_or_tool where command = ''")
     conn.execute(

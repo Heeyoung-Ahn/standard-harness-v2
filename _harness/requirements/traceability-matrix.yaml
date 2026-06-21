@@ -1082,23 +1082,34 @@
     },
     {
       "hrId": "HR-110R",
-      "xpOwner": "XP-08A",
+      "xpOwner": "XP-08A/XP-05",
       "files": [
-        "planned:xp_08a:HR-110R"
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
       ],
       "schemas": [],
-      "policies": [],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml"
+      ],
       "validators": [
-        "wiki-proposal-validator"
+        "sensitive-evidence-validator"
       ],
       "gates": [
-        "wiki-proposal-gate"
+        "sensitive-evidence-gate"
       ],
       "evidenceTypes": [
-        "wiki-update-proposal"
+        "evidence-classification-result",
+        "secret-scan-result"
       ],
       "tests": [
-        "tests.contract.test_xp_08a_planned_contract"
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.evals.test_secret_evidence_registration_blocked"
       ],
       "releaseBlocking": true
     },
@@ -1447,45 +1458,67 @@
     },
     {
       "hrId": "HR-162",
-      "xpOwner": "XP-08A",
+      "xpOwner": "XP-08A/XP-06",
       "files": [
-        "planned:xp_08a:HR-162"
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
       ],
       "schemas": [],
-      "policies": [],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml"
+      ],
       "validators": [
-        "context-authority-validator"
+        "sensitive-evidence-validator"
       ],
       "gates": [
-        "context-budget-gate"
+        "sensitive-evidence-gate"
       ],
       "evidenceTypes": [
-        "context-authority-policy"
+        "evidence-classification-result",
+        "secret-scan-result"
       ],
       "tests": [
-        "tests.contract.test_xp_08a_planned_contract"
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.evals.test_secret_evidence_registration_blocked"
       ],
       "releaseBlocking": true
     },
     {
       "hrId": "HR-163",
-      "xpOwner": "XP-08A",
+      "xpOwner": "XP-08A/XP-06",
       "files": [
-        "planned:xp_08a:HR-163"
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
       ],
       "schemas": [],
-      "policies": [],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml"
+      ],
       "validators": [
-        "context-authority-validator"
+        "sensitive-evidence-validator"
       ],
       "gates": [
-        "context-budget-gate"
+        "sensitive-evidence-gate"
       ],
       "evidenceTypes": [
-        "context-authority-policy"
+        "evidence-classification-result",
+        "secret-scan-result"
       ],
       "tests": [
-        "tests.contract.test_xp_08a_planned_contract"
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.evals.test_secret_evidence_registration_blocked"
       ],
       "releaseBlocking": true
     },
@@ -1665,12 +1698,21 @@
     },
     {
       "hrId": "HR-185",
-      "xpOwner": "XP-08A",
+      "xpOwner": "XP-08A/XP-08",
       "files": [
-        "planned:xp_08a:HR-185"
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
       ],
       "schemas": [],
-      "policies": [],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml"
+      ],
       "validators": [
         "sensitive-evidence-validator"
       ],
@@ -1678,10 +1720,12 @@
         "sensitive-evidence-gate"
       ],
       "evidenceTypes": [
-        "evidence-classification"
+        "evidence-classification-result",
+        "secret-scan-result"
       ],
       "tests": [
-        "tests.contract.test_xp_08a_planned_contract"
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.evals.test_secret_evidence_registration_blocked"
       ],
       "releaseBlocking": true
     },
@@ -1689,10 +1733,19 @@
       "hrId": "HR-186",
       "xpOwner": "XP-08A",
       "files": [
-        "planned:xp_08a:HR-186"
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
       ],
       "schemas": [],
-      "policies": [],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml"
+      ],
       "validators": [
         "sensitive-evidence-validator"
       ],
@@ -1700,10 +1753,12 @@
         "sensitive-evidence-gate"
       ],
       "evidenceTypes": [
-        "evidence-classification"
+        "evidence-classification-result",
+        "secret-scan-result"
       ],
       "tests": [
-        "tests.contract.test_xp_08a_planned_contract"
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.evals.test_secret_evidence_registration_blocked"
       ],
       "releaseBlocking": true
     },

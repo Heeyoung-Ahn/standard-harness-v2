@@ -197,6 +197,7 @@ def _apply_event(snapshot: dict[str, Any], row, payload: dict[str, Any]) -> None
                 workspace_id=evidence.get("workspace_id"),
             ),
         )
+        evidence.setdefault("classification", "INTERNAL")
         evidence.setdefault("claims", [])
         snapshot["evidence"][payload["evidence_id"]] = evidence
     elif event_type == "claim.recorded":

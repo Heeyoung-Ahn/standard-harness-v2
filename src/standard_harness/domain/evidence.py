@@ -9,6 +9,8 @@ from standard_harness.domain.requirements import RequirementRegistry
 from standard_harness.evidence.trust import EvidenceTrustPolicy
 from standard_harness.evidence.trust import TRUST_STATUSES
 from standard_harness.evidence.trust import VALIDATION_STATUSES
+from standard_harness.security.evidence_classification import EvidenceClassifier
+from standard_harness.security.evidence_classification import EvidenceClassificationPolicy
 from standard_harness.state.events import HASH_ALGORITHM, sha256_text, utc_now_iso
 from standard_harness.state.store import HarnessStore
 
@@ -46,6 +48,7 @@ class EvidenceService:
         workspace_id: str | None = None,
         trust_status: str | None = None,
         validation_status: str | None = None,
+        classification: str | None = None,
     ) -> dict[str, object]:
         if self.store.event_for_idempotency_key(idempotency_key) is not None:
             return self.get_evidence(evidence_id)
@@ -58,6 +61,19 @@ class EvidenceService:
                 raise ValueError("evidence claim must belong to the same packet")
         if result_status not in EVIDENCE_STATUSES:
             raise ValueError(f"Invalid evidence status: {result_status}")
+        classification_policy = EvidenceClassificationPolicy.from_repo(".")
+        classification_result = EvidenceClassifier(classification_policy).classify(
+            content=content,
+            artifact_path=artifact_path,
+        )
+        effective_classification = classification or str(classification_result["classification"])
+        if effective_classification not in classification_policy.classifications:
+            raise ValueError(f"Invalid evidence classification: {effective_classification}")
+        if (
+            classification_policy.registration_blocked(effective_classification)
+            or classification_policy.registration_blocked(str(classification_result["classification"]))
+        ):
+            raise ValueError(classification_policy.registration_diagnostic("SECRET"))
         trust_policy = EvidenceTrustPolicy()
         effective_validation_status = validation_status or trust_policy.derive_validation_status(
             result_status
@@ -99,6 +115,7 @@ class EvidenceService:
             "result_status": result_status,
             "validation_status": effective_validation_status,
             "trust_status": effective_trust_status,
+            "classification": effective_classification,
             "claims": [claim_id] if claim_id else [],
             "rationale": rationale,
         }
@@ -121,8 +138,9 @@ class EvidenceService:
                   exit_code, base_commit, head_commit, workspace_id, runner,
                   timestamp, cwd_or_execution_context, environment_fingerprint,
                   artifact_path, content_hash, content_hash_algorithm,
-                  result_status, validation_status, trust_status, claims_json, rationale
-                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  result_status, validation_status, trust_status, classification,
+                  claims_json, rationale
+                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     evidence_id,
@@ -148,6 +166,7 @@ class EvidenceService:
                     result_status,
                     effective_validation_status,
                     effective_trust_status,
+                    effective_classification,
                     json.dumps(evidence["claims"], sort_keys=True),
                     rationale,
                 ),
@@ -244,6 +263,7 @@ class EvidenceService:
         evidence.setdefault("base_commit", None)
         evidence.setdefault("head_commit", None)
         evidence.setdefault("workspace_id", evidence.get("packet_id"))
+        evidence.setdefault("classification", "INTERNAL")
         trust_policy = EvidenceTrustPolicy()
         if evidence.get("command") == "":
             evidence["command"] = evidence.get("command_or_tool", "")

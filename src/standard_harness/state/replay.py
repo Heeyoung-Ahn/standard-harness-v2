@@ -338,6 +338,7 @@ def _insert_evidence(conn, _row, payload: dict[str, Any]) -> None:
         head_commit=payload.get("head_commit"),
         workspace_id=payload.get("workspace_id") or payload["packet_id"],
     )
+    classification = payload.get("classification", "INTERNAL")
     conn.execute(
         """
         insert or replace into evidence (
@@ -346,8 +347,9 @@ def _insert_evidence(conn, _row, payload: dict[str, Any]) -> None:
           exit_code, base_commit, head_commit, workspace_id, runner,
           timestamp, cwd_or_execution_context, environment_fingerprint,
           artifact_path, content_hash, content_hash_algorithm,
-          result_status, validation_status, trust_status, claims_json, rationale
-        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          result_status, validation_status, trust_status, classification,
+          claims_json, rationale
+        ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             payload["evidence_id"],
@@ -373,6 +375,7 @@ def _insert_evidence(conn, _row, payload: dict[str, Any]) -> None:
             result_status,
             validation_status,
             trust_status,
+            classification,
             json.dumps(payload.get("claims", []), sort_keys=True),
             payload["rationale"],
         ),

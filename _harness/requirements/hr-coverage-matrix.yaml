@@ -1291,26 +1291,57 @@
     {
       "hrId": "HR-110R",
       "title": "Wiki updates use evidence-backed proposal/apply flow",
-      "coverageStatus": "missing",
-      "xpOwner": "XP-08A",
-      "implementationDisposition": "create",
-      "currentImplementation": [],
+      "coverageStatus": "partial",
+      "xpOwner": "XP-08A/XP-05",
+      "implementationDisposition": "modify",
+      "currentImplementation": [
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/evidence-classification.yaml"
+        ],
         "validator": [
-          "wiki-proposal-validator"
+          "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
-          "wiki-proposal-gate"
-        ],
-        "evidence": [
-          "wiki-update-proposal"
+          "sensitive-evidence-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_08a_planned_contract"
+          "tests/contract/test_sensitive_evidence_classification.py",
+          "tests/evals/test_secret_evidence_registration_blocked.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-08A",
+      "migrationCompatibility": [
+        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
+        "SECRET evidence is blocked before evidence.registered event persistence.",
+        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+      ],
+      "releaseBlockingValidators": [
+        "sensitive-evidence-validator"
+      ],
+      "releaseBlockingGates": [
+        "sensitive-evidence-gate"
+      ],
+      "diagnostics": [
+        "secret_evidence_registered",
+        "sensitive_wiki_promotion"
+      ],
+      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
+      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "frictionMetricBehavior": [
+        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
+        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+      ]
     },
     {
       "hrId": "HR-111R",
@@ -1667,50 +1698,112 @@
     {
       "hrId": "HR-162",
       "title": "Harness has context authority model",
-      "coverageStatus": "missing",
-      "xpOwner": "XP-08A",
-      "implementationDisposition": "create",
-      "currentImplementation": [],
+      "coverageStatus": "partial",
+      "xpOwner": "XP-08A/XP-06",
+      "implementationDisposition": "modify",
+      "currentImplementation": [
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/evidence-classification.yaml"
+        ],
         "validator": [
-          "context-authority-validator"
+          "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
-          "context-budget-gate"
-        ],
-        "evidence": [
-          "context-authority-policy"
+          "sensitive-evidence-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_08a_planned_contract"
+          "tests/contract/test_sensitive_evidence_classification.py",
+          "tests/evals/test_secret_evidence_registration_blocked.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-08A",
+      "migrationCompatibility": [
+        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
+        "SECRET evidence is blocked before evidence.registered event persistence.",
+        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+      ],
+      "releaseBlockingValidators": [
+        "sensitive-evidence-validator"
+      ],
+      "releaseBlockingGates": [
+        "sensitive-evidence-gate"
+      ],
+      "diagnostics": [
+        "secret_evidence_registered",
+        "sensitive_wiki_promotion"
+      ],
+      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
+      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "frictionMetricBehavior": [
+        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
+        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+      ]
     },
     {
       "hrId": "HR-163",
       "title": "Untrusted content has no instruction authority",
-      "coverageStatus": "missing",
-      "xpOwner": "XP-08A",
-      "implementationDisposition": "create",
-      "currentImplementation": [],
+      "coverageStatus": "partial",
+      "xpOwner": "XP-08A/XP-06",
+      "implementationDisposition": "modify",
+      "currentImplementation": [
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/evidence-classification.yaml"
+        ],
         "validator": [
-          "context-authority-validator"
+          "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
-          "context-budget-gate"
-        ],
-        "evidence": [
-          "context-authority-policy"
+          "sensitive-evidence-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_08a_planned_contract"
+          "tests/contract/test_sensitive_evidence_classification.py",
+          "tests/evals/test_secret_evidence_registration_blocked.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-08A",
+      "migrationCompatibility": [
+        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
+        "SECRET evidence is blocked before evidence.registered event persistence.",
+        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+      ],
+      "releaseBlockingValidators": [
+        "sensitive-evidence-validator"
+      ],
+      "releaseBlockingGates": [
+        "sensitive-evidence-gate"
+      ],
+      "diagnostics": [
+        "secret_evidence_registered",
+        "sensitive_wiki_promotion"
+      ],
+      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
+      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "frictionMetricBehavior": [
+        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
+        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+      ]
     },
     {
       "hrId": "HR-170R",
@@ -1967,50 +2060,112 @@
     {
       "hrId": "HR-185",
       "title": "Evidence and handoff context protect sensitive information",
-      "coverageStatus": "missing",
-      "xpOwner": "XP-08A",
+      "coverageStatus": "partial",
+      "xpOwner": "XP-08A/XP-08",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/evidence-classification.yaml"
+        ],
         "validator": [
-          "sensitive-evidence-validator"
+          "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
           "sensitive-evidence-gate"
         ],
-        "evidence": [
-          "evidence-classification"
-        ],
         "tests": [
-          "tests.contract.test_xp_08a_planned_contract"
+          "tests/contract/test_sensitive_evidence_classification.py",
+          "tests/evals/test_secret_evidence_registration_blocked.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-08A",
+      "migrationCompatibility": [
+        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
+        "SECRET evidence is blocked before evidence.registered event persistence.",
+        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+      ],
+      "releaseBlockingValidators": [
+        "sensitive-evidence-validator"
+      ],
+      "releaseBlockingGates": [
+        "sensitive-evidence-gate"
+      ],
+      "diagnostics": [
+        "secret_evidence_registered",
+        "sensitive_wiki_promotion"
+      ],
+      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
+      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "frictionMetricBehavior": [
+        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
+        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+      ]
     },
     {
       "hrId": "HR-186",
       "title": "Evidence classification exists",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-08A",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/state/migrations.py",
+        "src/standard_harness/state/replay.py",
+        "src/standard_harness/state/audit.py",
+        "src/standard_harness/security/redaction.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/evidence-classification.yaml"
+        ],
         "validator": [
-          "sensitive-evidence-validator"
+          "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
           "sensitive-evidence-gate"
         ],
-        "evidence": [
-          "evidence-classification"
-        ],
         "tests": [
-          "tests.contract.test_xp_08a_planned_contract"
+          "tests/contract/test_sensitive_evidence_classification.py",
+          "tests/evals/test_secret_evidence_registration_blocked.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-08A",
+      "migrationCompatibility": [
+        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
+        "SECRET evidence is blocked before evidence.registered event persistence.",
+        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+      ],
+      "releaseBlockingValidators": [
+        "sensitive-evidence-validator"
+      ],
+      "releaseBlockingGates": [
+        "sensitive-evidence-gate"
+      ],
+      "diagnostics": [
+        "secret_evidence_registered",
+        "sensitive_wiki_promotion"
+      ],
+      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
+      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "frictionMetricBehavior": [
+        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
+        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+      ]
     },
     {
       "hrId": "HR-190R",
