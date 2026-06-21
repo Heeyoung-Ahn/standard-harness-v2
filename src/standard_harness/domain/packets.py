@@ -67,17 +67,18 @@ class PacketService:
             "created_at": now,
             "updated_at": now,
         }
-        self.store.append_event(
-            event_type="packet.created",
-            actor_id=owner,
-            actor_role="Planner",
-            authority_basis="packet-create",
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            packet_version=1,
-            payload=packet,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="packet.created",
+                actor_id=owner,
+                actor_role="Planner",
+                authority_basis="packet-create",
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                packet_version=1,
+                payload=packet,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into packets (
@@ -90,7 +91,6 @@ class PacketService:
                 """,
                 _packet_row_values(packet),
             )
-            conn.commit()
         return self.get_packet(packet_id)
 
     def approve_packet(
@@ -104,6 +104,10 @@ class PacketService:
         rationale: str,
         idempotency_key: str,
     ) -> dict[str, object]:
+        existing_event = self.store.event_for_idempotency_key(idempotency_key)
+        if existing_event is not None:
+            existing_payload = existing_event["payload"]
+            return self._approval_from_payload(existing_payload)
         packet = self.get_packet(packet_id)
         approval_record_id = f"apr_{uuid4().hex}"
         source_watermark = self.store.latest_event_seq()
@@ -121,17 +125,18 @@ class PacketService:
             "decided_at": decided_at,
             "rationale": rationale,
         }
-        self.store.append_event(
-            event_type="packet.approved",
-            actor_id=approver_id,
-            actor_role=approver_role,
-            authority_basis=authority_basis,
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            packet_version=int(packet["packet_version"]),
-            payload=approval,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="packet.approved",
+                actor_id=approver_id,
+                actor_role=approver_role,
+                authority_basis=authority_basis,
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                packet_version=int(packet["packet_version"]),
+                payload=approval,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into approval_records (
@@ -162,7 +167,6 @@ class PacketService:
                 """,
                 ("approved", approval_record_id, decided_at, packet_id),
             )
-            conn.commit()
         return approval
 
     def transition_packet(
@@ -175,6 +179,8 @@ class PacketService:
         authority_basis: str,
         idempotency_key: str,
     ) -> dict[str, object]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_packet(packet_id)
         if lifecycle_state not in LIFECYCLE_STATES:
             raise ValueError(f"Invalid lifecycle state: {lifecycle_state}")
         if lifecycle_state == "closed":
@@ -186,22 +192,22 @@ class PacketService:
             "from_state": packet["lifecycle_state"],
             "to_state": lifecycle_state,
         }
-        self.store.append_event(
-            event_type="packet.transitioned",
-            actor_id=actor_id,
-            actor_role=actor_role,
-            authority_basis=authority_basis,
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            packet_version=int(packet["packet_version"]),
-            payload=payload,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="packet.transitioned",
+                actor_id=actor_id,
+                actor_role=actor_role,
+                authority_basis=authority_basis,
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                packet_version=int(packet["packet_version"]),
+                payload=payload,
+                conn=conn,
+            )
             conn.execute(
                 "update packets set lifecycle_state = ?, updated_at = ? where packet_id = ?",
                 (lifecycle_state, now, packet_id),
             )
-            conn.commit()
         return self.get_packet(packet_id)
 
     def get_packet(self, packet_id: str) -> dict[str, object]:
@@ -215,6 +221,21 @@ class PacketService:
         with self.store.connection() as conn:
             row = conn.execute("select 1 from packets where packet_id = ?", (packet_id,)).fetchone()
         return row is not None
+
+    def _approval_from_payload(self, payload: dict[str, object]) -> dict[str, object]:
+        return {
+            "approval_record_id": payload["approval_record_id"],
+            "packet_id": payload["packet_id"],
+            "packet_version": payload["packet_version"],
+            "approver_id": payload["approver_id"],
+            "approver_role": payload["approver_role"],
+            "authority_basis": payload["authority_basis"],
+            "decision_result": payload["decision_result"],
+            "approved_scope": payload["approved_scope"],
+            "source_watermark": payload["source_watermark"],
+            "decided_at": payload["decided_at"],
+            "rationale": payload["rationale"],
+        }
 
 
 def _packet_row_values(packet: dict[str, object]) -> tuple[object, ...]:

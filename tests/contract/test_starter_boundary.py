@@ -44,6 +44,41 @@ class StarterBoundaryTests(unittest.TestCase):
             self.assertIsNotNone(row)
             self.assertEqual(store.latest_event_seq(), 1)
 
+    def test_starter_manifest_duplicate_path_does_not_append_untraced_event(self):
+        from standard_harness.starter.manifest import StarterManifestService
+        from standard_harness.state.store import HarnessStore
+
+        with tempfile.TemporaryDirectory() as tmp:
+            store = HarnessStore(Path(tmp))
+            store.initialize()
+            service = StarterManifestService(store)
+            service.register_entry(
+                path="starter/standard-harness/START_HERE.md",
+                artifact_type="onboarding-doc",
+                owner="standard-harness",
+                included_in_payload=True,
+                generated=False,
+                managed_template=False,
+                promotion_source="docs/implementation/standard-harness-implementation-plan-v1.md",
+                validation_evidence=["starter-boundary-contract"],
+                idempotency_key="starter-entry-start-here",
+            )
+
+            with self.assertRaises(ValueError):
+                service.register_entry(
+                    path="starter/standard-harness/START_HERE.md",
+                    artifact_type="onboarding-doc",
+                    owner="standard-harness",
+                    included_in_payload=True,
+                    generated=False,
+                    managed_template=False,
+                    promotion_source="docs/implementation/another-plan.md",
+                    validation_evidence=["duplicate"],
+                    idempotency_key="starter-entry-start-here-duplicate",
+                )
+
+            self.assertEqual(store.latest_event_seq(), 1)
+
     def test_contamination_check_rejects_development_artifacts(self):
         from standard_harness.starter.contamination import StarterContaminationChecker
 

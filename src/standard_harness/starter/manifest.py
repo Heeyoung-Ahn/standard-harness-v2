@@ -25,6 +25,10 @@ class StarterManifestService:
         validation_evidence: list[str],
         idempotency_key: str,
     ) -> dict[str, Any]:
+        if self.store.event_for_idempotency_key(idempotency_key) is not None:
+            return self.get_entry(path)
+        if self._entry_exists(path):
+            raise ValueError(f"starter manifest path already exists: {path}")
         entry = {
             "path": path,
             "artifact_type": artifact_type,
@@ -35,17 +39,18 @@ class StarterManifestService:
             "promotion_source": promotion_source,
             "validation_evidence": validation_evidence,
         }
-        trace_event = self.store.append_event(
-            event_type="starter.entry_registered",
-            actor_id=owner,
-            actor_role="Maintainer",
-            authority_basis="starter manifest registration",
-            idempotency_key=idempotency_key,
-            payload=entry,
-        )
-        entry["trace_event_id"] = trace_event["event_id"]
-        entry["trace_event_seq"] = trace_event["event_seq"]
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            trace_event = self.store.append_event(
+                event_type="starter.entry_registered",
+                actor_id=owner,
+                actor_role="Maintainer",
+                authority_basis="starter manifest registration",
+                idempotency_key=idempotency_key,
+                payload=entry,
+                conn=conn,
+            )
+            entry["trace_event_id"] = trace_event["event_id"]
+            entry["trace_event_seq"] = trace_event["event_seq"]
             conn.execute(
                 """
                 insert or ignore into starter_manifest_entries (
@@ -67,7 +72,6 @@ class StarterManifestService:
                     trace_event["event_seq"],
                 ),
             )
-            conn.commit()
         return self.get_entry(path)
 
     def get_entry(self, path: str) -> dict[str, Any]:
@@ -83,3 +87,10 @@ class StarterManifestService:
         result["managed_template"] = bool(result["managed_template"])
         result["validation_evidence"] = json.loads(result.pop("validation_evidence_json"))
         return result
+
+    def _entry_exists(self, path: str) -> bool:
+        with self.store.connection() as conn:
+            row = conn.execute(
+                "select 1 from starter_manifest_entries where path = ?", (path,)
+            ).fetchone()
+        return row is not None

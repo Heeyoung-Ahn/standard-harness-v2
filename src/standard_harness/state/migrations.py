@@ -87,6 +87,8 @@ create table if not exists requirements (
   acceptance_criteria_json text not null,
   completion_classification text not null,
   packet_id text not null,
+  decision_record_id text,
+  decision_rationale text,
   created_at text not null,
   updated_at text not null
 );
@@ -109,6 +111,8 @@ create table if not exists artifacts (
   lifecycle_status text not null,
   source_reference text not null,
   packet_id text not null,
+  content_hash text,
+  content_hash_algorithm text,
   created_at text not null,
   updated_at text not null
 );
@@ -206,6 +210,8 @@ create table if not exists closeouts (
   gate_result_ids_json text not null,
   evidence_ids_json text not null,
   diagnostic_ids_json text not null,
+  policy_bundle_version text,
+  review_bundle_id text,
   source_event_range text not null,
   source_watermark integer not null,
   authority_basis text not null,
@@ -242,11 +248,503 @@ create table if not exists starter_manifest_entries (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists recovery_runs (
+  recovery_id text primary key,
+  reason text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  recovery_status text not null,
+  projection_checksum text not null,
+  rebuilt_tables_json text not null,
+  diagnostic_ids_json text not null,
+  started_event_id text not null,
+  completed_event_id text,
+  recorded_at text not null
+);
+
+create table if not exists audit_snapshots (
+  snapshot_id text primary key,
+  event_seq_range text not null,
+  schema_version text not null,
+  restore_checksum text not null,
+  snapshot_json text not null,
+  created_at text not null
+);
+
+create table if not exists state_backups (
+  backup_id text primary key,
+  backup_path text not null,
+  schema_version text not null,
+  event_seq_range text not null,
+  event_count integer not null,
+  projection_checksum text not null,
+  backup_checksum text not null,
+  created_event_id text not null,
+  created_at text not null
+);
+
+create table if not exists restore_verifications (
+  restore_id text primary key,
+  backup_id text not null,
+  schema_version text not null,
+  restored_event_seq_order_json text not null,
+  projection_checksum text not null,
+  restore_checksum text not null,
+  restore_status text not null,
+  verified_event_id text not null,
+  verified_at text not null
+);
+
+create table if not exists requirement_registration_diffs (
+  diff_id text primary key,
+  source_doc text not null,
+  entries_json text not null,
+  promotion_state text not null,
+  decision_record_id text,
+  decision_rationale text,
+  source_event_range text not null,
+  source_watermark integer not null,
+  created_at text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists ssot_change_impacts (
+  impact_id text primary key,
+  requirement_id text not null,
+  change_class text not null,
+  impacted_packet_ids_json text not null,
+  impacted_acceptance_criterion_ids_json text not null,
+  impacted_claim_ids_json text not null,
+  impacted_evidence_ids_json text not null,
+  impacted_gate_ids_json text not null,
+  impacted_projection_ids_json text not null,
+  review_status text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  created_at text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists project_completion_results (
+  completion_result_id text primary key,
+  scope text not null,
+  requirement_id text,
+  status text not null,
+  requirement_counts_json text not null,
+  diagnostic_ids_json text not null,
+  diagnostics_json text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  evaluated_at text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists adapter_invocations (
+  adapter_run_id text primary key,
+  adapter_id text not null,
+  adapter_version text not null,
+  input_snapshot_hash text not null,
+  permission_roots_json text not null,
+  artifact_manifest_json text not null,
+  event_request_json text not null,
+  failure_classification text,
+  evidence_provenance_json text not null,
+  timeout_seconds integer not null,
+  retry_count integer not null,
+  cancel_status text not null,
+  idempotency_key text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists workflow_runs (
+  workflow_run_id text primary key,
+  packet_id text not null,
+  phase text not null,
+  actor_role text not null,
+  input_projection_id text,
+  source_watermark integer not null,
+  status text not null,
+  retry_count integer not null,
+  blocker_diagnostic_ids_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists review_bundles (
+  review_bundle_id text primary key,
+  packet_id text not null,
+  packet_version integer not null,
+  requirement_snapshot_json text not null,
+  acceptance_criteria_snapshot_json text not null,
+  evidence_manifest_snapshot_json text not null,
+  adapter_model_identity text not null,
+  source_watermark integer not null,
+  freshness_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists llm_work_products (
+  work_product_id text primary key,
+  content text not null,
+  work_product_type text not null,
+  claim_type text not null,
+  confidence text not null,
+  human_decision_required integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists decision_claims (
+  decision_claim_id text primary key,
+  report_id text not null,
+  observation text not null,
+  inference text not null,
+  assumption text not null,
+  recommendation text not null,
+  confidence text not null,
+  human_decision_required integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists role_cards (
+  role_id text primary key,
+  permitted_actions_json text not null,
+  forbidden_decisions_json text not null,
+  escalation_duties_json text not null,
+  required_review_evidence_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists skill_policy_evaluations (
+  evaluation_id text primary key,
+  role_id text not null,
+  action text not null,
+  local_policy_json text not null,
+  policy_result text not null,
+  diagnostic_ids_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists challenges (
+  challenge_id text primary key,
+  payload_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists independent_reviews (
+  review_id text primary key,
+  payload_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists adjudications (
+  adjudication_id text primary key,
+  payload_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists git_snapshots (
+  git_snapshot_id text primary key,
+  repo_root text not null,
+  branch_name text not null,
+  commit_id text not null,
+  worktree_path text not null,
+  tracked_changes_json text not null,
+  untracked_files_json text not null,
+  ignored_files_json text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists git_reconciliations (
+  reconciliation_id text primary key,
+  packet_id text not null,
+  git_snapshot_id text not null,
+  branch_name text not null,
+  commit_id text not null,
+  classifications_json text not null,
+  unresolved_classifications_json text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists filesystem_drifts (
+  drift_record_id text primary key,
+  drift_id text not null,
+  packet_id text not null,
+  artifact_id text,
+  path text not null,
+  drift_type text not null,
+  remediation_json text not null,
+  resolution_status text not null,
+  source text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists policy_bundles (
+  policy_bundle_id text primary key,
+  version text not null,
+  risk_taxonomy_version text not null,
+  gate_policy_version text not null,
+  validator_policy_version text not null,
+  skill_policy_version text not null,
+  adapter_policy_version text not null,
+  security_data_policy_version text not null,
+  compatibility_status text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists profile_activations (
+  activation_id text primary key,
+  profile_id text not null,
+  status text not null,
+  conflicting_profile_ids_json text not null,
+  diagnostic_ids_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists dependencies (
+  dependency_id text primary key,
+  name text not null,
+  version text not null,
+  source text not null,
+  license_basis text not null,
+  install_scripts_json text not null,
+  network_behavior text not null,
+  trust_tier text not null,
+  waiver_expiry text,
+  rollback_path text not null,
+  intake_status text not null,
+  diagnostic_ids_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists ip_license_records (
+  ip_record_id text primary key,
+  source text not null,
+  license_or_usage_basis text not null,
+  generated_vs_copied text not null,
+  attribution_need text not null,
+  uncertainty text not null,
+  release_blocking_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists waivers (
+  waiver_id text primary key,
+  approver_id text not null,
+  approver_role text not null,
+  scope text not null,
+  expires_at text not null,
+  compensating_control text not null,
+  affected_gate_ids_json text not null,
+  revocation_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists threat_models (
+  threat_model_id text primary key,
+  assets_json text not null,
+  trust_boundaries_json text not null,
+  attacker_assumptions_json text not null,
+  abuse_cases_json text not null,
+  mitigations_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists pmo_projections (
+  pmo_projection_id text primary key,
+  source_event_range text not null,
+  source_watermark integer not null,
+  packet_counts_json text not null,
+  blocked_packets_json text not null,
+  open_risks_json text not null,
+  milestone_summary_json text not null,
+  projection_summary_json text not null default '{}',
+  dependency_summary_json text not null,
+  diagnostic_summary_json text not null,
+  freshness_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists cost_records (
+  cost_record_id text primary key,
+  packet_id text not null,
+  tool_name text not null,
+  operation_type text not null,
+  usage_quantity real not null,
+  usage_unit text not null,
+  cost_estimate real not null,
+  risk_tier text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists operational_memory_snapshots (
+  memory_snapshot_id text primary key,
+  source text not null,
+  source_event_range text not null,
+  source_watermark integer not null,
+  entries_json text not null,
+  freshness_status text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists human_control_snapshots (
+  snapshot_id text primary key,
+  source_event_range text not null,
+  source_watermark integer not null,
+  pending_approvals_json text not null,
+  non_delegable_decisions_json text not null,
+  active_waivers_json text not null,
+  challenged_items_json text not null,
+  blocked_gates_json text not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists cloud_orchestrations (
+  orchestration_run_id text primary key,
+  packet_id text not null,
+  actor_id text not null,
+  actor_role text not null,
+  remote_environment_id text not null,
+  permission_roots_json text not null,
+  input_snapshot_hash text not null,
+  adapter_run_ids_json text not null,
+  status text not null,
+  failure_classification text,
+  diagnostic_ids_json text not null,
+  evidence_output_json text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists integrity_signatures (
+  signature_id text primary key,
+  signed_entity_type text not null,
+  signed_entity_id text not null,
+  algorithm text not null,
+  key_id text not null,
+  payload_hash text not null,
+  signature_value text not null,
+  signed_at text not null,
+  signer_id text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists retention_policies (
+  retention_policy_id text primary key,
+  artifact_class text not null,
+  retention_minimum_days integer not null,
+  purge_rule text not null,
+  archive_rule text not null,
+  regeneration_expectation text not null,
+  approval_required integer not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists redaction_events (
+  redaction_event_id text primary key,
+  entity_type text not null,
+  entity_id text not null,
+  field text not null,
+  redaction_reason text not null,
+  redacted_hash text not null,
+  actor_id text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists friction_records (
+  friction_record_id text primary key,
+  friction_type text not null,
+  owner text not null,
+  evidence_ids_json text not null,
+  occurrence_count integer not null,
+  status text not null,
+  source text not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
+
+create table if not exists improvement_proposals (
+  proposal_id text primary key,
+  friction_record_id text not null,
+  proposal_type text not null,
+  owner text not null,
+  rationale text not null,
+  linked_evidence_ids_json text not null,
+  disposition text not null,
+  target_packet_required integer not null,
+  source_watermark integer not null,
+  trace_event_id text not null,
+  trace_event_seq integer not null
+);
 """
 
 
 def apply_migrations(conn: sqlite3.Connection) -> None:
     conn.executescript(SCHEMA_SQL)
+    _ensure_column(conn, "requirements", "decision_record_id", "text")
+    _ensure_column(conn, "requirements", "decision_rationale", "text")
+    _ensure_column(conn, "requirement_registration_diffs", "decision_record_id", "text")
+    _ensure_column(conn, "requirement_registration_diffs", "decision_rationale", "text")
+    _ensure_column(
+        conn,
+        "ssot_change_impacts",
+        "impacted_acceptance_criterion_ids_json",
+        "text not null default '[]'",
+    )
+    _ensure_column(
+        conn,
+        "adapter_invocations",
+        "idempotency_key",
+        "text not null default ''",
+    )
+    _ensure_column(conn, "closeouts", "review_bundle_id", "text")
+    _ensure_column(conn, "closeouts", "policy_bundle_version", "text")
+    _ensure_column(conn, "pmo_projections", "projection_summary_json", "text not null default '{}'")
+    _ensure_column(conn, "artifacts", "content_hash", "text")
+    _ensure_column(conn, "artifacts", "content_hash_algorithm", "text")
     checksum = sha256_text(SCHEMA_SQL)
     conn.execute(
         """
@@ -261,3 +759,9 @@ def apply_migrations(conn: sqlite3.Connection) -> None:
 
 def schema_version() -> str:
     return SCHEMA_VERSION
+
+
+def _ensure_column(conn: sqlite3.Connection, table: str, column: str, declaration: str) -> None:
+    existing = {row["name"] for row in conn.execute(f"pragma table_info({table})").fetchall()}
+    if column not in existing:
+        conn.execute(f"alter table {table} add column {column} {declaration}")

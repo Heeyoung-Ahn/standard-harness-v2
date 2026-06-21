@@ -62,16 +62,17 @@ class EvidenceService:
             "result_status": result_status,
             "rationale": rationale,
         }
-        self.store.append_event(
-            event_type="evidence.registered",
-            actor_id=runner,
-            actor_role="Tester",
-            authority_basis="evidence registration",
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            payload=evidence,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="evidence.registered",
+                actor_id=runner,
+                actor_role="Tester",
+                authority_basis="evidence registration",
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                payload=evidence,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into evidence (
@@ -97,7 +98,6 @@ class EvidenceService:
                     rationale,
                 ),
             )
-            conn.commit()
         return self.get_evidence(evidence_id)
 
     def record_claim(
@@ -142,16 +142,17 @@ class EvidenceService:
             "created_at": now,
             "updated_at": now,
         }
-        self.store.append_event(
-            event_type="claim.recorded",
-            actor_id="developer",
-            actor_role="Developer",
-            authority_basis="claim ledger entry",
-            idempotency_key=idempotency_key,
-            packet_id=packet_id,
-            payload=claim,
-        )
-        with self.store.connection() as conn:
+        with self.store.transaction() as conn:
+            self.store.append_event(
+                event_type="claim.recorded",
+                actor_id="developer",
+                actor_role="Developer",
+                authority_basis="claim ledger entry",
+                idempotency_key=idempotency_key,
+                packet_id=packet_id,
+                payload=claim,
+                conn=conn,
+            )
             conn.execute(
                 """
                 insert or ignore into claims (
@@ -172,7 +173,6 @@ class EvidenceService:
                     now,
                 ),
             )
-            conn.commit()
         return self.get_claim(claim_id)
 
     def get_evidence(self, evidence_id: str) -> dict[str, object]:
