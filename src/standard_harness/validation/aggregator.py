@@ -13,6 +13,8 @@ from standard_harness.evidence.trust import EvidenceTrustPolicy
 from standard_harness.policy.gate_profiles import GateProfilePolicy
 from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.state.store import HarnessStore
+from standard_harness.validation.boundary import BoundaryValidator
+from standard_harness.validation.boundary import boundary_input_from_packet
 from standard_harness.validation.challenge_gate import ChallengeGateValidator
 from standard_harness.validation.diagnostics import DiagnosticRecord
 from standard_harness.validation.evidence_trust import packet_requires_trusted_evidence
@@ -68,6 +70,7 @@ class ValidationService:
     def validate_packet(self, packet_id: str) -> list[dict[str, Any]]:
         diagnostics = self._packet_schema_diagnostics(packet_id)
         diagnostics.extend(self._test_plan_diagnostics(packet_id))
+        diagnostics.extend(self._boundary_diagnostics(packet_id))
         diagnostics.extend(ReadinessService(self.store).check_packet(packet_id)["diagnostics"])
         diagnostics.extend(self._completion_diagnostics(packet_id))
         diagnostics.extend(self._evidence_trust_diagnostics(packet_id))
@@ -529,6 +532,43 @@ class ValidationService:
                     affected_entity_id=packet_id,
                     packet_id=packet_id,
                     field="challenge-gate",
+                )
+            )
+        return diagnostics
+
+    def _boundary_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:
+        packet = PacketService(self.store).get_packet(packet_id)
+        boundary_input = boundary_input_from_packet(packet)
+        if boundary_input is None:
+            return []
+        try:
+            result = BoundaryValidator.from_repo(self.repo_root).validate(boundary_input)
+        except (OSError, ValueError) as exc:
+            return [
+                _diagnostic(
+                    error_code="invalid_zone_mapping",
+                    category="boundary",
+                    message="Boundary policy could not be loaded.",
+                    repair_hint="Keep _harness/policies/zones.yaml and agent-permissions.yaml valid JSON-compatible YAML.",
+                    affected_entity_type="packet",
+                    affected_entity_id=packet_id,
+                    packet_id=packet_id,
+                    field="boundaryValidation",
+                    actual_value=str(exc),
+                )
+            ]
+        diagnostics = []
+        for diagnostic in result["diagnostics"]:
+            diagnostics.append(
+                _diagnostic(
+                    error_code=diagnostic["diagnostic_id"],
+                    category="boundary",
+                    message=diagnostic["message"],
+                    repair_hint="Move the change to an allowed logical zone or use an authorized harness packet and role.",
+                    affected_entity_type="path",
+                    affected_entity_id=diagnostic["path"],
+                    packet_id=packet_id,
+                    field="boundaryValidation.changedFiles",
                 )
             )
         return diagnostics

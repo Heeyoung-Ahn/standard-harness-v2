@@ -23,6 +23,7 @@ class StarterContaminationChecker:
                     "repair_hint": "Remove local state, evidence, logs, secrets, caches, or generated reports from the starter payload.",
                     "affected_entity_type": "path",
                     "affected_entity_id": normalized,
+                    "boundary_zone": "starter",
                 }
             )
         return diagnostics
@@ -78,4 +79,5 @@ def _path_diagnostic(error_code: str, path: str) -> dict[str, object]:
         "repair_hint": "Ensure the starter payload root contains README.md and START_HERE.md and excludes development artifacts.",
         "affected_entity_type": "path",
         "affected_entity_id": normalized,
+        "boundary_zone": "starter",
     }

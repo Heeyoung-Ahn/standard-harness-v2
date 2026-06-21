@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "agent-permissions-policy",
+  "roles": {
+    "orchestrator": {
+      "readZones": [
+        "*"
+      ],
+      "allowedLogicalWriteZones": [
+        "ops"
+      ],
+      "allowedWriteZones": [
+        "_ops/packets/**",
+        "_ops/evidence/**",
+        "_ops/decisions/**"
+      ]
+    },
+    "planner": {
+      "readZones": [
+        "*"
+      ],
+      "allowedLogicalWriteZones": [
+        "ops"
+      ],
+      "allowedWriteZones": [
+        "_ops/packets/**",
+        "_ops/evidence/**"
+      ]
+    },
+    "developer": {
+      "readZones": [
+        "harness",
+        "ops",
+        "product"
+      ],
+      "allowedLogicalWriteZones": [
+        "product"
+      ],
+      "allowedWriteZones": []
+    },
+    "tester": {
+      "readZones": [
+        "*"
+      ],
+      "allowedLogicalWriteZones": [
+        "ops",
+        "product"
+      ],
+      "allowedWriteZones": [
+        "_ops/evidence/**",
+        "tests/**",
+        "product/e2e/**"
+      ]
+    },
+    "reviewer": {
+      "readZones": [
+        "*"
+      ],
+      "allowedLogicalWriteZones": [
+        "ops"
+      ],
+      "allowedWriteZones": [
+        "_ops/evidence/**"
+      ]
+    },
+    "security-reviewer": {
+      "readZones": [
+        "*"
+      ],
+      "allowedLogicalWriteZones": [
+        "ops"
+      ],
+      "allowedWriteZones": [
+        "_ops/evidence/**"
+      ]
+    },
+    "refactor-reviewer": {
+      "readZones": [
+        "*"
+      ],
+      "allowedLogicalWriteZones": [
+        "ops"
+      ],
+      "allowedWriteZones": [
+        "_ops/evidence/**"
+      ]
+    },
+    "documenter": {
+      "readZones": [
+        "*"
+      ],
+      "allowedLogicalWriteZones": [
+        "ops"
+      ],
+      "allowedWriteZones": [
+        "_ops/evidence/**",
+        "_ops/wiki-proposals/**",
+        "_ops/backlog/**"
+      ]
+    },
+    "wiki-applier": {
+      "readZones": [
+        "_ops/evidence/**",
+        "_ops/wiki-proposals/**",
+        "_ops/wiki/**"
+      ],
+      "allowedLogicalWriteZones": [
+        "ops"
+      ],
+      "allowedWriteZones": [
+        "_ops/wiki/**"
+      ]
+    },
+    "harness-developer": {
+      "readZones": [
+        "*"
+      ],
+      "allowedLogicalWriteZones": [
+        "harness",
+        "ops",
+        "starter"
+      ],
+      "allowedWriteZones": [
+        "_harness/**",
+        "_ops/evidence/**",
+        "starter/standard-harness/**"
+      ]
+    }
+  },
+  "frictionSignalBehavior": "emit forbidden_write_zone when role write permissions block a diff",
+  "metricSignalBehavior": "emit permission_validation_count by role and zone"
+}

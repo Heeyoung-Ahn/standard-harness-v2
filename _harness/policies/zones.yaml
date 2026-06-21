@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "logical-zone-policy",
+  "zones": {
+    "harness": [
+      "_harness/**"
+    ],
+    "ops": [
+      "_ops/**"
+    ],
+    "product": [
+      "product/**",
+      "apps/**",
+      "packages/**",
+      "services/**",
+      "infra/**",
+      "src/**",
+      "tests/**",
+      "tools/**"
+    ],
+    "starter": [
+      "starter/standard-harness/**"
+    ]
+  },
+  "packetTypeRules": {
+    "product-feature": {
+      "allowedLogicalWriteZones": [
+        "product",
+        "ops"
+      ],
+      "forbiddenWriteZones": [
+        "_harness/**"
+      ]
+    },
+    "product-bugfix": {
+      "allowedLogicalWriteZones": [
+        "product",
+        "ops"
+      ],
+      "forbiddenWriteZones": [
+        "_harness/**"
+      ]
+    },
+    "product-refactor": {
+      "allowedLogicalWriteZones": [
+        "product",
+        "ops"
+      ],
+      "forbiddenWriteZones": [
+        "_harness/**"
+      ]
+    },
+    "docs-only": {
+      "allowedLogicalWriteZones": [
+        "product",
+        "ops"
+      ],
+      "forbiddenWriteZones": [
+        "_harness/**"
+      ]
+    },
+    "harness-system": {
+      "allowedLogicalWriteZones": [
+        "harness",
+        "ops",
+        "starter"
+      ],
+      "forbiddenWriteZones": []
+    },
+    "harness-policy": {
+      "allowedLogicalWriteZones": [
+        "harness",
+        "ops",
+        "starter"
+      ],
+      "forbiddenWriteZones": []
+    },
+    "harness-validator": {
+      "allowedLogicalWriteZones": [
+        "harness",
+        "ops",
+        "starter"
+      ],
+      "forbiddenWriteZones": []
+    },
+    "starter-promotion": {
+      "allowedLogicalWriteZones": [
+        "starter",
+        "ops",
+        "harness"
+      ],
+      "forbiddenWriteZones": []
+    }
+  },
+  "frictionSignalBehavior": "emit forbidden_write_zone or invalid_zone_mapping when boundary validation blocks work",
+  "metricSignalBehavior": "emit boundary_validation_count by packetType, role, zone, and diagnostic"
+}

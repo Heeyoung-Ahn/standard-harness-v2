@@ -201,98 +201,242 @@
     {
       "hrId": "HR-010R",
       "title": "Repository uses logical zones",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-03",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "src/standard_harness/policy/zones.py",
+        "src/standard_harness/policy/permissions.py",
+        "src/standard_harness/validation/boundary.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/zones.yaml",
+          "_harness/policies/agent-permissions.yaml"
+        ],
         "validator": [
-          "boundary-validator"
+          "src/standard_harness/validation/boundary.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "boundary-gate"
         ],
-        "evidence": [
-          "boundary-policy"
-        ],
         "tests": [
-          "tests.contract.test_xp_03_planned_contract"
+          "tests/contract/test_logical_zone_mapping.py",
+          "tests/contract/test_git_diff_boundary_validator.py",
+          "tests/evals/test_product_packet_cannot_modify_harness.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-03",
+      "migrationCompatibility": [
+        "Existing starter contamination checks remain active and add starter boundary metadata.",
+        "Existing adapter permission roots remain compatible; XP-03 adds role logical write zones without requiring a physical product/ root.",
+        "Boundary validation consumes explicit git diff input and does not scan unrelated filesystem state."
+      ],
+      "releaseBlockingValidators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "releaseBlockingGates": [
+        "boundary-gate"
+      ],
+      "diagnostics": [
+        "harness_boundary_violation",
+        "forbidden_write_zone",
+        "invalid_zone_mapping"
+      ],
+      "waiverPolicy": "Product packet mutation of _harness/** is non-overridable.",
+      "enforcementPoint": "preflight, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit forbidden_write_zone or invalid_zone_mapping friction signal when boundary validation blocks work.",
+        "Emit boundary_validation_count and permission_validation_count metrics by packetType, role, zone, and diagnostic."
+      ]
     },
     {
       "hrId": "HR-011R",
       "title": "Harness system is not contaminated by product artifacts",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-03",
-      "implementationDisposition": "create",
-      "currentImplementation": [],
+      "implementationDisposition": "modify",
+      "currentImplementation": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "src/standard_harness/policy/zones.py",
+        "src/standard_harness/policy/permissions.py",
+        "src/standard_harness/validation/boundary.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/zones.yaml",
+          "_harness/policies/agent-permissions.yaml"
+        ],
         "validator": [
-          "boundary-validator"
+          "src/standard_harness/validation/boundary.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "boundary-gate"
         ],
-        "evidence": [
-          "boundary-policy"
-        ],
         "tests": [
-          "tests.contract.test_xp_03_planned_contract"
+          "tests/contract/test_logical_zone_mapping.py",
+          "tests/contract/test_git_diff_boundary_validator.py",
+          "tests/evals/test_product_packet_cannot_modify_harness.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-03",
+      "migrationCompatibility": [
+        "Existing starter contamination checks remain active and add starter boundary metadata.",
+        "Existing adapter permission roots remain compatible; XP-03 adds role logical write zones without requiring a physical product/ root.",
+        "Boundary validation consumes explicit git diff input and does not scan unrelated filesystem state."
+      ],
+      "releaseBlockingValidators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "releaseBlockingGates": [
+        "boundary-gate"
+      ],
+      "diagnostics": [
+        "harness_boundary_violation",
+        "forbidden_write_zone",
+        "invalid_zone_mapping"
+      ],
+      "waiverPolicy": "Product packet mutation of _harness/** is non-overridable.",
+      "enforcementPoint": "preflight, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit forbidden_write_zone or invalid_zone_mapping friction signal when boundary validation blocks work.",
+        "Emit boundary_validation_count and permission_validation_count metrics by packetType, role, zone, and diagnostic."
+      ]
     },
     {
       "hrId": "HR-012R",
       "title": "Harness changes require harness packet types",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-03",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "src/standard_harness/policy/zones.py",
+        "src/standard_harness/policy/permissions.py",
+        "src/standard_harness/validation/boundary.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/zones.yaml",
+          "_harness/policies/agent-permissions.yaml"
+        ],
         "validator": [
-          "boundary-validator"
+          "src/standard_harness/validation/boundary.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "boundary-gate"
         ],
-        "evidence": [
-          "boundary-policy"
-        ],
         "tests": [
-          "tests.contract.test_xp_03_planned_contract"
+          "tests/contract/test_logical_zone_mapping.py",
+          "tests/contract/test_git_diff_boundary_validator.py",
+          "tests/evals/test_product_packet_cannot_modify_harness.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-03",
+      "migrationCompatibility": [
+        "Existing starter contamination checks remain active and add starter boundary metadata.",
+        "Existing adapter permission roots remain compatible; XP-03 adds role logical write zones without requiring a physical product/ root.",
+        "Boundary validation consumes explicit git diff input and does not scan unrelated filesystem state."
+      ],
+      "releaseBlockingValidators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "releaseBlockingGates": [
+        "boundary-gate"
+      ],
+      "diagnostics": [
+        "harness_boundary_violation",
+        "forbidden_write_zone",
+        "invalid_zone_mapping"
+      ],
+      "waiverPolicy": "Product packet mutation of _harness/** is non-overridable.",
+      "enforcementPoint": "preflight, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit forbidden_write_zone or invalid_zone_mapping friction signal when boundary validation blocks work.",
+        "Emit boundary_validation_count and permission_validation_count metrics by packetType, role, zone, and diagnostic."
+      ]
     },
     {
       "hrId": "HR-013",
       "title": "Boundary validator uses git diff",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-03",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "src/standard_harness/policy/zones.py",
+        "src/standard_harness/policy/permissions.py",
+        "src/standard_harness/validation/boundary.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/zones.yaml",
+          "_harness/policies/agent-permissions.yaml"
+        ],
         "validator": [
-          "boundary-validator"
+          "src/standard_harness/validation/boundary.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "boundary-gate"
         ],
-        "evidence": [
-          "git-diff-boundary-result"
-        ],
         "tests": [
-          "tests.contract.test_xp_03_planned_contract"
+          "tests/contract/test_logical_zone_mapping.py",
+          "tests/contract/test_git_diff_boundary_validator.py",
+          "tests/evals/test_product_packet_cannot_modify_harness.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-03",
+      "migrationCompatibility": [
+        "Existing starter contamination checks remain active and add starter boundary metadata.",
+        "Existing adapter permission roots remain compatible; XP-03 adds role logical write zones without requiring a physical product/ root.",
+        "Boundary validation consumes explicit git diff input and does not scan unrelated filesystem state."
+      ],
+      "releaseBlockingValidators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "releaseBlockingGates": [
+        "boundary-gate"
+      ],
+      "diagnostics": [
+        "harness_boundary_violation",
+        "forbidden_write_zone",
+        "invalid_zone_mapping"
+      ],
+      "waiverPolicy": "Product packet mutation of _harness/** is non-overridable.",
+      "enforcementPoint": "preflight, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit forbidden_write_zone or invalid_zone_mapping friction signal when boundary validation blocks work.",
+        "Emit boundary_validation_count and permission_validation_count metrics by packetType, role, zone, and diagnostic."
+      ]
     },
     {
       "hrId": "HR-020R",
@@ -1643,74 +1787,182 @@
     {
       "hrId": "HR-180R",
       "title": "Agents have file access permissions",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-03",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "src/standard_harness/policy/zones.py",
+        "src/standard_harness/policy/permissions.py",
+        "src/standard_harness/validation/boundary.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/zones.yaml",
+          "_harness/policies/agent-permissions.yaml"
+        ],
         "validator": [
-          "permission-boundary-validator"
+          "src/standard_harness/validation/boundary.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "boundary-gate"
         ],
-        "evidence": [
-          "permission-policy"
-        ],
         "tests": [
-          "tests.contract.test_xp_03_planned_contract"
+          "tests/contract/test_logical_zone_mapping.py",
+          "tests/contract/test_git_diff_boundary_validator.py",
+          "tests/evals/test_product_packet_cannot_modify_harness.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-03",
+      "migrationCompatibility": [
+        "Existing starter contamination checks remain active and add starter boundary metadata.",
+        "Existing adapter permission roots remain compatible; XP-03 adds role logical write zones without requiring a physical product/ root.",
+        "Boundary validation consumes explicit git diff input and does not scan unrelated filesystem state."
+      ],
+      "releaseBlockingValidators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "releaseBlockingGates": [
+        "boundary-gate"
+      ],
+      "diagnostics": [
+        "harness_boundary_violation",
+        "forbidden_write_zone",
+        "invalid_zone_mapping"
+      ],
+      "waiverPolicy": "Product packet mutation of _harness/** is non-overridable.",
+      "enforcementPoint": "preflight, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit forbidden_write_zone or invalid_zone_mapping friction signal when boundary validation blocks work.",
+        "Emit boundary_validation_count and permission_validation_count metrics by packetType, role, zone, and diagnostic."
+      ]
     },
     {
       "hrId": "HR-181R",
       "title": "Product agents cannot modify harness system",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-03",
       "implementationDisposition": "create",
-      "currentImplementation": [],
+      "currentImplementation": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "src/standard_harness/policy/zones.py",
+        "src/standard_harness/policy/permissions.py",
+        "src/standard_harness/validation/boundary.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/zones.yaml",
+          "_harness/policies/agent-permissions.yaml"
+        ],
         "validator": [
-          "permission-boundary-validator"
+          "src/standard_harness/validation/boundary.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
           "boundary-gate"
         ],
-        "evidence": [
-          "boundary-validation-result"
-        ],
         "tests": [
-          "tests.contract.test_xp_03_planned_contract"
+          "tests/contract/test_logical_zone_mapping.py",
+          "tests/contract/test_git_diff_boundary_validator.py",
+          "tests/evals/test_product_packet_cannot_modify_harness.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-03",
+      "migrationCompatibility": [
+        "Existing starter contamination checks remain active and add starter boundary metadata.",
+        "Existing adapter permission roots remain compatible; XP-03 adds role logical write zones without requiring a physical product/ root.",
+        "Boundary validation consumes explicit git diff input and does not scan unrelated filesystem state."
+      ],
+      "releaseBlockingValidators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "releaseBlockingGates": [
+        "boundary-gate"
+      ],
+      "diagnostics": [
+        "harness_boundary_violation",
+        "forbidden_write_zone",
+        "invalid_zone_mapping"
+      ],
+      "waiverPolicy": "Product packet mutation of _harness/** is non-overridable.",
+      "enforcementPoint": "preflight, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit forbidden_write_zone or invalid_zone_mapping friction signal when boundary validation blocks work.",
+        "Emit boundary_validation_count and permission_validation_count metrics by packetType, role, zone, and diagnostic."
+      ]
     },
     {
       "hrId": "HR-182R",
       "title": "Starter promotion validates product trace removal",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-03",
-      "implementationDisposition": "create",
-      "currentImplementation": [],
+      "implementationDisposition": "modify",
+      "currentImplementation": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "src/standard_harness/policy/zones.py",
+        "src/standard_harness/policy/permissions.py",
+        "src/standard_harness/validation/boundary.py",
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/domain/closeout.py",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "policy": [
+          "_harness/policies/zones.yaml",
+          "_harness/policies/agent-permissions.yaml"
+        ],
         "validator": [
-          "starter-contamination-validator"
+          "src/standard_harness/validation/boundary.py",
+          "src/standard_harness/validation/aggregator.py"
         ],
         "gate": [
-          "starter-promotion-gate"
-        ],
-        "evidence": [
-          "starter-contamination-scan"
+          "boundary-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_03_planned_contract"
+          "tests/contract/test_logical_zone_mapping.py",
+          "tests/contract/test_git_diff_boundary_validator.py",
+          "tests/evals/test_product_packet_cannot_modify_harness.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-03",
+      "migrationCompatibility": [
+        "Existing starter contamination checks remain active and add starter boundary metadata.",
+        "Existing adapter permission roots remain compatible; XP-03 adds role logical write zones without requiring a physical product/ root.",
+        "Boundary validation consumes explicit git diff input and does not scan unrelated filesystem state."
+      ],
+      "releaseBlockingValidators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "releaseBlockingGates": [
+        "boundary-gate"
+      ],
+      "diagnostics": [
+        "harness_boundary_violation",
+        "forbidden_write_zone",
+        "invalid_zone_mapping"
+      ],
+      "waiverPolicy": "Product packet mutation of _harness/** is non-overridable.",
+      "enforcementPoint": "preflight, validate, closeout",
+      "frictionMetricBehavior": [
+        "Emit forbidden_write_zone or invalid_zone_mapping friction signal when boundary validation blocks work.",
+        "Emit boundary_validation_count and permission_validation_count metrics by packetType, role, zone, and diagnostic."
+      ]
     },
     {
       "hrId": "HR-185",

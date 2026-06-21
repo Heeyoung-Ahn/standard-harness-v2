@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from standard_harness.domain.packets import PacketService
 from standard_harness.domain.packets import LIFECYCLE_STATES
@@ -14,6 +15,8 @@ from standard_harness.policy.bundles import PolicyBundleService
 from standard_harness.policy.release import ReleasePolicyBoundary
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
+from standard_harness.validation.boundary import BoundaryValidator
+from standard_harness.validation.boundary import boundary_input_from_packet
 from standard_harness.validation.challenge_gate import ChallengeGateValidator
 from standard_harness.validation.evidence_trust import packet_requires_trusted_evidence
 
@@ -79,6 +82,8 @@ class CloseoutService:
         required_claim_ids = {str(claim["claim_id"]) for claim in claims}
         if gate_results and not required_claim_ids.issubset(checked_claim_ids):
             _add_diagnostic(diagnostics, "missing_gate_claim_coverage")
+        for diagnostic_id in self._boundary_diagnostics(packet):
+            _add_diagnostic(diagnostics, diagnostic_id)
         for diagnostic_id in self._projection_diagnostics(packet_id):
             _add_diagnostic(diagnostics, diagnostic_id)
         for diagnostic_id in self._review_bundle_diagnostics(
@@ -243,6 +248,16 @@ class CloseoutService:
 
     def _requires_trusted_evidence(self, packet: dict[str, object]) -> bool:
         return packet_requires_trusted_evidence(packet)
+
+    def _boundary_diagnostics(self, packet: dict[str, object]) -> list[str]:
+        boundary_input = boundary_input_from_packet(packet)
+        if boundary_input is None:
+            return []
+        try:
+            result = BoundaryValidator.from_repo(Path.cwd()).validate(boundary_input)
+        except (OSError, ValueError):
+            return ["invalid_zone_mapping"]
+        return list(result["diagnostic_ids"])
 
     def _closeout_exists(self, closeout_id: str) -> bool:
         with self.store.connection() as conn:
