@@ -41,6 +41,7 @@ V2.1 작업은 새 기능을 임의로 추가하는 작업이 아니다. v0.2에
 | Excluded intake | Spreadsheet candidate requirements | Not a V2.1 scope or requirement source unless explicitly reopened by the user |
 | Legacy reference | v1.0 harness / `docs/reference/v1/clean-starter-harness.zip` | Comparative evidence and skill-behavior reference only; no direct copy, bulk promotion, or V2.1 goal/scope change |
 | Skill reference candidates | Superpowers skills, v1 harness skill behavior | Candidate skill patterns for catalog review; no direct adoption unless adapted to V2.1 contracts |
+| External design references | Anthropic-style skill and context architecture patterns | Reference-only design evidence for progressive disclosure, procedural knowledge, provenance, and context curation; not a V2.1 requirement source, scope expansion, or XP ownership change |
 
 ---
 
@@ -107,7 +108,7 @@ The following defaults are selected for XP-00:
 | HR coverage artifact format | YAML canonical plus CSV/Markdown projections |
 | Database migration style | XP-by-XP incremental migration with schema version bump |
 | Starter policy mirroring | repo-root `_harness/**` is the development policy/schema root; starter reflection happens only through a starter-promotion packet |
-| Wiki storage | Markdown files plus structured YAML/JSON index |
+| Wiki storage | Markdown files plus structured YAML/JSON index, with provenance metadata and projection-only skill-facing index |
 | Required skill scope | XP-00 freezes the minimum required skill list; XP-07 may extend it through catalog review |
 | V2.1 release boundary | release after XP-10, with XP-00 through XP-03 allowed as internal milestones |
 
@@ -280,7 +281,7 @@ flowchart TD
   XP02["XP-02 Evidence trust / test-plan / closeout"]
   XP03["XP-03 Boundary / permission"]
   XP08A["XP-08A Sensitive evidence minimum guard"]
-  XP05["XP-05 Documenter / wiki"]
+  XP05["XP-05 Documenter / wiki knowledge index"]
   XP04["XP-04 E2E / review / security / refactor"]
   XP06["XP-06 Context / token budget"]
   XP07["XP-07 Handoff / skill catalog / skill router"]
@@ -380,7 +381,7 @@ XP release-blocking matrix format:
 | XP-02 | evidence-trust-validator, test-plan-validator | evidence-trust-gate | untrusted_evidence, missing_test_plan, manual_only_evidence | conditional | closeout |
 | XP-03 | boundary-validator, permission-validator | boundary-gate | harness_boundary_violation, forbidden_write_zone, invalid_zone_mapping | no for product `_harness/**` mutation | preflight, closeout |
 | XP-08A | sensitive-evidence-validator | sensitive-evidence-gate | secret_evidence_registered, sensitive_wiki_promotion | no | evidence registration, wiki proposal |
-| XP-05 | wiki-proposal-validator, closeout-report-validator | wiki-governance-gate | missing_closeout_report, direct_wiki_write, invalid_wiki_proposal | no for direct wiki write | closeout, wiki apply |
+| XP-05 | wiki-proposal-validator, closeout-report-validator, wiki-index-validator | wiki-governance-gate | missing_closeout_report, direct_wiki_write, invalid_wiki_proposal, missing_wiki_provenance, invalid_wiki_index, skill_facing_index_authority_violation | no for direct wiki write and authority override | closeout, wiki apply |
 | XP-09 | recurring-friction-validator, success-metrics-validator | compound-engineering-gate | missing_compound_telemetry, missing_success_metrics, unlinked_starter_promotion_candidate | no for V2.1 completion | V2.1 conformance |
 | XP-10 | validator-catalog-validator, v21-conformance-validator | v21-conformance-gate | missing_hr190_validator, missing_hr191_gate_metadata, incomplete_p0_coverage | no | release closeout |
 
@@ -768,14 +769,30 @@ Release-blocking:
 XP-05 cannot begin until SECRET/SENSITIVE evidence promotion block exists.
 ```
 
-### XP-05. Closeout Documenter, Wiki Proposal, Wiki Applier
+### XP-05. Closeout Documenter, Evidence-Backed Wiki, Knowledge Index
 
 Related HR: HR-100R, HR-101R, HR-102R, HR-110R, HR-111R
 
 Goal:
 
 ```text
-Create an evidence-backed documenter and Wiki flow where proposals are validated before Wiki mutation.
+Create an evidence-backed documenter, validated Wiki proposal/apply flow, and structured Wiki knowledge index that later context packs and skill routers can consume without treating stale, generated, or unprovenanced summaries as source of truth.
+```
+
+Reference boundary:
+
+```text
+Anthropic-style skill and context architecture is used only as a design reference for XP-05 Wiki knowledge structuring, provenance, progressive disclosure, and skill-facing knowledge projection. It does not change the V2.1 source of truth, HR scope, release boundary, or XP-07 ownership of skill catalog, routing, and execution.
+```
+
+Architecture update:
+
+```text
+- Wiki is not a free-form documentation dump. It is a structured knowledge projection backed by trusted evidence, packet closeout reports, decision records, and validated proposals.
+- Wiki pages must carry entry type, source tier, provenance, owner, review status, related HR/XP/packet IDs, and evidence links.
+- Generated summaries cannot override requirements, policies, gate results, human decisions, or trusted evidence.
+- XP-05 owns the Wiki knowledge map and skill-facing index only. Runtime skill catalog, routing, and execution remain XP-07 responsibilities.
+- Stale, low-authority, or generated Wiki content must emit docs_drift or stale_context friction signals and must not be promoted into high-authority context without the XP-06 context authority rules.
 ```
 
 Current implementation basis:
@@ -794,7 +811,13 @@ Create: src/standard_harness/documenter/closeout_report.py
 Create: src/standard_harness/wiki/proposals.py
 Create: src/standard_harness/wiki/validator.py
 Create: src/standard_harness/wiki/applier.py
+Create: src/standard_harness/wiki/index.py
+Create: src/standard_harness/wiki/provenance.py
 Create: _harness/schemas/wiki-proposal.schema.json
+Create: _harness/schemas/wiki-page.schema.json
+Create: _harness/schemas/wiki-index.schema.json
+Create: _harness/policies/wiki-knowledge-policy.yaml
+Create: _ops/wiki/index.yaml
 Create: _ops/wiki/architecture.md
 Create: _ops/wiki/decision-log.md
 Create: _ops/wiki/packet-history.md
@@ -802,6 +825,7 @@ Create: _ops/wiki/current-conventions.md
 Create: _ops/wiki/known-frictions.md
 Create: _ops/wiki/agent-lessons.md
 Create: _ops/wiki/deprecated-context.md
+Create: _ops/wiki/skill-facing-index.md
 Modify: src/standard_harness/validation/aggregator.py
 ```
 
@@ -810,18 +834,21 @@ Migration/compatibility:
 ```text
 - Existing operational memory snapshots are source evidence, not direct Wiki state.
 - Existing closeout DB rows can generate historical closeout reports only after evidence trust migration.
+- Existing Wiki-like summaries remain low-authority generated context until linked to trusted evidence and applied through validated proposals.
+- Historical packet history entries require source tier, provenance, owner, review status, and evidence links before they can become authoritative Wiki state.
+- `skill-facing-index.md` is a projection for later XP-07 routing and cannot define, execute, or authorize skills.
 ```
 
 Acceptance test command:
 
 ```powershell
-python -m unittest tests.contract.test_closeout_documenter_report tests.contract.test_wiki_proposal_validator tests.contract.test_wiki_applier_requires_validated_proposal
+python -m unittest tests.contract.test_closeout_documenter_report tests.contract.test_wiki_proposal_validator tests.contract.test_wiki_applier_requires_validated_proposal tests.contract.test_wiki_page_schema tests.contract.test_wiki_index_contract tests.contract.test_wiki_provenance_required tests.contract.test_skill_facing_index_is_projection_only
 ```
 
 Release-blocking:
 
 ```text
-Wiki mutation without validated proposal must fail. Documenter direct write to `_ops/wiki/**` must fail.
+Wiki mutation without validated proposal must fail. Documenter direct write to `_ops/wiki/**` must fail. Wiki pages without entry type, source tier, provenance, owner, review status, related HR/XP/packet IDs, and evidence links cannot be promoted to authoritative Wiki state. Stale, low-authority, or generated Wiki content cannot override requirements, policies, gate results, trusted evidence, or human decision records. Skill-facing Wiki projections cannot execute or authorize skills.
 ```
 
 ### XP-04. E2E Applicability, Browser Evidence, Requirements/Security/Refactor Gates
@@ -1236,6 +1263,6 @@ These decisions are closed defaults for starting XP-00. They do not reopen the r
 | HR coverage artifact format | YAML canonical plus CSV/Markdown projections | XP-00 |
 | Database migration style | XP-by-XP incremental migration with schema version bump | XP-00 |
 | Starter policy mirroring | repo-root `_harness/**` remains the development policy/schema root; starter reflection only through a starter-promotion packet | XP-00, XP-03, XP-08, XP-09 |
-| Wiki storage | Markdown files plus structured YAML/JSON index | XP-05 |
+| Wiki storage | Markdown files plus structured YAML/JSON index, with provenance metadata and projection-only skill-facing index | XP-05 |
 | Required skill scope | XP-00 freezes the minimum required skill list; XP-07 owns catalog schema, router, and extension/adaptation boundary | XP-00, XP-07 |
 | V2.1 release boundary | release after XP-10; XP-00 through XP-03 may be internal milestones only | XP-00, XP-10 |
