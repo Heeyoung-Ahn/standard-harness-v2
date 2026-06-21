@@ -1,0 +1,17 @@
+{
+  "artifact": "_harness/catalog/minimum-required-skills.yaml",
+  "artifactRole": "canonical",
+  "baselineVersion": "0.2.0",
+  "ownerXp": "XP-00",
+  "frozenUntil": "XP-07",
+  "extensionBoundary": "XP-07 may expand this through the formal skill catalog and router; XP-00 through XP-06 use this frozen minimum set.",
+  "skills": [
+    {"id": "SKILL-TDD-IMPLEMENTATION", "purpose": "Write focused tests first, confirm RED, implement minimal GREEN, and preserve regression evidence.", "source": "v2-native-required-skill", "permissionScope": ["tests/**", "src/**"], "evidenceContract": ["red-test-output", "green-test-output"], "fallbackBehavior": "manual test-plan-first evidence if strict red-green is impractical"},
+    {"id": "SKILL-EVIDENCE-TRUST-VALIDATION", "purpose": "Classify evidence trust status and block unsupported closeout claims.", "source": "v2-native-required-skill", "permissionScope": ["_ops/evidence/**", "src/standard_harness/validation/**"], "evidenceContract": ["evidence-trust-result"], "fallbackBehavior": "block closeout with repair diagnostic"},
+    {"id": "SKILL-BOUNDARY-VALIDATION", "purpose": "Detect logical-zone and _harness/** boundary violations.", "source": "v2-native-required-skill", "permissionScope": ["_harness/**", "_ops/**", "product/**", "src/**"], "evidenceContract": ["boundary-validation-result"], "fallbackBehavior": "hard fail when boundary cannot be established"},
+    {"id": "SKILL-CLOSEOUT-DOCUMENTER", "purpose": "Create evidence-backed closeout reports without direct Wiki mutation.", "source": "v2-native-required-skill", "permissionScope": ["_ops/evidence/**", "_ops/wiki-proposals/**", "_ops/backlog/**"], "evidenceContract": ["closeout-report"], "fallbackBehavior": "block closed state until report exists"},
+    {"id": "SKILL-WIKI-PROPOSAL-VALIDATION", "purpose": "Validate Wiki proposals before wiki-applier mutation.", "source": "v2-native-required-skill", "permissionScope": ["_ops/wiki-proposals/**", "_ops/wiki/**"], "evidenceContract": ["wiki-proposal-validation-result"], "fallbackBehavior": "reject proposal and leave Wiki unchanged"},
+    {"id": "SKILL-CONTEXT-PACK-GENERATION", "purpose": "Generate role-specific context packs with authority labels and token-budget controls.", "source": "v2-native-required-skill", "permissionScope": ["_ops/active-context/**", "_ops/evidence/**"], "evidenceContract": ["context-pack"], "fallbackBehavior": "manual handoff uses summary-first context with stale/untrusted warnings"},
+    {"id": "SKILL-FRICTION-ANALYSIS", "purpose": "Record friction signals and support recurring-friction improvement candidates.", "source": "v2-native-required-skill", "permissionScope": ["_ops/evidence/**", "_ops/backlog/**"], "evidenceContract": ["friction-signal"], "fallbackBehavior": "record N/A rationale when no validator, gate, handoff, wiki, evidence, or manual path is introduced"}
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "artifact": "_harness/policies/p0-policy.yaml",
+  "artifactRole": "canonical",
+  "baselineVersion": "0.2.0",
+  "ownerXp": "XP-00",
+  "p0Always": {
+    "nonWaivable": true,
+    "requirements": [
+      "packet exists",
+      "packet schema valid",
+      "packet state transition valid",
+      "objective/scope/out-of-scope declared",
+      "change zone declared",
+      "permission boundary valid",
+      "completion claim linked to evidence",
+      "no unresolved blocker",
+      "closeout report exists before closed",
+      "closeout validator PASS before closed"
+    ],
+    "gateLevel": "hard"
+  },
+  "p0Conditional": {
+    "nonWaivableWhenApplicable": true,
+    "gateLevel": "hard",
+    "rules": [
+      {"condition": "code_or_runtime_behavior_changed", "gate": "test-evidence-gate", "requiredEvidence": ["trusted-test-evidence"]},
+      {"condition": "ui_auth_routing_or_core_user_flow_changed", "gate": "browser-e2e-gate", "requiredEvidence": ["browser-evidence-bundle"]},
+      {"condition": "auth_permission_db_file_external_api_or_sensitive_data_changed", "gate": "security-review-gate", "requiredEvidence": ["security-review"]},
+      {"condition": "product_or_harness_code_changed", "gate": "refactor-review-gate", "requiredEvidence": ["refactor-review"]},
+      {"condition": "documented_command_changed", "gate": "manual-command-gate", "requiredEvidence": ["manual-command-validation"]},
+      {"condition": "wiki_update_proposal_exists", "gate": "wiki-proposal-gate", "requiredEvidence": ["wiki-update-proposal"]},
+      {"condition": "unsafe_user_request_or_gate_exception_requested", "gate": "challenge-gate", "requiredEvidence": ["challenge-review", "decision-record"]},
+      {"condition": "harness_system_changed", "gate": "harness-validation-gate", "requiredEvidence": ["harness-validation", "starter-impact-review"]},
+      {"condition": "starter_created_or_promoted", "gate": "starter-contamination-gate", "requiredEvidence": ["starter-contamination-scan"]}
+    ]
+  },
+  "nonOverridable": [
+    "missing_packet",
+    "invalid_packet_state_transition",
+    "product_packet_modifying__harness",
+    "missing_closeout_report",
+    "unrecorded_completion_claim",
+    "critical_security_blocker_without_mitigation_or_followup",
+    "sensitive_evidence_written_to_wiki"
+  ],
+  "xp00ReleaseBlocking": {
+    "validator": "requirements-metadata-validator",
+    "gateId": "requirements-baseline-gate",
+    "diagnosticIds": ["missing_hr_metadata", "missing_traceability", "non_goal_guardrail_missing"],
+    "waivable": false,
+    "enforcementPoint": "validate"
+  }
+}

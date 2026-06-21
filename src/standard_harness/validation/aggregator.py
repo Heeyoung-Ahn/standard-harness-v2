@@ -11,21 +11,33 @@ from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.state.store import HarnessStore
 from standard_harness.validation.diagnostics import DiagnosticRecord
 from standard_harness.validation.readiness import ReadinessService
+from standard_harness.validation.requirements_metadata import RequirementsMetadataValidator
 
 
 class ValidationService:
-    def __init__(self, store: HarnessStore, *, starter_root: Path | None = None):
+    def __init__(
+        self,
+        store: HarnessStore,
+        *,
+        starter_root: Path | None = None,
+        repo_root: Path | None = None,
+    ):
         self.store = store
+        self.repo_root = repo_root or Path.cwd()
         self.starter_root = starter_root or Path.cwd() / "starter" / "standard-harness"
 
     def validate_all(self, *, packet_id: str | None = None) -> list[dict[str, Any]]:
         diagnostics = []
+        diagnostics.extend(self.validate_requirements_metadata())
         diagnostics.extend(self.validate_state())
         diagnostics.extend(self.validate_starter())
         if packet_id is not None:
             diagnostics.extend(self.validate_packet(packet_id))
             diagnostics.extend(self.validate_projection(packet_id))
         return diagnostics
+
+    def validate_requirements_metadata(self) -> list[dict[str, Any]]:
+        return RequirementsMetadataValidator(self.repo_root).validate()
 
     def validate_state(self) -> list[dict[str, Any]]:
         diagnostics = []

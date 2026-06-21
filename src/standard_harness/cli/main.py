@@ -617,6 +617,7 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any
     parser.add_argument("--packet-id", default=None)
     parser.add_argument("--starter", action="store_true")
     parser.add_argument("--projection", action="store_true")
+    parser.add_argument("--requirements-metadata", action="store_true")
     parser.add_argument("--all", action="store_true")
     parsed = parser.parse_args(argv)
     packet_id = parsed.packet_id or parsed.packet_scope
@@ -624,6 +625,8 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any
     diagnostics: list[dict[str, Any]] = []
     if parsed.all:
         return service.validate_all(packet_id=packet_id)
+    if parsed.requirements_metadata:
+        diagnostics.extend(service.validate_requirements_metadata())
     if parsed.state:
         diagnostics.extend(service.validate_state())
     if parsed.packet_scope or parsed.packet_id:
@@ -636,7 +639,16 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any
         if packet_id is None:
             raise ValueError("validate --projection requires --packet-id")
         diagnostics.extend(service.validate_projection(packet_id))
-    if not any([parsed.state, parsed.packet_scope, parsed.packet_id, parsed.starter, parsed.projection]):
+    if not any(
+        [
+            parsed.state,
+            parsed.packet_scope,
+            parsed.packet_id,
+            parsed.starter,
+            parsed.projection,
+            parsed.requirements_metadata,
+        ]
+    ):
         diagnostics.extend(service.validate_state())
     return diagnostics
 
