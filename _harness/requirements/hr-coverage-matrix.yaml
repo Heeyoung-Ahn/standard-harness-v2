@@ -3186,74 +3186,212 @@
     {
       "hrId": "HR-170R",
       "title": "Harness generates and manages maintenance documents",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-08",
-      "implementationDisposition": "create",
-      "currentImplementation": [],
+      "implementationDisposition": "modify",
+      "currentImplementation": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "manual": [
+          "docs/manual/standard-harness-runbook-v21.md",
+          "docs/manual/standard-harness-troubleshooting-v21.md"
+        ],
+        "policy": [
+          "_harness/policies/evidence-classification.yaml"
+        ],
         "validator": [
-          "manual-command-validator"
+          "src/standard_harness/docsops/command_inventory.py",
+          "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
-          "manual-command-gate"
-        ],
-        "evidence": [
-          "manual-runbook"
+          "manual-command-gate",
+          "sensitive-evidence-gate",
+          "starter-boundary-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_08_planned_contract"
+          "tests/contract/test_manual_runbook_command_validation.py",
+          "tests/contract/test_sensitive_evidence_classification.py",
+          "tests/contract/test_starter_boundary.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-08",
+      "migrationCompatibility": [
+        "Existing command inventory remains valid and now includes docs/manual source scope.",
+        "Existing starter contamination checks remain part of starter boundary validation.",
+        "XP-08 extends XP-08A classification with handoff, screenshot, retention, and redaction rules."
+      ],
+      "releaseBlockingValidators": [
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator"
+      ],
+      "releaseBlockingGates": [
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate"
+      ],
+      "diagnostics": [
+        "missing_command_inventory_entry",
+        "stale_command_inventory",
+        "secret_evidence_registered",
+        "sensitive_handoff_requires_redaction",
+        "starter_contamination"
+      ],
+      "waiverPolicy": "Outdated command on command/install/closeout path blocks release. SECRET evidence in handoff context blocks release.",
+      "enforcementPoint": "manual command validation, evidence registration, handoff context, starter validation",
+      "frictionMetricBehavior": [
+        "Emit missing_command_inventory_entry, stale_command_inventory, secret_evidence_registered, or sensitive_handoff_requires_redaction when blocked.",
+        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification."
+      ]
     },
     {
       "hrId": "HR-171R",
       "title": "Human manuals are accurate and executable",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-08",
-      "implementationDisposition": "create",
-      "currentImplementation": [],
+      "implementationDisposition": "modify",
+      "currentImplementation": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "manual": [
+          "docs/manual/standard-harness-runbook-v21.md",
+          "docs/manual/standard-harness-troubleshooting-v21.md"
+        ],
+        "policy": [
+          "_harness/policies/evidence-classification.yaml"
+        ],
         "validator": [
-          "manual-command-validator"
+          "src/standard_harness/docsops/command_inventory.py",
+          "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
-          "manual-command-gate"
-        ],
-        "evidence": [
-          "manual-command-inventory"
+          "manual-command-gate",
+          "sensitive-evidence-gate",
+          "starter-boundary-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_08_planned_contract"
+          "tests/contract/test_manual_runbook_command_validation.py",
+          "tests/contract/test_sensitive_evidence_classification.py",
+          "tests/contract/test_starter_boundary.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-08",
+      "migrationCompatibility": [
+        "Existing command inventory remains valid and now includes docs/manual source scope.",
+        "Existing starter contamination checks remain part of starter boundary validation.",
+        "XP-08 extends XP-08A classification with handoff, screenshot, retention, and redaction rules."
+      ],
+      "releaseBlockingValidators": [
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator"
+      ],
+      "releaseBlockingGates": [
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate"
+      ],
+      "diagnostics": [
+        "missing_command_inventory_entry",
+        "stale_command_inventory",
+        "secret_evidence_registered",
+        "sensitive_handoff_requires_redaction",
+        "starter_contamination"
+      ],
+      "waiverPolicy": "Outdated command on command/install/closeout path blocks release. SECRET evidence in handoff context blocks release.",
+      "enforcementPoint": "manual command validation, evidence registration, handoff context, starter validation",
+      "frictionMetricBehavior": [
+        "Emit missing_command_inventory_entry, stale_command_inventory, secret_evidence_registered, or sensitive_handoff_requires_redaction when blocked.",
+        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification."
+      ]
     },
     {
       "hrId": "HR-172R",
       "title": "Documented commands are validated",
-      "coverageStatus": "missing",
+      "coverageStatus": "complete",
       "xpOwner": "XP-08",
-      "implementationDisposition": "create",
-      "currentImplementation": [],
+      "implementationDisposition": "modify",
+      "currentImplementation": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
+        "_harness/policies/evidence-classification.yaml",
+        "src/standard_harness/security/evidence_classification.py",
+        "src/standard_harness/validation/sensitive_evidence.py",
+        "src/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "src/standard_harness/starter/contamination.py"
+      ],
       "targetArtifacts": {
+        "manual": [
+          "docs/manual/standard-harness-runbook-v21.md",
+          "docs/manual/standard-harness-troubleshooting-v21.md"
+        ],
+        "policy": [
+          "_harness/policies/evidence-classification.yaml"
+        ],
         "validator": [
-          "manual-command-validator"
+          "src/standard_harness/docsops/command_inventory.py",
+          "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
-          "manual-command-gate"
-        ],
-        "evidence": [
-          "manual-command-result"
+          "manual-command-gate",
+          "sensitive-evidence-gate",
+          "starter-boundary-gate"
         ],
         "tests": [
-          "tests.contract.test_xp_08_planned_contract"
+          "tests/contract/test_manual_runbook_command_validation.py",
+          "tests/contract/test_sensitive_evidence_classification.py",
+          "tests/contract/test_starter_boundary.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": null
+      "lastUpdatedByPacket": "XP-08",
+      "migrationCompatibility": [
+        "Existing command inventory remains valid and now includes docs/manual source scope.",
+        "Existing starter contamination checks remain part of starter boundary validation.",
+        "XP-08 extends XP-08A classification with handoff, screenshot, retention, and redaction rules."
+      ],
+      "releaseBlockingValidators": [
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator"
+      ],
+      "releaseBlockingGates": [
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate"
+      ],
+      "diagnostics": [
+        "missing_command_inventory_entry",
+        "stale_command_inventory",
+        "secret_evidence_registered",
+        "sensitive_handoff_requires_redaction",
+        "starter_contamination"
+      ],
+      "waiverPolicy": "Outdated command on command/install/closeout path blocks release. SECRET evidence in handoff context blocks release.",
+      "enforcementPoint": "manual command validation, evidence registration, handoff context, starter validation",
+      "frictionMetricBehavior": [
+        "Emit missing_command_inventory_entry, stale_command_inventory, secret_evidence_registered, or sensitive_handoff_requires_redaction when blocked.",
+        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification."
+      ]
     },
     {
       "hrId": "HR-180R",
@@ -3438,111 +3576,141 @@
     {
       "hrId": "HR-185",
       "title": "Evidence and handoff context protect sensitive information",
-      "coverageStatus": "partial",
+      "coverageStatus": "complete",
       "xpOwner": "XP-08A/XP-08",
-      "implementationDisposition": "create",
+      "implementationDisposition": "modify",
       "currentImplementation": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
         "_harness/policies/evidence-classification.yaml",
         "src/standard_harness/security/evidence_classification.py",
         "src/standard_harness/validation/sensitive_evidence.py",
-        "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/state/migrations.py",
-        "src/standard_harness/state/replay.py",
-        "src/standard_harness/state/audit.py",
-        "src/standard_harness/security/redaction.py"
+        "src/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "src/standard_harness/starter/contamination.py"
       ],
       "targetArtifacts": {
+        "manual": [
+          "docs/manual/standard-harness-runbook-v21.md",
+          "docs/manual/standard-harness-troubleshooting-v21.md"
+        ],
         "policy": [
           "_harness/policies/evidence-classification.yaml"
         ],
         "validator": [
+          "src/standard_harness/docsops/command_inventory.py",
           "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
-          "sensitive-evidence-gate"
+          "manual-command-gate",
+          "sensitive-evidence-gate",
+          "starter-boundary-gate"
         ],
         "tests": [
+          "tests/contract/test_manual_runbook_command_validation.py",
           "tests/contract/test_sensitive_evidence_classification.py",
-          "tests/evals/test_secret_evidence_registration_blocked.py"
+          "tests/contract/test_starter_boundary.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-08A",
+      "lastUpdatedByPacket": "XP-08",
       "migrationCompatibility": [
-        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
-        "SECRET evidence is blocked before evidence.registered event persistence.",
-        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+        "Existing command inventory remains valid and now includes docs/manual source scope.",
+        "Existing starter contamination checks remain part of starter boundary validation.",
+        "XP-08 extends XP-08A classification with handoff, screenshot, retention, and redaction rules."
       ],
       "releaseBlockingValidators": [
-        "sensitive-evidence-validator"
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator"
       ],
       "releaseBlockingGates": [
-        "sensitive-evidence-gate"
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate"
       ],
       "diagnostics": [
+        "missing_command_inventory_entry",
+        "stale_command_inventory",
         "secret_evidence_registered",
-        "sensitive_wiki_promotion"
+        "sensitive_handoff_requires_redaction",
+        "starter_contamination"
       ],
-      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
-      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "waiverPolicy": "Outdated command on command/install/closeout path blocks release. SECRET evidence in handoff context blocks release.",
+      "enforcementPoint": "manual command validation, evidence registration, handoff context, starter validation",
       "frictionMetricBehavior": [
-        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
-        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+        "Emit missing_command_inventory_entry, stale_command_inventory, secret_evidence_registered, or sensitive_handoff_requires_redaction when blocked.",
+        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification."
       ]
     },
     {
       "hrId": "HR-186",
       "title": "Evidence classification exists",
       "coverageStatus": "complete",
-      "xpOwner": "XP-08A",
-      "implementationDisposition": "create",
+      "xpOwner": "XP-08A/XP-08",
+      "implementationDisposition": "modify",
       "currentImplementation": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
         "_harness/policies/evidence-classification.yaml",
         "src/standard_harness/security/evidence_classification.py",
         "src/standard_harness/validation/sensitive_evidence.py",
-        "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/state/migrations.py",
-        "src/standard_harness/state/replay.py",
-        "src/standard_harness/state/audit.py",
-        "src/standard_harness/security/redaction.py"
+        "src/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "src/standard_harness/starter/contamination.py"
       ],
       "targetArtifacts": {
+        "manual": [
+          "docs/manual/standard-harness-runbook-v21.md",
+          "docs/manual/standard-harness-troubleshooting-v21.md"
+        ],
         "policy": [
           "_harness/policies/evidence-classification.yaml"
         ],
         "validator": [
+          "src/standard_harness/docsops/command_inventory.py",
           "src/standard_harness/validation/sensitive_evidence.py"
         ],
         "gate": [
-          "sensitive-evidence-gate"
+          "manual-command-gate",
+          "sensitive-evidence-gate",
+          "starter-boundary-gate"
         ],
         "tests": [
+          "tests/contract/test_manual_runbook_command_validation.py",
           "tests/contract/test_sensitive_evidence_classification.py",
-          "tests/evals/test_secret_evidence_registration_blocked.py"
+          "tests/contract/test_starter_boundary.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-08A",
+      "lastUpdatedByPacket": "XP-08",
       "migrationCompatibility": [
-        "Existing evidence rows and replayed legacy evidence default to INTERNAL classification.",
-        "SECRET evidence is blocked before evidence.registered event persistence.",
-        "SENSITIVE and SECRET evidence are marked non-promotable to Wiki and LLM handoff context; full Wiki/handoff enforcement continues in XP-05/XP-07/XP-08."
+        "Existing command inventory remains valid and now includes docs/manual source scope.",
+        "Existing starter contamination checks remain part of starter boundary validation.",
+        "XP-08 extends XP-08A classification with handoff, screenshot, retention, and redaction rules."
       ],
       "releaseBlockingValidators": [
-        "sensitive-evidence-validator"
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator"
       ],
       "releaseBlockingGates": [
-        "sensitive-evidence-gate"
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate"
       ],
       "diagnostics": [
+        "missing_command_inventory_entry",
+        "stale_command_inventory",
         "secret_evidence_registered",
-        "sensitive_wiki_promotion"
+        "sensitive_handoff_requires_redaction",
+        "starter_contamination"
       ],
-      "waiverPolicy": "SECRET evidence registration and SECRET/SENSITIVE promotion to Wiki or handoff context are not allowed in XP-08A minimum guard.",
-      "enforcementPoint": "evidence registration, wiki proposal, handoff context",
+      "waiverPolicy": "Outdated command on command/install/closeout path blocks release. SECRET evidence in handoff context blocks release.",
+      "enforcementPoint": "manual command validation, evidence registration, handoff context, starter validation",
       "frictionMetricBehavior": [
-        "Emit secret_evidence_registered or sensitive_wiki_promotion friction signal when classification blocks registration or promotion.",
-        "Emit evidence_classification_count and sensitive_evidence_validation_count metrics by classification and target."
+        "Emit missing_command_inventory_entry, stale_command_inventory, secret_evidence_registered, or sensitive_handoff_requires_redaction when blocked.",
+        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification."
       ]
     },
     {

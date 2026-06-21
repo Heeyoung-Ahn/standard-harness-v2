@@ -4,7 +4,7 @@
 
 This inventory closes FP-13C by classifying documented operator commands as executable or manual-only, recording freshness, and identifying commands that require human approval before execution.
 
-Command source scope for this release is `README.md`, `docs/release/*.md`, and `docs/decisions/*.md`. Implementation-plan command blocks are task instructions, not operator command documentation.
+Command source scope for this release is `README.md`, `docs/release/*.md`, `docs/decisions/*.md`, and `docs/manual/*.md`. Implementation-plan command blocks are task instructions, not operator command documentation.
 
 | command_id | command | source_path | classification | manual_only_reason | freshness_status | verified_by | waiver_id |
 | --- | --- | --- | --- | --- | --- | --- | --- |

@@ -26,6 +26,8 @@ class SensitiveEvidenceValidator:
             diagnostics.append("sensitive_wiki_promotion")
         if target == "handoff" and not self.policy.can_include_in_handoff(classification):
             diagnostics.append("secret_evidence_registered")
+        if target == "handoff" and classification == "SENSITIVE":
+            diagnostics.append("sensitive_handoff_requires_redaction")
         return {
             "status": "blocked" if diagnostics else "pass",
             "diagnostic_ids": diagnostics,
