@@ -9,6 +9,20 @@
       "releaseBlocking": true
     },
     {
+      "validatorId": "challenge-review-evidence-validator",
+      "hrIds": ["HR-150R", "HR-151R", "HR-152", "HR-190R", "HR-191"],
+      "gateId": "challenge-review-evidence-gate",
+      "implementation": "standard_harness.validation.challenge_review_evidence:ChallengeReviewEvidenceValidator",
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "challenge-review-evidence-gate",
+        "validatorId": "challenge-review-evidence-validator",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
       "validatorId": "v21-conformance-validator",
       "hrIds": ["HR-190R", "HR-191", "HR-200"],
       "gateId": "v21-conformance-gate",

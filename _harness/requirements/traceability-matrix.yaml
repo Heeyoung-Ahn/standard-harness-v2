@@ -2061,9 +2061,11 @@
         "src/standard_harness/reviews/adjudication.py",
         "src/standard_harness/memory/human_control_snapshot.py",
         "src/standard_harness/validation/challenge_gate.py",
+        "src/standard_harness/validation/challenge_review_evidence.py",
         "src/standard_harness/validation/human_decision.py",
         "src/standard_harness/validation/aggregator.py",
-        "src/standard_harness/domain/closeout.py"
+        "src/standard_harness/domain/closeout.py",
+        "docs/reviews/v21"
       ],
       "schemas": [
         "human-decision.schema.json"
@@ -2073,17 +2075,23 @@
         "p0-policy"
       ],
       "validators": [
-        "challenge-gate-validator"
+        "challenge-gate-validator",
+        "challenge-review-evidence-validator"
       ],
       "gates": [
         "challenge-gate"
       ],
       "evidenceTypes": [
-        "challenge-review"
+        "challenge-review",
+        "challenge-review-evidence-report"
       ],
       "tests": [
         "tests.contract.test_challenge_gate_applicability",
-        "tests.contract.test_challenge_review_required_for_p0_exception"
+        "tests.contract.test_challenge_review_required_for_p0_exception",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit"
       ],
       "releaseBlocking": true
     },
@@ -2097,9 +2105,11 @@
         "src/standard_harness/reviews/adjudication.py",
         "src/standard_harness/memory/human_control_snapshot.py",
         "src/standard_harness/validation/challenge_gate.py",
+        "src/standard_harness/validation/challenge_review_evidence.py",
         "src/standard_harness/validation/human_decision.py",
         "src/standard_harness/validation/aggregator.py",
-        "src/standard_harness/domain/closeout.py"
+        "src/standard_harness/domain/closeout.py",
+        "docs/reviews/v21"
       ],
       "schemas": [
         "human-decision.schema.json"
@@ -2108,7 +2118,8 @@
         "challenge-gate"
       ],
       "validators": [
-        "challenge-gate-validator"
+        "challenge-gate-validator",
+        "challenge-review-evidence-validator"
       ],
       "gates": [
         "challenge-gate"
@@ -2116,11 +2127,16 @@
       "evidenceTypes": [
         "challenge-review",
         "decision-record",
-        "gate-result"
+        "gate-result",
+        "challenge-review-evidence-report"
       ],
       "tests": [
         "tests.contract.test_challenge_gate_applicability",
-        "tests.contract.test_challenge_review_required_for_p0_exception"
+        "tests.contract.test_challenge_review_required_for_p0_exception",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit"
       ],
       "releaseBlocking": true
     },
@@ -2134,9 +2150,11 @@
         "src/standard_harness/reviews/adjudication.py",
         "src/standard_harness/memory/human_control_snapshot.py",
         "src/standard_harness/validation/challenge_gate.py",
+        "src/standard_harness/validation/challenge_review_evidence.py",
         "src/standard_harness/validation/human_decision.py",
         "src/standard_harness/validation/aggregator.py",
-        "src/standard_harness/domain/closeout.py"
+        "src/standard_harness/domain/closeout.py",
+        "docs/reviews/v21"
       ],
       "schemas": [
         "human-decision.schema.json"
@@ -2146,16 +2164,22 @@
         "challenge-gate"
       ],
       "validators": [
-        "human-decision-validator"
+        "human-decision-validator",
+        "challenge-review-evidence-validator"
       ],
       "gates": [
         "challenge-gate"
       ],
       "evidenceTypes": [
-        "human-decision-record"
+        "human-decision-record",
+        "challenge-review-evidence-report"
       ],
       "tests": [
-        "tests.contract.test_human_decision_non_overridable_items"
+        "tests.contract.test_human_decision_non_overridable_items",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit"
       ],
       "releaseBlocking": true
     },
@@ -2616,6 +2640,7 @@
       "files": [
         "src/standard_harness/validation/requirements_metadata.py",
         "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/validation/challenge_review_evidence.py",
         "src/standard_harness/validation/na_decisions.py",
         "_harness/policies/validator-catalog.yaml",
         "src/standard_harness/validation/catalog.py",
@@ -2639,17 +2664,20 @@
         "requirements-metadata-validator",
         "packet-schema-validator",
         "gate-profile-validator",
+        "challenge-review-evidence-validator",
         "na-decision-validator",
         "v21-conformance-validator",
         "validator-catalog-validator"
       ],
       "gates": [
         "requirements-baseline-gate",
+        "challenge-review-evidence-gate",
         "packet-kernel-gate",
         "v21-conformance-gate"
       ],
       "evidenceTypes": [
         "validator-result",
+        "challenge-review-evidence-report",
         "v21-conformance-report"
       ],
       "tests": [
@@ -2657,6 +2685,10 @@
         "tests.contract.test_v02_packet_schema",
         "tests.contract.test_gate_profile_applicability",
         "tests.contract.test_rule_based_na_decision",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit",
         "tests.contract.test_validator_catalog_hr190_coverage",
         "tests.contract.test_v21_full_conformance_gate"
       ],
@@ -2672,6 +2704,7 @@
         "src/standard_harness/state/replay.py",
         "src/standard_harness/state/audit.py",
         "_harness/policies/validator-catalog.yaml",
+        "src/standard_harness/validation/challenge_review_evidence.py",
         "src/standard_harness/validation/catalog.py",
         "src/standard_harness/completion/v21_conformance.py",
         "src/standard_harness/validation/aggregator.py",
@@ -2687,19 +2720,26 @@
         "_harness/policies/validator-catalog.yaml"
       ],
       "validators": [
+        "challenge-review-evidence-validator",
         "validator-catalog-validator",
         "v21-conformance-validator"
       ],
       "gates": [
+        "challenge-review-evidence-gate",
         "v21-conformance-gate",
         "packet-kernel-gate"
       ],
       "evidenceTypes": [
         "gate-result",
+        "challenge-review-evidence-report",
         "v21-conformance-report"
       ],
       "tests": [
         "tests.contract.test_gate_profile_applicability",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit",
         "tests.contract.test_validator_catalog_hr190_coverage",
         "tests.contract.test_v21_full_conformance_gate"
       ],
