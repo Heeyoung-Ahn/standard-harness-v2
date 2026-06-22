@@ -1,3 +1,15 @@
+# V2.1 Review Governance Gate Idea
+
+## Document Relationship
+
+- Master plan: `V2.1 Hardening Master Plan.md`.
+- V2.1 disposition: accepted as XP-10C Review Governance Gate after release evidence, security, and metrics hardening.
+- Role: source idea for turning challenge/adversarial/code review into structured release-blocking evidence.
+- Feeds: `review hardening plus wiki knowledge architecture hardening prompt.md`.
+- Related to: `v2.1 additional hardening idea.md` and `v22-hardening-strategy.md`.
+
+---
+
 네. v2.1에 넣으려면 **“리뷰 절차 문서 추가”가 아니라 “리뷰를 하네스의 공식 gate 체계로 승격”**해야 합니다.
 
 가장 좋은 진행 방식은 다음입니다.

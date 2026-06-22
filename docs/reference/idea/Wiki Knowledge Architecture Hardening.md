@@ -1,3 +1,15 @@
+# V2.1 Wiki Knowledge Architecture Hardening Prompt
+
+## Document Relationship
+
+- Master plan: `V2.1 Hardening Master Plan.md`.
+- V2.1 disposition: accepted as XP-05B Wiki Knowledge Architecture, after release evidence/security/metrics hardening.
+- Role: source prompt for making Wiki/reference pages projection-only, provenance-backed, freshness-validated navigation artifacts.
+- Feeds: `review hardening plus wiki knowledge architecture hardening prompt.md`.
+- Future expansion: V2.2 Knowledge Continuity layer in `v22-hardening-strategy.md`.
+
+---
+
 /goal Create a goal with this objective:
 
 Implement V2.1 Wiki Knowledge Architecture Hardening after the current V2.1 hardening work is complete.

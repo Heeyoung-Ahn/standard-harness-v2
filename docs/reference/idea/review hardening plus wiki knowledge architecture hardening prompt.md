@@ -1,3 +1,15 @@
+# V2.1 Review And Wiki Hardening Prompt
+
+## Document Relationship
+
+- Master plan: `V2.1 Hardening Master Plan.md`.
+- V2.1 disposition: accepted as a combined prompt reference, but implementation should be split into separate branches.
+- Split into: XP-10C Review Governance Gate and XP-05B Wiki Knowledge Architecture.
+- Preceded by: XP-10B Release Evidence Integrity, XP-SecurityA, and XP-MetricsA.
+- Source documents: `Review Hardening.md`, `Wiki Knowledge Architecture Hardening.md`, and `v2.1 additional hardening idea.md`.
+
+---
+
 Implement V2.1 additional hardening with two scoped items:
 
 1. XP-10B Review Governance Gate

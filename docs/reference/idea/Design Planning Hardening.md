@@ -1,3 +1,15 @@
+# V2.2 Design Planning Hardening Prompt
+
+## Document Relationship
+
+- Master plan: `V2.1 Hardening Master Plan.md`.
+- V2.1 disposition: deferred; do not implement during V2.1 hardening except for projection-only boundary lessons that support Wiki/Review hardening.
+- V2.2 role: defines the future Design Projection layer for wireframes, reusable UI module contracts, design mockups, and browser validation handoff.
+- Depends on: `Planning Pipeline Hardening.md`.
+- Related to: `v22-hardening-strategy.md`.
+
+---
+
 /goal Create a goal with this objective:
 
 Implement V2.1 Design Planning Hardening for wireframe projection, reusable design mockup systemization, and UI module contracts.

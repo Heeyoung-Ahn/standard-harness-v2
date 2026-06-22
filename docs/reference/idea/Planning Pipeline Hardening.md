@@ -1,3 +1,15 @@
+# V2.2 Planning Pipeline Hardening Prompt
+
+## Document Relationship
+
+- Master plan: `V2.1 Hardening Master Plan.md`.
+- V2.1 disposition: deferred; do not implement during V2.1 hardening because it expands planning/product-intake scope.
+- V2.2 role: defines the future Intent Capture and Specification Normalization layers.
+- Feeds: `Design Planning Hardening.md`.
+- Related to: `v22-hardening-strategy.md`.
+
+---
+
 /goal Create a goal with this objective:
 
 Implement V2.1 Planning Pipeline Hardening for requirements interview, PRD writing, feature specification, flow modeling, and verifiable requirement normalization.

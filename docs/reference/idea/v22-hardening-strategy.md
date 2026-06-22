@@ -1,4 +1,14 @@
-# V2.2 Project Operating Harness 기획안
+# V2.2 Project Operating Harness Strategy
+
+## Document Relationship
+
+- Master plan: `V2.1 Hardening Master Plan.md`.
+- V2.1 disposition: reference only; do not implement as part of V2.1 release hardening.
+- V2.2 role: long-range operating model for planning, design projection, delivery, review governance, knowledge continuity, and improvement loops.
+- Inputs from V2.1: Review Governance Gate, Wiki Knowledge Architecture, HR-200 metrics, and executable release gate.
+- Related V2.2 prompts: `Planning Pipeline Hardening.md` and `Design Planning Hardening.md`.
+
+---
 
 ## 1. V2.2 목적
 
