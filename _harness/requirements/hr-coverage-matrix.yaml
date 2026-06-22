@@ -4069,10 +4069,12 @@
         "src/standard_harness/validation/aggregator.py",
         "src/standard_harness/completion/final_gate.py",
         "docs/release/v21-conformance-report.md",
-        "docs/release/release-quality-closeout-v1.md"
+        "docs/release/release-quality-closeout-v1.md",
+        "_ops/metrics/hr200-success-metrics.json"
       ],
       "targetArtifacts": {
         "schema": [
+          "_harness/schemas/friction-signal.schema.json",
           "_harness/schemas/starter-promotion-candidate.schema.json"
         ],
         "validator": [
@@ -4093,18 +4095,24 @@
           "tests/contract/test_compound_event_replay_compatibility.py",
           "tests/evals/test_compound_engineering_required_for_v1_completion.py",
           "tests/contract/test_validator_catalog_hr190_coverage.py",
-          "tests/contract/test_v21_full_conformance_gate.py"
+          "tests/contract/test_v21_full_conformance_gate.py",
+          "tests/contract/test_friction_signal_schema_conformance.py",
+          "tests/contract/test_starter_promotion_candidate_schema_conformance.py",
+          "tests/contract/test_success_metrics_hr200_required_fields.py",
+          "tests/contract/test_success_metrics_written_to_ops_metrics.py",
+          "tests/contract/test_success_metrics_include_source_watermark.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10",
+      "lastUpdatedByPacket": "XP-09A",
       "migrationCompatibility": [
         "Existing friction_records map to friction.signal records.",
         "Existing improvement proposals retain disposition and can feed starter promotion candidates.",
         "Existing PMO/cost records can feed HR-200 metrics."
+        ,"XP-09A writes deterministic HR-200 projection evidence with sourceWatermark."
       ],
       "releaseBlockingValidators": [
         "recurring-friction-detector",

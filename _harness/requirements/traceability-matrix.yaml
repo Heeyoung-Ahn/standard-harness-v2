@@ -2723,9 +2723,11 @@
         "src/standard_harness/validation/aggregator.py",
         "src/standard_harness/completion/final_gate.py",
         "docs/release/v21-conformance-report.md",
-        "docs/release/release-quality-closeout-v1.md"
+        "docs/release/release-quality-closeout-v1.md",
+        "_ops/metrics/hr200-success-metrics.json"
       ],
       "schemas": [
+        "_harness/schemas/friction-signal.schema.json",
         "_harness/schemas/starter-promotion-candidate.schema.json"
       ],
       "policies": [
@@ -2756,7 +2758,12 @@
         "tests.contract.test_compound_event_replay_compatibility",
         "tests.evals.test_compound_engineering_required_for_v1_completion",
         "tests.contract.test_validator_catalog_hr190_coverage",
-        "tests.contract.test_v21_full_conformance_gate"
+        "tests.contract.test_v21_full_conformance_gate",
+        "tests.contract.test_friction_signal_schema_conformance",
+        "tests.contract.test_starter_promotion_candidate_schema_conformance",
+        "tests.contract.test_success_metrics_hr200_required_fields",
+        "tests.contract.test_success_metrics_written_to_ops_metrics",
+        "tests.contract.test_success_metrics_include_source_watermark"
       ],
       "releaseBlocking": true
     }

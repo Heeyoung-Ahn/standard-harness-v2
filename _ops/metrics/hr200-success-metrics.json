@@ -1,0 +1,20 @@
+{
+  "boundaryViolationDetection": 1.0,
+  "closeoutClaimLedgerCoverage": 1.0,
+  "completionRate": 1.0,
+  "docsCommandInventoryCoverage": 1.0,
+  "evidenceIndexCoverage": 1.0,
+  "frictionCount": 1,
+  "frictionSignalBehavior": "aggregate XP friction signals into HR-200 metrics",
+  "metricId": "HR-200",
+  "metricSignalBehavior": "emit success_metrics_report_generated",
+  "p0AlwaysValidationCoverage": 1.0,
+  "packetCloseoutCompleteness": 1.0,
+  "repeatedFrictionCount": 1,
+  "sourceWatermark": {
+    "computedBy": "success-metrics@v2.1",
+    "sourceEventRange": "XP-09A-projection"
+  },
+  "totalCostEstimate": 0.0,
+  "trustedEvidenceRatio": 1.0
+}
