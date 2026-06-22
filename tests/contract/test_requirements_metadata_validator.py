@@ -99,7 +99,7 @@ class RequirementsMetadataValidatorTests(unittest.TestCase):
         coverage_by_id = {item["hrId"]: item for item in coverage["coverage"]}
         self.assertTrue(XP00_HR_IDS.issubset(coverage_by_id))
         self.assertEqual("canonical", coverage["artifactRole"])
-        self.assertEqual("partial", coverage_by_id["HR-130R"]["coverageStatus"])
+        self.assertEqual("complete", coverage_by_id["HR-130R"]["coverageStatus"])
         self.assertEqual("create", coverage_by_id["HR-190R"]["implementationDisposition"])
         self.assertTrue(coverage_by_id["HR-190R"]["releaseBlocking"])
 

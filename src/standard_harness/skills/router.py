@@ -19,7 +19,16 @@ class SkillRouter:
     def route(self, *, task_type: str, role: str) -> dict[str, Any]:
         skill = self.catalog.find_for_task(task_type)
         if skill is None:
-            return {"status": "blocked", "diagnostic_ids": ["required_skill_not_cataloged"]}
+            return {
+                "status": "blocked",
+                "taskType": task_type,
+                "role": role,
+                "selectedBy": "skill-router",
+                "evidenceRequired": True,
+                "bypassesP0Gate": False,
+                "p0Boundary": "preserved",
+                "diagnostic_ids": ["unknown_required_skill", "required_skill_not_cataloged"],
+            }
         allowed = skill.get("permissionScope", {}).get("allowedWriteZones", [])
         return {
             "status": "selected",
@@ -30,5 +39,8 @@ class SkillRouter:
             "evidenceRequired": bool(skill.get("evidenceContract", {}).get("required")),
             "allowedWriteZones": allowed,
             "fallbackBehavior": skill.get("fallbackBehavior"),
+            "evidenceContract": skill.get("evidenceContract", {}),
+            "bypassesP0Gate": False,
+            "p0Boundary": "preserved",
             "diagnostic_ids": [],
         }

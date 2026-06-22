@@ -17,6 +17,12 @@ class SkillCatalog:
         path = Path(repo_root) / "_harness" / "catalog" / "skill-catalog.yaml"
         return cls(json.loads(path.read_text(encoding="utf-8")))
 
+    @classmethod
+    def minimum_required_from_repo(cls, repo_root: str | Path) -> list[str]:
+        path = Path(repo_root) / "_harness" / "catalog" / "minimum-required-skills.yaml"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return [skill["id"] for skill in data.get("skills", [])]
+
     def get(self, skill_id: str) -> dict[str, Any]:
         return self.by_id[skill_id]
 

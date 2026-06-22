@@ -381,7 +381,13 @@
         "tests.contract.test_skill_catalog_contract",
         "tests.contract.test_required_skill_implementation_registry",
         "tests.contract.test_skill_router_evidence_contract",
-        "tests.contract.test_v1_skill_reference_traceability"
+        "tests.contract.test_v1_skill_reference_traceability",
+        "tests.contract.test_required_skill_catalog_completion",
+        "tests.contract.test_skill_router_minimum_skills",
+        "tests.contract.test_handoff_skill_cli_commands",
+        "tests.contract.test_unknown_skill_is_blocked",
+        "tests.contract.test_skill_route_preserves_p0_gate_boundary",
+        "tests.contract.test_every_required_skill_has_hr_trace"
       ],
       "releaseBlocking": true
     },

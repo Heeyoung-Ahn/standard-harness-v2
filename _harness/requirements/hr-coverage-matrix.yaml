@@ -2856,7 +2856,7 @@
     {
       "hrId": "HR-130R",
       "title": "Skill router extension interface",
-      "coverageStatus": "partial",
+      "coverageStatus": "complete",
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
@@ -2902,11 +2902,17 @@
           "tests/contract/test_skill_catalog_contract.py",
           "tests/contract/test_required_skill_implementation_registry.py",
           "tests/contract/test_skill_router_evidence_contract.py",
-          "tests/contract/test_v1_skill_reference_traceability.py"
+          "tests/contract/test_v1_skill_reference_traceability.py",
+          "tests/contract/test_required_skill_catalog_completion.py",
+          "tests/contract/test_skill_router_minimum_skills.py",
+          "tests/contract/test_handoff_skill_cli_commands.py",
+          "tests/contract/test_unknown_skill_is_blocked.py",
+          "tests/contract/test_skill_route_preserves_p0_gate_boundary.py",
+          "tests/contract/test_every_required_skill_has_hr_trace.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-07",
+      "lastUpdatedByPacket": "XP-07A",
       "migrationCompatibility": [
         "Existing adapter manifests map to provider capability manifests with optional provider/capability fields.",
         "Existing role cards remain role authority records and are linked by role-routing policy.",
@@ -2924,6 +2930,7 @@
       ],
       "diagnostics": [
         "required_skill_not_cataloged",
+        "unknown_required_skill",
         "manual_handoff_required",
         "provider_route_unavailable",
         "skill_route_bypasses_gate"
