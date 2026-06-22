@@ -2658,6 +2658,7 @@
         "tools/run_full_regression.py",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-packaging-hygiene-v21.md",
+        "docs/manual/standard-harness-v21-development-scenario.md",
         "docs/release/release-quality-closeout-v1.md"
       ],
       "schemas": [
@@ -2705,6 +2706,16 @@
         "tests.contract.test_release_archive_uses_tracked_files_only",
         "tests.contract.test_release_archive_excludes_untracked_temp_files",
         "tests.contract.test_full_regression_runner_records_last_test",
+        "tests.contract.test_v21_conformance_blocks_missing_validator_catalog_entries",
+        "tests.contract.test_v21_conformance_blocks_partial_required_hr",
+        "tests.contract.test_v21_conformance_blocks_missing_compound_metrics",
+        "tests.contract.test_validate_release_runs_v21_conformance",
+        "tests.contract.test_v21_development_scenario_documented",
+        "tests.contract.test_release_archive_contains_required_release_docs",
+        "tests.contract.test_v21_conformance_reads_generated_hr200_metrics_artifact",
+        "tests.contract.test_validator_catalog_entries_have_importable_implementations",
+        "tests.contract.test_validator_catalog_entries_have_negative_tests",
+        "tests.contract.test_release_blocking_validators_are_reachable_from_release_validation",
         "tests.contract.test_validator_catalog_hr190_coverage",
         "tests.contract.test_v21_full_conformance_gate"
       ],
@@ -2729,6 +2740,7 @@
         "tools/run_full_regression.py",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-packaging-hygiene-v21.md",
+        "docs/manual/standard-harness-v21-development-scenario.md",
         "docs/release/release-quality-closeout-v1.md"
       ],
       "schemas": [
@@ -2759,6 +2771,14 @@
         "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
         "tests.contract.test_challenge_review_blocks_unresolved_major",
         "tests.contract.test_challenge_review_loop_limit",
+        "tests.contract.test_v21_conformance_blocks_missing_validator_catalog_entries",
+        "tests.contract.test_v21_conformance_blocks_partial_required_hr",
+        "tests.contract.test_v21_conformance_blocks_missing_compound_metrics",
+        "tests.contract.test_validate_release_runs_v21_conformance",
+        "tests.contract.test_v21_conformance_reads_generated_hr200_metrics_artifact",
+        "tests.contract.test_validator_catalog_entries_have_importable_implementations",
+        "tests.contract.test_validator_catalog_entries_have_negative_tests",
+        "tests.contract.test_release_blocking_validators_are_reachable_from_release_validation",
         "tests.contract.test_validator_catalog_hr190_coverage",
         "tests.contract.test_v21_full_conformance_gate"
       ],
@@ -2781,6 +2801,7 @@
         "src/standard_harness/completion/v21_conformance.py",
         "src/standard_harness/validation/aggregator.py",
         "src/standard_harness/completion/final_gate.py",
+        "docs/manual/standard-harness-v21-development-scenario.md",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-quality-closeout-v1.md",
         "_ops/metrics/hr200-success-metrics.json"
@@ -2822,7 +2843,10 @@
         "tests.contract.test_starter_promotion_candidate_schema_conformance",
         "tests.contract.test_success_metrics_hr200_required_fields",
         "tests.contract.test_success_metrics_written_to_ops_metrics",
-        "tests.contract.test_success_metrics_include_source_watermark"
+        "tests.contract.test_success_metrics_include_source_watermark",
+        "tests.contract.test_v21_conformance_blocks_missing_compound_metrics",
+        "tests.contract.test_v21_conformance_reads_generated_hr200_metrics_artifact",
+        "tests.contract.test_validate_release_runs_v21_conformance"
       ],
       "releaseBlocking": true
     }

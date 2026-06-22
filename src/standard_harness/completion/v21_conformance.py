@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from standard_harness.validation.catalog import ValidatorCatalog
+from standard_harness.validation.challenge_review_evidence import ChallengeReviewEvidenceValidator
 
 
 ALLOWED_PARTIAL_HR = {"HR-130R"}
@@ -21,6 +22,7 @@ class V21ConformanceGate:
     def evaluate(self) -> dict[str, Any]:
         diagnostics: list[str] = []
         coverage = self._read("_harness/requirements/hr-coverage-matrix.yaml")["coverage"]
+        metadata = self._read("_harness/requirements/hr-coverage-matrix.yaml")
         traceability = self._read("_harness/requirements/traceability-matrix.yaml")["traceability"]
         trace_by_id = {item["hrId"]: item for item in traceability}
         for row in coverage:
@@ -40,12 +42,24 @@ class V21ConformanceGate:
             if not trace or not trace.get("tests"):
                 diagnostics.append("missing_traceability")
         catalog = ValidatorCatalog.from_repo(self.repo_root)
+        required_validator_ids = {
+            item["validator"]
+            for item in metadata.get("releaseBlockingValidators", [])
+            if item.get("validator")
+        }
+        missing_catalog_entries = required_validator_ids - catalog.ids()
+        if missing_catalog_entries:
+            diagnostics.append("missing_validator_catalog_entry")
+        diagnostics.extend(catalog.release_blocking_diagnostics(repo_root=self.repo_root))
         if not catalog.validators_for_hr("HR-190R"):
             diagnostics.append("missing_hr190_validator")
         if not catalog.gate_metadata_for_hr("HR-191"):
             diagnostics.append("missing_hr191_gate_metadata")
         if not any(row["hrId"] == "HR-200" and row.get("coverageStatus") == "complete" for row in coverage):
             diagnostics.append("missing_hr200_metrics")
+        diagnostics.extend(self._hr200_metric_diagnostics())
+        diagnostics.extend(self._challenge_review_diagnostics())
+        diagnostics.extend(self._release_doc_diagnostics())
         return {
             "status": "pass" if not diagnostics else "blocked",
             "diagnostic_ids": sorted(set(diagnostics)),
@@ -55,3 +69,57 @@ class V21ConformanceGate:
 
     def _read(self, relative: str) -> dict[str, Any]:
         return json.loads((self.repo_root / relative).read_text(encoding="utf-8"))
+
+    def _hr200_metric_diagnostics(self) -> list[str]:
+        path = self.repo_root / "_ops/metrics/hr200-success-metrics.json"
+        if not path.exists():
+            return ["missing_hr200_metrics"]
+        try:
+            metrics = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return ["incomplete_hr200_metrics"]
+        required = {
+            "metricId",
+            "completionRate",
+            "trustedEvidenceRatio",
+            "docsCommandInventoryCoverage",
+            "closeoutClaimLedgerCoverage",
+            "sourceWatermark",
+        }
+        if metrics.get("metricId") != "HR-200" or any(field not in metrics for field in required):
+            return ["incomplete_hr200_metrics"]
+        watermark = metrics.get("sourceWatermark")
+        if not isinstance(watermark, dict) or not watermark.get("sourceEventRange") or not watermark.get("computedBy"):
+            return ["incomplete_hr200_metrics"]
+        return []
+
+    def _challenge_review_diagnostics(self) -> list[str]:
+        required_xps = [
+            "XP-01",
+            "XP-02",
+            "XP-03",
+            "XP-04",
+            "XP-05",
+            "XP-06",
+            "XP-07",
+            "XP-08",
+            "XP-09",
+            "XP-10",
+            "XP-07A",
+            "XP-09A",
+            "XP-ProcessA",
+            "XP-PackagingA",
+            "XP-10A",
+        ]
+        result = ChallengeReviewEvidenceValidator(self.repo_root).validate_required(required_xps)
+        return ["missing_challenge_review_evidence"] if result["status"] != "pass" else []
+
+    def _release_doc_diagnostics(self) -> list[str]:
+        required = [
+            "docs/release/v21-conformance-report.md",
+            "docs/release/release-packaging-hygiene-v21.md",
+            "docs/release/final-product-docs-command-inventory-v1.md",
+            "docs/manual/standard-harness-v21-development-scenario.md",
+        ]
+        missing = [relative for relative in required if not (self.repo_root / relative).exists()]
+        return ["missing_release_archive_artifact"] if missing else []

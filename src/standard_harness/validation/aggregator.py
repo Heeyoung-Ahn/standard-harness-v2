@@ -64,6 +64,12 @@ class ValidationService:
             for diagnostic_id in result["diagnostic_ids"]
         ]
 
+    def validate_release(self) -> list[dict[str, Any]]:
+        diagnostics = []
+        diagnostics.extend(self.validate_requirements_metadata())
+        diagnostics.extend(self.validate_v21_conformance())
+        return diagnostics
+
     def validate_state(self) -> list[dict[str, Any]]:
         diagnostics = []
         with self.store.connection() as conn:

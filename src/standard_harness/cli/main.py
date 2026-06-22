@@ -671,6 +671,8 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any
     parser.add_argument("--starter", action="store_true")
     parser.add_argument("--projection", action="store_true")
     parser.add_argument("--requirements-metadata", action="store_true")
+    parser.add_argument("--v21-conformance", action="store_true")
+    parser.add_argument("--release", action="store_true")
     parser.add_argument("--all", action="store_true")
     parsed = parser.parse_args(argv)
     packet_id = parsed.packet_id or parsed.packet_scope
@@ -678,6 +680,10 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any
     diagnostics: list[dict[str, Any]] = []
     if parsed.all:
         return service.validate_all(packet_id=packet_id)
+    if parsed.release:
+        diagnostics.extend(service.validate_release())
+    if parsed.v21_conformance:
+        diagnostics.extend(service.validate_v21_conformance())
     if parsed.requirements_metadata:
         diagnostics.extend(service.validate_requirements_metadata())
     if parsed.state:
@@ -700,6 +706,8 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any
             parsed.starter,
             parsed.projection,
             parsed.requirements_metadata,
+            parsed.v21_conformance,
+            parsed.release,
         ]
     ):
         diagnostics.extend(service.validate_state())
