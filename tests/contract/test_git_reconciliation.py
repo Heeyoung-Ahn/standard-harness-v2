@@ -29,7 +29,7 @@ class GitReconciliationTests(unittest.TestCase):
 
             self.assertTrue(snapshot["branch_name"])
             self.assertNotEqual(snapshot["commit_id"], "UNBORN")
-            self.assertEqual(snapshot["repo_root"], str(repo))
+            self.assertTrue(Path(snapshot["repo_root"]).samefile(repo))
             self.assertEqual(snapshot["source_watermark"], 0)
             self.assertEqual(
                 GitSnapshotService(store).get_snapshot("snap-branch")["branch_name"],
