@@ -21,6 +21,18 @@ python -m unittest discover -s tests
 python tools/harness_cli.py --json --harness-root C:\tmp\standard-harness-demo validate --all --packet-id pkt-001
 ```
 
+See `docs/manual/standard-harness-v21-development-scenario.md` for the complete product-feature packet journey.
+
+## Release Validation
+
+```powershell
+python tools\harness_cli.py --json validate --v21-conformance
+```
+
+```powershell
+python tools\harness_cli.py --json validate --release
+```
+
 ## Starter Validation
 
 ```powershell

@@ -3423,12 +3423,17 @@
         "src/standard_harness/validation/sensitive_evidence.py",
         "src/standard_harness/docsops/command_inventory.py",
         "docs/release/final-product-docs-command-inventory-v1.md",
+        "docs/release/release-packaging-hygiene-v21.md",
+        "tools/release_archive.py",
+        "tools/run_full_regression.py",
         "src/standard_harness/starter/contamination.py"
       ],
       "targetArtifacts": {
         "manual": [
           "docs/manual/standard-harness-runbook-v21.md",
-          "docs/manual/standard-harness-troubleshooting-v21.md"
+          "docs/manual/standard-harness-troubleshooting-v21.md",
+          "docs/release/release-packaging-hygiene-v21.md",
+          "docs/release/final-product-docs-command-inventory-v1.md"
         ],
         "policy": [
           "_harness/policies/evidence-classification.yaml"
@@ -3443,17 +3448,23 @@
           "starter-boundary-gate"
         ],
         "tests": [
+          "tests/contract/test_release_packaging_hygiene.py",
+          "tests/contract/test_full_regression_runner_contract.py",
+          "tests/contract/test_release_archive_uses_tracked_files_only.py",
+          "tests/contract/test_release_archive_excludes_untracked_temp_files.py",
+          "tests/contract/test_full_regression_runner_records_last_test.py",
           "tests/contract/test_manual_runbook_command_validation.py",
           "tests/contract/test_sensitive_evidence_classification.py",
           "tests/contract/test_starter_boundary.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-08",
+      "lastUpdatedByPacket": "XP-PackagingA",
       "migrationCompatibility": [
         "Existing command inventory remains valid and now includes docs/manual source scope.",
         "Existing starter contamination checks remain part of starter boundary validation.",
-        "XP-08 extends XP-08A classification with handoff, screenshot, retention, and redaction rules."
+        "XP-08 extends XP-08A classification with handoff, screenshot, retention, and redaction rules.",
+        "XP-PackagingA adds tracked-file-only release archive and full regression command wrappers without changing existing manual command semantics."
       ],
       "releaseBlockingValidators": [
         "manual-command-inventory-validator",
@@ -3954,7 +3965,11 @@
         "src/standard_harness/validation/catalog.py",
         "src/standard_harness/completion/v21_conformance.py",
         "src/standard_harness/completion/final_gate.py",
+        "tools/release_archive.py",
+        "tools/run_full_regression.py",
         "docs/release/v21-conformance-report.md",
+        "docs/release/release-packaging-hygiene-v21.md",
+        "docs/manual/standard-harness-v21-development-scenario.md",
         "docs/release/release-quality-closeout-v1.md"
       ],
       "targetArtifacts": {
@@ -3980,6 +3995,21 @@
           "tests/contract/test_challenge_review_requires_commit_and_test_evidence.py",
           "tests/contract/test_challenge_review_blocks_unresolved_major.py",
           "tests/contract/test_challenge_review_loop_limit.py",
+          "tests/contract/test_release_packaging_hygiene.py",
+          "tests/contract/test_full_regression_runner_contract.py",
+          "tests/contract/test_release_archive_uses_tracked_files_only.py",
+          "tests/contract/test_release_archive_excludes_untracked_temp_files.py",
+          "tests/contract/test_full_regression_runner_records_last_test.py",
+          "tests/contract/test_v21_conformance_blocks_missing_validator_catalog_entries.py",
+          "tests/contract/test_v21_conformance_blocks_partial_required_hr.py",
+          "tests/contract/test_v21_conformance_blocks_missing_compound_metrics.py",
+          "tests/contract/test_validate_release_runs_v21_conformance.py",
+          "tests/contract/test_v21_development_scenario_documented.py",
+          "tests/contract/test_release_archive_contains_required_release_docs.py",
+          "tests/contract/test_v21_conformance_reads_generated_hr200_metrics_artifact.py",
+          "tests/contract/test_validator_catalog_entries_have_importable_implementations.py",
+          "tests/contract/test_validator_catalog_entries_have_negative_tests.py",
+          "tests/contract/test_release_blocking_validators_are_reachable_from_release_validation.py",
           "tests/contract/test_validator_catalog_hr190_coverage.py",
           "tests/contract/test_v21_full_conformance_gate.py"
         ],
@@ -3988,7 +4018,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-ProcessA",
+      "lastUpdatedByPacket": "XP-10A",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4027,7 +4057,11 @@
         "src/standard_harness/completion/v21_conformance.py",
         "src/standard_harness/validation/aggregator.py",
         "src/standard_harness/completion/final_gate.py",
+        "tools/release_archive.py",
+        "tools/run_full_regression.py",
         "docs/release/v21-conformance-report.md",
+        "docs/release/release-packaging-hygiene-v21.md",
+        "docs/manual/standard-harness-v21-development-scenario.md",
         "docs/release/release-quality-closeout-v1.md"
       ],
       "targetArtifacts": {
@@ -4053,6 +4087,14 @@
           "tests/contract/test_challenge_review_requires_commit_and_test_evidence.py",
           "tests/contract/test_challenge_review_blocks_unresolved_major.py",
           "tests/contract/test_challenge_review_loop_limit.py",
+          "tests/contract/test_v21_conformance_blocks_missing_validator_catalog_entries.py",
+          "tests/contract/test_v21_conformance_blocks_partial_required_hr.py",
+          "tests/contract/test_v21_conformance_blocks_missing_compound_metrics.py",
+          "tests/contract/test_validate_release_runs_v21_conformance.py",
+          "tests/contract/test_v21_conformance_reads_generated_hr200_metrics_artifact.py",
+          "tests/contract/test_validator_catalog_entries_have_importable_implementations.py",
+          "tests/contract/test_validator_catalog_entries_have_negative_tests.py",
+          "tests/contract/test_release_blocking_validators_are_reachable_from_release_validation.py",
           "tests/contract/test_validator_catalog_hr190_coverage.py",
           "tests/contract/test_v21_full_conformance_gate.py"
         ],
@@ -4061,7 +4103,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-ProcessA",
+      "lastUpdatedByPacket": "XP-10A",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4103,6 +4145,7 @@
         "src/standard_harness/completion/v21_conformance.py",
         "src/standard_harness/validation/aggregator.py",
         "src/standard_harness/completion/final_gate.py",
+        "docs/manual/standard-harness-v21-development-scenario.md",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-quality-closeout-v1.md",
         "_ops/metrics/hr200-success-metrics.json"
@@ -4135,19 +4178,23 @@
           "tests/contract/test_starter_promotion_candidate_schema_conformance.py",
           "tests/contract/test_success_metrics_hr200_required_fields.py",
           "tests/contract/test_success_metrics_written_to_ops_metrics.py",
-          "tests/contract/test_success_metrics_include_source_watermark.py"
+          "tests/contract/test_success_metrics_include_source_watermark.py",
+          "tests/contract/test_v21_conformance_blocks_missing_compound_metrics.py",
+          "tests/contract/test_v21_conformance_reads_generated_hr200_metrics_artifact.py",
+          "tests/contract/test_validate_release_runs_v21_conformance.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-09A",
+      "lastUpdatedByPacket": "XP-10A",
       "migrationCompatibility": [
         "Existing friction_records map to friction.signal records.",
         "Existing improvement proposals retain disposition and can feed starter promotion candidates.",
         "Existing PMO/cost records can feed HR-200 metrics."
-        ,"XP-09A writes deterministic HR-200 projection evidence with sourceWatermark."
+        ,"XP-09A writes deterministic HR-200 projection evidence with sourceWatermark.",
+        "XP-10A makes the HR-200 projection artifact a release-blocking V2.1 conformance input."
       ],
       "releaseBlockingValidators": [
         "recurring-friction-detector",

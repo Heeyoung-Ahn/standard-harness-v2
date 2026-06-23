@@ -53,6 +53,8 @@ class ChallengeReviewEvidenceRequiredTests(unittest.TestCase):
                 "XP-07A",
                 "XP-09A",
                 "XP-ProcessA",
+                "XP-PackagingA",
+                "XP-10A",
             ]
         )
 
