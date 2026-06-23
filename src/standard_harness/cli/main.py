@@ -16,8 +16,10 @@ from standard_harness.domain.evidence import EvidenceService
 from standard_harness.domain.gates import GateService
 from standard_harness.domain.packets import PacketService
 from standard_harness.domain.requirements import RequirementRegistry
+from standard_harness.handoff.prompts import HandoffPromptBuilder
 from standard_harness.memory.operational import OperationalMemoryService
 from standard_harness.projection.current_context import CurrentContextProjection
+from standard_harness.skills.router import SkillRouter
 from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.state.store import HarnessStore, resolve_harness_root
 from standard_harness.validation.aggregator import ValidationService
@@ -192,6 +194,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "closeout": _handle_closeout,
         "context": _handle_context,
         "starter-check": _handle_starter_check,
+        "skill-route": _handle_skill_route,
+        "handoff-prompt": _handle_handoff_prompt,
     }
 
     if args.command in handlers:
@@ -565,6 +569,53 @@ def _handle_context(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
     projection = CurrentContextProjection(store).generate(packet_id=parsed.packet_id)
     memory_entries = OperationalMemoryService(store).preview_entries(packet_id=parsed.packet_id)
     return {"projection": projection, "memory_entries": memory_entries}
+
+
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[3]
+
+
+def _handle_skill_route(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("skill-route")
+    parser.add_argument("--task-type", required=True)
+    parser.add_argument("--role", required=True)
+    parsed = parser.parse_args(argv)
+    route = SkillRouter.from_repo(_repo_root()).route(task_type=parsed.task_type, role=parsed.role)
+    if route["status"] == "blocked":
+        raise ValueError(",".join(route["diagnostic_ids"]))
+    return {"route": route}
+
+
+def _handle_handoff_prompt(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("handoff-prompt")
+    parser.add_argument("--task-type", required=True)
+    parser.add_argument("--role", required=True)
+    parser.add_argument("--packet-id", required=True)
+    parsed = parser.parse_args(argv)
+    repo_root = _repo_root()
+    route = SkillRouter.from_repo(repo_root).route(task_type=parsed.task_type, role=parsed.role)
+    if route["status"] == "blocked":
+        raise ValueError(",".join(route["diagnostic_ids"]))
+    handoff = HandoffPromptBuilder.from_repo(repo_root).build(
+        role=parsed.role,
+        packet_id=parsed.packet_id,
+        context_pack={
+            "packetId": parsed.packet_id,
+            "taskType": parsed.task_type,
+            "requiredSkill": route["requiredSkill"],
+        },
+    )
+    handoff.update(
+        {
+            "selectedBy": route["selectedBy"],
+            "requiredSkill": route["requiredSkill"],
+            "evidenceRequired": route["evidenceRequired"],
+            "evidenceClassification": handoff["evidenceMode"],
+            "bypassesP0Gate": route["bypassesP0Gate"],
+            "p0Boundary": route["p0Boundary"],
+        }
+    )
+    return {"handoff": handoff}
 
 
 def _handle_starter_check(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
