@@ -7,6 +7,7 @@ from typing import Any
 
 from standard_harness.policy.permissions import AgentPermissionPolicy
 from standard_harness.policy.zones import LogicalZonePolicy
+from standard_harness.policy.zones import has_parent_traversal
 from standard_harness.policy.zones import normalize_path
 from standard_harness.policy.zones import path_matches_any
 
@@ -59,7 +60,16 @@ class BoundaryValidator:
         hard_fail = False
 
         for change in changed_files:
-            path = normalize_path(str(change["path"]))
+            raw_path = str(change["path"])
+            path = normalize_path(raw_path)
+            if has_parent_traversal(raw_path):
+                _add_diagnostic(
+                    diagnostic_ids,
+                    diagnostics,
+                    "path_traversal",
+                    path=path,
+                    message="Changed file path must not contain parent traversal segments.",
+                )
             if declared_zones and not path_matches_any(path, declared_zones):
                 _add_diagnostic(
                     diagnostic_ids,

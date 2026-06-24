@@ -295,7 +295,8 @@
       "tests": [
         "tests.contract.test_logical_zone_mapping",
         "tests.contract.test_git_diff_boundary_validator",
-        "tests.evals.test_product_packet_cannot_modify_harness"
+        "tests.evals.test_product_packet_cannot_modify_harness",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal"
       ],
       "releaseBlocking": true
     },
@@ -331,7 +332,8 @@
       "tests": [
         "tests.contract.test_logical_zone_mapping",
         "tests.contract.test_git_diff_boundary_validator",
-        "tests.evals.test_product_packet_cannot_modify_harness"
+        "tests.evals.test_product_packet_cannot_modify_harness",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal"
       ],
       "releaseBlocking": true
     },
@@ -795,7 +797,8 @@
       "tests": [
         "tests.contract.test_evidence_trust_model_v02",
         "tests.contract.test_evidence_trust_migration_compatibility",
-        "tests.evals.test_manual_only_evidence_cannot_closeout"
+        "tests.evals.test_manual_only_evidence_cannot_closeout",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout"
       ],
       "releaseBlocking": true
     },
@@ -833,7 +836,8 @@
       "tests": [
         "tests.contract.test_evidence_trust_model_v02",
         "tests.contract.test_evidence_trust_migration_compatibility",
-        "tests.evals.test_manual_only_evidence_cannot_closeout"
+        "tests.evals.test_manual_only_evidence_cannot_closeout",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout"
       ],
       "releaseBlocking": true
     },
@@ -2539,7 +2543,8 @@
         "src/standard_harness/validation/boundary.py",
         "src/standard_harness/validation/aggregator.py",
         "src/standard_harness/domain/closeout.py",
-        "src/standard_harness/starter/contamination.py"
+        "src/standard_harness/starter/contamination.py",
+        "tools/release_archive.py"
       ],
       "schemas": [],
       "policies": [
@@ -2548,7 +2553,8 @@
       ],
       "validators": [
         "boundary-validator",
-        "permission-validator"
+        "permission-validator",
+        "starter-contamination-validator"
       ],
       "gates": [
         "boundary-gate"
@@ -2560,7 +2566,8 @@
       "tests": [
         "tests.contract.test_logical_zone_mapping",
         "tests.contract.test_git_diff_boundary_validator",
-        "tests.evals.test_product_packet_cannot_modify_harness"
+        "tests.evals.test_product_packet_cannot_modify_harness",
+        "tests.evals.test_release_archive_rejects_symlink_escape"
       ],
       "releaseBlocking": true
     },
@@ -2575,7 +2582,8 @@
         "src/standard_harness/validation/sensitive_evidence.py",
         "src/standard_harness/docsops/command_inventory.py",
         "docs/release/final-product-docs-command-inventory-v1.md",
-        "src/standard_harness/starter/contamination.py"
+        "src/standard_harness/starter/contamination.py",
+        "src/standard_harness/domain/evidence.py"
       ],
       "schemas": [],
       "policies": [
@@ -2599,7 +2607,8 @@
       "tests": [
         "tests.contract.test_manual_runbook_command_validation",
         "tests.contract.test_sensitive_evidence_classification",
-        "tests.contract.test_starter_boundary"
+        "tests.contract.test_starter_boundary",
+        "tests.evals.test_secret_evidence_registration_uses_store_root"
       ],
       "releaseBlocking": true
     },
@@ -2614,7 +2623,8 @@
         "src/standard_harness/validation/sensitive_evidence.py",
         "src/standard_harness/docsops/command_inventory.py",
         "docs/release/final-product-docs-command-inventory-v1.md",
-        "src/standard_harness/starter/contamination.py"
+        "src/standard_harness/starter/contamination.py",
+        "src/standard_harness/domain/evidence.py"
       ],
       "schemas": [],
       "policies": [
@@ -2638,7 +2648,8 @@
       "tests": [
         "tests.contract.test_manual_runbook_command_validation",
         "tests.contract.test_sensitive_evidence_classification",
-        "tests.contract.test_starter_boundary"
+        "tests.contract.test_starter_boundary",
+        "tests.evals.test_secret_evidence_registration_uses_store_root"
       ],
       "releaseBlocking": true
     },
@@ -2661,7 +2672,12 @@
         "docs/release/v21-conformance-report.md",
         "docs/release/release-packaging-hygiene-v21.md",
         "docs/manual/standard-harness-v21-development-scenario.md",
-        "docs/release/release-quality-closeout-v1.md"
+        "docs/release/release-quality-closeout-v1.md",
+        "src/standard_harness/policy/zones.py",
+        "src/standard_harness/validation/boundary.py",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/wiki/applier.py"
       ],
       "schemas": [
         "packet.schema.json",
@@ -2681,7 +2697,11 @@
         "challenge-review-evidence-validator",
         "na-decision-validator",
         "v21-conformance-validator",
-        "validator-catalog-validator"
+        "validator-catalog-validator",
+        "boundary-validator",
+        "evidence-trust-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator"
       ],
       "gates": [
         "requirements-baseline-gate",
@@ -2722,7 +2742,12 @@
         "tests.contract.test_validator_catalog_entries_have_negative_tests",
         "tests.contract.test_release_blocking_validators_are_reachable_from_release_validation",
         "tests.contract.test_validator_catalog_hr190_coverage",
-        "tests.contract.test_v21_full_conformance_gate"
+        "tests.contract.test_v21_full_conformance_gate",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout",
+        "tests.evals.test_secret_evidence_registration_uses_store_root",
+        "tests.evals.test_wiki_applier_rejects_path_traversal",
+        "tests.evals.test_release_archive_rejects_symlink_escape"
       ],
       "releaseBlocking": true
     },
@@ -2748,7 +2773,12 @@
         "docs/release/v21-conformance-report.md",
         "docs/release/release-packaging-hygiene-v21.md",
         "docs/manual/standard-harness-v21-development-scenario.md",
-        "docs/release/release-quality-closeout-v1.md"
+        "docs/release/release-quality-closeout-v1.md",
+        "src/standard_harness/policy/zones.py",
+        "src/standard_harness/validation/boundary.py",
+        "src/standard_harness/evidence/trust.py",
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/wiki/applier.py"
       ],
       "schemas": [
         "gate-result.schema.json"
@@ -2760,7 +2790,11 @@
       "validators": [
         "challenge-review-evidence-validator",
         "validator-catalog-validator",
-        "v21-conformance-validator"
+        "v21-conformance-validator",
+        "boundary-validator",
+        "evidence-trust-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator"
       ],
       "gates": [
         "challenge-review-evidence-gate",
@@ -2790,7 +2824,12 @@
         "tests.contract.test_validator_catalog_entries_have_negative_tests",
         "tests.contract.test_release_blocking_validators_are_reachable_from_release_validation",
         "tests.contract.test_validator_catalog_hr190_coverage",
-        "tests.contract.test_v21_full_conformance_gate"
+        "tests.contract.test_v21_full_conformance_gate",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout",
+        "tests.evals.test_secret_evidence_registration_uses_store_root",
+        "tests.evals.test_wiki_applier_rejects_path_traversal",
+        "tests.evals.test_release_archive_rejects_symlink_escape"
       ],
       "releaseBlocking": true
     },

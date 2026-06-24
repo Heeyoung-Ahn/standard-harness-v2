@@ -20,7 +20,10 @@ class WikiApplier:
         normalized = target.as_posix().lstrip("./")
         if not normalized.startswith("_ops/wiki/"):
             return {"status": "blocked", "diagnostic_ids": ["invalid_wiki_target"]}
-        destination = self.repo_root / normalized
+        wiki_root = (self.repo_root / "_ops" / "wiki").resolve()
+        destination = (self.repo_root / normalized).resolve()
+        if not destination.is_relative_to(wiki_root):
+            return {"status": "blocked", "diagnostic_ids": ["invalid_wiki_target"]}
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(str(proposal.get("content", "")), encoding="utf-8")
         return {

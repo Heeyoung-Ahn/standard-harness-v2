@@ -22,6 +22,7 @@ CLOSEOUT_TRUST_STATUSES = {
     "TRUSTED_CI",
     "MANUAL_ACCEPTED_BY_HUMAN",
 }
+TRUSTED_CI_PRODUCERS = {"github-actions", "trusted-ci"}
 
 
 class EvidenceTrustPolicy:
@@ -54,10 +55,27 @@ class EvidenceTrustPolicy:
         return "MANUAL_ONLY"
 
     def can_closeout(self, evidence: dict[str, Any]) -> bool:
-        return (
-            evidence.get("validation_status") == "STRUCTURALLY_VALID"
-            and evidence.get("trust_status") in CLOSEOUT_TRUST_STATUSES
-        )
+        if evidence.get("validation_status") != "STRUCTURALLY_VALID":
+            return False
+        trust_status = evidence.get("trust_status")
+        if trust_status == "TRUSTED_CI":
+            return (
+                evidence.get("produced_via") == "trusted-ci"
+                and evidence.get("producer_provider") in TRUSTED_CI_PRODUCERS
+                and bool(evidence.get("base_commit"))
+                and bool(evidence.get("head_commit"))
+                and bool(evidence.get("workspace_id"))
+            )
+        if trust_status == "REPRODUCED_BY_HARNESS":
+            return (
+                evidence.get("produced_via") == "harness-reproduction"
+                and bool(evidence.get("base_commit"))
+                and bool(evidence.get("head_commit"))
+                and bool(evidence.get("workspace_id"))
+            )
+        if trust_status == "MANUAL_ACCEPTED_BY_HUMAN":
+            return evidence.get("produced_via") == "human-accepted-manual"
+        return False
 
     def is_manual_only(self, evidence: dict[str, Any]) -> bool:
         return evidence.get("trust_status") == "MANUAL_ONLY"

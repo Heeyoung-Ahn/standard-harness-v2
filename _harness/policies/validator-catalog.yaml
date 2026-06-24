@@ -57,6 +57,27 @@
       }
     },
     {
+      "validatorId": "boundary-validator",
+      "hrIds": ["HR-010R", "HR-011R", "HR-012R", "HR-013", "HR-180R", "HR-181R", "HR-190R", "HR-191"],
+      "gateId": "boundary-gate",
+      "implementation": "standard_harness.validation.boundary:BoundaryValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_git_diff_boundary_validator",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal"
+      ],
+      "reachableFrom": ["validate --release", "validate --v21-conformance", "validate --all"],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "boundary-gate",
+        "validatorId": "boundary-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
       "validatorId": "na-decision-validator",
       "hrIds": ["HR-040R", "HR-041R", "HR-190R"],
       "gateId": "packet-kernel-gate",
@@ -151,11 +172,14 @@
     },
     {
       "validatorId": "evidence-trust-validator",
-      "hrIds": ["HR-020R", "HR-021R", "HR-090R", "HR-190R"],
+      "hrIds": ["HR-020R", "HR-021R", "HR-041R", "HR-043", "HR-044", "HR-090R", "HR-190R"],
       "gateId": "evidence-trust-gate",
       "implementation": "standard_harness.validation.evidence_trust:EvidenceTrustValidator",
       "cliEntrypoint": "validate --release",
-      "negativeTests": ["tests.contract.test_evidence_trust_model_v02"],
+      "negativeTests": [
+        "tests.contract.test_evidence_trust_model_v02",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout"
+      ],
       "reachableFrom": ["validate --release", "validate --v21-conformance", "validate --all"],
       "releaseBlocking": true,
       "gateResultMetadata": {
@@ -205,11 +229,14 @@
     },
     {
       "validatorId": "sensitive-evidence-validator",
-      "hrIds": ["HR-170R", "HR-171R", "HR-190R"],
+      "hrIds": ["HR-170R", "HR-171R", "HR-185", "HR-186", "HR-190R"],
       "gateId": "sensitive-evidence-gate",
       "implementation": "standard_harness.validation.sensitive_evidence:SensitiveEvidenceValidator",
       "cliEntrypoint": "validate --release",
-      "negativeTests": ["tests.contract.test_sensitive_evidence_classification"],
+      "negativeTests": [
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.evals.test_secret_evidence_registration_uses_store_root"
+      ],
       "reachableFrom": ["validate --release", "validate --v21-conformance", "validate --all"],
       "releaseBlocking": true,
       "gateResultMetadata": {
@@ -223,11 +250,14 @@
     },
     {
       "validatorId": "starter-contamination-validator",
-      "hrIds": ["HR-170R", "HR-171R", "HR-190R"],
+      "hrIds": ["HR-170R", "HR-171R", "HR-182R", "HR-190R"],
       "gateId": "starter-boundary-gate",
       "implementation": "standard_harness.starter.contamination:StarterContaminationChecker",
       "cliEntrypoint": "validate --release",
-      "negativeTests": ["tests.contract.test_starter_boundary"],
+      "negativeTests": [
+        "tests.contract.test_starter_boundary",
+        "tests.evals.test_release_archive_rejects_symlink_escape"
+      ],
       "reachableFrom": ["validate --release", "validate --v21-conformance", "validate --all"],
       "releaseBlocking": true,
       "gateResultMetadata": {

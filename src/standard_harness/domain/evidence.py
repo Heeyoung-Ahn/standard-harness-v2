@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 from standard_harness.domain.packets import PacketService
 from standard_harness.domain.requirements import RequirementRegistry
@@ -61,7 +62,7 @@ class EvidenceService:
                 raise ValueError("evidence claim must belong to the same packet")
         if result_status not in EVIDENCE_STATUSES:
             raise ValueError(f"Invalid evidence status: {result_status}")
-        classification_policy = EvidenceClassificationPolicy.from_repo(".")
+        classification_policy = _classification_policy_for_store(self.store)
         classification_result = EvidenceClassifier(classification_policy).classify(
             content=content,
             artifact_path=artifact_path,
@@ -351,3 +352,11 @@ class EvidenceService:
                 f"select 1 from {table} where {key_column} = ?", (key_value,)
             ).fetchone()
         return row is not None
+
+
+def _classification_policy_for_store(store: HarnessStore) -> EvidenceClassificationPolicy:
+    policy_path = store.harness_root / "_harness" / "policies" / "evidence-classification.yaml"
+    if policy_path.exists():
+        return EvidenceClassificationPolicy.load(policy_path)
+    repo_root = Path(__file__).resolve().parents[3]
+    return EvidenceClassificationPolicy.from_repo(repo_root)
