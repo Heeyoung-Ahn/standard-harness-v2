@@ -19,6 +19,8 @@ class SuccessMetricsSourceWatermarkTests(unittest.TestCase):
             cost_records=[],
             completion_results=[],
             source_event_range="1-12",
+            source_record_hash="not_applicable",
+            metrics_not_applicable=True,
         )
 
         self.assertEqual("1-12", report["sourceWatermark"]["sourceEventRange"])

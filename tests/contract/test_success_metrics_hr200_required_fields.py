@@ -19,9 +19,10 @@ class SuccessMetricsHr200RequiredFieldsTests(unittest.TestCase):
             cost_records=[{"cost_estimate": 1.25}],
             completion_results=[{"status": "complete"}],
             validation_records=[{"validatorId": "boundary-validator", "status": "pass"}],
-            evidence_records=[{"trustStatus": "TRUSTED"}],
+            evidence_records=[{"trustStatus": "TRUSTED_CI"}],
             command_records=[{"status": "documented"}],
             claim_records=[{"supportStatus": "supported"}],
+            source_record_hash="sha256:records",
         )
 
         for field in [
