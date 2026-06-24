@@ -1,0 +1,78 @@
+{
+  "evidenceId": "release-v21-review-governance",
+  "generatedBy": "review-governance-validator@0.2.0",
+  "generatedAt": "2026-06-24T22:57:52.148Z",
+  "sourceEventRange": "XP-10C",
+  "reviews": [
+    {
+      "reviewId": "rv-xp-10c-review-governance",
+      "packetId": "XP-10C",
+      "reviewType": "implementation",
+      "reviewedCommit": "b05259f0672111c7a3261c8b832ade09e0583971",
+      "reviewedFiles": [
+        {
+          "path": "src/standard_harness/validation/review_governance.py",
+          "sha256": "sha256:688c6b7403c681e7a6423d25d060bd6ebfff9bd0290bed6dc0a27c83a4e1dac3"
+        },
+        {
+          "path": "src/standard_harness/completion/v21_conformance.py",
+          "sha256": "sha256:4d0918c35e45335ac4cd0fbb40bc75851d291aa478451865821349ad37f1928b"
+        },
+        {
+          "path": "src/standard_harness/domain/closeout.py",
+          "sha256": "sha256:0941ff0b2777f57e00201e516d9cf612c6f9c8aae7c229b78b72bf449a5f9ccc"
+        },
+        {
+          "path": "_harness/policies/review-governance.yaml",
+          "sha256": "sha256:0905faa7b3077340a6ea494670b878ac25e53ccd45ee21953f0ab76f9c6017b0"
+        },
+        {
+          "path": "_harness/policies/validator-catalog.yaml",
+          "sha256": "sha256:ae3a0486436cbf016ac7f5c03a316fa8234c008ec23e0ae597fa13e5dc5e29cd"
+        },
+        {
+          "path": "_harness/schemas/review-governance-evidence.schema.json",
+          "sha256": "sha256:a8bee5322da93e635780a0c245fed00d3c195d7596b985dbe0b814c209d42bba"
+        },
+        {
+          "path": "_harness/requirements/hr-coverage-matrix.yaml",
+          "sha256": "sha256:d4ceba77e74909cc074290374139b8ac64639efe26b35196318a4d62b22bb1f9"
+        },
+        {
+          "path": "_harness/requirements/traceability-matrix.yaml",
+          "sha256": "sha256:f407a7bb1174536e9ffbffb54cbd101ccdd4526f49c80647e4b9c2c2c9f034d7"
+        },
+        {
+          "path": "tests/contract/test_v21_review_governance_gate.py",
+          "sha256": "sha256:2e08618e79e55e72758a35dd914697e04f3c12e97832c5a354ae038db18fd1ab"
+        },
+        {
+          "path": "tests/contract/test_review_governance_closeout_gate.py",
+          "sha256": "sha256:a8d19d0af5110cb9b18d66015941b71d62f341a5e0a64b7bcd0c304d73afb831"
+        }
+      ],
+      "focusedTestEvidence": {
+        "command": "python -m unittest tests.contract.test_v21_review_governance_gate tests.contract.test_review_governance_closeout_gate",
+        "result": "passed"
+      },
+      "fullRegressionEvidence": {
+        "evidenceId": "release-v21-full-regression",
+        "result": "passed"
+      },
+      "deterministicEvidence": [
+        "focusedTestEvidence",
+        "fullRegressionEvidence",
+        "validator-catalog",
+        "hr-traceability"
+      ],
+      "findings": [],
+      "acceptedRisks": [],
+      "finalDecision": "pass",
+      "finalAdjudication": {
+        "status": "approved",
+        "adjudicator": "planner-agent-pauli",
+        "rationale": "READY_FOR_CODE approved the shrunk XP-10C slice; focused negative tests prove missing, fake, stale, unresolved, unadjudicated, and AI-only review evidence blocks release."
+      }
+    }
+  ]
+}

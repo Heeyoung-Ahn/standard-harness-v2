@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "V2.1 Review Governance Evidence",
+  "type": "object",
+  "required": ["evidenceId", "generatedBy", "sourceEventRange", "reviews"],
+  "properties": {
+    "evidenceId": {"type": "string"},
+    "generatedBy": {"type": "string"},
+    "sourceEventRange": {"type": "string"},
+    "reviews": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "reviewId",
+          "packetId",
+          "reviewType",
+          "reviewedCommit",
+          "reviewedFiles",
+          "focusedTestEvidence",
+          "fullRegressionEvidence",
+          "deterministicEvidence",
+          "findings",
+          "finalDecision"
+        ],
+        "properties": {
+          "reviewId": {"type": "string"},
+          "packetId": {"type": "string"},
+          "reviewType": {"type": "string"},
+          "reviewedCommit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "reviewedFiles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["path", "sha256"],
+              "properties": {
+                "path": {"type": "string"},
+                "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+              }
+            }
+          },
+          "focusedTestEvidence": {"type": "object"},
+          "fullRegressionEvidence": {"type": "object"},
+          "deterministicEvidence": {"type": "array"},
+          "findings": {"type": "array"},
+          "acceptedRisks": {"type": "array"},
+          "finalDecision": {"type": "string"},
+          "finalAdjudication": {"type": "object"}
+        }
+      }
+    }
+  }
+}
