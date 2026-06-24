@@ -48,8 +48,19 @@ def create_release_archive(root: str | Path, output_path: str | Path) -> Path:
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for relative_path in list_release_files(repo_root):
-            archive.write(repo_root / relative_path, relative_path)
+            source = repo_root / relative_path
+            validate_release_source(repo_root, source)
+            archive.write(source, relative_path)
     return output
+
+
+def validate_release_source(repo_root: str | Path, source: Path) -> None:
+    if not source.is_symlink():
+        return
+    resolved = source.resolve()
+    root_resolved = Path(repo_root).resolve()
+    if not resolved.is_relative_to(root_resolved):
+        raise ValueError("release_archive_symlink_escape")
 
 
 def validate_release_files(paths: list[str]) -> list[str]:

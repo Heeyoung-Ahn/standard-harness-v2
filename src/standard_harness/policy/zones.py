@@ -5,6 +5,7 @@ from __future__ import annotations
 import fnmatch
 import json
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any
 
 
@@ -68,7 +69,25 @@ class LogicalZonePolicy:
 
 
 def normalize_path(path: str) -> str:
-    return path.replace("\\", "/").strip().lstrip("./")
+    raw = path.replace("\\", "/").strip()
+    while raw.startswith("./"):
+        raw = raw[2:]
+    parts: list[str] = []
+    for part in PurePosixPath(raw).parts:
+        if part in {"", "."}:
+            continue
+        if part == "..":
+            if parts:
+                parts.pop()
+            else:
+                parts.append("..")
+            continue
+        parts.append(part)
+    return "/".join(parts)
+
+
+def has_parent_traversal(path: str) -> bool:
+    return ".." in PurePosixPath(path.replace("\\", "/")).parts
 
 
 def path_matches_any(path: str, patterns: list[str]) -> bool:
