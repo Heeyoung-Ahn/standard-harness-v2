@@ -89,9 +89,31 @@ class V21ConformanceGate:
         if metrics.get("metricId") != "HR-200" or any(field not in metrics for field in required):
             return ["incomplete_hr200_metrics"]
         watermark = metrics.get("sourceWatermark")
-        if not isinstance(watermark, dict) or not watermark.get("sourceEventRange") or not watermark.get("computedBy"):
-            return ["incomplete_hr200_metrics"]
-        return []
+        required_watermark = {
+            "sourceEventRange",
+            "sourceRecordHash",
+            "generationCommand",
+            "generatedAt",
+            "computedBy",
+        }
+        diagnostics: list[str] = []
+        if not isinstance(watermark, dict) or any(not watermark.get(field) for field in required_watermark):
+            diagnostics.append("incomplete_hr200_metrics")
+        else:
+            if metrics.get("sourceRecordHash") != watermark.get("sourceRecordHash"):
+                diagnostics.append("stale_hr200_metrics")
+        for field in (
+            "completionRate",
+            "trustedEvidenceRatio",
+            "docsCommandInventoryCoverage",
+            "closeoutClaimLedgerCoverage",
+        ):
+            value = metrics.get(field)
+            if not isinstance(value, (int, float)) or isinstance(value, bool):
+                diagnostics.append("invalid_hr200_metric_type")
+            elif value < 0 or value > 1:
+                diagnostics.append("invalid_hr200_metric_type")
+        return diagnostics
 
     def _release_regression_diagnostics(self) -> list[str]:
         path = self.repo_root / "_ops/evidence/release/v21-full-regression.json"

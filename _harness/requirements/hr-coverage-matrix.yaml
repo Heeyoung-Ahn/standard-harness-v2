@@ -3998,7 +3998,9 @@
         "src/standard_harness/validation/boundary.py",
         "src/standard_harness/evidence/trust.py",
         "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/wiki/applier.py"
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/metrics/success.py",
+        "_ops/metrics/hr200-success-metrics.json"
       ],
       "targetArtifacts": {
         "validator": [
@@ -4012,7 +4014,8 @@
           "boundary-validator",
           "evidence-trust-validator",
           "sensitive-evidence-validator",
-          "starter-contamination-validator"
+          "starter-contamination-validator",
+          "src/standard_harness/metrics/success.py"
         ],
         "gate": [
           "requirements-baseline-gate",
@@ -4054,14 +4057,18 @@
           "tests/evals/test_forged_trusted_ci_cannot_closeout.py",
           "tests/evals/test_secret_evidence_registration_uses_store_root.py",
           "tests/evals/test_wiki_applier_rejects_path_traversal.py",
-          "tests/evals/test_release_archive_rejects_symlink_escape.py"
+          "tests/evals/test_release_archive_rejects_symlink_escape.py",
+          "tests/contract/test_success_metrics_hr200_required_fields.py",
+          "tests/contract/test_hr200_metrics_trust_statuses.py",
+          "tests/contract/test_hr200_metrics_source_watermark.py",
+          "tests/contract/test_v21_conformance_blocks_stale_hr200_metrics.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-SecurityA",
+      "lastUpdatedByPacket": "XP-MetricsA",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4069,7 +4076,8 @@
         "boundary-validator",
         "evidence-trust-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "success-metrics-reporter"
       ],
       "releaseBlockingGates": [
         "v21-conformance-gate"
@@ -4088,7 +4096,12 @@
         "invalid_wiki_target",
         "secret_evidence_registered",
         "release_archive_symlink_escape",
-        "forged_trusted_ci_evidence"
+        "forged_trusted_ci_evidence",
+        "invalid_trust_status",
+        "missing_source_records",
+        "incomplete_hr200_metrics",
+        "stale_hr200_metrics",
+        "invalid_hr200_metric_type"
       ],
       "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
       "enforcementPoint": "v21-conformance-gate",
@@ -4126,7 +4139,9 @@
         "src/standard_harness/validation/boundary.py",
         "src/standard_harness/evidence/trust.py",
         "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/wiki/applier.py"
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/metrics/success.py",
+        "_ops/metrics/hr200-success-metrics.json"
       ],
       "targetArtifacts": {
         "schema": [
@@ -4141,7 +4156,8 @@
           "boundary-validator",
           "evidence-trust-validator",
           "sensitive-evidence-validator",
-          "starter-contamination-validator"
+          "starter-contamination-validator",
+          "src/standard_harness/metrics/success.py"
         ],
         "gate": [
           "packet-kernel-gate",
@@ -4173,14 +4189,18 @@
           "tests/evals/test_forged_trusted_ci_cannot_closeout.py",
           "tests/evals/test_secret_evidence_registration_uses_store_root.py",
           "tests/evals/test_wiki_applier_rejects_path_traversal.py",
-          "tests/evals/test_release_archive_rejects_symlink_escape.py"
+          "tests/evals/test_release_archive_rejects_symlink_escape.py",
+          "tests/contract/test_success_metrics_hr200_required_fields.py",
+          "tests/contract/test_hr200_metrics_trust_statuses.py",
+          "tests/contract/test_hr200_metrics_source_watermark.py",
+          "tests/contract/test_v21_conformance_blocks_stale_hr200_metrics.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-SecurityA",
+      "lastUpdatedByPacket": "XP-MetricsA",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4188,7 +4208,8 @@
         "boundary-validator",
         "evidence-trust-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "success-metrics-reporter"
       ],
       "releaseBlockingGates": [
         "v21-conformance-gate"
@@ -4207,7 +4228,12 @@
         "invalid_wiki_target",
         "secret_evidence_registered",
         "release_archive_symlink_escape",
-        "forged_trusted_ci_evidence"
+        "forged_trusted_ci_evidence",
+        "invalid_trust_status",
+        "missing_source_records",
+        "incomplete_hr200_metrics",
+        "stale_hr200_metrics",
+        "invalid_hr200_metric_type"
       ],
       "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
       "enforcementPoint": "v21-conformance-gate",
@@ -4272,14 +4298,17 @@
           "tests/contract/test_success_metrics_include_source_watermark.py",
           "tests/contract/test_v21_conformance_blocks_missing_compound_metrics.py",
           "tests/contract/test_v21_conformance_reads_generated_hr200_metrics_artifact.py",
-          "tests/contract/test_validate_release_runs_v21_conformance.py"
+          "tests/contract/test_validate_release_runs_v21_conformance.py",
+          "tests/contract/test_hr200_metrics_trust_statuses.py",
+          "tests/contract/test_hr200_metrics_source_watermark.py",
+          "tests/contract/test_v21_conformance_blocks_stale_hr200_metrics.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10A",
+      "lastUpdatedByPacket": "XP-MetricsA",
       "migrationCompatibility": [
         "Existing friction_records map to friction.signal records.",
         "Existing improvement proposals retain disposition and can feed starter promotion candidates.",
@@ -4306,7 +4335,12 @@
         "incomplete_hr_coverage",
         "missing_hr190_validator",
         "missing_hr191_gate_metadata",
-        "missing_hr200_metrics"
+        "missing_hr200_metrics",
+        "invalid_trust_status",
+        "missing_source_records",
+        "incomplete_hr200_metrics",
+        "stale_hr200_metrics",
+        "invalid_hr200_metric_type"
       ],
       "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
       "enforcementPoint": "v21-conformance-gate",

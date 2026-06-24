@@ -11,10 +11,14 @@
   "p0AlwaysValidationCoverage": 1.0,
   "packetCloseoutCompleteness": 1.0,
   "repeatedFrictionCount": 1,
+  "sourceRecordHash": "sha256:83ec94f65e428c8d554e06890f082e6db0b3cb177828738c548a75181af028ce",
   "sourceWatermark": {
     "computedBy": "success-metrics@v2.1",
-    "sourceEventRange": "XP-09A-projection"
+    "generatedAt": "2026-06-24T21:40:01.428988Z",
+    "generationCommand": "python tools\\harness_cli.py --json validate --v21-conformance",
+    "sourceEventRange": "XP-MetricsA-projection",
+    "sourceRecordHash": "sha256:83ec94f65e428c8d554e06890f082e6db0b3cb177828738c548a75181af028ce"
   },
-  "totalCostEstimate": 0.0,
+  "totalCostEstimate": 0,
   "trustedEvidenceRatio": 1.0
 }

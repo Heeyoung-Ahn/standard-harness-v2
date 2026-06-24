@@ -2677,7 +2677,9 @@
         "src/standard_harness/validation/boundary.py",
         "src/standard_harness/evidence/trust.py",
         "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/wiki/applier.py"
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/metrics/success.py",
+        "_ops/metrics/hr200-success-metrics.json"
       ],
       "schemas": [
         "packet.schema.json",
@@ -2701,7 +2703,8 @@
         "boundary-validator",
         "evidence-trust-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "success-metrics-reporter"
       ],
       "gates": [
         "requirements-baseline-gate",
@@ -2747,7 +2750,11 @@
         "tests.evals.test_forged_trusted_ci_cannot_closeout",
         "tests.evals.test_secret_evidence_registration_uses_store_root",
         "tests.evals.test_wiki_applier_rejects_path_traversal",
-        "tests.evals.test_release_archive_rejects_symlink_escape"
+        "tests.evals.test_release_archive_rejects_symlink_escape",
+        "tests.contract.test_success_metrics_hr200_required_fields",
+        "tests.contract.test_hr200_metrics_trust_statuses",
+        "tests.contract.test_hr200_metrics_source_watermark",
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics"
       ],
       "releaseBlocking": true
     },
@@ -2778,7 +2785,9 @@
         "src/standard_harness/validation/boundary.py",
         "src/standard_harness/evidence/trust.py",
         "src/standard_harness/domain/evidence.py",
-        "src/standard_harness/wiki/applier.py"
+        "src/standard_harness/wiki/applier.py",
+        "src/standard_harness/metrics/success.py",
+        "_ops/metrics/hr200-success-metrics.json"
       ],
       "schemas": [
         "gate-result.schema.json"
@@ -2794,7 +2803,8 @@
         "boundary-validator",
         "evidence-trust-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "success-metrics-reporter"
       ],
       "gates": [
         "challenge-review-evidence-gate",
@@ -2829,7 +2839,11 @@
         "tests.evals.test_forged_trusted_ci_cannot_closeout",
         "tests.evals.test_secret_evidence_registration_uses_store_root",
         "tests.evals.test_wiki_applier_rejects_path_traversal",
-        "tests.evals.test_release_archive_rejects_symlink_escape"
+        "tests.evals.test_release_archive_rejects_symlink_escape",
+        "tests.contract.test_success_metrics_hr200_required_fields",
+        "tests.contract.test_hr200_metrics_trust_statuses",
+        "tests.contract.test_hr200_metrics_source_watermark",
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics"
       ],
       "releaseBlocking": true
     },
@@ -2895,7 +2909,10 @@
         "tests.contract.test_success_metrics_include_source_watermark",
         "tests.contract.test_v21_conformance_blocks_missing_compound_metrics",
         "tests.contract.test_v21_conformance_reads_generated_hr200_metrics_artifact",
-        "tests.contract.test_validate_release_runs_v21_conformance"
+        "tests.contract.test_validate_release_runs_v21_conformance",
+        "tests.contract.test_hr200_metrics_trust_statuses",
+        "tests.contract.test_hr200_metrics_source_watermark",
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics"
       ],
       "releaseBlocking": true
     }
