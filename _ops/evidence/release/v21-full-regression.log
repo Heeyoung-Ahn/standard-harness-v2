@@ -27,6 +27,7 @@ test_placeholder_review_commit_blocks (contract.test_challenge_review_requires_c
 test_review_without_commit_and_test_evidence_blocks (contract.test_challenge_review_requires_commit_and_test_evidence.ChallengeReviewRequiresCommitAndTestEvidenceTests.test_review_without_commit_and_test_evidence_blocks) ... ok
 test_short_review_commit_blocks (contract.test_challenge_review_requires_commit_and_test_evidence.ChallengeReviewRequiresCommitAndTestEvidenceTests.test_short_review_commit_blocks) ... ok
 test_unknown_review_commit_blocks_when_git_metadata_exists (contract.test_challenge_review_requires_commit_and_test_evidence.ChallengeReviewRequiresCommitAndTestEvidenceTests.test_unknown_review_commit_blocks_when_git_metadata_exists) ... ok
+test_ci_checkout_fetches_full_git_history_for_commit_evidence_validation (contract.test_ci_checkout_fetches_full_history.CiCheckoutHistoryTests.test_ci_checkout_fetches_full_git_history_for_commit_evidence_validation) ... ok
 test_closeout_report_contains_v02_required_sections_and_wiki_summary (contract.test_closeout_documenter_report.CloseoutDocumenterReportTests.test_closeout_report_contains_v02_required_sections_and_wiki_summary) ... ok
 test_cloud_and_device_contracts_reject_missing_required_fields (contract.test_cloud_device_adapter_contract.CloudDeviceAdapterContractTests.test_cloud_and_device_contracts_reject_missing_required_fields) ... ok
 test_cloud_evidence_contract_requires_identity_and_failure_class (contract.test_cloud_device_adapter_contract.CloudDeviceAdapterContractTests.test_cloud_evidence_contract_requires_identity_and_failure_class) ... ok
@@ -333,6 +334,6 @@ test_validate_all_fails_with_missing_evidence_diagnostics (integration.test_vali
 test_validate_all_passes_for_closed_low_risk_packet (integration.test_validate_command.ValidateCommandTests.test_validate_all_passes_for_closed_low_risk_packet) ... ok
 
 ----------------------------------------------------------------------
-Ran 333 tests in 155.292s
+Ran 334 tests in 151.495s
 
 OK
