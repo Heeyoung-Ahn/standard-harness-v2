@@ -23,6 +23,7 @@ from standard_harness.validation.e2e_applicability import E2EApplicabilityValida
 from standard_harness.validation.evidence_trust import packet_requires_trusted_evidence
 from standard_harness.validation.refactor_review import RefactorReviewValidator
 from standard_harness.validation.requirements_review import RequirementsReviewValidator
+from standard_harness.validation.review_governance import ReviewGovernanceValidator
 from standard_harness.validation.security_review import SecurityReviewValidator
 
 
@@ -90,6 +91,8 @@ class CloseoutService:
         for diagnostic_id in self._boundary_diagnostics(packet):
             _add_diagnostic(diagnostics, diagnostic_id)
         for diagnostic_id in self._review_gate_diagnostics(packet):
+            _add_diagnostic(diagnostics, diagnostic_id)
+        for diagnostic_id in self._review_governance_diagnostics(packet):
             _add_diagnostic(diagnostics, diagnostic_id)
         for diagnostic_id in self._projection_diagnostics(packet_id):
             _add_diagnostic(diagnostics, diagnostic_id)
@@ -294,6 +297,9 @@ class CloseoutService:
         if isinstance(ai_input, dict):
             diagnostics.extend(AIReviewValidator().evaluate(ai_input)["diagnostic_ids"])
         return diagnostics
+
+    def _review_governance_diagnostics(self, packet: dict[str, object]) -> list[str]:
+        return ReviewGovernanceValidator(self.store.harness_root).closeout_diagnostics(packet)
 
     def _closeout_exists(self, closeout_id: str) -> bool:
         with self.store.connection() as conn:

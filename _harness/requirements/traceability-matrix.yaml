@@ -671,23 +671,40 @@
         "src/standard_harness/state/migrations.py",
         "src/standard_harness/state/replay.py",
         "src/standard_harness/state/audit.py",
-        "src/standard_harness/validation/aggregator.py"
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/validation/review_governance.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/review-governance-evidence.schema.json"
+      ],
       "policies": [
-        "evidence-trust-policy"
+        "evidence-trust-policy",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml"
       ],
       "validators": [
-        "test-plan-validator"
+        "test-plan-validator",
+        "review-governance-validator"
       ],
       "gates": [
-        "test-plan-gate"
+        "test-plan-gate",
+        "review-governance-gate",
+        "v21-conformance-gate"
       ],
       "evidenceTypes": [
-        "test-plan"
+        "test-plan",
+        "review-governance-evidence",
+        "gate-result"
       ],
       "tests": [
-        "tests.contract.test_test_plan_first_gate"
+        "tests.contract.test_test_plan_first_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -705,27 +722,43 @@
         "src/standard_harness/state/migrations.py",
         "src/standard_harness/state/replay.py",
         "src/standard_harness/state/audit.py",
-        "src/standard_harness/validation/aggregator.py"
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/validation/review_governance.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json"
       ],
       "schemas": [
-        "evidence.schema.json"
+        "evidence.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json"
       ],
       "policies": [
-        "evidence-trust-policy"
+        "evidence-trust-policy",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml"
       ],
       "validators": [
-        "evidence-trust-validator"
+        "evidence-trust-validator",
+        "review-governance-validator"
       ],
       "gates": [
-        "evidence-trust-gate"
+        "evidence-trust-gate",
+        "review-governance-gate",
+        "v21-conformance-gate"
       ],
       "evidenceTypes": [
-        "trusted-test-evidence"
+        "trusted-test-evidence",
+        "review-governance-evidence",
+        "gate-result"
       ],
       "tests": [
         "tests.contract.test_evidence_trust_model_v02",
         "tests.contract.test_evidence_trust_migration_compatibility",
-        "tests.evals.test_manual_only_evidence_cannot_closeout"
+        "tests.evals.test_manual_only_evidence_cannot_closeout",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1206,41 +1239,57 @@
         "src/standard_harness/runtime/browser_contract.py",
         "src/standard_harness/evidence/runtime.py",
         "src/standard_harness/security/threat_model.py",
-        "src/standard_harness/reviews/bundles.py"
+        "src/standard_harness/reviews/bundles.py",
+        "src/standard_harness/validation/review_governance.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json"
       ],
       "schemas": [
         "_harness/schemas/e2e-applicability.schema.json",
-        "_harness/schemas/browser-evidence-bundle.schema.json"
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json"
       ],
       "policies": [
         "_harness/policies/security-triggers.yaml",
-        "_harness/policies/domain-boundaries.yaml"
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml"
       ],
       "validators": [
         "e2e-applicability-validator",
         "requirements-review-validator",
         "security-review-validator",
         "refactor-review-validator",
-        "ai-review-validator"
+        "ai-review-validator",
+        "review-governance-validator"
       ],
       "gates": [
         "e2e-applicability-gate",
         "requirements-review-gate",
         "security-review-gate",
         "refactor-review-gate",
-        "ai-review-gate"
+        "ai-review-gate",
+        "review-governance-gate",
+        "v21-conformance-gate"
       ],
       "evidenceTypes": [
         "browser-evidence-bundle",
         "requirements-review-result",
         "security-review-result",
         "refactor-review-result",
-        "ai-review-result"
+        "ai-review-result",
+        "review-governance-evidence",
+        "gate-result"
       ],
       "tests": [
         "tests.contract.test_e2e_applicability_gate",
         "tests.contract.test_security_trigger_applicability",
-        "tests.contract.test_refactor_domain_boundary_gate"
+        "tests.contract.test_refactor_domain_boundary_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1262,41 +1311,57 @@
         "src/standard_harness/runtime/browser_contract.py",
         "src/standard_harness/evidence/runtime.py",
         "src/standard_harness/security/threat_model.py",
-        "src/standard_harness/reviews/bundles.py"
+        "src/standard_harness/reviews/bundles.py",
+        "src/standard_harness/validation/review_governance.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json"
       ],
       "schemas": [
         "_harness/schemas/e2e-applicability.schema.json",
-        "_harness/schemas/browser-evidence-bundle.schema.json"
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json"
       ],
       "policies": [
         "_harness/policies/security-triggers.yaml",
-        "_harness/policies/domain-boundaries.yaml"
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml"
       ],
       "validators": [
         "e2e-applicability-validator",
         "requirements-review-validator",
         "security-review-validator",
         "refactor-review-validator",
-        "ai-review-validator"
+        "ai-review-validator",
+        "review-governance-validator"
       ],
       "gates": [
         "e2e-applicability-gate",
         "requirements-review-gate",
         "security-review-gate",
         "refactor-review-gate",
-        "ai-review-gate"
+        "ai-review-gate",
+        "review-governance-gate",
+        "v21-conformance-gate"
       ],
       "evidenceTypes": [
         "browser-evidence-bundle",
         "requirements-review-result",
         "security-review-result",
         "refactor-review-result",
-        "ai-review-result"
+        "ai-review-result",
+        "review-governance-evidence",
+        "gate-result"
       ],
       "tests": [
         "tests.contract.test_e2e_applicability_gate",
         "tests.contract.test_security_trigger_applicability",
-        "tests.contract.test_refactor_domain_boundary_gate"
+        "tests.contract.test_refactor_domain_boundary_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1318,41 +1383,57 @@
         "src/standard_harness/runtime/browser_contract.py",
         "src/standard_harness/evidence/runtime.py",
         "src/standard_harness/security/threat_model.py",
-        "src/standard_harness/reviews/bundles.py"
+        "src/standard_harness/reviews/bundles.py",
+        "src/standard_harness/validation/review_governance.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json"
       ],
       "schemas": [
         "_harness/schemas/e2e-applicability.schema.json",
-        "_harness/schemas/browser-evidence-bundle.schema.json"
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json"
       ],
       "policies": [
         "_harness/policies/security-triggers.yaml",
-        "_harness/policies/domain-boundaries.yaml"
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml"
       ],
       "validators": [
         "e2e-applicability-validator",
         "requirements-review-validator",
         "security-review-validator",
         "refactor-review-validator",
-        "ai-review-validator"
+        "ai-review-validator",
+        "review-governance-validator"
       ],
       "gates": [
         "e2e-applicability-gate",
         "requirements-review-gate",
         "security-review-gate",
         "refactor-review-gate",
-        "ai-review-gate"
+        "ai-review-gate",
+        "review-governance-gate",
+        "v21-conformance-gate"
       ],
       "evidenceTypes": [
         "browser-evidence-bundle",
         "requirements-review-result",
         "security-review-result",
         "refactor-review-result",
-        "ai-review-result"
+        "ai-review-result",
+        "review-governance-evidence",
+        "gate-result"
       ],
       "tests": [
         "tests.contract.test_e2e_applicability_gate",
         "tests.contract.test_security_trigger_applicability",
-        "tests.contract.test_refactor_domain_boundary_gate"
+        "tests.contract.test_refactor_domain_boundary_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1374,41 +1455,57 @@
         "src/standard_harness/runtime/browser_contract.py",
         "src/standard_harness/evidence/runtime.py",
         "src/standard_harness/security/threat_model.py",
-        "src/standard_harness/reviews/bundles.py"
+        "src/standard_harness/reviews/bundles.py",
+        "src/standard_harness/validation/review_governance.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json"
       ],
       "schemas": [
         "_harness/schemas/e2e-applicability.schema.json",
-        "_harness/schemas/browser-evidence-bundle.schema.json"
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json"
       ],
       "policies": [
         "_harness/policies/security-triggers.yaml",
-        "_harness/policies/domain-boundaries.yaml"
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml"
       ],
       "validators": [
         "e2e-applicability-validator",
         "requirements-review-validator",
         "security-review-validator",
         "refactor-review-validator",
-        "ai-review-validator"
+        "ai-review-validator",
+        "review-governance-validator"
       ],
       "gates": [
         "e2e-applicability-gate",
         "requirements-review-gate",
         "security-review-gate",
         "refactor-review-gate",
-        "ai-review-gate"
+        "ai-review-gate",
+        "review-governance-gate",
+        "v21-conformance-gate"
       ],
       "evidenceTypes": [
         "browser-evidence-bundle",
         "requirements-review-result",
         "security-review-result",
         "refactor-review-result",
-        "ai-review-result"
+        "ai-review-result",
+        "review-governance-evidence",
+        "gate-result"
       ],
       "tests": [
         "tests.contract.test_e2e_applicability_gate",
         "tests.contract.test_security_trigger_applicability",
-        "tests.contract.test_refactor_domain_boundary_gate"
+        "tests.contract.test_refactor_domain_boundary_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -2679,18 +2776,25 @@
         "src/standard_harness/domain/evidence.py",
         "src/standard_harness/wiki/applier.py",
         "src/standard_harness/metrics/success.py",
-        "_ops/metrics/hr200-success-metrics.json"
+        "_ops/metrics/hr200-success-metrics.json",
+        "src/standard_harness/validation/review_governance.py",
+        "src/standard_harness/domain/closeout.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json"
       ],
       "schemas": [
         "packet.schema.json",
         "gate-result.schema.json",
-        "na-decision.schema.json"
+        "na-decision.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json"
       ],
       "policies": [
         "p0-policy",
         "non-goal-guardrails",
         "gate-profiles",
-        "_harness/policies/validator-catalog.yaml"
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/review-governance.yaml"
       ],
       "validators": [
         "requirements-metadata-validator",
@@ -2704,19 +2808,23 @@
         "evidence-trust-validator",
         "sensitive-evidence-validator",
         "starter-contamination-validator",
-        "success-metrics-reporter"
+        "success-metrics-reporter",
+        "review-governance-validator"
       ],
       "gates": [
         "requirements-baseline-gate",
         "challenge-review-evidence-gate",
         "packet-kernel-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "review-governance-gate"
       ],
       "evidenceTypes": [
         "validator-result",
         "challenge-review-evidence-report",
         "release-full-regression-evidence",
-        "v21-conformance-report"
+        "v21-conformance-report",
+        "review-governance-evidence",
+        "gate-result"
       ],
       "tests": [
         "tests.contract.test_requirements_metadata_validator",
@@ -2754,7 +2862,9 @@
         "tests.contract.test_success_metrics_hr200_required_fields",
         "tests.contract.test_hr200_metrics_trust_statuses",
         "tests.contract.test_hr200_metrics_source_watermark",
-        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics"
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -2787,14 +2897,21 @@
         "src/standard_harness/domain/evidence.py",
         "src/standard_harness/wiki/applier.py",
         "src/standard_harness/metrics/success.py",
-        "_ops/metrics/hr200-success-metrics.json"
+        "_ops/metrics/hr200-success-metrics.json",
+        "src/standard_harness/validation/review_governance.py",
+        "src/standard_harness/domain/closeout.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json"
       ],
       "schemas": [
-        "gate-result.schema.json"
+        "gate-result.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json"
       ],
       "policies": [
         "gate-profiles",
-        "_harness/policies/validator-catalog.yaml"
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/review-governance.yaml"
       ],
       "validators": [
         "challenge-review-evidence-validator",
@@ -2804,18 +2921,21 @@
         "evidence-trust-validator",
         "sensitive-evidence-validator",
         "starter-contamination-validator",
-        "success-metrics-reporter"
+        "success-metrics-reporter",
+        "review-governance-validator"
       ],
       "gates": [
         "challenge-review-evidence-gate",
         "v21-conformance-gate",
-        "packet-kernel-gate"
+        "packet-kernel-gate",
+        "review-governance-gate"
       ],
       "evidenceTypes": [
         "gate-result",
         "challenge-review-evidence-report",
         "release-full-regression-evidence",
-        "v21-conformance-report"
+        "v21-conformance-report",
+        "review-governance-evidence"
       ],
       "tests": [
         "tests.contract.test_gate_profile_applicability",
@@ -2843,7 +2963,9 @@
         "tests.contract.test_success_metrics_hr200_required_fields",
         "tests.contract.test_hr200_metrics_trust_statuses",
         "tests.contract.test_hr200_metrics_source_watermark",
-        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics"
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
       ],
       "releaseBlocking": true
     },

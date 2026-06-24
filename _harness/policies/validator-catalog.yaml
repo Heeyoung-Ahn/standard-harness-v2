@@ -209,6 +209,40 @@
       }
     },
     {
+      "validatorId": "review-governance-validator",
+      "hrIds": [
+        "HR-040R",
+        "HR-041R",
+        "HR-070R",
+        "HR-071R",
+        "HR-080R",
+        "HR-081R",
+        "HR-190R",
+        "HR-191"
+      ],
+      "gateId": "review-governance-gate",
+      "implementation": "standard_harness.validation.review_governance:ReviewGovernanceValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "review-governance-gate",
+        "validatorId": "review-governance-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
       "validatorId": "human-decision-validator",
       "hrIds": [
         "HR-152",
@@ -535,7 +569,8 @@
         "tests.contract.test_v21_conformance_blocks_partial_required_hr",
         "tests.contract.test_v21_conformance_blocks_missing_regression_evidence",
         "tests.evals.test_release_hygiene_blocks_repo_local_sqlite",
-        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics"
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
+        "tests.contract.test_v21_review_governance_gate"
       ],
       "reachableFrom": [
         "validate --release",

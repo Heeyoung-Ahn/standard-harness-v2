@@ -1,0 +1,41 @@
+{
+  "policyId": "review-governance",
+  "version": "0.2.0",
+  "validatorId": "review-governance-validator",
+  "gateId": "review-governance-gate",
+  "releaseEvidence": "_ops/evidence/release/v21-review-governance.json",
+  "requiredReviewGatesByPacketType": {
+    "product-feature": [
+      "requirementsReview",
+      "securityReview",
+      "aiReview",
+      "refactorReview"
+    ],
+    "product-bugfix": [
+      "requirementsReview",
+      "refactorReview"
+    ],
+    "product-refactor": [
+      "aiReview",
+      "refactorReview"
+    ],
+    "security-data": [
+      "securityReview"
+    ]
+  },
+  "diagnostics": [
+    "missing_review_governance_evidence",
+    "missing_required_review",
+    "invalid_review_governance_commit",
+    "stale_review_governance_evidence",
+    "missing_focused_review_test_evidence",
+    "missing_review_regression_evidence",
+    "unresolved_p0_review_finding",
+    "p1_review_requires_risk_acceptance",
+    "missing_review_final_adjudication",
+    "ai_review_cannot_release_alone",
+    "missing_required_review_governance"
+  ],
+  "frictionSignalBehavior": "Emit missed_review or missing_evidence when release/closeout review governance is missing, stale, AI-only, or unadjudicated.",
+  "metricSignalBehavior": "Emit review_governance_validation_count by status and finding severity."
+}
