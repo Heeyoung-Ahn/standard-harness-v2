@@ -1,7 +1,7 @@
 ---
 {
   "xpId": "XP-ProcessA",
-  "reviewedCommit": "a5f8ce6",
+  "reviewedCommit": "a5f8ce64d0a8607446dc56c14ba90bb594a1a254",
   "reviewedFiles": ["src/standard_harness/validation/challenge_review_evidence.py", "_harness/policies/validator-catalog.yaml", "docs/reviews/v21"],
   "focusedTestCommand": "python -m unittest tests.contract.test_challenge_review_evidence_required tests.contract.test_challenge_review_requires_commit_and_test_evidence tests.contract.test_challenge_review_blocks_unresolved_major tests.contract.test_challenge_review_loop_limit",
   "focusedTestResult": "passed",

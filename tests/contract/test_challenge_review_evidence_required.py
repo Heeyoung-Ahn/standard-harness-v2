@@ -67,7 +67,7 @@ def _report(xp_id: str) -> str:
         "---\n"
         "{\n"
         f'  "xpId": "{xp_id}",\n'
-        '  "reviewedCommit": "abcdef1",\n'
+        '  "reviewedCommit": "abcdef1234567890abcdef1234567890abcdef12",\n'
         '  "reviewedFiles": ["src/example.py"],\n'
         '  "focusedTestCommand": "python -m unittest tests.contract.test_example",\n'
         '  "focusedTestResult": "passed",\n'

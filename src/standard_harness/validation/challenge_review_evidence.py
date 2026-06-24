@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import re
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -75,8 +77,11 @@ class ChallengeReviewEvidenceValidator:
             diagnostics.extend(_diagnostic_for_missing_field(field) for field in missing)
         if expected_xp_id and report.get("xpId") != expected_xp_id:
             _add(diagnostics, "challenge_review_xp_mismatch")
-        if not report.get("reviewedCommit"):
+        reviewed_commit = str(report.get("reviewedCommit", ""))
+        if not reviewed_commit:
             _add(diagnostics, "missing_review_commit")
+        elif not _valid_reviewed_commit(reviewed_commit, self.repo_root):
+            _add(diagnostics, "invalid_review_commit")
         if not report.get("reviewedFiles"):
             _add(diagnostics, "missing_review_files")
         if not report.get("focusedTestCommand") or not report.get("fullRegressionCommand"):
@@ -134,6 +139,23 @@ def _diagnostic_for_missing_field(field: str) -> str:
 
 def _has_unresolved_major_or_blocker(findings: list[dict[str, Any]]) -> bool:
     return any(item.get("severity") in {"major", "blocker"} for item in findings)
+
+
+COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+def _valid_reviewed_commit(value: str, repo_root: Path) -> bool:
+    if value.startswith("pending-") or not COMMIT_RE.match(value):
+        return False
+    if not (repo_root / ".git").exists():
+        return True
+    result = subprocess.run(
+        ["git", "-C", str(repo_root), "cat-file", "-e", f"{value}^{{commit}}"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    return result.returncode == 0
 
 
 def _add(diagnostic_ids: list[str], diagnostic_id: str) -> None:
