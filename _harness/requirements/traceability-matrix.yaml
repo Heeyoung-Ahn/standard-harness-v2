@@ -2653,9 +2653,11 @@
         "_harness/policies/validator-catalog.yaml",
         "src/standard_harness/validation/catalog.py",
         "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/release/evidence.py",
         "src/standard_harness/completion/final_gate.py",
         "tools/release_archive.py",
         "tools/run_full_regression.py",
+        "_ops/evidence/release/v21-full-regression.json",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-packaging-hygiene-v21.md",
         "docs/manual/standard-harness-v21-development-scenario.md",
@@ -2690,6 +2692,7 @@
       "evidenceTypes": [
         "validator-result",
         "challenge-review-evidence-report",
+        "release-full-regression-evidence",
         "v21-conformance-report"
       ],
       "tests": [
@@ -2708,6 +2711,8 @@
         "tests.contract.test_full_regression_runner_records_last_test",
         "tests.contract.test_v21_conformance_blocks_missing_validator_catalog_entries",
         "tests.contract.test_v21_conformance_blocks_partial_required_hr",
+        "tests.contract.test_v21_conformance_blocks_missing_regression_evidence",
+        "tests.evals.test_release_hygiene_blocks_repo_local_sqlite",
         "tests.contract.test_v21_conformance_blocks_missing_compound_metrics",
         "tests.contract.test_validate_release_runs_v21_conformance",
         "tests.contract.test_v21_development_scenario_documented",
@@ -2734,10 +2739,12 @@
         "src/standard_harness/validation/challenge_review_evidence.py",
         "src/standard_harness/validation/catalog.py",
         "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/release/evidence.py",
         "src/standard_harness/validation/aggregator.py",
         "src/standard_harness/completion/final_gate.py",
         "tools/release_archive.py",
         "tools/run_full_regression.py",
+        "_ops/evidence/release/v21-full-regression.json",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-packaging-hygiene-v21.md",
         "docs/manual/standard-harness-v21-development-scenario.md",
@@ -2763,6 +2770,7 @@
       "evidenceTypes": [
         "gate-result",
         "challenge-review-evidence-report",
+        "release-full-regression-evidence",
         "v21-conformance-report"
       ],
       "tests": [
@@ -2773,6 +2781,8 @@
         "tests.contract.test_challenge_review_loop_limit",
         "tests.contract.test_v21_conformance_blocks_missing_validator_catalog_entries",
         "tests.contract.test_v21_conformance_blocks_partial_required_hr",
+        "tests.contract.test_v21_conformance_blocks_missing_regression_evidence",
+        "tests.evals.test_release_hygiene_blocks_repo_local_sqlite",
         "tests.contract.test_v21_conformance_blocks_missing_compound_metrics",
         "tests.contract.test_validate_release_runs_v21_conformance",
         "tests.contract.test_v21_conformance_reads_generated_hr200_metrics_artifact",

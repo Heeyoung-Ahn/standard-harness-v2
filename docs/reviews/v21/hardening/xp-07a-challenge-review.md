@@ -1,7 +1,7 @@
 ---
 {
   "xpId": "XP-07A",
-  "reviewedCommit": "0448afb",
+  "reviewedCommit": "0448afb4c12206fc6c3ffb78ec8510998d5f2638",
   "reviewedFiles": ["_harness/catalog/skill-catalog.yaml", "src/standard_harness/skills/router.py", "src/standard_harness/cli/main.py"],
   "focusedTestCommand": "python -m unittest tests.contract.test_required_skill_catalog_completion tests.contract.test_skill_router_minimum_skills tests.contract.test_handoff_skill_cli_commands tests.contract.test_unknown_skill_is_blocked tests.contract.test_skill_route_preserves_p0_gate_boundary tests.contract.test_every_required_skill_has_hr_trace",
   "focusedTestResult": "passed",

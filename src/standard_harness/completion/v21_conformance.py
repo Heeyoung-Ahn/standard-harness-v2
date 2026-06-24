@@ -8,9 +8,7 @@ from typing import Any
 
 from standard_harness.validation.catalog import ValidatorCatalog
 from standard_harness.validation.challenge_review_evidence import ChallengeReviewEvidenceValidator
-
-
-ALLOWED_PARTIAL_HR = {"HR-130R"}
+from standard_harness.release.evidence import load_full_regression_evidence, missing_full_regression_fields
 
 
 class V21ConformanceGate:
@@ -28,7 +26,7 @@ class V21ConformanceGate:
         for row in coverage:
             hr_id = row["hrId"]
             status = row.get("coverageStatus")
-            if status != "complete" and hr_id not in ALLOWED_PARTIAL_HR:
+            if status != "complete":
                 diagnostics.append("incomplete_hr_coverage")
             trace = trace_by_id.get(hr_id)
             target_validators = row.get("targetArtifacts", {}).get("validator", [])
@@ -58,6 +56,8 @@ class V21ConformanceGate:
         if not any(row["hrId"] == "HR-200" and row.get("coverageStatus") == "complete" for row in coverage):
             diagnostics.append("missing_hr200_metrics")
         diagnostics.extend(self._hr200_metric_diagnostics())
+        diagnostics.extend(self._release_regression_diagnostics())
+        diagnostics.extend(self._release_hygiene_diagnostics())
         diagnostics.extend(self._challenge_review_diagnostics())
         diagnostics.extend(self._release_doc_diagnostics())
         return {
@@ -91,6 +91,25 @@ class V21ConformanceGate:
         watermark = metrics.get("sourceWatermark")
         if not isinstance(watermark, dict) or not watermark.get("sourceEventRange") or not watermark.get("computedBy"):
             return ["incomplete_hr200_metrics"]
+        return []
+
+    def _release_regression_diagnostics(self) -> list[str]:
+        path = self.repo_root / "_ops/evidence/release/v21-full-regression.json"
+        if not path.exists():
+            return ["missing_release_regression_evidence"]
+        try:
+            evidence = load_full_regression_evidence(self.repo_root)
+        except json.JSONDecodeError:
+            return ["incomplete_release_regression_evidence"]
+        if missing_full_regression_fields(evidence):
+            return ["incomplete_release_regression_evidence"]
+        if evidence.get("result") != "passed" or evidence.get("timeoutStatus") != "completed":
+            return ["failed_release_regression_evidence"]
+        return []
+
+    def _release_hygiene_diagnostics(self) -> list[str]:
+        if (self.repo_root / ".harness/state/harness.sqlite3").exists():
+            return ["repo_local_generated_state"]
         return []
 
     def _challenge_review_diagnostics(self) -> list[str]:

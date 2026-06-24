@@ -3964,9 +3964,11 @@
         "_harness/policies/validator-catalog.yaml",
         "src/standard_harness/validation/catalog.py",
         "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/release/evidence.py",
         "src/standard_harness/completion/final_gate.py",
         "tools/release_archive.py",
         "tools/run_full_regression.py",
+        "_ops/evidence/release/v21-full-regression.json",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-packaging-hygiene-v21.md",
         "docs/manual/standard-harness-v21-development-scenario.md",
@@ -3979,12 +3981,16 @@
         "src/standard_harness/validation/challenge_review_evidence.py",
         "src/standard_harness/validation/na_decisions.py",
           "src/standard_harness/validation/catalog.py",
-          "src/standard_harness/completion/v21_conformance.py"
+          "src/standard_harness/completion/v21_conformance.py",
+          "src/standard_harness/release/evidence.py"
         ],
         "gate": [
           "requirements-baseline-gate",
           "packet-kernel-gate",
           "v21-conformance-gate"
+        ],
+        "evidence": [
+          "_ops/evidence/release/v21-full-regression.json"
         ],
         "tests": [
           "tests/contract/test_requirements_metadata_validator.py",
@@ -4002,6 +4008,8 @@
           "tests/contract/test_full_regression_runner_records_last_test.py",
           "tests/contract/test_v21_conformance_blocks_missing_validator_catalog_entries.py",
           "tests/contract/test_v21_conformance_blocks_partial_required_hr.py",
+          "tests/contract/test_v21_conformance_blocks_missing_regression_evidence.py",
+          "tests/evals/test_release_hygiene_blocks_repo_local_sqlite.py",
           "tests/contract/test_v21_conformance_blocks_missing_compound_metrics.py",
           "tests/contract/test_validate_release_runs_v21_conformance.py",
           "tests/contract/test_v21_development_scenario_documented.py",
@@ -4018,7 +4026,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10A",
+      "lastUpdatedByPacket": "XP-10B",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4031,7 +4039,12 @@
         "incomplete_hr_coverage",
         "missing_hr190_validator",
         "missing_hr191_gate_metadata",
-        "missing_hr200_metrics"
+        "missing_hr200_metrics",
+        "invalid_review_commit",
+        "missing_release_regression_evidence",
+        "incomplete_release_regression_evidence",
+        "failed_release_regression_evidence",
+        "repo_local_generated_state"
       ],
       "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
       "enforcementPoint": "v21-conformance-gate",
@@ -4055,10 +4068,12 @@
         "src/standard_harness/validation/challenge_review_evidence.py",
         "src/standard_harness/validation/catalog.py",
         "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/release/evidence.py",
         "src/standard_harness/validation/aggregator.py",
         "src/standard_harness/completion/final_gate.py",
         "tools/release_archive.py",
         "tools/run_full_regression.py",
+        "_ops/evidence/release/v21-full-regression.json",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-packaging-hygiene-v21.md",
         "docs/manual/standard-harness-v21-development-scenario.md",
@@ -4072,14 +4087,16 @@
           "src/standard_harness/domain/gates.py",
           "src/standard_harness/validation/challenge_review_evidence.py",
           "src/standard_harness/validation/catalog.py",
-          "src/standard_harness/completion/v21_conformance.py"
+          "src/standard_harness/completion/v21_conformance.py",
+          "src/standard_harness/release/evidence.py"
         ],
         "gate": [
           "packet-kernel-gate",
           "v21-conformance-gate"
         ],
         "evidence": [
-          "gate-result"
+          "gate-result",
+          "_ops/evidence/release/v21-full-regression.json"
         ],
         "tests": [
           "tests/contract/test_gate_profile_applicability.py",
@@ -4089,6 +4106,8 @@
           "tests/contract/test_challenge_review_loop_limit.py",
           "tests/contract/test_v21_conformance_blocks_missing_validator_catalog_entries.py",
           "tests/contract/test_v21_conformance_blocks_partial_required_hr.py",
+          "tests/contract/test_v21_conformance_blocks_missing_regression_evidence.py",
+          "tests/evals/test_release_hygiene_blocks_repo_local_sqlite.py",
           "tests/contract/test_v21_conformance_blocks_missing_compound_metrics.py",
           "tests/contract/test_validate_release_runs_v21_conformance.py",
           "tests/contract/test_v21_conformance_reads_generated_hr200_metrics_artifact.py",
@@ -4103,7 +4122,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10A",
+      "lastUpdatedByPacket": "XP-10B",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4116,7 +4135,12 @@
         "incomplete_hr_coverage",
         "missing_hr190_validator",
         "missing_hr191_gate_metadata",
-        "missing_hr200_metrics"
+        "missing_hr200_metrics",
+        "invalid_review_commit",
+        "missing_release_regression_evidence",
+        "incomplete_release_regression_evidence",
+        "failed_release_regression_evidence",
+        "repo_local_generated_state"
       ],
       "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
       "enforcementPoint": "v21-conformance-gate",

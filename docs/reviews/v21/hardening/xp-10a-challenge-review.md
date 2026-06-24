@@ -1,7 +1,7 @@
 ---
 {
   "xpId": "XP-10A",
-  "reviewedCommit": "pending-xp-10a",
+  "reviewedCommit": "863cc4cea9ca5e8b2733d3786b1731c4d7b7af79",
   "reviewedFiles": [
     "_harness/policies/validator-catalog.yaml",
     "src/standard_harness/validation/catalog.py",

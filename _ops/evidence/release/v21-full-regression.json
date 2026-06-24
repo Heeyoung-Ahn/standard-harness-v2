@@ -1,0 +1,12 @@
+{
+  "command": "python -m unittest discover -s tests",
+  "durationSeconds": 155.856,
+  "evidenceId": "release-v21-full-regression",
+  "generatedAt": "2026-06-24T14:14:03.482431Z",
+  "generatedBy": "tools/run_full_regression.py",
+  "headCommit": "ceee5caf0acb5aaa05a4ac380f4d41b7da46b5fa",
+  "lastTest": "integration.test_validate_command.ValidateCommandTests.test_validate_all_passes_for_closed_low_risk_packet",
+  "logPath": "_ops/evidence/release/v21-full-regression.log",
+  "result": "passed",
+  "timeoutStatus": "completed"
+}
