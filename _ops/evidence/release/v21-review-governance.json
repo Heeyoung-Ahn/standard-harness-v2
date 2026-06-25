@@ -1,8 +1,8 @@
 {
   "evidenceId": "release-v21-review-governance",
   "generatedBy": "review-governance-validator@0.2.0",
-  "generatedAt": "2026-06-25T14:47:57.646Z",
-  "sourceEventRange": "XP-05B",
+  "generatedAt": "2026-06-26T00:05:00+09:00",
+  "sourceEventRange": "XP-05B..XP-ReleaseA",
   "reviews": [
     {
       "reviewId": "rv-xp-05b-wiki-knowledge",
@@ -16,11 +16,11 @@
         },
         {
           "path": "src/standard_harness/completion/v21_conformance.py",
-          "sha256": "sha256:89a85f1fbeadcd60927403ac284bed688bc29bd50f482b3ae19bf12552861f13"
+          "sha256": "sha256:d39324234737ad43ce297eb1dde1e3c0348c3fd1416ecc4434308450f7b70429"
         },
         {
           "path": "_harness/policies/validator-catalog.yaml",
-          "sha256": "sha256:92e8b3ceba1ac87c36bb3a07eb0c5249f8f76f6eaf9c616c01f658957281e0e6"
+          "sha256": "sha256:43038dc4f53c88446dddd0655941d03cd1bbd909123717fcf60dff785da945e9"
         },
         {
           "path": "_harness/policies/wiki-knowledge-policy.yaml",
@@ -28,11 +28,11 @@
         },
         {
           "path": "_harness/requirements/hr-coverage-matrix.yaml",
-          "sha256": "sha256:f3503ebc1bbe4e3537b7da0f46bf6e67266e62b0be5c8e248c98f02dd155e33a"
+          "sha256": "sha256:2e4e27face996679c0e421af9df2c1d10778c942cf8797171af87a968274bb34"
         },
         {
           "path": "_harness/requirements/traceability-matrix.yaml",
-          "sha256": "sha256:f0b7679f00f18fe7e576bc4a5b693780fe1ea8b9aaaba9d8786fd612edfc30a0"
+          "sha256": "sha256:da3723b682f88bfa6f44a2b53502e4c5c27cae4c68e5edd3892417df7fdfe8c2"
         },
         {
           "path": "_ops/wiki/index.yaml",
@@ -40,7 +40,7 @@
         },
         {
           "path": "tests/contract/test_wiki_knowledge_release_gate.py",
-          "sha256": "sha256:d3e8eada541cff5738c7ce5b155c8d34c9d8099f3e9c34d2bab60add3f98b63b"
+          "sha256": "sha256:9d0a05663209634718ce4d64b7187fbee0fe459e070c3e234b3e82e5a58672dd"
         }
       ],
       "focusedTestEvidence": {
@@ -62,6 +62,70 @@
         "status": "approved",
         "adjudicator": "human-owner",
         "rationale": "No unresolved release-blocking review findings for XP-05B wiki knowledge release gate."
+      }
+    },
+    {
+      "reviewId": "rv-xp-releasea-executable-release-gate",
+      "packetId": "XP-ReleaseA",
+      "reviewType": "implementation",
+      "reviewedCommit": "a717dee7f5b7b6cbc0fe22de992aba5d3b424ecf",
+      "reviewedFiles": [
+        {
+          "path": "src/standard_harness/validation/executable_release.py",
+          "sha256": "sha256:c30eb4e9b7aa9cab082beae178d606221cf849a530a26a09f24481789f0ecd1d"
+        },
+        {
+          "path": "src/standard_harness/validation/catalog.py",
+          "sha256": "sha256:d87ea0952ce3cad27243ef3a8f8f4c4c98dcc227030212cc0ac645ca0754bfbb"
+        },
+        {
+          "path": "src/standard_harness/completion/v21_conformance.py",
+          "sha256": "sha256:d39324234737ad43ce297eb1dde1e3c0348c3fd1416ecc4434308450f7b70429"
+        },
+        {
+          "path": "_harness/policies/validator-catalog.yaml",
+          "sha256": "sha256:43038dc4f53c88446dddd0655941d03cd1bbd909123717fcf60dff785da945e9"
+        },
+        {
+          "path": "_harness/policies/release-behavior-probes.yaml",
+          "sha256": "sha256:15fcc2bde9855ad1cc3bd079d23dedd40160dc5fe13bc762540e3b45add310c3"
+        },
+        {
+          "path": "_harness/requirements/hr-coverage-matrix.yaml",
+          "sha256": "sha256:2e4e27face996679c0e421af9df2c1d10778c942cf8797171af87a968274bb34"
+        },
+        {
+          "path": "_harness/requirements/traceability-matrix.yaml",
+          "sha256": "sha256:da3723b682f88bfa6f44a2b53502e4c5c27cae4c68e5edd3892417df7fdfe8c2"
+        },
+        {
+          "path": "_ops/evidence/release/v21-executable-release-gate.json",
+          "sha256": "sha256:17043f35e1e33750cf7d9c46c7fbc51151a62010fd68654c7641bdc49a0e894b"
+        },
+        {
+          "path": "tests/contract/test_executable_release_gate.py",
+          "sha256": "sha256:ec6dc435a9d39b8df228e8c296185a92e968302887c1b64aab3c7ca8aa875ebe"
+        }
+      ],
+      "focusedTestEvidence": {
+        "command": "python -m unittest tests.contract.test_executable_release_gate tests.contract.test_validator_catalog_entries_have_importable_implementations tests.contract.test_validator_catalog_entries_have_negative_tests tests.contract.test_release_blocking_validators_are_reachable_from_release_validation",
+        "result": "passed"
+      },
+      "fullRegressionEvidence": {
+        "evidenceId": "release-v21-full-regression",
+        "result": "passed"
+      },
+      "deterministicEvidence": [
+        "focusedTestEvidence",
+        "fullRegressionEvidence"
+      ],
+      "findings": [],
+      "acceptedRisks": [],
+      "finalDecision": "pass",
+      "finalAdjudication": {
+        "status": "approved",
+        "adjudicator": "planner-agent",
+        "rationale": "XP-ReleaseA adds a release-blocking executable probe gate with negative tests for missing, malformed, unexercised, and non-blocking release probes."
       }
     }
   ]

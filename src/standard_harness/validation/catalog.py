@@ -31,6 +31,9 @@ class ValidatorCatalog:
     def ids(self) -> set[str]:
         return {str(item.get("validatorId")) for item in self.validators if item.get("validatorId")}
 
+    def release_blocking_validators(self) -> list[dict[str, Any]]:
+        return [item for item in self.validators if item.get("releaseBlocking")]
+
     def release_blocking_diagnostics(self, *, repo_root: str | Path | None = None) -> list[str]:
         repo = Path(repo_root) if repo_root is not None else Path.cwd()
         diagnostics: list[str] = []
