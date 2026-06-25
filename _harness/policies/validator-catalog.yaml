@@ -564,6 +564,35 @@
       }
     },
     {
+      "validatorId": "executable-release-validator",
+      "hrIds": [
+        "HR-120R",
+        "HR-190R",
+        "HR-191",
+        "HR-200"
+      ],
+      "gateId": "executable-release-gate",
+      "implementation": "standard_harness.validation.executable_release:ExecutableReleaseValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_executable_release_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "executable-release-gate",
+        "validatorId": "executable-release-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
       "validatorId": "validator-catalog-validator",
       "hrIds": [
         "HR-190R",

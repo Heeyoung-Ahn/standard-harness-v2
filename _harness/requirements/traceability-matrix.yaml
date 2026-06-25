@@ -1941,32 +1941,42 @@
         "_ops/backlog/harness-improvement-backlog.md",
         "src/standard_harness/self_improvement/proposals.py",
         "src/standard_harness/domain/packets.py",
-        "src/standard_harness/completion/coverage.py"
+        "src/standard_harness/completion/coverage.py",
+        "src/standard_harness/validation/executable_release.py",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_ops/evidence/release/v21-executable-release-gate.json"
       ],
       "schemas": [
         "_harness/schemas/starter-promotion-candidate.schema.json"
       ],
-      "policies": [],
+      "policies": [
+        "_harness/policies/release-behavior-probes.yaml"
+      ],
       "validators": [
         "recurring-friction-detector",
         "success-metrics-reporter",
-        "starter-promotion-candidate-validator"
+        "starter-promotion-candidate-validator",
+        "executable-release-validator"
       ],
       "gates": [
-        "compound-engineering-gate"
+        "compound-engineering-gate",
+        "executable-release-gate"
       ],
       "evidenceTypes": [
         "friction.signal",
         "improvement.candidate",
         "starter-promotion-candidate",
-        "success-metrics-report"
+        "success-metrics-report",
+        "release-behavior-probe-bundle",
+        "executable-release-gate-evidence"
       ],
       "tests": [
         "tests.contract.test_recurring_friction_detector",
         "tests.contract.test_success_metrics_report",
         "tests.contract.test_starter_promotion_candidate_registry",
         "tests.contract.test_compound_event_replay_compatibility",
-        "tests.evals.test_compound_engineering_required_for_v1_completion"
+        "tests.evals.test_compound_engineering_required_for_v1_completion",
+        "tests.contract.test_executable_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -2843,7 +2853,10 @@
         "src/standard_harness/validation/wiki_knowledge.py",
         "_harness/policies/wiki-knowledge-policy.yaml",
         "_ops/wiki/index.yaml",
-        "_ops/wiki/skill-facing-index.md"
+        "_ops/wiki/skill-facing-index.md",
+        "src/standard_harness/validation/executable_release.py",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_ops/evidence/release/v21-executable-release-gate.json"
       ],
       "schemas": [
         "packet.schema.json",
@@ -2857,7 +2870,8 @@
         "gate-profiles",
         "_harness/policies/validator-catalog.yaml",
         "_harness/policies/review-governance.yaml",
-        "_harness/policies/wiki-knowledge-policy.yaml"
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/release-behavior-probes.yaml"
       ],
       "validators": [
         "requirements-metadata-validator",
@@ -2873,7 +2887,8 @@
         "starter-contamination-validator",
         "success-metrics-reporter",
         "review-governance-validator",
-        "wiki-knowledge-validator"
+        "wiki-knowledge-validator",
+        "executable-release-validator"
       ],
       "gates": [
         "requirements-baseline-gate",
@@ -2881,7 +2896,8 @@
         "packet-kernel-gate",
         "v21-conformance-gate",
         "review-governance-gate",
-        "wiki-governance-gate"
+        "wiki-governance-gate",
+        "executable-release-gate"
       ],
       "evidenceTypes": [
         "validator-result",
@@ -2890,7 +2906,9 @@
         "v21-conformance-report",
         "review-governance-evidence",
         "gate-result",
-        "wiki-knowledge-validation-result"
+        "wiki-knowledge-validation-result",
+        "release-behavior-probe-bundle",
+        "executable-release-gate-evidence"
       ],
       "tests": [
         "tests.contract.test_requirements_metadata_validator",
@@ -2931,7 +2949,8 @@
         "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
         "tests.contract.test_v21_review_governance_gate",
         "tests.contract.test_review_governance_closeout_gate",
-        "tests.contract.test_wiki_knowledge_release_gate"
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_executable_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -2973,7 +2992,10 @@
         "src/standard_harness/validation/wiki_knowledge.py",
         "_harness/policies/wiki-knowledge-policy.yaml",
         "_ops/wiki/index.yaml",
-        "_ops/wiki/skill-facing-index.md"
+        "_ops/wiki/skill-facing-index.md",
+        "src/standard_harness/validation/executable_release.py",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_ops/evidence/release/v21-executable-release-gate.json"
       ],
       "schemas": [
         "gate-result.schema.json",
@@ -2983,7 +3005,8 @@
         "gate-profiles",
         "_harness/policies/validator-catalog.yaml",
         "_harness/policies/review-governance.yaml",
-        "_harness/policies/wiki-knowledge-policy.yaml"
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/release-behavior-probes.yaml"
       ],
       "validators": [
         "challenge-review-evidence-validator",
@@ -2995,14 +3018,16 @@
         "starter-contamination-validator",
         "success-metrics-reporter",
         "review-governance-validator",
-        "wiki-knowledge-validator"
+        "wiki-knowledge-validator",
+        "executable-release-validator"
       ],
       "gates": [
         "challenge-review-evidence-gate",
         "v21-conformance-gate",
         "packet-kernel-gate",
         "review-governance-gate",
-        "wiki-governance-gate"
+        "wiki-governance-gate",
+        "executable-release-gate"
       ],
       "evidenceTypes": [
         "gate-result",
@@ -3010,7 +3035,9 @@
         "release-full-regression-evidence",
         "v21-conformance-report",
         "review-governance-evidence",
-        "wiki-knowledge-validation-result"
+        "wiki-knowledge-validation-result",
+        "release-behavior-probe-bundle",
+        "executable-release-gate-evidence"
       ],
       "tests": [
         "tests.contract.test_gate_profile_applicability",
@@ -3041,7 +3068,8 @@
         "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
         "tests.contract.test_v21_review_governance_gate",
         "tests.contract.test_review_governance_closeout_gate",
-        "tests.contract.test_wiki_knowledge_release_gate"
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_executable_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -3069,7 +3097,10 @@
         "src/standard_harness/validation/wiki_knowledge.py",
         "_harness/policies/wiki-knowledge-policy.yaml",
         "_ops/wiki/index.yaml",
-        "_ops/wiki/skill-facing-index.md"
+        "_ops/wiki/skill-facing-index.md",
+        "src/standard_harness/validation/executable_release.py",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_ops/evidence/release/v21-executable-release-gate.json"
       ],
       "schemas": [
         "_harness/schemas/friction-signal.schema.json",
@@ -3077,7 +3108,8 @@
       ],
       "policies": [
         "_harness/policies/validator-catalog.yaml",
-        "_harness/policies/wiki-knowledge-policy.yaml"
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/release-behavior-probes.yaml"
       ],
       "validators": [
         "recurring-friction-detector",
@@ -3085,12 +3117,14 @@
         "starter-promotion-candidate-validator",
         "v21-conformance-validator",
         "validator-catalog-validator",
-        "wiki-knowledge-validator"
+        "wiki-knowledge-validator",
+        "executable-release-validator"
       ],
       "gates": [
         "compound-engineering-gate",
         "v21-conformance-gate",
-        "wiki-governance-gate"
+        "wiki-governance-gate",
+        "executable-release-gate"
       ],
       "evidenceTypes": [
         "friction.signal",
@@ -3098,7 +3132,9 @@
         "starter-promotion-candidate",
         "success-metrics-report",
         "v21-conformance-report",
-        "wiki-knowledge-validation-result"
+        "wiki-knowledge-validation-result",
+        "release-behavior-probe-bundle",
+        "executable-release-gate-evidence"
       ],
       "tests": [
         "tests.contract.test_recurring_friction_detector",
@@ -3119,7 +3155,8 @@
         "tests.contract.test_hr200_metrics_trust_statuses",
         "tests.contract.test_hr200_metrics_source_watermark",
         "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
-        "tests.contract.test_wiki_knowledge_release_gate"
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_executable_release_gate"
       ],
       "releaseBlocking": true
     }
