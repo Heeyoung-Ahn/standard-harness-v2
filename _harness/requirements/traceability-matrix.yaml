@@ -55,23 +55,33 @@
       "hrId": "HR-003",
       "xpOwner": "XP-00",
       "files": [
-        "_harness/policies/non-goal-guardrails.yaml"
+        "_harness/policies/non-goal-guardrails.yaml",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "schemas": [],
       "policies": [
-        "non-goal-guardrails"
+        "non-goal-guardrails",
+        "_harness/policies/wiki-knowledge-policy.yaml"
       ],
       "validators": [
-        "requirements-metadata-validator"
+        "requirements-metadata-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
-        "requirements-baseline-gate"
+        "requirements-baseline-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
-        "guardrail-policy"
+        "guardrail-policy",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
-        "tests.contract.test_non_goal_guardrails"
+        "tests.contract.test_non_goal_guardrails",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -147,23 +157,33 @@
       "hrId": "HR-007",
       "xpOwner": "XP-00",
       "files": [
-        "_harness/policies/p0-policy.yaml"
+        "_harness/policies/p0-policy.yaml",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "schemas": [],
       "policies": [
-        "p0-policy"
+        "p0-policy",
+        "_harness/policies/wiki-knowledge-policy.yaml"
       ],
       "validators": [
-        "requirements-metadata-validator"
+        "requirements-metadata-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
-        "requirements-baseline-gate"
+        "requirements-baseline-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
-        "p0-policy"
+        "p0-policy",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
-        "tests.contract.test_requirements_metadata_validator"
+        "tests.contract.test_requirements_metadata_validator",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -1567,7 +1587,7 @@
     },
     {
       "hrId": "HR-100R",
-      "xpOwner": "XP-05",
+      "xpOwner": "XP-05B",
       "files": [
         "src/standard_harness/documenter/closeout_report.py",
         "src/standard_harness/wiki/proposals.py",
@@ -1588,7 +1608,9 @@
         "_ops/wiki/known-frictions.md",
         "_ops/wiki/agent-lessons.md",
         "_ops/wiki/deprecated-context.md",
-        "_ops/wiki/skill-facing-index.md"
+        "_ops/wiki/skill-facing-index.md",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py"
       ],
       "schemas": [
         "_harness/schemas/wiki-proposal.schema.json",
@@ -1600,16 +1622,19 @@
       ],
       "validators": [
         "wiki-proposal-validator",
-        "wiki-provenance-validator"
+        "wiki-provenance-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
         "wiki-proposal-gate",
-        "wiki-apply-gate"
+        "wiki-apply-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
         "closeout-report",
         "wiki-proposal",
-        "wiki-page-index"
+        "wiki-page-index",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
         "tests.contract.test_closeout_documenter_report",
@@ -1618,7 +1643,8 @@
         "tests.contract.test_wiki_page_schema",
         "tests.contract.test_wiki_index_contract",
         "tests.contract.test_wiki_provenance_required",
-        "tests.contract.test_skill_facing_index_is_projection_only"
+        "tests.contract.test_skill_facing_index_is_projection_only",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -1738,7 +1764,7 @@
     },
     {
       "hrId": "HR-110R",
-      "xpOwner": "XP-05",
+      "xpOwner": "XP-05B",
       "files": [
         "src/standard_harness/documenter/closeout_report.py",
         "src/standard_harness/wiki/proposals.py",
@@ -1759,7 +1785,9 @@
         "_ops/wiki/known-frictions.md",
         "_ops/wiki/agent-lessons.md",
         "_ops/wiki/deprecated-context.md",
-        "_ops/wiki/skill-facing-index.md"
+        "_ops/wiki/skill-facing-index.md",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py"
       ],
       "schemas": [
         "_harness/schemas/wiki-proposal.schema.json",
@@ -1771,16 +1799,19 @@
       ],
       "validators": [
         "wiki-proposal-validator",
-        "wiki-provenance-validator"
+        "wiki-provenance-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
         "wiki-proposal-gate",
-        "wiki-apply-gate"
+        "wiki-apply-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
         "closeout-report",
         "wiki-proposal",
-        "wiki-page-index"
+        "wiki-page-index",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
         "tests.contract.test_closeout_documenter_report",
@@ -1789,13 +1820,14 @@
         "tests.contract.test_wiki_page_schema",
         "tests.contract.test_wiki_index_contract",
         "tests.contract.test_wiki_provenance_required",
-        "tests.contract.test_skill_facing_index_is_projection_only"
+        "tests.contract.test_skill_facing_index_is_projection_only",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     },
     {
       "hrId": "HR-111R",
-      "xpOwner": "XP-05",
+      "xpOwner": "XP-05B",
       "files": [
         "src/standard_harness/documenter/closeout_report.py",
         "src/standard_harness/wiki/proposals.py",
@@ -1816,7 +1848,9 @@
         "_ops/wiki/known-frictions.md",
         "_ops/wiki/agent-lessons.md",
         "_ops/wiki/deprecated-context.md",
-        "_ops/wiki/skill-facing-index.md"
+        "_ops/wiki/skill-facing-index.md",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py"
       ],
       "schemas": [
         "_harness/schemas/wiki-proposal.schema.json",
@@ -1828,16 +1862,19 @@
       ],
       "validators": [
         "wiki-proposal-validator",
-        "wiki-provenance-validator"
+        "wiki-provenance-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
         "wiki-proposal-gate",
-        "wiki-apply-gate"
+        "wiki-apply-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
         "closeout-report",
         "wiki-proposal",
-        "wiki-page-index"
+        "wiki-page-index",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
         "tests.contract.test_closeout_documenter_report",
@@ -1846,7 +1883,8 @@
         "tests.contract.test_wiki_page_schema",
         "tests.contract.test_wiki_index_contract",
         "tests.contract.test_wiki_provenance_required",
-        "tests.contract.test_skill_facing_index_is_projection_only"
+        "tests.contract.test_skill_facing_index_is_projection_only",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -2295,29 +2333,39 @@
         "src/standard_harness/context/budget.py",
         "src/standard_harness/validation/context_budget.py",
         "src/standard_harness/projection/current_context.py",
-        "src/standard_harness/reviews/routing.py"
+        "src/standard_harness/reviews/routing.py",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "schemas": [],
       "policies": [
         "_harness/policies/context-authority.yaml",
-        "_harness/policies/token-budget.yaml"
+        "_harness/policies/token-budget.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml"
       ],
       "validators": [
         "context-authority-validator",
-        "context-budget-validator"
+        "context-budget-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
         "context-authority-gate",
-        "context-budget-gate"
+        "context-budget-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
         "role-context-pack",
-        "context-budget-validation-result"
+        "context-budget-validation-result",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
         "tests.contract.test_context_authority_labels",
         "tests.contract.test_role_specific_context_pack",
-        "tests.contract.test_token_context_budget_validator"
+        "tests.contract.test_token_context_budget_validator",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -2332,29 +2380,39 @@
         "src/standard_harness/context/budget.py",
         "src/standard_harness/validation/context_budget.py",
         "src/standard_harness/projection/current_context.py",
-        "src/standard_harness/reviews/routing.py"
+        "src/standard_harness/reviews/routing.py",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "schemas": [],
       "policies": [
         "_harness/policies/context-authority.yaml",
-        "_harness/policies/token-budget.yaml"
+        "_harness/policies/token-budget.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml"
       ],
       "validators": [
         "context-authority-validator",
-        "context-budget-validator"
+        "context-budget-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
         "context-authority-gate",
-        "context-budget-gate"
+        "context-budget-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
         "role-context-pack",
-        "context-budget-validation-result"
+        "context-budget-validation-result",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
         "tests.contract.test_context_authority_labels",
         "tests.contract.test_role_specific_context_pack",
-        "tests.contract.test_token_context_budget_validator"
+        "tests.contract.test_token_context_budget_validator",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -2781,7 +2839,11 @@
         "src/standard_harness/domain/closeout.py",
         "_harness/policies/review-governance.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "schemas": [
         "packet.schema.json",
@@ -2794,7 +2856,8 @@
         "non-goal-guardrails",
         "gate-profiles",
         "_harness/policies/validator-catalog.yaml",
-        "_harness/policies/review-governance.yaml"
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml"
       ],
       "validators": [
         "requirements-metadata-validator",
@@ -2809,14 +2872,16 @@
         "sensitive-evidence-validator",
         "starter-contamination-validator",
         "success-metrics-reporter",
-        "review-governance-validator"
+        "review-governance-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
         "requirements-baseline-gate",
         "challenge-review-evidence-gate",
         "packet-kernel-gate",
         "v21-conformance-gate",
-        "review-governance-gate"
+        "review-governance-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
         "validator-result",
@@ -2824,7 +2889,8 @@
         "release-full-regression-evidence",
         "v21-conformance-report",
         "review-governance-evidence",
-        "gate-result"
+        "gate-result",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
         "tests.contract.test_requirements_metadata_validator",
@@ -2864,7 +2930,8 @@
         "tests.contract.test_hr200_metrics_source_watermark",
         "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
         "tests.contract.test_v21_review_governance_gate",
-        "tests.contract.test_review_governance_closeout_gate"
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -2902,7 +2969,11 @@
         "src/standard_harness/domain/closeout.py",
         "_harness/policies/review-governance.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "schemas": [
         "gate-result.schema.json",
@@ -2911,7 +2982,8 @@
       "policies": [
         "gate-profiles",
         "_harness/policies/validator-catalog.yaml",
-        "_harness/policies/review-governance.yaml"
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml"
       ],
       "validators": [
         "challenge-review-evidence-validator",
@@ -2922,20 +2994,23 @@
         "sensitive-evidence-validator",
         "starter-contamination-validator",
         "success-metrics-reporter",
-        "review-governance-validator"
+        "review-governance-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
         "challenge-review-evidence-gate",
         "v21-conformance-gate",
         "packet-kernel-gate",
-        "review-governance-gate"
+        "review-governance-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
         "gate-result",
         "challenge-review-evidence-report",
         "release-full-regression-evidence",
         "v21-conformance-report",
-        "review-governance-evidence"
+        "review-governance-evidence",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
         "tests.contract.test_gate_profile_applicability",
@@ -2965,7 +3040,8 @@
         "tests.contract.test_hr200_metrics_source_watermark",
         "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
         "tests.contract.test_v21_review_governance_gate",
-        "tests.contract.test_review_governance_closeout_gate"
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     },
@@ -2989,32 +3065,40 @@
         "docs/manual/standard-harness-v21-development-scenario.md",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-quality-closeout-v1.md",
-        "_ops/metrics/hr200-success-metrics.json"
+        "_ops/metrics/hr200-success-metrics.json",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "schemas": [
         "_harness/schemas/friction-signal.schema.json",
         "_harness/schemas/starter-promotion-candidate.schema.json"
       ],
       "policies": [
-        "_harness/policies/validator-catalog.yaml"
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml"
       ],
       "validators": [
         "recurring-friction-detector",
         "success-metrics-reporter",
         "starter-promotion-candidate-validator",
         "v21-conformance-validator",
-        "validator-catalog-validator"
+        "validator-catalog-validator",
+        "wiki-knowledge-validator"
       ],
       "gates": [
         "compound-engineering-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "wiki-governance-gate"
       ],
       "evidenceTypes": [
         "friction.signal",
         "improvement.candidate",
         "starter-promotion-candidate",
         "success-metrics-report",
-        "v21-conformance-report"
+        "v21-conformance-report",
+        "wiki-knowledge-validation-result"
       ],
       "tests": [
         "tests.contract.test_recurring_friction_detector",
@@ -3034,7 +3118,8 @@
         "tests.contract.test_validate_release_runs_v21_conformance",
         "tests.contract.test_hr200_metrics_trust_statuses",
         "tests.contract.test_hr200_metrics_source_watermark",
-        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics"
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
+        "tests.contract.test_wiki_knowledge_release_gate"
       ],
       "releaseBlocking": true
     }

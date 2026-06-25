@@ -1,4 +1,53 @@
 {
   "projectionOnly": true,
-  "pages": []
+  "pages": [
+    {
+      "path": "_ops/wiki/agent-lessons.md",
+      "entryType": "IMPROVEMENT_CANDIDATE",
+      "sourceTier": "seed",
+      "reviewStatus": "draft"
+    },
+    {
+      "path": "_ops/wiki/architecture.md",
+      "entryType": "DECISION",
+      "sourceTier": "seed",
+      "reviewStatus": "draft"
+    },
+    {
+      "path": "_ops/wiki/current-conventions.md",
+      "entryType": "ASSUMPTION",
+      "sourceTier": "seed",
+      "reviewStatus": "draft"
+    },
+    {
+      "path": "_ops/wiki/decision-log.md",
+      "entryType": "DECISION",
+      "sourceTier": "seed",
+      "reviewStatus": "draft"
+    },
+    {
+      "path": "_ops/wiki/deprecated-context.md",
+      "entryType": "DEPRECATED",
+      "sourceTier": "seed",
+      "reviewStatus": "draft"
+    },
+    {
+      "path": "_ops/wiki/known-frictions.md",
+      "entryType": "FRICTION",
+      "sourceTier": "seed",
+      "reviewStatus": "draft"
+    },
+    {
+      "path": "_ops/wiki/packet-history.md",
+      "entryType": "DECISION",
+      "sourceTier": "seed",
+      "reviewStatus": "draft"
+    },
+    {
+      "path": "_ops/wiki/skill-facing-index.md",
+      "entryType": "DECISION",
+      "sourceTier": "projection",
+      "reviewStatus": "draft"
+    }
+  ]
 }

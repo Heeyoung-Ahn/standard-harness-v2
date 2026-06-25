@@ -301,6 +301,12 @@ test_waiver_records_approval_scope_expiration_revocation_control_and_gate_metada
 test_validated_proposal_can_apply_to_wiki_page (contract.test_wiki_applier_requires_validated_proposal.WikiApplierRequiresValidatedProposalTests.test_validated_proposal_can_apply_to_wiki_page) ... ok
 test_wiki_mutation_without_validated_proposal_fails (contract.test_wiki_applier_requires_validated_proposal.WikiApplierRequiresValidatedProposalTests.test_wiki_mutation_without_validated_proposal_fails) ... ok
 test_index_builder_projects_authoritative_pages_and_stale_warnings (contract.test_wiki_index_contract.WikiIndexContractTests.test_index_builder_projects_authoritative_pages_and_stale_warnings) ... ok
+test_release_blocks_current_wiki_page_without_canonical_sources (contract.test_wiki_knowledge_release_gate.WikiKnowledgeReleaseGateTests.test_release_blocks_current_wiki_page_without_canonical_sources) ... ok
+test_release_blocks_current_wiki_page_without_provenance (contract.test_wiki_knowledge_release_gate.WikiKnowledgeReleaseGateTests.test_release_blocks_current_wiki_page_without_provenance) ... ok
+test_release_blocks_seed_or_projection_page_marked_current (contract.test_wiki_knowledge_release_gate.WikiKnowledgeReleaseGateTests.test_release_blocks_seed_or_projection_page_marked_current) ... ok
+test_release_blocks_skill_facing_index_authority_grant (contract.test_wiki_knowledge_release_gate.WikiKnowledgeReleaseGateTests.test_release_blocks_skill_facing_index_authority_grant) ... ok
+test_release_blocks_stale_wiki_index_projection (contract.test_wiki_knowledge_release_gate.WikiKnowledgeReleaseGateTests.test_release_blocks_stale_wiki_index_projection) ... ok
+test_release_blocks_wiki_authority_override_claim (contract.test_wiki_knowledge_release_gate.WikiKnowledgeReleaseGateTests.test_release_blocks_wiki_authority_override_claim) ... ok
 test_wiki_page_schema_requires_authority_metadata (contract.test_wiki_page_schema.WikiPageSchemaTests.test_wiki_page_schema_requires_authority_metadata) ... ok
 test_proposal_requires_evidence_link_closeout_and_non_sensitive_evidence (contract.test_wiki_proposal_validator.WikiProposalValidatorTests.test_proposal_requires_evidence_link_closeout_and_non_sensitive_evidence) ... ok
 test_sensitive_evidence_cannot_be_promoted_to_wiki (contract.test_wiki_proposal_validator.WikiProposalValidatorTests.test_sensitive_evidence_cannot_be_promoted_to_wiki) ... ok
@@ -355,6 +361,6 @@ test_validate_all_fails_with_missing_evidence_diagnostics (integration.test_vali
 test_validate_all_passes_for_closed_low_risk_packet (integration.test_validate_command.ValidateCommandTests.test_validate_all_passes_for_closed_low_risk_packet) ... ok
 
 ----------------------------------------------------------------------
-Ran 354 tests in 95.033s
+Ran 360 tests in 97.827s
 
 OK

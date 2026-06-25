@@ -243,6 +243,41 @@
       }
     },
     {
+      "validatorId": "wiki-knowledge-validator",
+      "hrIds": [
+        "HR-003",
+        "HR-007",
+        "HR-100R",
+        "HR-110R",
+        "HR-111R",
+        "HR-160R",
+        "HR-161R",
+        "HR-190R",
+        "HR-191",
+        "HR-200"
+      ],
+      "gateId": "wiki-governance-gate",
+      "implementation": "standard_harness.validation.wiki_knowledge:WikiKnowledgeValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_wiki_knowledge_release_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "wiki-governance-gate",
+        "validatorId": "wiki-knowledge-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
       "validatorId": "human-decision-validator",
       "hrIds": [
         "HR-152",

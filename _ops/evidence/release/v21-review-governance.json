@@ -1,58 +1,50 @@
 {
   "evidenceId": "release-v21-review-governance",
   "generatedBy": "review-governance-validator@0.2.0",
-  "generatedAt": "2026-06-24T22:57:52.148Z",
-  "sourceEventRange": "XP-10C",
+  "generatedAt": "2026-06-25T14:47:57.646Z",
+  "sourceEventRange": "XP-05B",
   "reviews": [
     {
-      "reviewId": "rv-xp-10c-review-governance",
-      "packetId": "XP-10C",
+      "reviewId": "rv-xp-05b-wiki-knowledge",
+      "packetId": "XP-05B",
       "reviewType": "implementation",
       "reviewedCommit": "b05259f0672111c7a3261c8b832ade09e0583971",
       "reviewedFiles": [
         {
-          "path": "src/standard_harness/validation/review_governance.py",
-          "sha256": "sha256:688c6b7403c681e7a6423d25d060bd6ebfff9bd0290bed6dc0a27c83a4e1dac3"
+          "path": "src/standard_harness/validation/wiki_knowledge.py",
+          "sha256": "sha256:88987ee98f9d2415790f68efd298a359f37c1de1404a19e584e8609b5a556c28"
         },
         {
           "path": "src/standard_harness/completion/v21_conformance.py",
-          "sha256": "sha256:4d0918c35e45335ac4cd0fbb40bc75851d291aa478451865821349ad37f1928b"
-        },
-        {
-          "path": "src/standard_harness/domain/closeout.py",
-          "sha256": "sha256:0941ff0b2777f57e00201e516d9cf612c6f9c8aae7c229b78b72bf449a5f9ccc"
-        },
-        {
-          "path": "_harness/policies/review-governance.yaml",
-          "sha256": "sha256:0905faa7b3077340a6ea494670b878ac25e53ccd45ee21953f0ab76f9c6017b0"
+          "sha256": "sha256:89a85f1fbeadcd60927403ac284bed688bc29bd50f482b3ae19bf12552861f13"
         },
         {
           "path": "_harness/policies/validator-catalog.yaml",
-          "sha256": "sha256:ae3a0486436cbf016ac7f5c03a316fa8234c008ec23e0ae597fa13e5dc5e29cd"
+          "sha256": "sha256:92e8b3ceba1ac87c36bb3a07eb0c5249f8f76f6eaf9c616c01f658957281e0e6"
         },
         {
-          "path": "_harness/schemas/review-governance-evidence.schema.json",
-          "sha256": "sha256:a8bee5322da93e635780a0c245fed00d3c195d7596b985dbe0b814c209d42bba"
+          "path": "_harness/policies/wiki-knowledge-policy.yaml",
+          "sha256": "sha256:606bdd735b555c9d844e44ba0c8ccb6295fd2a3e02c49edee12f67d031f04c5d"
         },
         {
           "path": "_harness/requirements/hr-coverage-matrix.yaml",
-          "sha256": "sha256:d4ceba77e74909cc074290374139b8ac64639efe26b35196318a4d62b22bb1f9"
+          "sha256": "sha256:f3503ebc1bbe4e3537b7da0f46bf6e67266e62b0be5c8e248c98f02dd155e33a"
         },
         {
           "path": "_harness/requirements/traceability-matrix.yaml",
-          "sha256": "sha256:f407a7bb1174536e9ffbffb54cbd101ccdd4526f49c80647e4b9c2c2c9f034d7"
+          "sha256": "sha256:f0b7679f00f18fe7e576bc4a5b693780fe1ea8b9aaaba9d8786fd612edfc30a0"
         },
         {
-          "path": "tests/contract/test_v21_review_governance_gate.py",
-          "sha256": "sha256:2e08618e79e55e72758a35dd914697e04f3c12e97832c5a354ae038db18fd1ab"
+          "path": "_ops/wiki/index.yaml",
+          "sha256": "sha256:20ab67500ee8ea87e0e03e27eda661528be4d35ef5c5d692307141f24cdc459a"
         },
         {
-          "path": "tests/contract/test_review_governance_closeout_gate.py",
-          "sha256": "sha256:a8d19d0af5110cb9b18d66015941b71d62f341a5e0a64b7bcd0c304d73afb831"
+          "path": "tests/contract/test_wiki_knowledge_release_gate.py",
+          "sha256": "sha256:d3e8eada541cff5738c7ce5b155c8d34c9d8099f3e9c34d2bab60add3f98b63b"
         }
       ],
       "focusedTestEvidence": {
-        "command": "python -m unittest tests.contract.test_v21_review_governance_gate tests.contract.test_review_governance_closeout_gate",
+        "command": "python -m unittest tests.contract.test_wiki_knowledge_release_gate tests.contract.test_validator_catalog_entries_have_importable_implementations tests.contract.test_validator_catalog_entries_have_negative_tests tests.contract.test_release_blocking_validators_are_reachable_from_release_validation",
         "result": "passed"
       },
       "fullRegressionEvidence": {
@@ -61,17 +53,15 @@
       },
       "deterministicEvidence": [
         "focusedTestEvidence",
-        "fullRegressionEvidence",
-        "validator-catalog",
-        "hr-traceability"
+        "fullRegressionEvidence"
       ],
       "findings": [],
       "acceptedRisks": [],
       "finalDecision": "pass",
       "finalAdjudication": {
         "status": "approved",
-        "adjudicator": "planner-agent-pauli",
-        "rationale": "READY_FOR_CODE approved the shrunk XP-10C slice; focused negative tests prove missing, fake, stale, unresolved, unadjudicated, and AI-only review evidence blocks release."
+        "adjudicator": "human-owner",
+        "rationale": "No unresolved release-blocking review findings for XP-05B wiki knowledge release gate."
       }
     }
   ]

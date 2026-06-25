@@ -12,5 +12,27 @@
   "mutationRule": "Only wiki-applier may write _ops/wiki/** after wiki-proposal-validator validates the proposal.",
   "skillFacingIndexRule": "skill-facing-index.md is projection only and cannot execute or authorize skills.",
   "frictionSignalBehavior": "emit docs_drift or stale_context when wiki content is stale, low-authority, generated, or unprovenanced",
-  "metricSignalBehavior": "emit wiki_proposal_validation_count, wiki_apply_count, and wiki_index_page_count"
+  "metricSignalBehavior": "emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, stale_wiki_reference_count",
+  "releaseBlocking": {
+    "validator": "wiki-knowledge-validator",
+    "gateId": "wiki-governance-gate",
+    "diagnostics": [
+      "missing_wiki_provenance",
+      "missing_wiki_canonical_source",
+      "stale_wiki_reference",
+      "wiki_authority_override",
+      "skill_facing_index_authority_violation",
+      "invalid_wiki_index"
+    ],
+    "nonWaivable": [
+      "wiki_authority_override",
+      "skill_facing_index_authority_violation"
+    ],
+    "enforcementPoint": [
+      "validate --release",
+      "validate --v21-conformance"
+    ]
+  },
+  "currentPageRule": "reviewStatus current requires trusted provenance evidenceIds and canonicalSources; seed, projection, generated, and low-authority source tiers cannot be current.",
+  "indexProjectionRule": "_ops/wiki/index.yaml must be projectionOnly and cannot mismatch page metadata it projects."
 }

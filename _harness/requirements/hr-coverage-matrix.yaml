@@ -64,24 +64,58 @@
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
-        "docs/requirements/standard-harness-integrated-requirements-v0.2.md"
+        "docs/requirements/standard-harness-integrated-requirements-v0.2.md",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "targetArtifacts": {
         "policy": [
-          "_harness/policies/non-goal-guardrails.yaml"
+          "_harness/policies/non-goal-guardrails.yaml",
+          "_harness/policies/wiki-knowledge-policy.yaml"
         ],
         "validator": [
-          "src/standard_harness/validation/requirements_metadata.py"
+          "src/standard_harness/validation/requirements_metadata.py",
+          "src/standard_harness/validation/wiki_knowledge.py",
+          "wiki-knowledge-validator"
         ],
         "gate": [
-          "requirements-baseline-gate"
+          "requirements-baseline-gate",
+          "wiki-governance-gate"
         ],
         "tests": [
-          "tests/contract/test_non_goal_guardrails.py"
+          "tests/contract/test_non_goal_guardrails.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-00"
+      "lastUpdatedByPacket": "XP-05B",
+      "releaseBlockingValidators": [
+        "wiki-knowledge-validator"
+      ],
+      "releaseBlockingGates": [
+        "wiki-governance-gate"
+      ],
+      "diagnostics": [
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "missing_wiki_provenance",
+        "missing_wiki_canonical_source",
+        "stale_wiki_reference",
+        "wiki_authority_override",
+        "skill_facing_index_authority_violation",
+        "invalid_wiki_index"
+      ],
+      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
+      "frictionMetricBehavior": [
+        "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
+      ]
     },
     {
       "hrId": "HR-004",
@@ -159,21 +193,57 @@
       "xpOwner": "XP-00",
       "implementationDisposition": "create",
       "currentImplementation": [
-        "src/standard_harness/completion/final_gate.py"
+        "src/standard_harness/completion/final_gate.py",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "targetArtifacts": {
         "policy": [
-          "_harness/policies/p0-policy.yaml"
+          "_harness/policies/p0-policy.yaml",
+          "_harness/policies/wiki-knowledge-policy.yaml"
         ],
         "validator": [
-          "src/standard_harness/validation/requirements_metadata.py"
+          "src/standard_harness/validation/requirements_metadata.py",
+          "src/standard_harness/validation/wiki_knowledge.py",
+          "wiki-knowledge-validator"
         ],
         "tests": [
-          "tests/contract/test_requirements_metadata_validator.py"
+          "tests/contract/test_requirements_metadata_validator.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
+        ],
+        "gate": [
+          "wiki-governance-gate"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10"
+      "lastUpdatedByPacket": "XP-05B",
+      "releaseBlockingValidators": [
+        "wiki-knowledge-validator"
+      ],
+      "releaseBlockingGates": [
+        "wiki-governance-gate"
+      ],
+      "diagnostics": [
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "missing_wiki_provenance",
+        "missing_wiki_canonical_source",
+        "stale_wiki_reference",
+        "wiki_authority_override",
+        "skill_facing_index_authority_violation",
+        "invalid_wiki_index"
+      ],
+      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
+      "frictionMetricBehavior": [
+        "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
+      ]
     },
     {
       "hrId": "HR-008",
@@ -2364,7 +2434,9 @@
         "_ops/wiki/known-frictions.md",
         "_ops/wiki/agent-lessons.md",
         "_ops/wiki/deprecated-context.md",
-        "_ops/wiki/skill-facing-index.md"
+        "_ops/wiki/skill-facing-index.md",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py"
       ],
       "targetArtifacts": {
         "schema": [
@@ -2378,11 +2450,14 @@
         "validator": [
           "src/standard_harness/wiki/validator.py",
           "src/standard_harness/wiki/provenance.py",
-          "src/standard_harness/validation/aggregator.py"
+          "src/standard_harness/validation/aggregator.py",
+          "src/standard_harness/validation/wiki_knowledge.py",
+          "wiki-knowledge-validator"
         ],
         "gate": [
           "wiki-proposal-gate",
-          "wiki-apply-gate"
+          "wiki-apply-gate",
+          "wiki-governance-gate"
         ],
         "tests": [
           "tests/contract/test_closeout_documenter_report.py",
@@ -2391,11 +2466,12 @@
           "tests/contract/test_wiki_page_schema.py",
           "tests/contract/test_wiki_index_contract.py",
           "tests/contract/test_wiki_provenance_required.py",
-          "tests/contract/test_skill_facing_index_is_projection_only.py"
+          "tests/contract/test_skill_facing_index_is_projection_only.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-05",
+      "lastUpdatedByPacket": "XP-05B",
       "migrationCompatibility": [
         "Existing operational memory remains source evidence and is not direct Wiki state.",
         "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
@@ -2404,11 +2480,13 @@
       ],
       "releaseBlockingValidators": [
         "wiki-proposal-validator",
-        "wiki-provenance-validator"
+        "wiki-provenance-validator",
+        "wiki-knowledge-validator"
       ],
       "releaseBlockingGates": [
         "wiki-proposal-gate",
-        "wiki-apply-gate"
+        "wiki-apply-gate",
+        "wiki-governance-gate"
       ],
       "diagnostics": [
         "invalid_wiki_proposal",
@@ -2416,13 +2494,21 @@
         "wiki_proposal_not_validated",
         "sensitive_wiki_promotion",
         "stale_context",
-        "docs_drift"
+        "docs_drift",
+        "missing_wiki_provenance",
+        "missing_wiki_canonical_source",
+        "stale_wiki_reference",
+        "wiki_authority_override",
+        "skill_facing_index_authority_violation",
+        "invalid_wiki_index"
       ],
-      "waiverPolicy": "Wiki mutation without a validated proposal is not allowed. Skill-facing projections cannot authorize skills.",
-      "enforcementPoint": "validate, wiki proposal, wiki apply, closeout documenter",
+      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
+      "enforcementPoint": "validate --release, validate --v21-conformance, wiki proposal, wiki apply",
       "frictionMetricBehavior": [
         "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
-        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics."
+        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics.",
+        "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
       ]
     },
     {
@@ -2625,7 +2711,9 @@
         "_ops/wiki/known-frictions.md",
         "_ops/wiki/agent-lessons.md",
         "_ops/wiki/deprecated-context.md",
-        "_ops/wiki/skill-facing-index.md"
+        "_ops/wiki/skill-facing-index.md",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py"
       ],
       "targetArtifacts": {
         "schema": [
@@ -2639,11 +2727,14 @@
         "validator": [
           "src/standard_harness/wiki/validator.py",
           "src/standard_harness/wiki/provenance.py",
-          "src/standard_harness/validation/aggregator.py"
+          "src/standard_harness/validation/aggregator.py",
+          "src/standard_harness/validation/wiki_knowledge.py",
+          "wiki-knowledge-validator"
         ],
         "gate": [
           "wiki-proposal-gate",
-          "wiki-apply-gate"
+          "wiki-apply-gate",
+          "wiki-governance-gate"
         ],
         "tests": [
           "tests/contract/test_closeout_documenter_report.py",
@@ -2652,11 +2743,12 @@
           "tests/contract/test_wiki_page_schema.py",
           "tests/contract/test_wiki_index_contract.py",
           "tests/contract/test_wiki_provenance_required.py",
-          "tests/contract/test_skill_facing_index_is_projection_only.py"
+          "tests/contract/test_skill_facing_index_is_projection_only.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-05",
+      "lastUpdatedByPacket": "XP-05B",
       "migrationCompatibility": [
         "Existing operational memory remains source evidence and is not direct Wiki state.",
         "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
@@ -2665,11 +2757,13 @@
       ],
       "releaseBlockingValidators": [
         "wiki-proposal-validator",
-        "wiki-provenance-validator"
+        "wiki-provenance-validator",
+        "wiki-knowledge-validator"
       ],
       "releaseBlockingGates": [
         "wiki-proposal-gate",
-        "wiki-apply-gate"
+        "wiki-apply-gate",
+        "wiki-governance-gate"
       ],
       "diagnostics": [
         "invalid_wiki_proposal",
@@ -2677,13 +2771,21 @@
         "wiki_proposal_not_validated",
         "sensitive_wiki_promotion",
         "stale_context",
-        "docs_drift"
+        "docs_drift",
+        "missing_wiki_provenance",
+        "missing_wiki_canonical_source",
+        "stale_wiki_reference",
+        "wiki_authority_override",
+        "skill_facing_index_authority_violation",
+        "invalid_wiki_index"
       ],
-      "waiverPolicy": "Wiki mutation without a validated proposal is not allowed. Skill-facing projections cannot authorize skills.",
-      "enforcementPoint": "validate, wiki proposal, wiki apply, closeout documenter",
+      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
+      "enforcementPoint": "validate --release, validate --v21-conformance, wiki proposal, wiki apply",
       "frictionMetricBehavior": [
         "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
-        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics."
+        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics.",
+        "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
       ]
     },
     {
@@ -2712,7 +2814,9 @@
         "_ops/wiki/known-frictions.md",
         "_ops/wiki/agent-lessons.md",
         "_ops/wiki/deprecated-context.md",
-        "_ops/wiki/skill-facing-index.md"
+        "_ops/wiki/skill-facing-index.md",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py"
       ],
       "targetArtifacts": {
         "schema": [
@@ -2726,11 +2830,14 @@
         "validator": [
           "src/standard_harness/wiki/validator.py",
           "src/standard_harness/wiki/provenance.py",
-          "src/standard_harness/validation/aggregator.py"
+          "src/standard_harness/validation/aggregator.py",
+          "src/standard_harness/validation/wiki_knowledge.py",
+          "wiki-knowledge-validator"
         ],
         "gate": [
           "wiki-proposal-gate",
-          "wiki-apply-gate"
+          "wiki-apply-gate",
+          "wiki-governance-gate"
         ],
         "tests": [
           "tests/contract/test_closeout_documenter_report.py",
@@ -2739,11 +2846,12 @@
           "tests/contract/test_wiki_page_schema.py",
           "tests/contract/test_wiki_index_contract.py",
           "tests/contract/test_wiki_provenance_required.py",
-          "tests/contract/test_skill_facing_index_is_projection_only.py"
+          "tests/contract/test_skill_facing_index_is_projection_only.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-05",
+      "lastUpdatedByPacket": "XP-05B",
       "migrationCompatibility": [
         "Existing operational memory remains source evidence and is not direct Wiki state.",
         "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
@@ -2752,11 +2860,13 @@
       ],
       "releaseBlockingValidators": [
         "wiki-proposal-validator",
-        "wiki-provenance-validator"
+        "wiki-provenance-validator",
+        "wiki-knowledge-validator"
       ],
       "releaseBlockingGates": [
         "wiki-proposal-gate",
-        "wiki-apply-gate"
+        "wiki-apply-gate",
+        "wiki-governance-gate"
       ],
       "diagnostics": [
         "invalid_wiki_proposal",
@@ -2764,13 +2874,21 @@
         "wiki_proposal_not_validated",
         "sensitive_wiki_promotion",
         "stale_context",
-        "docs_drift"
+        "docs_drift",
+        "missing_wiki_provenance",
+        "missing_wiki_canonical_source",
+        "stale_wiki_reference",
+        "wiki_authority_override",
+        "skill_facing_index_authority_violation",
+        "invalid_wiki_index"
       ],
-      "waiverPolicy": "Wiki mutation without a validated proposal is not allowed. Skill-facing projections cannot authorize skills.",
-      "enforcementPoint": "validate, wiki proposal, wiki apply, closeout documenter",
+      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
+      "enforcementPoint": "validate --release, validate --v21-conformance, wiki proposal, wiki apply",
       "frictionMetricBehavior": [
         "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
-        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics."
+        "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics.",
+        "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
       ]
     },
     {
@@ -3411,7 +3529,12 @@
         "src/standard_harness/context/budget.py",
         "src/standard_harness/validation/context_budget.py",
         "src/standard_harness/projection/current_context.py",
-        "src/standard_harness/reviews/routing.py"
+        "src/standard_harness/reviews/routing.py",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "targetArtifacts": {
         "policy": [
@@ -3420,7 +3543,8 @@
         ],
         "validator": [
           "src/standard_harness/context/authority.py",
-          "src/standard_harness/validation/context_budget.py"
+          "src/standard_harness/validation/context_budget.py",
+          "src/standard_harness/validation/wiki_knowledge.py"
         ],
         "gate": [
           "context-authority-gate",
@@ -3429,11 +3553,12 @@
         "tests": [
           "tests/contract/test_context_authority_labels.py",
           "tests/contract/test_role_specific_context_pack.py",
-          "tests/contract/test_token_context_budget_validator.py"
+          "tests/contract/test_token_context_budget_validator.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-06",
+      "lastUpdatedByPacket": "XP-05B",
       "migrationCompatibility": [
         "Existing current_context projection remains source context and now carries authority label metadata.",
         "Existing ContextRouter stale and untrusted override diagnostics map to authority override diagnostics.",
@@ -3474,7 +3599,12 @@
         "src/standard_harness/context/budget.py",
         "src/standard_harness/validation/context_budget.py",
         "src/standard_harness/projection/current_context.py",
-        "src/standard_harness/reviews/routing.py"
+        "src/standard_harness/reviews/routing.py",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "src/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "targetArtifacts": {
         "policy": [
@@ -3483,7 +3613,8 @@
         ],
         "validator": [
           "src/standard_harness/context/authority.py",
-          "src/standard_harness/validation/context_budget.py"
+          "src/standard_harness/validation/context_budget.py",
+          "src/standard_harness/validation/wiki_knowledge.py"
         ],
         "gate": [
           "context-authority-gate",
@@ -3492,11 +3623,12 @@
         "tests": [
           "tests/contract/test_context_authority_labels.py",
           "tests/contract/test_role_specific_context_pack.py",
-          "tests/contract/test_token_context_budget_validator.py"
+          "tests/contract/test_token_context_budget_validator.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-06",
+      "lastUpdatedByPacket": "XP-05B",
       "migrationCompatibility": [
         "Existing current_context projection remains source context and now carries authority label metadata.",
         "Existing ContextRouter stale and untrusted override diagnostics map to authority override diagnostics.",
@@ -4235,7 +4367,11 @@
         "src/standard_harness/domain/closeout.py",
         "_harness/policies/review-governance.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "targetArtifacts": {
         "validator": [
@@ -4252,13 +4388,16 @@
           "starter-contamination-validator",
           "src/standard_harness/metrics/success.py",
           "src/standard_harness/validation/review_governance.py",
-          "review-governance-validator"
+          "review-governance-validator",
+          "src/standard_harness/validation/wiki_knowledge.py",
+          "wiki-knowledge-validator"
         ],
         "gate": [
           "requirements-baseline-gate",
           "packet-kernel-gate",
           "v21-conformance-gate",
-          "review-governance-gate"
+          "review-governance-gate",
+          "wiki-governance-gate"
         ],
         "evidence": [
           "_ops/evidence/release/v21-full-regression.json",
@@ -4303,18 +4442,20 @@
           "tests/contract/test_hr200_metrics_source_watermark.py",
           "tests/contract/test_v21_conformance_blocks_stale_hr200_metrics.py",
           "tests/contract/test_v21_review_governance_gate.py",
-          "tests/contract/test_review_governance_closeout_gate.py"
+          "tests/contract/test_review_governance_closeout_gate.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml",
-          "_harness/policies/review-governance.yaml"
+          "_harness/policies/review-governance.yaml",
+          "_harness/policies/wiki-knowledge-policy.yaml"
         ],
         "schema": [
           "_harness/schemas/review-governance-evidence.schema.json"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10C",
+      "lastUpdatedByPacket": "XP-05B",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4324,11 +4465,13 @@
         "sensitive-evidence-validator",
         "starter-contamination-validator",
         "success-metrics-reporter",
-        "review-governance-validator"
+        "review-governance-validator",
+        "wiki-knowledge-validator"
       ],
       "releaseBlockingGates": [
         "v21-conformance-gate",
-        "review-governance-gate"
+        "review-governance-gate",
+        "wiki-governance-gate"
       ],
       "diagnostics": [
         "incomplete_hr_coverage",
@@ -4360,15 +4503,27 @@
         "p1_review_requires_risk_acceptance",
         "missing_review_final_adjudication",
         "ai_review_cannot_release_alone",
-        "missing_required_review_governance"
+        "missing_required_review_governance",
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "missing_wiki_provenance",
+        "missing_wiki_canonical_source",
+        "stale_wiki_reference",
+        "wiki_authority_override",
+        "skill_facing_index_authority_violation",
+        "invalid_wiki_index"
       ],
-      "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
-      "enforcementPoint": "v21-conformance-gate, review-governance-gate",
+      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit v21_conformance_blocked when release conformance fails.",
         "Emit v21_conformance_evaluated metric by status.",
         "Emit missed_review or missing_evidence when review governance is missing, stale, AI-only, or unadjudicated.",
-        "Emit review_governance_validation_count by status and finding severity."
+        "Emit review_governance_validation_count by status and finding severity.",
+        "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
       ]
     },
     {
@@ -4407,7 +4562,11 @@
         "src/standard_harness/domain/closeout.py",
         "_harness/policies/review-governance.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "targetArtifacts": {
         "schema": [
@@ -4426,12 +4585,15 @@
           "starter-contamination-validator",
           "src/standard_harness/metrics/success.py",
           "src/standard_harness/validation/review_governance.py",
-          "review-governance-validator"
+          "review-governance-validator",
+          "src/standard_harness/validation/wiki_knowledge.py",
+          "wiki-knowledge-validator"
         ],
         "gate": [
           "packet-kernel-gate",
           "v21-conformance-gate",
-          "review-governance-gate"
+          "review-governance-gate",
+          "wiki-governance-gate"
         ],
         "evidence": [
           "gate-result",
@@ -4466,15 +4628,17 @@
           "tests/contract/test_hr200_metrics_source_watermark.py",
           "tests/contract/test_v21_conformance_blocks_stale_hr200_metrics.py",
           "tests/contract/test_v21_review_governance_gate.py",
-          "tests/contract/test_review_governance_closeout_gate.py"
+          "tests/contract/test_review_governance_closeout_gate.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml",
-          "_harness/policies/review-governance.yaml"
+          "_harness/policies/review-governance.yaml",
+          "_harness/policies/wiki-knowledge-policy.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10C",
+      "lastUpdatedByPacket": "XP-05B",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4484,11 +4648,13 @@
         "sensitive-evidence-validator",
         "starter-contamination-validator",
         "success-metrics-reporter",
-        "review-governance-validator"
+        "review-governance-validator",
+        "wiki-knowledge-validator"
       ],
       "releaseBlockingGates": [
         "v21-conformance-gate",
-        "review-governance-gate"
+        "review-governance-gate",
+        "wiki-governance-gate"
       ],
       "diagnostics": [
         "incomplete_hr_coverage",
@@ -4520,15 +4686,27 @@
         "p1_review_requires_risk_acceptance",
         "missing_review_final_adjudication",
         "ai_review_cannot_release_alone",
-        "missing_required_review_governance"
+        "missing_required_review_governance",
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "missing_wiki_provenance",
+        "missing_wiki_canonical_source",
+        "stale_wiki_reference",
+        "wiki_authority_override",
+        "skill_facing_index_authority_violation",
+        "invalid_wiki_index"
       ],
-      "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
-      "enforcementPoint": "v21-conformance-gate, review-governance-gate",
+      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit v21_conformance_blocked when release conformance fails.",
         "Emit v21_conformance_evaluated metric by status.",
         "Emit missed_review or missing_evidence when review governance is missing, stale, AI-only, or unadjudicated.",
-        "Emit review_governance_validation_count by status and finding severity."
+        "Emit review_governance_validation_count by status and finding severity.",
+        "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
       ]
     },
     {
@@ -4554,7 +4732,11 @@
         "docs/manual/standard-harness-v21-development-scenario.md",
         "docs/release/v21-conformance-report.md",
         "docs/release/release-quality-closeout-v1.md",
-        "_ops/metrics/hr200-success-metrics.json"
+        "_ops/metrics/hr200-success-metrics.json",
+        "src/standard_harness/validation/wiki_knowledge.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
       ],
       "targetArtifacts": {
         "schema": [
@@ -4566,11 +4748,14 @@
           "src/standard_harness/self_improvement/starter_promotion.py",
           "src/standard_harness/metrics/success.py",
           "src/standard_harness/validation/catalog.py",
-          "src/standard_harness/completion/v21_conformance.py"
+          "src/standard_harness/completion/v21_conformance.py",
+          "src/standard_harness/validation/wiki_knowledge.py",
+          "wiki-knowledge-validator"
         ],
         "gate": [
           "compound-engineering-gate",
-          "v21-conformance-gate"
+          "v21-conformance-gate",
+          "wiki-governance-gate"
         ],
         "tests": [
           "tests/contract/test_recurring_friction_detector.py",
@@ -4590,14 +4775,16 @@
           "tests/contract/test_validate_release_runs_v21_conformance.py",
           "tests/contract/test_hr200_metrics_trust_statuses.py",
           "tests/contract/test_hr200_metrics_source_watermark.py",
-          "tests/contract/test_v21_conformance_blocks_stale_hr200_metrics.py"
+          "tests/contract/test_v21_conformance_blocks_stale_hr200_metrics.py",
+          "tests/contract/test_wiki_knowledge_release_gate.py"
         ],
         "policy": [
-          "_harness/policies/validator-catalog.yaml"
+          "_harness/policies/validator-catalog.yaml",
+          "_harness/policies/wiki-knowledge-policy.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-MetricsA",
+      "lastUpdatedByPacket": "XP-05B",
       "migrationCompatibility": [
         "Existing friction_records map to friction.signal records.",
         "Existing improvement proposals retain disposition and can feed starter promotion candidates.",
@@ -4610,11 +4797,13 @@
         "success-metrics-reporter",
         "starter-promotion-candidate-validator",
         "v21-conformance-validator",
-        "validator-catalog-validator"
+        "validator-catalog-validator",
+        "wiki-knowledge-validator"
       ],
       "releaseBlockingGates": [
         "compound-engineering-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "wiki-governance-gate"
       ],
       "diagnostics": [
         "recurring_friction_detected",
@@ -4629,15 +4818,27 @@
         "missing_source_records",
         "incomplete_hr200_metrics",
         "stale_hr200_metrics",
-        "invalid_hr200_metric_type"
+        "invalid_hr200_metric_type",
+        "invalid_wiki_proposal",
+        "missing_wiki_evidence_link",
+        "wiki_proposal_not_validated",
+        "sensitive_wiki_promotion",
+        "missing_wiki_provenance",
+        "missing_wiki_canonical_source",
+        "stale_wiki_reference",
+        "wiki_authority_override",
+        "skill_facing_index_authority_violation",
+        "invalid_wiki_index"
       ],
-      "waiverPolicy": "Any incomplete P0 HR coverage, missing HR-190R validator, missing HR-191 gate metadata, or missing XP-09 compound coverage blocks V2.1 completion.",
-      "enforcementPoint": "v21-conformance-gate",
+      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit recurring_friction_detected and missing_starter_promotion_evidence when blocked.",
         "Emit recurring_friction_count, starter_promotion_candidate_count, and success_metrics_report_generated metrics.",
         "Emit v21_conformance_blocked when release conformance fails.",
-        "Emit v21_conformance_evaluated metric by status."
+        "Emit v21_conformance_evaluated metric by status.",
+        "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
       ]
     }
   ],
@@ -4774,6 +4975,20 @@
       ],
       "waivable": false,
       "enforcementPoint": "validate --release, validate --v21-conformance, closeout"
+    },
+    {
+      "validator": "wiki-knowledge-validator",
+      "gateId": "wiki-governance-gate",
+      "diagnosticIds": [
+        "missing_wiki_provenance",
+        "missing_wiki_canonical_source",
+        "stale_wiki_reference",
+        "wiki_authority_override",
+        "skill_facing_index_authority_violation",
+        "invalid_wiki_index"
+      ],
+      "waivable": false,
+      "enforcementPoint": "validate --release, validate --v21-conformance"
     }
   ],
   "frictionMetricBehavior": {
@@ -4786,6 +5001,8 @@
     "xp01aFriction": "Challenge gate and human decision validators emit or reserve unsafe_user_instruction_conflict, missed_review, missing_evidence, and missing_closeout friction signals when blocked. XP-09 remains responsible for aggregation.",
     "xp01aMetric": "Challenge gate evaluation and human decision validation emit or reserve challenge_gate_evaluated, challenge_gate_blocked, and human_decision_validated count metrics. XP-09 remains responsible for aggregation.",
     "xp02Friction": "Test-plan and evidence trust validators emit or reserve missing_evidence, missing_closeout, manual_rework, and docs_implementation_mismatch friction signals when blocked. XP-09 remains responsible for aggregation.",
-    "xp02Metric": "Evidence trust records reserve trusted_evidence_ratio, closeout_claim_ledger_coverage, test_plan_validated, and evidence_trust_validated metrics. XP-09 remains responsible for aggregation."
+    "xp02Metric": "Evidence trust records reserve trusted_evidence_ratio, closeout_claim_ledger_coverage, test_plan_validated, and evidence_trust_validated metrics. XP-09 remains responsible for aggregation.",
+    "xp05bFriction": "Wiki knowledge validator emits or reserves docs_drift, stale_context, and lost_long_term_context when wiki projection authority or provenance blocks release.",
+    "xp05bMetric": "Wiki knowledge validator emits or reserves wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
   }
 }
