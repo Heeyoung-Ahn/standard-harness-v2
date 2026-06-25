@@ -1078,31 +1078,40 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/evidence.schema.json",
-          "_harness/schemas/review-governance-evidence.schema.json"
+          "_harness/schemas/review-governance-evidence.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
           "_harness/policies/evidence-trust-policy.yaml",
           "_harness/policies/review-governance.yaml",
-          "_harness/policies/validator-catalog.yaml"
+          "_harness/policies/validator-catalog.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/validation/evidence_trust.py",
           "src/standard_harness/validation/test_plan.py",
           "src/standard_harness/validation/aggregator.py",
           "src/standard_harness/validation/review_governance.py",
-          "review-governance-validator"
+          "review-governance-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "test-plan-gate",
           "evidence-trust-gate",
           "closeout-gate",
           "review-governance-gate",
-          "v21-conformance-gate"
+          "v21-conformance-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_evidence_trust_model_v02.py",
@@ -1110,7 +1119,8 @@
           "tests/contract/test_evidence_trust_migration_compatibility.py",
           "tests/evals/test_manual_only_evidence_cannot_closeout.py",
           "tests/contract/test_v21_review_governance_gate.py",
-          "tests/contract/test_review_governance_closeout_gate.py"
+          "tests/contract/test_review_governance_closeout_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ],
         "evidence": [
           "review-governance-evidence",
@@ -1118,13 +1128,15 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10C",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "releaseBlockingValidators": [
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "missing_review_governance_evidence",
@@ -1137,13 +1149,32 @@
         "p1_review_requires_risk_acceptance",
         "missing_review_final_adjudication",
         "ai_review_cannot_release_alone",
-        "missing_required_review_governance"
+        "missing_required_review_governance",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Review governance release blockers require deterministic evidence and final adjudication; AI-only review cannot release.",
-      "enforcementPoint": "validate --release, validate --v21-conformance, closeout",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit missed_review or missing_evidence when review governance is missing, stale, AI-only, or unadjudicated.",
-        "Emit review_governance_validation_count by status and finding severity."
+        "Emit review_governance_validation_count by status and finding severity.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -1209,36 +1240,77 @@
         "src/standard_harness/state/migrations.py",
         "src/standard_harness/state/replay.py",
         "src/standard_harness/state/audit.py",
-        "src/standard_harness/validation/aggregator.py"
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
-          "_harness/schemas/evidence.schema.json"
+          "_harness/schemas/evidence.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
-          "_harness/policies/evidence-trust-policy.yaml"
+          "_harness/policies/evidence-trust-policy.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/validation/evidence_trust.py",
           "src/standard_harness/validation/test_plan.py",
           "src/standard_harness/validation/aggregator.py",
-          "evidence-trust-validator"
+          "evidence-trust-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "test-plan-gate",
           "evidence-trust-gate",
-          "closeout-gate"
+          "closeout-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_evidence_trust_model_v02.py",
           "tests/contract/test_test_plan_first_gate.py",
           "tests/contract/test_evidence_trust_migration_compatibility.py",
           "tests/evals/test_manual_only_evidence_cannot_closeout.py",
-          "tests/evals/test_forged_trusted_ci_cannot_closeout.py"
+          "tests/evals/test_forged_trusted_ci_cannot_closeout.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-SecurityA"
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
+      "releaseBlockingValidators": [
+        "final-closeout-validator"
+      ],
+      "releaseBlockingGates": [
+        "v21-final-closeout-gate"
+      ],
+      "diagnostics": [
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
+      ],
+      "enforcementPoint": "validate --release, validate --v21-conformance",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "frictionMetricBehavior": [
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
+      ]
     },
     {
       "hrId": "HR-044",
@@ -1257,36 +1329,77 @@
         "src/standard_harness/state/migrations.py",
         "src/standard_harness/state/replay.py",
         "src/standard_harness/state/audit.py",
-        "src/standard_harness/validation/aggregator.py"
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
-          "_harness/schemas/evidence.schema.json"
+          "_harness/schemas/evidence.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
-          "_harness/policies/evidence-trust-policy.yaml"
+          "_harness/policies/evidence-trust-policy.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/validation/evidence_trust.py",
           "src/standard_harness/validation/test_plan.py",
           "src/standard_harness/validation/aggregator.py",
-          "evidence-trust-validator"
+          "evidence-trust-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "test-plan-gate",
           "evidence-trust-gate",
-          "closeout-gate"
+          "closeout-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_evidence_trust_model_v02.py",
           "tests/contract/test_test_plan_first_gate.py",
           "tests/contract/test_evidence_trust_migration_compatibility.py",
           "tests/evals/test_manual_only_evidence_cannot_closeout.py",
-          "tests/evals/test_forged_trusted_ci_cannot_closeout.py"
+          "tests/evals/test_forged_trusted_ci_cannot_closeout.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-SecurityA"
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
+      "releaseBlockingValidators": [
+        "final-closeout-validator"
+      ],
+      "releaseBlockingGates": [
+        "v21-final-closeout-gate"
+      ],
+      "diagnostics": [
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
+      ],
+      "enforcementPoint": "validate --release, validate --v21-conformance",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "frictionMetricBehavior": [
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
+      ]
     },
     {
       "hrId": "HR-045",
@@ -1845,19 +1958,25 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/e2e-applicability.schema.json",
           "_harness/schemas/browser-evidence-bundle.schema.json",
-          "_harness/schemas/review-governance-evidence.schema.json"
+          "_harness/schemas/review-governance-evidence.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
           "_harness/policies/security-triggers.yaml",
           "_harness/policies/domain-boundaries.yaml",
           "_harness/policies/review-governance.yaml",
-          "_harness/policies/validator-catalog.yaml"
+          "_harness/policies/validator-catalog.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/validation/e2e_applicability.py",
@@ -1866,7 +1985,9 @@
           "src/standard_harness/validation/refactor_review.py",
           "src/standard_harness/validation/ai_review.py",
           "src/standard_harness/validation/review_governance.py",
-          "review-governance-validator"
+          "review-governance-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "e2e-applicability-gate",
@@ -1875,14 +1996,16 @@
           "refactor-review-gate",
           "ai-review-gate",
           "review-governance-gate",
-          "v21-conformance-gate"
+          "v21-conformance-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_e2e_applicability_gate.py",
           "tests/contract/test_security_trigger_applicability.py",
           "tests/contract/test_refactor_domain_boundary_gate.py",
           "tests/contract/test_v21_review_governance_gate.py",
-          "tests/contract/test_review_governance_closeout_gate.py"
+          "tests/contract/test_review_governance_closeout_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ],
         "evidence": [
           "review-governance-evidence",
@@ -1890,7 +2013,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10C",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
         "Existing threat model records become security review evidence only when trigger applicability passes.",
@@ -1902,7 +2025,8 @@
         "security-review-validator",
         "refactor-review-validator",
         "ai-review-validator",
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "e2e-applicability-gate",
@@ -1911,7 +2035,8 @@
         "refactor-review-gate",
         "ai-review-gate",
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "missing_e2e_applicability",
@@ -1932,15 +2057,34 @@
         "p1_review_requires_risk_acceptance",
         "missing_review_final_adjudication",
         "ai_review_cannot_release_alone",
-        "missing_required_review_governance"
+        "missing_required_review_governance",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
-      "enforcementPoint": "gate profile, validate, closeout, review-governance-gate",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
         "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics.",
         "Emit missed_review or missing_evidence when review governance is missing, stale, AI-only, or unadjudicated.",
-        "Emit review_governance_validation_count by status and finding severity."
+        "Emit review_governance_validation_count by status and finding severity.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -1970,19 +2114,25 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/e2e-applicability.schema.json",
           "_harness/schemas/browser-evidence-bundle.schema.json",
-          "_harness/schemas/review-governance-evidence.schema.json"
+          "_harness/schemas/review-governance-evidence.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
           "_harness/policies/security-triggers.yaml",
           "_harness/policies/domain-boundaries.yaml",
           "_harness/policies/review-governance.yaml",
-          "_harness/policies/validator-catalog.yaml"
+          "_harness/policies/validator-catalog.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/validation/e2e_applicability.py",
@@ -1991,7 +2141,9 @@
           "src/standard_harness/validation/refactor_review.py",
           "src/standard_harness/validation/ai_review.py",
           "src/standard_harness/validation/review_governance.py",
-          "review-governance-validator"
+          "review-governance-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "e2e-applicability-gate",
@@ -2000,14 +2152,16 @@
           "refactor-review-gate",
           "ai-review-gate",
           "review-governance-gate",
-          "v21-conformance-gate"
+          "v21-conformance-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_e2e_applicability_gate.py",
           "tests/contract/test_security_trigger_applicability.py",
           "tests/contract/test_refactor_domain_boundary_gate.py",
           "tests/contract/test_v21_review_governance_gate.py",
-          "tests/contract/test_review_governance_closeout_gate.py"
+          "tests/contract/test_review_governance_closeout_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ],
         "evidence": [
           "review-governance-evidence",
@@ -2015,7 +2169,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10C",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
         "Existing threat model records become security review evidence only when trigger applicability passes.",
@@ -2027,7 +2181,8 @@
         "security-review-validator",
         "refactor-review-validator",
         "ai-review-validator",
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "e2e-applicability-gate",
@@ -2036,7 +2191,8 @@
         "refactor-review-gate",
         "ai-review-gate",
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "missing_e2e_applicability",
@@ -2057,15 +2213,34 @@
         "p1_review_requires_risk_acceptance",
         "missing_review_final_adjudication",
         "ai_review_cannot_release_alone",
-        "missing_required_review_governance"
+        "missing_required_review_governance",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
-      "enforcementPoint": "gate profile, validate, closeout, review-governance-gate",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
         "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics.",
         "Emit missed_review or missing_evidence when review governance is missing, stale, AI-only, or unadjudicated.",
-        "Emit review_governance_validation_count by status and finding severity."
+        "Emit review_governance_validation_count by status and finding severity.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -2095,19 +2270,25 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/e2e-applicability.schema.json",
           "_harness/schemas/browser-evidence-bundle.schema.json",
-          "_harness/schemas/review-governance-evidence.schema.json"
+          "_harness/schemas/review-governance-evidence.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
           "_harness/policies/security-triggers.yaml",
           "_harness/policies/domain-boundaries.yaml",
           "_harness/policies/review-governance.yaml",
-          "_harness/policies/validator-catalog.yaml"
+          "_harness/policies/validator-catalog.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/validation/e2e_applicability.py",
@@ -2116,7 +2297,9 @@
           "src/standard_harness/validation/refactor_review.py",
           "src/standard_harness/validation/ai_review.py",
           "src/standard_harness/validation/review_governance.py",
-          "review-governance-validator"
+          "review-governance-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "e2e-applicability-gate",
@@ -2125,14 +2308,16 @@
           "refactor-review-gate",
           "ai-review-gate",
           "review-governance-gate",
-          "v21-conformance-gate"
+          "v21-conformance-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_e2e_applicability_gate.py",
           "tests/contract/test_security_trigger_applicability.py",
           "tests/contract/test_refactor_domain_boundary_gate.py",
           "tests/contract/test_v21_review_governance_gate.py",
-          "tests/contract/test_review_governance_closeout_gate.py"
+          "tests/contract/test_review_governance_closeout_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ],
         "evidence": [
           "review-governance-evidence",
@@ -2140,7 +2325,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10C",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
         "Existing threat model records become security review evidence only when trigger applicability passes.",
@@ -2152,7 +2337,8 @@
         "security-review-validator",
         "refactor-review-validator",
         "ai-review-validator",
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "e2e-applicability-gate",
@@ -2161,7 +2347,8 @@
         "refactor-review-gate",
         "ai-review-gate",
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "missing_e2e_applicability",
@@ -2182,15 +2369,34 @@
         "p1_review_requires_risk_acceptance",
         "missing_review_final_adjudication",
         "ai_review_cannot_release_alone",
-        "missing_required_review_governance"
+        "missing_required_review_governance",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
-      "enforcementPoint": "gate profile, validate, closeout, review-governance-gate",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
         "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics.",
         "Emit missed_review or missing_evidence when review governance is missing, stale, AI-only, or unadjudicated.",
-        "Emit review_governance_validation_count by status and finding severity."
+        "Emit review_governance_validation_count by status and finding severity.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -2220,19 +2426,25 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/e2e-applicability.schema.json",
           "_harness/schemas/browser-evidence-bundle.schema.json",
-          "_harness/schemas/review-governance-evidence.schema.json"
+          "_harness/schemas/review-governance-evidence.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
           "_harness/policies/security-triggers.yaml",
           "_harness/policies/domain-boundaries.yaml",
           "_harness/policies/review-governance.yaml",
-          "_harness/policies/validator-catalog.yaml"
+          "_harness/policies/validator-catalog.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/validation/e2e_applicability.py",
@@ -2241,7 +2453,9 @@
           "src/standard_harness/validation/refactor_review.py",
           "src/standard_harness/validation/ai_review.py",
           "src/standard_harness/validation/review_governance.py",
-          "review-governance-validator"
+          "review-governance-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "e2e-applicability-gate",
@@ -2250,14 +2464,16 @@
           "refactor-review-gate",
           "ai-review-gate",
           "review-governance-gate",
-          "v21-conformance-gate"
+          "v21-conformance-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_e2e_applicability_gate.py",
           "tests/contract/test_security_trigger_applicability.py",
           "tests/contract/test_refactor_domain_boundary_gate.py",
           "tests/contract/test_v21_review_governance_gate.py",
-          "tests/contract/test_review_governance_closeout_gate.py"
+          "tests/contract/test_review_governance_closeout_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ],
         "evidence": [
           "review-governance-evidence",
@@ -2265,7 +2481,7 @@
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-10C",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing browser/runtime contract tests remain adapter contract tests and are reused as browser evidence validation inputs.",
         "Existing threat model records become security review evidence only when trigger applicability passes.",
@@ -2277,7 +2493,8 @@
         "security-review-validator",
         "refactor-review-validator",
         "ai-review-validator",
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "e2e-applicability-gate",
@@ -2286,7 +2503,8 @@
         "refactor-review-gate",
         "ai-review-gate",
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "missing_e2e_applicability",
@@ -2307,15 +2525,34 @@
         "p1_review_requires_risk_acceptance",
         "missing_review_final_adjudication",
         "ai_review_cannot_release_alone",
-        "missing_required_review_governance"
+        "missing_required_review_governance",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "UI/auth/routing/core user flow E2E requirements and security trigger hard gates cannot be bypassed without rule-based N/A where allowed.",
-      "enforcementPoint": "gate profile, validate, closeout, review-governance-gate",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit missing_e2e_applicability, security_review_required, requirements_review_required, refactor_review_required, or ai_review_cannot_replace_deterministic_evidence when blocked.",
         "Emit e2e_applicability_count, security_review_gate_count, requirements_review_count, refactor_review_count, and ai_review_validation_count metrics.",
         "Emit missed_review or missing_evidence when review governance is missing, stale, AI-only, or unadjudicated.",
-        "Emit review_governance_validation_count by status and finding severity."
+        "Emit review_governance_validation_count by status and finding severity.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -2436,28 +2673,37 @@
         "_ops/wiki/deprecated-context.md",
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/wiki_knowledge.py",
-        "src/standard_harness/completion/v21_conformance.py"
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/wiki-proposal.schema.json",
           "_harness/schemas/wiki-page.schema.json",
-          "_harness/schemas/wiki-index.schema.json"
+          "_harness/schemas/wiki-index.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
-          "_harness/policies/wiki-knowledge-policy.yaml"
+          "_harness/policies/wiki-knowledge-policy.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/wiki/validator.py",
           "src/standard_harness/wiki/provenance.py",
           "src/standard_harness/validation/aggregator.py",
           "src/standard_harness/validation/wiki_knowledge.py",
-          "wiki-knowledge-validator"
+          "wiki-knowledge-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "wiki-proposal-gate",
           "wiki-apply-gate",
-          "wiki-governance-gate"
+          "wiki-governance-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_closeout_documenter_report.py",
@@ -2467,11 +2713,12 @@
           "tests/contract/test_wiki_index_contract.py",
           "tests/contract/test_wiki_provenance_required.py",
           "tests/contract/test_skill_facing_index_is_projection_only.py",
-          "tests/contract/test_wiki_knowledge_release_gate.py"
+          "tests/contract/test_wiki_knowledge_release_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-05B",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing operational memory remains source evidence and is not direct Wiki state.",
         "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
@@ -2481,12 +2728,14 @@
       "releaseBlockingValidators": [
         "wiki-proposal-validator",
         "wiki-provenance-validator",
-        "wiki-knowledge-validator"
+        "wiki-knowledge-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "wiki-proposal-gate",
         "wiki-apply-gate",
-        "wiki-governance-gate"
+        "wiki-governance-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "invalid_wiki_proposal",
@@ -2500,15 +2749,34 @@
         "stale_wiki_reference",
         "wiki_authority_override",
         "skill_facing_index_authority_violation",
-        "invalid_wiki_index"
+        "invalid_wiki_index",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
-      "enforcementPoint": "validate --release, validate --v21-conformance, wiki proposal, wiki apply",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
         "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics.",
         "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
-        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -2713,28 +2981,37 @@
         "_ops/wiki/deprecated-context.md",
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/wiki_knowledge.py",
-        "src/standard_harness/completion/v21_conformance.py"
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/wiki-proposal.schema.json",
           "_harness/schemas/wiki-page.schema.json",
-          "_harness/schemas/wiki-index.schema.json"
+          "_harness/schemas/wiki-index.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
-          "_harness/policies/wiki-knowledge-policy.yaml"
+          "_harness/policies/wiki-knowledge-policy.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/wiki/validator.py",
           "src/standard_harness/wiki/provenance.py",
           "src/standard_harness/validation/aggregator.py",
           "src/standard_harness/validation/wiki_knowledge.py",
-          "wiki-knowledge-validator"
+          "wiki-knowledge-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "wiki-proposal-gate",
           "wiki-apply-gate",
-          "wiki-governance-gate"
+          "wiki-governance-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_closeout_documenter_report.py",
@@ -2744,11 +3021,12 @@
           "tests/contract/test_wiki_index_contract.py",
           "tests/contract/test_wiki_provenance_required.py",
           "tests/contract/test_skill_facing_index_is_projection_only.py",
-          "tests/contract/test_wiki_knowledge_release_gate.py"
+          "tests/contract/test_wiki_knowledge_release_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-05B",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing operational memory remains source evidence and is not direct Wiki state.",
         "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
@@ -2758,12 +3036,14 @@
       "releaseBlockingValidators": [
         "wiki-proposal-validator",
         "wiki-provenance-validator",
-        "wiki-knowledge-validator"
+        "wiki-knowledge-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "wiki-proposal-gate",
         "wiki-apply-gate",
-        "wiki-governance-gate"
+        "wiki-governance-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "invalid_wiki_proposal",
@@ -2777,15 +3057,34 @@
         "stale_wiki_reference",
         "wiki_authority_override",
         "skill_facing_index_authority_violation",
-        "invalid_wiki_index"
+        "invalid_wiki_index",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
-      "enforcementPoint": "validate --release, validate --v21-conformance, wiki proposal, wiki apply",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
         "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics.",
         "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
-        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -2816,28 +3115,37 @@
         "_ops/wiki/deprecated-context.md",
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/wiki_knowledge.py",
-        "src/standard_harness/completion/v21_conformance.py"
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/wiki-proposal.schema.json",
           "_harness/schemas/wiki-page.schema.json",
-          "_harness/schemas/wiki-index.schema.json"
+          "_harness/schemas/wiki-index.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "policy": [
-          "_harness/policies/wiki-knowledge-policy.yaml"
+          "_harness/policies/wiki-knowledge-policy.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/wiki/validator.py",
           "src/standard_harness/wiki/provenance.py",
           "src/standard_harness/validation/aggregator.py",
           "src/standard_harness/validation/wiki_knowledge.py",
-          "wiki-knowledge-validator"
+          "wiki-knowledge-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "wiki-proposal-gate",
           "wiki-apply-gate",
-          "wiki-governance-gate"
+          "wiki-governance-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_closeout_documenter_report.py",
@@ -2847,11 +3155,12 @@
           "tests/contract/test_wiki_index_contract.py",
           "tests/contract/test_wiki_provenance_required.py",
           "tests/contract/test_skill_facing_index_is_projection_only.py",
-          "tests/contract/test_wiki_knowledge_release_gate.py"
+          "tests/contract/test_wiki_knowledge_release_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-05B",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing operational memory remains source evidence and is not direct Wiki state.",
         "Existing closeout rows can be used as source evidence for generated closeout reports after evidence trust migration.",
@@ -2861,12 +3170,14 @@
       "releaseBlockingValidators": [
         "wiki-proposal-validator",
         "wiki-provenance-validator",
-        "wiki-knowledge-validator"
+        "wiki-knowledge-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "wiki-proposal-gate",
         "wiki-apply-gate",
-        "wiki-governance-gate"
+        "wiki-governance-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "invalid_wiki_proposal",
@@ -2880,15 +3191,34 @@
         "stale_wiki_reference",
         "wiki_authority_override",
         "skill_facing_index_authority_violation",
-        "invalid_wiki_index"
+        "invalid_wiki_index",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Wiki authority override and skill/release authorization violations are non-waivable. Current Wiki pages require trusted provenance and canonical sources, or must be downgraded from current.",
-      "enforcementPoint": "validate --release, validate --v21-conformance, wiki proposal, wiki apply",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit docs_drift or stale_context when wiki content is missing provenance, stale, generated, or low authority.",
         "Emit wiki_proposal_validation_count, wiki_apply_count, wiki_index_page_count, and closeout_report_generated metrics.",
         "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
-        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics."
+        "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -2972,22 +3302,30 @@
         "src/standard_harness/completion/coverage.py",
         "src/standard_harness/validation/executable_release.py",
         "_harness/policies/release-behavior-probes.yaml",
-        "_ops/evidence/release/v21-executable-release-gate.json"
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
-          "_harness/schemas/starter-promotion-candidate.schema.json"
+          "_harness/schemas/starter-promotion-candidate.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "validator": [
           "src/standard_harness/self_improvement/recurring.py",
           "src/standard_harness/self_improvement/starter_promotion.py",
           "src/standard_harness/metrics/success.py",
           "src/standard_harness/validation/executable_release.py",
-          "executable-release-validator"
+          "executable-release-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "compound-engineering-gate",
-          "executable-release-gate"
+          "executable-release-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_recurring_friction_detector.py",
@@ -2995,14 +3333,16 @@
           "tests/contract/test_starter_promotion_candidate_registry.py",
           "tests/contract/test_compound_event_replay_compatibility.py",
           "tests/evals/test_compound_engineering_required_for_v1_completion.py",
-          "tests/contract/test_executable_release_gate.py"
+          "tests/contract/test_executable_release_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ],
         "policy": [
-          "_harness/policies/release-behavior-probes.yaml"
+          "_harness/policies/release-behavior-probes.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-ReleaseA",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing friction_records map to friction.signal records.",
         "Existing improvement proposals retain disposition and can feed starter promotion candidates.",
@@ -3012,11 +3352,13 @@
         "recurring-friction-detector",
         "success-metrics-reporter",
         "starter-promotion-candidate-validator",
-        "executable-release-validator"
+        "executable-release-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "compound-engineering-gate",
-        "executable-release-gate"
+        "executable-release-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "recurring_friction_detected",
@@ -3029,15 +3371,34 @@
         "invalid_release_gate_result_shape",
         "missing_required_release_validator_family",
         "missing_release_probe_evidence",
-        "release_behavior_probe_failed"
+        "release_behavior_probe_failed",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Executable release probe coverage for release-blocking validators is non-waivable for V2.1 closeout.",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
       "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit recurring_friction_detected and missing_starter_promotion_evidence when blocked.",
         "Emit recurring_friction_count, starter_promotion_candidate_count, and success_metrics_report_generated metrics.",
         "Emit missing_evidence or docs_implementation_mismatch when release behavior probes are missing, malformed, unexercised, or fail to block invalid fixtures.",
-        "Emit releaseValidatorProbeCoverage and release_behavior_probe_count by validator family."
+        "Emit releaseValidatorProbeCoverage and release_behavior_probe_count by validator family.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -3819,7 +4180,11 @@
         "docs/release/release-packaging-hygiene-v21.md",
         "tools/release_archive.py",
         "tools/run_full_regression.py",
-        "src/standard_harness/starter/contamination.py"
+        "src/standard_harness/starter/contamination.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "manual": [
@@ -3829,16 +4194,20 @@
           "docs/release/final-product-docs-command-inventory-v1.md"
         ],
         "policy": [
-          "_harness/policies/evidence-classification.yaml"
+          "_harness/policies/evidence-classification.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/docsops/command_inventory.py",
-          "src/standard_harness/validation/sensitive_evidence.py"
+          "src/standard_harness/validation/sensitive_evidence.py",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "manual-command-gate",
           "sensitive-evidence-gate",
-          "starter-boundary-gate"
+          "starter-boundary-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_release_packaging_hygiene.py",
@@ -3848,11 +4217,15 @@
           "tests/contract/test_full_regression_runner_records_last_test.py",
           "tests/contract/test_manual_runbook_command_validation.py",
           "tests/contract/test_sensitive_evidence_classification.py",
-          "tests/contract/test_starter_boundary.py"
+          "tests/contract/test_starter_boundary.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
+        ],
+        "schema": [
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-PackagingA",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing command inventory remains valid and now includes docs/manual source scope.",
         "Existing starter contamination checks remain part of starter boundary validation.",
@@ -3862,25 +4235,46 @@
       "releaseBlockingValidators": [
         "manual-command-inventory-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "manual-command-gate",
         "sensitive-evidence-gate",
-        "starter-boundary-gate"
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "missing_command_inventory_entry",
         "stale_command_inventory",
         "secret_evidence_registered",
         "sensitive_handoff_requires_redaction",
-        "starter_contamination"
+        "starter_contamination",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Outdated command on command/install/closeout path blocks release. SECRET evidence in handoff context blocks release.",
-      "enforcementPoint": "manual command validation, evidence registration, handoff context, starter validation",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit missing_command_inventory_entry, stale_command_inventory, secret_evidence_registered, or sensitive_handoff_requires_redaction when blocked.",
-        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification."
+        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -3897,7 +4291,11 @@
         "src/standard_harness/validation/sensitive_evidence.py",
         "src/standard_harness/docsops/command_inventory.py",
         "docs/release/final-product-docs-command-inventory-v1.md",
-        "src/standard_harness/starter/contamination.py"
+        "src/standard_harness/starter/contamination.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "manual": [
@@ -3905,25 +4303,33 @@
           "docs/manual/standard-harness-troubleshooting-v21.md"
         ],
         "policy": [
-          "_harness/policies/evidence-classification.yaml"
+          "_harness/policies/evidence-classification.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/docsops/command_inventory.py",
-          "src/standard_harness/validation/sensitive_evidence.py"
+          "src/standard_harness/validation/sensitive_evidence.py",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "manual-command-gate",
           "sensitive-evidence-gate",
-          "starter-boundary-gate"
+          "starter-boundary-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_manual_runbook_command_validation.py",
           "tests/contract/test_sensitive_evidence_classification.py",
-          "tests/contract/test_starter_boundary.py"
+          "tests/contract/test_starter_boundary.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
+        ],
+        "schema": [
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-08",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing command inventory remains valid and now includes docs/manual source scope.",
         "Existing starter contamination checks remain part of starter boundary validation.",
@@ -3932,25 +4338,46 @@
       "releaseBlockingValidators": [
         "manual-command-inventory-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "manual-command-gate",
         "sensitive-evidence-gate",
-        "starter-boundary-gate"
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "missing_command_inventory_entry",
         "stale_command_inventory",
         "secret_evidence_registered",
         "sensitive_handoff_requires_redaction",
-        "starter_contamination"
+        "starter_contamination",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Outdated command on command/install/closeout path blocks release. SECRET evidence in handoff context blocks release.",
-      "enforcementPoint": "manual command validation, evidence registration, handoff context, starter validation",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit missing_command_inventory_entry, stale_command_inventory, secret_evidence_registered, or sensitive_handoff_requires_redaction when blocked.",
-        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification."
+        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -4223,7 +4650,11 @@
         "src/standard_harness/docsops/command_inventory.py",
         "docs/release/final-product-docs-command-inventory-v1.md",
         "src/standard_harness/starter/contamination.py",
-        "src/standard_harness/domain/evidence.py"
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "manual": [
@@ -4231,27 +4662,35 @@
           "docs/manual/standard-harness-troubleshooting-v21.md"
         ],
         "policy": [
-          "_harness/policies/evidence-classification.yaml"
+          "_harness/policies/evidence-classification.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/docsops/command_inventory.py",
           "src/standard_harness/validation/sensitive_evidence.py",
-          "sensitive-evidence-validator"
+          "sensitive-evidence-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "manual-command-gate",
           "sensitive-evidence-gate",
-          "starter-boundary-gate"
+          "starter-boundary-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_manual_runbook_command_validation.py",
           "tests/contract/test_sensitive_evidence_classification.py",
           "tests/contract/test_starter_boundary.py",
-          "tests/evals/test_secret_evidence_registration_uses_store_root.py"
+          "tests/evals/test_secret_evidence_registration_uses_store_root.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
+        ],
+        "schema": [
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-SecurityA",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing command inventory remains valid and now includes docs/manual source scope.",
         "Existing starter contamination checks remain part of starter boundary validation.",
@@ -4260,25 +4699,46 @@
       "releaseBlockingValidators": [
         "manual-command-inventory-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "manual-command-gate",
         "sensitive-evidence-gate",
-        "starter-boundary-gate"
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "missing_command_inventory_entry",
         "stale_command_inventory",
         "secret_evidence_registered",
         "sensitive_handoff_requires_redaction",
-        "starter_contamination"
+        "starter_contamination",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Outdated command on command/install/closeout path blocks release. SECRET evidence in handoff context blocks release.",
-      "enforcementPoint": "manual command validation, evidence registration, handoff context, starter validation",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit missing_command_inventory_entry, stale_command_inventory, secret_evidence_registered, or sensitive_handoff_requires_redaction when blocked.",
-        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification."
+        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -4296,7 +4756,11 @@
         "src/standard_harness/docsops/command_inventory.py",
         "docs/release/final-product-docs-command-inventory-v1.md",
         "src/standard_harness/starter/contamination.py",
-        "src/standard_harness/domain/evidence.py"
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "manual": [
@@ -4304,27 +4768,35 @@
           "docs/manual/standard-harness-troubleshooting-v21.md"
         ],
         "policy": [
-          "_harness/policies/evidence-classification.yaml"
+          "_harness/policies/evidence-classification.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "validator": [
           "src/standard_harness/docsops/command_inventory.py",
           "src/standard_harness/validation/sensitive_evidence.py",
-          "sensitive-evidence-validator"
+          "sensitive-evidence-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "manual-command-gate",
           "sensitive-evidence-gate",
-          "starter-boundary-gate"
+          "starter-boundary-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_manual_runbook_command_validation.py",
           "tests/contract/test_sensitive_evidence_classification.py",
           "tests/contract/test_starter_boundary.py",
-          "tests/evals/test_secret_evidence_registration_uses_store_root.py"
+          "tests/evals/test_secret_evidence_registration_uses_store_root.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
+        ],
+        "schema": [
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-SecurityA",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing command inventory remains valid and now includes docs/manual source scope.",
         "Existing starter contamination checks remain part of starter boundary validation.",
@@ -4333,25 +4805,46 @@
       "releaseBlockingValidators": [
         "manual-command-inventory-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "manual-command-gate",
         "sensitive-evidence-gate",
-        "starter-boundary-gate"
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "missing_command_inventory_entry",
         "stale_command_inventory",
         "secret_evidence_registered",
         "sensitive_handoff_requires_redaction",
-        "starter_contamination"
+        "starter_contamination",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Outdated command on command/install/closeout path blocks release. SECRET evidence in handoff context blocks release.",
-      "enforcementPoint": "manual command validation, evidence registration, handoff context, starter validation",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
+      "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit missing_command_inventory_entry, stale_command_inventory, secret_evidence_registered, or sensitive_handoff_requires_redaction when blocked.",
-        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification."
+        "Emit manual_command_validation_count and sensitive_evidence_validation_count by target and classification.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -4395,7 +4888,11 @@
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/executable_release.py",
         "_harness/policies/release-behavior-probes.yaml",
-        "_ops/evidence/release/v21-executable-release-gate.json"
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "validator": [
@@ -4416,7 +4913,9 @@
           "src/standard_harness/validation/wiki_knowledge.py",
           "wiki-knowledge-validator",
           "src/standard_harness/validation/executable_release.py",
-          "executable-release-validator"
+          "executable-release-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "requirements-baseline-gate",
@@ -4424,7 +4923,8 @@
           "v21-conformance-gate",
           "review-governance-gate",
           "wiki-governance-gate",
-          "executable-release-gate"
+          "executable-release-gate",
+          "v21-final-closeout-gate"
         ],
         "evidence": [
           "_ops/evidence/release/v21-full-regression.json",
@@ -4471,20 +4971,23 @@
           "tests/contract/test_v21_review_governance_gate.py",
           "tests/contract/test_review_governance_closeout_gate.py",
           "tests/contract/test_wiki_knowledge_release_gate.py",
-          "tests/contract/test_executable_release_gate.py"
+          "tests/contract/test_executable_release_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml",
           "_harness/policies/review-governance.yaml",
           "_harness/policies/wiki-knowledge-policy.yaml",
-          "_harness/policies/release-behavior-probes.yaml"
+          "_harness/policies/release-behavior-probes.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ],
         "schema": [
-          "_harness/schemas/review-governance-evidence.schema.json"
+          "_harness/schemas/review-governance-evidence.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-ReleaseA",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4496,13 +4999,15 @@
         "success-metrics-reporter",
         "review-governance-validator",
         "wiki-knowledge-validator",
-        "executable-release-validator"
+        "executable-release-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "v21-conformance-gate",
         "review-governance-gate",
         "wiki-governance-gate",
-        "executable-release-gate"
+        "executable-release-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "incomplete_hr_coverage",
@@ -4551,9 +5056,24 @@
         "invalid_release_gate_result_shape",
         "missing_required_release_validator_family",
         "missing_release_probe_evidence",
-        "release_behavior_probe_failed"
+        "release_behavior_probe_failed",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Executable release probe coverage for release-blocking validators is non-waivable for V2.1 closeout.",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
       "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit v21_conformance_blocked when release conformance fails.",
@@ -4563,7 +5083,11 @@
         "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
         "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics.",
         "Emit missing_evidence or docs_implementation_mismatch when release behavior probes are missing, malformed, unexercised, or fail to block invalid fixtures.",
-        "Emit releaseValidatorProbeCoverage and release_behavior_probe_count by validator family."
+        "Emit releaseValidatorProbeCoverage and release_behavior_probe_count by validator family.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -4609,12 +5133,17 @@
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/executable_release.py",
         "_harness/policies/release-behavior-probes.yaml",
-        "_ops/evidence/release/v21-executable-release-gate.json"
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/gate-result.schema.json",
-          "_harness/schemas/review-governance-evidence.schema.json"
+          "_harness/schemas/review-governance-evidence.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "validator": [
           "src/standard_harness/domain/gates.py",
@@ -4632,14 +5161,17 @@
           "src/standard_harness/validation/wiki_knowledge.py",
           "wiki-knowledge-validator",
           "src/standard_harness/validation/executable_release.py",
-          "executable-release-validator"
+          "executable-release-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "packet-kernel-gate",
           "v21-conformance-gate",
           "review-governance-gate",
           "wiki-governance-gate",
-          "executable-release-gate"
+          "executable-release-gate",
+          "v21-final-closeout-gate"
         ],
         "evidence": [
           "gate-result",
@@ -4676,17 +5208,19 @@
           "tests/contract/test_v21_review_governance_gate.py",
           "tests/contract/test_review_governance_closeout_gate.py",
           "tests/contract/test_wiki_knowledge_release_gate.py",
-          "tests/contract/test_executable_release_gate.py"
+          "tests/contract/test_executable_release_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml",
           "_harness/policies/review-governance.yaml",
           "_harness/policies/wiki-knowledge-policy.yaml",
-          "_harness/policies/release-behavior-probes.yaml"
+          "_harness/policies/release-behavior-probes.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-ReleaseA",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "releaseBlockingValidators": [
         "challenge-review-evidence-validator",
         "v21-conformance-validator",
@@ -4698,13 +5232,15 @@
         "success-metrics-reporter",
         "review-governance-validator",
         "wiki-knowledge-validator",
-        "executable-release-validator"
+        "executable-release-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "v21-conformance-gate",
         "review-governance-gate",
         "wiki-governance-gate",
-        "executable-release-gate"
+        "executable-release-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "incomplete_hr_coverage",
@@ -4753,9 +5289,24 @@
         "invalid_release_gate_result_shape",
         "missing_required_release_validator_family",
         "missing_release_probe_evidence",
-        "release_behavior_probe_failed"
+        "release_behavior_probe_failed",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Executable release probe coverage for release-blocking validators is non-waivable for V2.1 closeout.",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
       "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit v21_conformance_blocked when release conformance fails.",
@@ -4765,7 +5316,11 @@
         "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
         "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics.",
         "Emit missing_evidence or docs_implementation_mismatch when release behavior probes are missing, malformed, unexercised, or fail to block invalid fixtures.",
-        "Emit releaseValidatorProbeCoverage and release_behavior_probe_count by validator family."
+        "Emit releaseValidatorProbeCoverage and release_behavior_probe_count by validator family.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     },
     {
@@ -4798,12 +5353,17 @@
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/executable_release.py",
         "_harness/policies/release-behavior-probes.yaml",
-        "_ops/evidence/release/v21-executable-release-gate.json"
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "targetArtifacts": {
         "schema": [
           "_harness/schemas/friction-signal.schema.json",
-          "_harness/schemas/starter-promotion-candidate.schema.json"
+          "_harness/schemas/starter-promotion-candidate.schema.json",
+          "_harness/schemas/final-closeout-evidence.schema.json"
         ],
         "validator": [
           "src/standard_harness/self_improvement/recurring.py",
@@ -4814,13 +5374,16 @@
           "src/standard_harness/validation/wiki_knowledge.py",
           "wiki-knowledge-validator",
           "src/standard_harness/validation/executable_release.py",
-          "executable-release-validator"
+          "executable-release-validator",
+          "src/standard_harness/validation/final_closeout.py",
+          "final-closeout-validator"
         ],
         "gate": [
           "compound-engineering-gate",
           "v21-conformance-gate",
           "wiki-governance-gate",
-          "executable-release-gate"
+          "executable-release-gate",
+          "v21-final-closeout-gate"
         ],
         "tests": [
           "tests/contract/test_recurring_friction_detector.py",
@@ -4842,16 +5405,18 @@
           "tests/contract/test_hr200_metrics_source_watermark.py",
           "tests/contract/test_v21_conformance_blocks_stale_hr200_metrics.py",
           "tests/contract/test_wiki_knowledge_release_gate.py",
-          "tests/contract/test_executable_release_gate.py"
+          "tests/contract/test_executable_release_gate.py",
+          "tests/contract/test_v21_final_closeout_gate.py"
         ],
         "policy": [
           "_harness/policies/validator-catalog.yaml",
           "_harness/policies/wiki-knowledge-policy.yaml",
-          "_harness/policies/release-behavior-probes.yaml"
+          "_harness/policies/release-behavior-probes.yaml",
+          "_harness/policies/final-closeout-policy.yaml"
         ]
       },
       "releaseBlocking": true,
-      "lastUpdatedByPacket": "XP-ReleaseA",
+      "lastUpdatedByPacket": "XP-FinalCloseoutA",
       "migrationCompatibility": [
         "Existing friction_records map to friction.signal records.",
         "Existing improvement proposals retain disposition and can feed starter promotion candidates.",
@@ -4866,13 +5431,15 @@
         "v21-conformance-validator",
         "validator-catalog-validator",
         "wiki-knowledge-validator",
-        "executable-release-validator"
+        "executable-release-validator",
+        "final-closeout-validator"
       ],
       "releaseBlockingGates": [
         "compound-engineering-gate",
         "v21-conformance-gate",
         "wiki-governance-gate",
-        "executable-release-gate"
+        "executable-release-gate",
+        "v21-final-closeout-gate"
       ],
       "diagnostics": [
         "recurring_friction_detected",
@@ -4904,9 +5471,24 @@
         "invalid_release_gate_result_shape",
         "missing_required_release_validator_family",
         "missing_release_probe_evidence",
-        "release_behavior_probe_failed"
+        "release_behavior_probe_failed",
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
       ],
-      "waiverPolicy": "Executable release probe coverage for release-blocking validators is non-waivable for V2.1 closeout.",
+      "waiverPolicy": "V2.1 final closeout evidence and clean release verification are non-waivable for release completion.",
       "enforcementPoint": "validate --release, validate --v21-conformance",
       "frictionMetricBehavior": [
         "Emit recurring_friction_detected and missing_starter_promotion_evidence when blocked.",
@@ -4916,7 +5498,11 @@
         "Emit docs_drift, stale_context, or lost_long_term_context when Wiki knowledge validation blocks release.",
         "Emit wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics.",
         "Emit missing_evidence or docs_implementation_mismatch when release behavior probes are missing, malformed, unexercised, or fail to block invalid fixtures.",
-        "Emit releaseValidatorProbeCoverage and release_behavior_probe_count by validator family."
+        "Emit releaseValidatorProbeCoverage and release_behavior_probe_count by validator family.",
+        "Emit missing_closeout when final closeout evidence is absent.",
+        "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+        "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence.",
+        "Emit finalCloseoutVerificationCoverage as an HR-200 metric signal."
       ]
     }
   ],
@@ -5082,6 +5668,29 @@
       ],
       "waivable": false,
       "enforcementPoint": "validate --release, validate --v21-conformance"
+    },
+    {
+      "validator": "final-closeout-validator",
+      "gateId": "v21-final-closeout-gate",
+      "diagnosticIds": [
+        "missing_final_closeout_evidence",
+        "invalid_final_closeout_evidence",
+        "stale_final_closeout_evidence",
+        "missing_final_closeout_verification",
+        "missing_release_gate_verification",
+        "missing_review_governance_verification",
+        "missing_wiki_knowledge_verification",
+        "missing_hr200_metrics_verification",
+        "missing_security_boundary_verification",
+        "missing_executable_release_probe_verification",
+        "missing_full_regression_verification",
+        "stale_full_regression_evidence",
+        "missing_clean_hygiene_verification",
+        "final_closeout_unresolved_blocker",
+        "invalid_final_closeout_gate_result_metadata"
+      ],
+      "waivable": false,
+      "enforcementPoint": "validate --release, validate --v21-conformance"
     }
   ],
   "frictionMetricBehavior": {
@@ -5098,6 +5707,8 @@
     "xp05bFriction": "Wiki knowledge validator emits or reserves docs_drift, stale_context, and lost_long_term_context when wiki projection authority or provenance blocks release.",
     "xp05bMetric": "Wiki knowledge validator emits or reserves wiki_knowledge_validation_count, wiki_current_page_provenance_ratio, and stale_wiki_reference_count metrics.",
     "xpReleaseAFriction": "Executable release validator emits missing_evidence or docs_implementation_mismatch when release-blocking validator behavior probes are missing, malformed, or do not block invalid fixtures.",
-    "xpReleaseAMetric": "Executable release validator emits releaseValidatorProbeCoverage and release_behavior_probe_count by validator family."
+    "xpReleaseAMetric": "Executable release validator emits releaseValidatorProbeCoverage and release_behavior_probe_count by validator family.",
+    "xpFinalCloseoutAFriction": "Final closeout validator emits missing_closeout, missing_evidence, stale_context, or docs_drift when release closeout evidence is absent, incomplete, stale, or contradicted by generated-state hygiene.",
+    "xpFinalCloseoutAMetric": "Final closeout validator emits finalCloseoutVerificationCoverage from required release verification domains."
   }
 }

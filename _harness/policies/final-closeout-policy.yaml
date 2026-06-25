@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "final-closeout-policy",
+  "validatorId": "final-closeout-validator",
+  "gateId": "v21-final-closeout-gate",
+  "requiredVerifications": [
+    "releaseGate",
+    "reviewGovernance",
+    "wikiKnowledge",
+    "hr200Metrics",
+    "securityBoundary",
+    "executableReleaseProbes",
+    "fullRegression",
+    "cleanHygiene"
+  ],
+  "nonWaivableDiagnostics": [
+    "missing_final_closeout_evidence",
+    "invalid_final_closeout_evidence",
+    "stale_final_closeout_evidence",
+    "missing_final_closeout_verification",
+    "missing_release_gate_verification",
+    "missing_review_governance_verification",
+    "missing_wiki_knowledge_verification",
+    "missing_hr200_metrics_verification",
+    "missing_security_boundary_verification",
+    "missing_executable_release_probe_verification",
+    "missing_full_regression_verification",
+    "stale_full_regression_evidence",
+    "missing_clean_hygiene_verification",
+    "final_closeout_unresolved_blocker",
+    "invalid_final_closeout_gate_result_metadata"
+  ],
+  "frictionSignalBehavior": {
+    "missingCloseout": "Emit missing_closeout when final closeout evidence is absent.",
+    "missingEvidence": "Emit missing_evidence when required final closeout evidence path, hash, command, or result is absent.",
+    "staleEvidence": "Emit stale_context or docs_drift when final closeout references stale commit-bound evidence."
+  },
+  "metricSignalBehavior": {
+    "metricId": "finalCloseoutVerificationCoverage",
+    "target": 1.0,
+    "unit": "ratio"
+  }
+}

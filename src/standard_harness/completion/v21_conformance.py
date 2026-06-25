@@ -9,6 +9,7 @@ from typing import Any
 from standard_harness.validation.catalog import ValidatorCatalog
 from standard_harness.validation.challenge_review_evidence import ChallengeReviewEvidenceValidator
 from standard_harness.validation.executable_release import ExecutableReleaseValidator
+from standard_harness.validation.final_closeout import FinalCloseoutValidator
 from standard_harness.validation.review_governance import ReviewGovernanceValidator
 from standard_harness.validation.wiki_knowledge import WikiKnowledgeValidator
 from standard_harness.release.evidence import load_full_regression_evidence, missing_full_regression_fields
@@ -65,6 +66,7 @@ class V21ConformanceGate:
         diagnostics.extend(self._review_governance_diagnostics())
         diagnostics.extend(self._wiki_knowledge_diagnostics())
         diagnostics.extend(self._executable_release_diagnostics())
+        diagnostics.extend(self._final_closeout_diagnostics())
         diagnostics.extend(self._release_doc_diagnostics())
         return {
             "status": "pass" if not diagnostics else "blocked",
@@ -171,6 +173,10 @@ class V21ConformanceGate:
 
     def _executable_release_diagnostics(self) -> list[str]:
         result = ExecutableReleaseValidator(self.repo_root).validate_release()
+        return list(result["diagnostic_ids"])
+
+    def _final_closeout_diagnostics(self) -> list[str]:
+        result = FinalCloseoutValidator(self.repo_root).validate_release()
         return list(result["diagnostic_ids"])
 
     def _release_doc_diagnostics(self) -> list[str]:

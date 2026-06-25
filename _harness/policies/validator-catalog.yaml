@@ -564,6 +564,49 @@
       }
     },
     {
+      "validatorId": "final-closeout-validator",
+      "hrIds": [
+        "HR-041R",
+        "HR-043",
+        "HR-044",
+        "HR-070R",
+        "HR-071R",
+        "HR-080R",
+        "HR-081R",
+        "HR-100R",
+        "HR-110R",
+        "HR-111R",
+        "HR-120R",
+        "HR-170R",
+        "HR-171R",
+        "HR-185",
+        "HR-186",
+        "HR-190R",
+        "HR-191",
+        "HR-200"
+      ],
+      "gateId": "v21-final-closeout-gate",
+      "implementation": "standard_harness.validation.final_closeout:FinalCloseoutValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "v21-final-closeout-gate",
+        "validatorId": "final-closeout-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
       "validatorId": "executable-release-validator",
       "hrIds": [
         "HR-120R",

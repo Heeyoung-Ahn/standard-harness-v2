@@ -360,6 +360,22 @@
         ],
         "releaseBlocking": true
       }
+    },
+    {
+      "validatorId": "final-closeout-validator",
+      "family": "release-evidence",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "v21-final-closeout-gate",
+        "validatorId": "final-closeout-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
     }
   ]
 }

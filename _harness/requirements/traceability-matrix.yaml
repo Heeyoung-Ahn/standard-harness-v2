@@ -748,37 +748,48 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "evidence.schema.json",
-        "_harness/schemas/review-governance-evidence.schema.json"
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
         "evidence-trust-policy",
         "_harness/policies/review-governance.yaml",
-        "_harness/policies/validator-catalog.yaml"
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "evidence-trust-validator",
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "evidence-trust-gate",
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "trusted-test-evidence",
         "review-governance-evidence",
-        "gate-result"
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_evidence_trust_model_v02",
         "tests.contract.test_evidence_trust_migration_compatibility",
         "tests.evals.test_manual_only_evidence_cannot_closeout",
         "tests.contract.test_v21_review_governance_gate",
-        "tests.contract.test_review_governance_closeout_gate"
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -830,28 +841,39 @@
         "src/standard_harness/state/migrations.py",
         "src/standard_harness/state/replay.py",
         "src/standard_harness/state/audit.py",
-        "src/standard_harness/validation/aggregator.py"
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
-        "evidence.schema.json"
+        "evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
-        "evidence-trust-policy"
+        "evidence-trust-policy",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
-        "evidence-trust-validator"
+        "evidence-trust-validator",
+        "final-closeout-validator"
       ],
       "gates": [
-        "evidence-trust-gate"
+        "evidence-trust-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
-        "evidence-record"
+        "evidence-record",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_evidence_trust_model_v02",
         "tests.contract.test_evidence_trust_migration_compatibility",
         "tests.evals.test_manual_only_evidence_cannot_closeout",
-        "tests.evals.test_forged_trusted_ci_cannot_closeout"
+        "tests.evals.test_forged_trusted_ci_cannot_closeout",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -869,28 +891,39 @@
         "src/standard_harness/state/migrations.py",
         "src/standard_harness/state/replay.py",
         "src/standard_harness/state/audit.py",
-        "src/standard_harness/validation/aggregator.py"
+        "src/standard_harness/validation/aggregator.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
-        "evidence.schema.json"
+        "evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
-        "evidence-trust-policy"
+        "evidence-trust-policy",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
-        "evidence-trust-validator"
+        "evidence-trust-validator",
+        "final-closeout-validator"
       ],
       "gates": [
-        "evidence-trust-gate"
+        "evidence-trust-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
-        "evidence-trust-policy"
+        "evidence-trust-policy",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_evidence_trust_model_v02",
         "tests.contract.test_evidence_trust_migration_compatibility",
         "tests.evals.test_manual_only_evidence_cannot_closeout",
-        "tests.evals.test_forged_trusted_ci_cannot_closeout"
+        "tests.evals.test_forged_trusted_ci_cannot_closeout",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1265,18 +1298,24 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "_harness/schemas/e2e-applicability.schema.json",
         "_harness/schemas/browser-evidence-bundle.schema.json",
-        "_harness/schemas/review-governance-evidence.schema.json"
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
         "_harness/policies/security-triggers.yaml",
         "_harness/policies/domain-boundaries.yaml",
         "_harness/policies/review-governance.yaml",
-        "_harness/policies/validator-catalog.yaml"
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "e2e-applicability-validator",
@@ -1284,7 +1323,8 @@
         "security-review-validator",
         "refactor-review-validator",
         "ai-review-validator",
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "e2e-applicability-gate",
@@ -1293,7 +1333,8 @@
         "refactor-review-gate",
         "ai-review-gate",
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "browser-evidence-bundle",
@@ -1302,14 +1343,17 @@
         "refactor-review-result",
         "ai-review-result",
         "review-governance-evidence",
-        "gate-result"
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_e2e_applicability_gate",
         "tests.contract.test_security_trigger_applicability",
         "tests.contract.test_refactor_domain_boundary_gate",
         "tests.contract.test_v21_review_governance_gate",
-        "tests.contract.test_review_governance_closeout_gate"
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1337,18 +1381,24 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "_harness/schemas/e2e-applicability.schema.json",
         "_harness/schemas/browser-evidence-bundle.schema.json",
-        "_harness/schemas/review-governance-evidence.schema.json"
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
         "_harness/policies/security-triggers.yaml",
         "_harness/policies/domain-boundaries.yaml",
         "_harness/policies/review-governance.yaml",
-        "_harness/policies/validator-catalog.yaml"
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "e2e-applicability-validator",
@@ -1356,7 +1406,8 @@
         "security-review-validator",
         "refactor-review-validator",
         "ai-review-validator",
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "e2e-applicability-gate",
@@ -1365,7 +1416,8 @@
         "refactor-review-gate",
         "ai-review-gate",
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "browser-evidence-bundle",
@@ -1374,14 +1426,17 @@
         "refactor-review-result",
         "ai-review-result",
         "review-governance-evidence",
-        "gate-result"
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_e2e_applicability_gate",
         "tests.contract.test_security_trigger_applicability",
         "tests.contract.test_refactor_domain_boundary_gate",
         "tests.contract.test_v21_review_governance_gate",
-        "tests.contract.test_review_governance_closeout_gate"
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1409,18 +1464,24 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "_harness/schemas/e2e-applicability.schema.json",
         "_harness/schemas/browser-evidence-bundle.schema.json",
-        "_harness/schemas/review-governance-evidence.schema.json"
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
         "_harness/policies/security-triggers.yaml",
         "_harness/policies/domain-boundaries.yaml",
         "_harness/policies/review-governance.yaml",
-        "_harness/policies/validator-catalog.yaml"
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "e2e-applicability-validator",
@@ -1428,7 +1489,8 @@
         "security-review-validator",
         "refactor-review-validator",
         "ai-review-validator",
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "e2e-applicability-gate",
@@ -1437,7 +1499,8 @@
         "refactor-review-gate",
         "ai-review-gate",
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "browser-evidence-bundle",
@@ -1446,14 +1509,17 @@
         "refactor-review-result",
         "ai-review-result",
         "review-governance-evidence",
-        "gate-result"
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_e2e_applicability_gate",
         "tests.contract.test_security_trigger_applicability",
         "tests.contract.test_refactor_domain_boundary_gate",
         "tests.contract.test_v21_review_governance_gate",
-        "tests.contract.test_review_governance_closeout_gate"
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1481,18 +1547,24 @@
         "_harness/policies/review-governance.yaml",
         "_harness/policies/validator-catalog.yaml",
         "_harness/schemas/review-governance-evidence.schema.json",
-        "_ops/evidence/release/v21-review-governance.json"
+        "_ops/evidence/release/v21-review-governance.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "_harness/schemas/e2e-applicability.schema.json",
         "_harness/schemas/browser-evidence-bundle.schema.json",
-        "_harness/schemas/review-governance-evidence.schema.json"
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
         "_harness/policies/security-triggers.yaml",
         "_harness/policies/domain-boundaries.yaml",
         "_harness/policies/review-governance.yaml",
-        "_harness/policies/validator-catalog.yaml"
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "e2e-applicability-validator",
@@ -1500,7 +1572,8 @@
         "security-review-validator",
         "refactor-review-validator",
         "ai-review-validator",
-        "review-governance-validator"
+        "review-governance-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "e2e-applicability-gate",
@@ -1509,7 +1582,8 @@
         "refactor-review-gate",
         "ai-review-gate",
         "review-governance-gate",
-        "v21-conformance-gate"
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "browser-evidence-bundle",
@@ -1518,14 +1592,17 @@
         "refactor-review-result",
         "ai-review-result",
         "review-governance-evidence",
-        "gate-result"
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_e2e_applicability_gate",
         "tests.contract.test_security_trigger_applicability",
         "tests.contract.test_refactor_domain_boundary_gate",
         "tests.contract.test_v21_review_governance_gate",
-        "tests.contract.test_review_governance_closeout_gate"
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1610,31 +1687,41 @@
         "_ops/wiki/deprecated-context.md",
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/wiki_knowledge.py",
-        "src/standard_harness/completion/v21_conformance.py"
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "_harness/schemas/wiki-proposal.schema.json",
         "_harness/schemas/wiki-page.schema.json",
-        "_harness/schemas/wiki-index.schema.json"
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
-        "_harness/policies/wiki-knowledge-policy.yaml"
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "wiki-proposal-validator",
         "wiki-provenance-validator",
-        "wiki-knowledge-validator"
+        "wiki-knowledge-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "wiki-proposal-gate",
         "wiki-apply-gate",
-        "wiki-governance-gate"
+        "wiki-governance-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "closeout-report",
         "wiki-proposal",
         "wiki-page-index",
-        "wiki-knowledge-validation-result"
+        "wiki-knowledge-validation-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_closeout_documenter_report",
@@ -1644,7 +1731,8 @@
         "tests.contract.test_wiki_index_contract",
         "tests.contract.test_wiki_provenance_required",
         "tests.contract.test_skill_facing_index_is_projection_only",
-        "tests.contract.test_wiki_knowledge_release_gate"
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1787,31 +1875,41 @@
         "_ops/wiki/deprecated-context.md",
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/wiki_knowledge.py",
-        "src/standard_harness/completion/v21_conformance.py"
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "_harness/schemas/wiki-proposal.schema.json",
         "_harness/schemas/wiki-page.schema.json",
-        "_harness/schemas/wiki-index.schema.json"
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
-        "_harness/policies/wiki-knowledge-policy.yaml"
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "wiki-proposal-validator",
         "wiki-provenance-validator",
-        "wiki-knowledge-validator"
+        "wiki-knowledge-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "wiki-proposal-gate",
         "wiki-apply-gate",
-        "wiki-governance-gate"
+        "wiki-governance-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "closeout-report",
         "wiki-proposal",
         "wiki-page-index",
-        "wiki-knowledge-validation-result"
+        "wiki-knowledge-validation-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_closeout_documenter_report",
@@ -1821,7 +1919,8 @@
         "tests.contract.test_wiki_index_contract",
         "tests.contract.test_wiki_provenance_required",
         "tests.contract.test_skill_facing_index_is_projection_only",
-        "tests.contract.test_wiki_knowledge_release_gate"
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1850,31 +1949,41 @@
         "_ops/wiki/deprecated-context.md",
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/wiki_knowledge.py",
-        "src/standard_harness/completion/v21_conformance.py"
+        "src/standard_harness/completion/v21_conformance.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "_harness/schemas/wiki-proposal.schema.json",
         "_harness/schemas/wiki-page.schema.json",
-        "_harness/schemas/wiki-index.schema.json"
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
-        "_harness/policies/wiki-knowledge-policy.yaml"
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "wiki-proposal-validator",
         "wiki-provenance-validator",
-        "wiki-knowledge-validator"
+        "wiki-knowledge-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "wiki-proposal-gate",
         "wiki-apply-gate",
-        "wiki-governance-gate"
+        "wiki-governance-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "closeout-report",
         "wiki-proposal",
         "wiki-page-index",
-        "wiki-knowledge-validation-result"
+        "wiki-knowledge-validation-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_closeout_documenter_report",
@@ -1884,7 +1993,8 @@
         "tests.contract.test_wiki_index_contract",
         "tests.contract.test_wiki_provenance_required",
         "tests.contract.test_skill_facing_index_is_projection_only",
-        "tests.contract.test_wiki_knowledge_release_gate"
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -1944,23 +2054,31 @@
         "src/standard_harness/completion/coverage.py",
         "src/standard_harness/validation/executable_release.py",
         "_harness/policies/release-behavior-probes.yaml",
-        "_ops/evidence/release/v21-executable-release-gate.json"
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
-        "_harness/schemas/starter-promotion-candidate.schema.json"
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
-        "_harness/policies/release-behavior-probes.yaml"
+        "_harness/policies/release-behavior-probes.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "recurring-friction-detector",
         "success-metrics-reporter",
         "starter-promotion-candidate-validator",
-        "executable-release-validator"
+        "executable-release-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "compound-engineering-gate",
-        "executable-release-gate"
+        "executable-release-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "friction.signal",
@@ -1968,7 +2086,9 @@
         "starter-promotion-candidate",
         "success-metrics-report",
         "release-behavior-probe-bundle",
-        "executable-release-gate-evidence"
+        "executable-release-gate-evidence",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_recurring_friction_detector",
@@ -1976,7 +2096,8 @@
         "tests.contract.test_starter_promotion_candidate_registry",
         "tests.contract.test_compound_event_replay_compatibility",
         "tests.evals.test_compound_engineering_required_for_v1_completion",
-        "tests.contract.test_executable_release_gate"
+        "tests.contract.test_executable_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -2514,26 +2635,37 @@
         "docs/release/release-packaging-hygiene-v21.md",
         "tools/release_archive.py",
         "tools/run_full_regression.py",
-        "src/standard_harness/starter/contamination.py"
+        "src/standard_harness/starter/contamination.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
       "policies": [
-        "_harness/policies/evidence-classification.yaml"
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "manual-command-inventory-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "manual-command-gate",
         "sensitive-evidence-gate",
-        "starter-boundary-gate"
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "manual-command-inventory",
         "evidence-classification-result",
-        "starter-boundary-result"
+        "starter-boundary-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_release_packaging_hygiene",
@@ -2543,7 +2675,8 @@
         "tests.contract.test_full_regression_runner_records_last_test",
         "tests.contract.test_manual_runbook_command_validation",
         "tests.contract.test_sensitive_evidence_classification",
-        "tests.contract.test_starter_boundary"
+        "tests.contract.test_starter_boundary",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -2558,31 +2691,43 @@
         "src/standard_harness/validation/sensitive_evidence.py",
         "src/standard_harness/docsops/command_inventory.py",
         "docs/release/final-product-docs-command-inventory-v1.md",
-        "src/standard_harness/starter/contamination.py"
+        "src/standard_harness/starter/contamination.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
       "policies": [
-        "_harness/policies/evidence-classification.yaml"
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "manual-command-inventory-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "manual-command-gate",
         "sensitive-evidence-gate",
-        "starter-boundary-gate"
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "manual-command-inventory",
         "evidence-classification-result",
-        "starter-boundary-result"
+        "starter-boundary-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_manual_runbook_command_validation",
         "tests.contract.test_sensitive_evidence_classification",
-        "tests.contract.test_starter_boundary"
+        "tests.contract.test_starter_boundary",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -2748,32 +2893,44 @@
         "src/standard_harness/docsops/command_inventory.py",
         "docs/release/final-product-docs-command-inventory-v1.md",
         "src/standard_harness/starter/contamination.py",
-        "src/standard_harness/domain/evidence.py"
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
       "policies": [
-        "_harness/policies/evidence-classification.yaml"
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "manual-command-inventory-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "manual-command-gate",
         "sensitive-evidence-gate",
-        "starter-boundary-gate"
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "manual-command-inventory",
         "evidence-classification-result",
-        "starter-boundary-result"
+        "starter-boundary-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_manual_runbook_command_validation",
         "tests.contract.test_sensitive_evidence_classification",
         "tests.contract.test_starter_boundary",
-        "tests.evals.test_secret_evidence_registration_uses_store_root"
+        "tests.evals.test_secret_evidence_registration_uses_store_root",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -2789,32 +2946,44 @@
         "src/standard_harness/docsops/command_inventory.py",
         "docs/release/final-product-docs-command-inventory-v1.md",
         "src/standard_harness/starter/contamination.py",
-        "src/standard_harness/domain/evidence.py"
+        "src/standard_harness/domain/evidence.py",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
-      "schemas": [],
+      "schemas": [
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
       "policies": [
-        "_harness/policies/evidence-classification.yaml"
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "manual-command-inventory-validator",
         "sensitive-evidence-validator",
-        "starter-contamination-validator"
+        "starter-contamination-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "manual-command-gate",
         "sensitive-evidence-gate",
-        "starter-boundary-gate"
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "manual-command-inventory",
         "evidence-classification-result",
-        "starter-boundary-result"
+        "starter-boundary-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_manual_runbook_command_validation",
         "tests.contract.test_sensitive_evidence_classification",
         "tests.contract.test_starter_boundary",
-        "tests.evals.test_secret_evidence_registration_uses_store_root"
+        "tests.evals.test_secret_evidence_registration_uses_store_root",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -2856,13 +3025,18 @@
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/executable_release.py",
         "_harness/policies/release-behavior-probes.yaml",
-        "_ops/evidence/release/v21-executable-release-gate.json"
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "packet.schema.json",
         "gate-result.schema.json",
         "na-decision.schema.json",
-        "_harness/schemas/review-governance-evidence.schema.json"
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
         "p0-policy",
@@ -2871,7 +3045,8 @@
         "_harness/policies/validator-catalog.yaml",
         "_harness/policies/review-governance.yaml",
         "_harness/policies/wiki-knowledge-policy.yaml",
-        "_harness/policies/release-behavior-probes.yaml"
+        "_harness/policies/release-behavior-probes.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "requirements-metadata-validator",
@@ -2888,7 +3063,8 @@
         "success-metrics-reporter",
         "review-governance-validator",
         "wiki-knowledge-validator",
-        "executable-release-validator"
+        "executable-release-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "requirements-baseline-gate",
@@ -2897,7 +3073,8 @@
         "v21-conformance-gate",
         "review-governance-gate",
         "wiki-governance-gate",
-        "executable-release-gate"
+        "executable-release-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "validator-result",
@@ -2908,7 +3085,9 @@
         "gate-result",
         "wiki-knowledge-validation-result",
         "release-behavior-probe-bundle",
-        "executable-release-gate-evidence"
+        "executable-release-gate-evidence",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_requirements_metadata_validator",
@@ -2950,7 +3129,8 @@
         "tests.contract.test_v21_review_governance_gate",
         "tests.contract.test_review_governance_closeout_gate",
         "tests.contract.test_wiki_knowledge_release_gate",
-        "tests.contract.test_executable_release_gate"
+        "tests.contract.test_executable_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -2995,18 +3175,24 @@
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/executable_release.py",
         "_harness/policies/release-behavior-probes.yaml",
-        "_ops/evidence/release/v21-executable-release-gate.json"
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "gate-result.schema.json",
-        "_harness/schemas/review-governance-evidence.schema.json"
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
         "gate-profiles",
         "_harness/policies/validator-catalog.yaml",
         "_harness/policies/review-governance.yaml",
         "_harness/policies/wiki-knowledge-policy.yaml",
-        "_harness/policies/release-behavior-probes.yaml"
+        "_harness/policies/release-behavior-probes.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "challenge-review-evidence-validator",
@@ -3019,7 +3205,8 @@
         "success-metrics-reporter",
         "review-governance-validator",
         "wiki-knowledge-validator",
-        "executable-release-validator"
+        "executable-release-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "challenge-review-evidence-gate",
@@ -3027,7 +3214,8 @@
         "packet-kernel-gate",
         "review-governance-gate",
         "wiki-governance-gate",
-        "executable-release-gate"
+        "executable-release-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "gate-result",
@@ -3037,7 +3225,9 @@
         "review-governance-evidence",
         "wiki-knowledge-validation-result",
         "release-behavior-probe-bundle",
-        "executable-release-gate-evidence"
+        "executable-release-gate-evidence",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_gate_profile_applicability",
@@ -3069,7 +3259,8 @@
         "tests.contract.test_v21_review_governance_gate",
         "tests.contract.test_review_governance_closeout_gate",
         "tests.contract.test_wiki_knowledge_release_gate",
-        "tests.contract.test_executable_release_gate"
+        "tests.contract.test_executable_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     },
@@ -3100,16 +3291,22 @@
         "_ops/wiki/skill-facing-index.md",
         "src/standard_harness/validation/executable_release.py",
         "_harness/policies/release-behavior-probes.yaml",
-        "_ops/evidence/release/v21-executable-release-gate.json"
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "src/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
       ],
       "schemas": [
         "_harness/schemas/friction-signal.schema.json",
-        "_harness/schemas/starter-promotion-candidate.schema.json"
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
       ],
       "policies": [
         "_harness/policies/validator-catalog.yaml",
         "_harness/policies/wiki-knowledge-policy.yaml",
-        "_harness/policies/release-behavior-probes.yaml"
+        "_harness/policies/release-behavior-probes.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
       ],
       "validators": [
         "recurring-friction-detector",
@@ -3118,13 +3315,15 @@
         "v21-conformance-validator",
         "validator-catalog-validator",
         "wiki-knowledge-validator",
-        "executable-release-validator"
+        "executable-release-validator",
+        "final-closeout-validator"
       ],
       "gates": [
         "compound-engineering-gate",
         "v21-conformance-gate",
         "wiki-governance-gate",
-        "executable-release-gate"
+        "executable-release-gate",
+        "v21-final-closeout-gate"
       ],
       "evidenceTypes": [
         "friction.signal",
@@ -3134,7 +3333,9 @@
         "v21-conformance-report",
         "wiki-knowledge-validation-result",
         "release-behavior-probe-bundle",
-        "executable-release-gate-evidence"
+        "executable-release-gate-evidence",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
       ],
       "tests": [
         "tests.contract.test_recurring_friction_detector",
@@ -3156,7 +3357,8 @@
         "tests.contract.test_hr200_metrics_source_watermark",
         "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
         "tests.contract.test_wiki_knowledge_release_gate",
-        "tests.contract.test_executable_release_gate"
+        "tests.contract.test_executable_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
       ],
       "releaseBlocking": true
     }
