@@ -1,0 +1,91 @@
+{
+  "evidenceId": "release-v21-final-closeout",
+  "generatedBy": "final-closeout-validator@0.2.0",
+  "generatedAt": "2026-06-26T00:35:00+09:00",
+  "sourceEventRange": "XP-FinalCloseoutA",
+  "release": {
+    "headCommit": "9f783b8d1b99352885f12441093cc3fe6487770d",
+    "status": "pass"
+  },
+  "gateResult": {
+    "gateId": "v21-final-closeout-gate",
+    "validatorId": "final-closeout-validator",
+    "status": "PASS",
+    "diagnostic_ids": [],
+    "releaseBlocking": true,
+    "policyVersion": "0.2.0",
+    "validatorVersion": "final-closeout-validator@0.2.0",
+    "evidenceIds": [
+      "release-v21-final-closeout"
+    ]
+  },
+  "verifications": {
+    "releaseGate": {
+      "status": "pass",
+      "evidencePath": "docs/release/v21-conformance-report.md",
+      "command": "python tools\\harness_cli.py --json validate --release",
+      "evidenceHash": "sha256:822766145bd7ae814febd5138bd26658e8bd69ca43d677d3b9c02f133ce0cd3c"
+    },
+    "reviewGovernance": {
+      "status": "pass",
+      "evidencePath": "_ops/evidence/release/v21-review-governance.json",
+      "validatorId": "review-governance-validator",
+      "evidenceHash": "sha256:45b9d3bbf2d0ab52e7feefe899d824761a72ae0ec184885857b17d773e57dc7e"
+    },
+    "wikiKnowledge": {
+      "status": "pass",
+      "evidencePath": "_ops/wiki/index.yaml",
+      "validatorId": "wiki-knowledge-validator"
+    },
+    "hr200Metrics": {
+      "status": "pass",
+      "evidencePath": "_ops/metrics/hr200-success-metrics.json",
+      "metricId": "HR-200",
+      "evidenceHash": "sha256:8d7df736a253d0d9add3df2d39b7276abc8131625dc8250518ede773c523480d"
+    },
+    "securityBoundary": {
+      "status": "pass",
+      "evidencePath": "_harness/policies/agent-permissions.yaml",
+      "validators": [
+        "boundary-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator"
+      ]
+    },
+    "executableReleaseProbes": {
+      "status": "pass",
+      "evidencePath": "_ops/evidence/release/v21-executable-release-gate.json",
+      "validatorId": "executable-release-validator",
+      "evidenceHash": "sha256:384f86b84c1d0d59d0cad9747a41db91df4ac08244de4e5a5a693ac91e627310"
+    },
+    "fullRegression": {
+      "status": "pass",
+      "evidencePath": "_ops/evidence/release/v21-full-regression.json",
+      "headCommit": "9f783b8d1b99352885f12441093cc3fe6487770d",
+      "result": "passed",
+      "command": "python -m unittest discover -s tests",
+      "logPath": "_ops/evidence/release/v21-full-regression.log",
+      "generatedAt": "2026-06-25T21:42:49.617720Z",
+      "evidenceHash": "sha256:da5ea63942ac4c73319a5b6d40ac584fd9b4f8ebe2c97bf407947b60fa61e30d"
+    },
+    "cleanHygiene": {
+      "status": "pass",
+      "repoLocalGeneratedState": false,
+      "evidencePath": "_ops/evidence/release/v21-final-closeout.json"
+    }
+  },
+  "unresolvedBlockers": [],
+  "metrics": {
+    "finalCloseoutVerificationCoverage": 1
+  },
+  "frictionSignalBehavior": {
+    "sourceXp": "XP-FinalCloseoutA",
+    "observedAtGate": "v21-final-closeout-gate",
+    "signals": [
+      "missing_closeout",
+      "missing_evidence",
+      "stale_context",
+      "docs_drift"
+    ]
+  }
+}

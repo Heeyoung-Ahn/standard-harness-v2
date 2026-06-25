@@ -1,8 +1,8 @@
 {
   "evidenceId": "release-v21-review-governance",
   "generatedBy": "review-governance-validator@0.2.0",
-  "generatedAt": "2026-06-26T00:05:00+09:00",
-  "sourceEventRange": "XP-05B..XP-ReleaseA",
+  "generatedAt": "2026-06-26T00:35:00+09:00",
+  "sourceEventRange": "XP-05B..XP-FinalCloseoutA",
   "reviews": [
     {
       "reviewId": "rv-xp-05b-wiki-knowledge",
@@ -16,11 +16,11 @@
         },
         {
           "path": "src/standard_harness/completion/v21_conformance.py",
-          "sha256": "sha256:d39324234737ad43ce297eb1dde1e3c0348c3fd1416ecc4434308450f7b70429"
+          "sha256": "sha256:a56720189ce1ccc58a41537d3ade87bd959d010b86bd6e4fdd0a652b10475926"
         },
         {
           "path": "_harness/policies/validator-catalog.yaml",
-          "sha256": "sha256:43038dc4f53c88446dddd0655941d03cd1bbd909123717fcf60dff785da945e9"
+          "sha256": "sha256:bb8461025ca793523b124b96434e49bba49b1256df39df89087da476c4552b57"
         },
         {
           "path": "_harness/policies/wiki-knowledge-policy.yaml",
@@ -28,11 +28,11 @@
         },
         {
           "path": "_harness/requirements/hr-coverage-matrix.yaml",
-          "sha256": "sha256:2e4e27face996679c0e421af9df2c1d10778c942cf8797171af87a968274bb34"
+          "sha256": "sha256:0279178267e65c52386d7cfacd9b7fdc35cee8bde37f210e7991f2ccf477a49b"
         },
         {
           "path": "_harness/requirements/traceability-matrix.yaml",
-          "sha256": "sha256:da3723b682f88bfa6f44a2b53502e4c5c27cae4c68e5edd3892417df7fdfe8c2"
+          "sha256": "sha256:0c34ad258d0bf09def426bfa5f8841d7f36056840c9f8c90fde8803be111769e"
         },
         {
           "path": "_ops/wiki/index.yaml",
@@ -40,7 +40,7 @@
         },
         {
           "path": "tests/contract/test_wiki_knowledge_release_gate.py",
-          "sha256": "sha256:9d0a05663209634718ce4d64b7187fbee0fe459e070c3e234b3e82e5a58672dd"
+          "sha256": "sha256:0b253d9542b5976aa2c6ac254f43430f609da157e78835362863ab0689b3dce2"
         }
       ],
       "focusedTestEvidence": {
@@ -80,27 +80,27 @@
         },
         {
           "path": "src/standard_harness/completion/v21_conformance.py",
-          "sha256": "sha256:d39324234737ad43ce297eb1dde1e3c0348c3fd1416ecc4434308450f7b70429"
+          "sha256": "sha256:a56720189ce1ccc58a41537d3ade87bd959d010b86bd6e4fdd0a652b10475926"
         },
         {
           "path": "_harness/policies/validator-catalog.yaml",
-          "sha256": "sha256:43038dc4f53c88446dddd0655941d03cd1bbd909123717fcf60dff785da945e9"
+          "sha256": "sha256:bb8461025ca793523b124b96434e49bba49b1256df39df89087da476c4552b57"
         },
         {
           "path": "_harness/policies/release-behavior-probes.yaml",
-          "sha256": "sha256:15fcc2bde9855ad1cc3bd079d23dedd40160dc5fe13bc762540e3b45add310c3"
+          "sha256": "sha256:63f5a20adc6f523cea3d50c2b4e6eac0033237a4045d8e431a224ab84cd998a3"
         },
         {
           "path": "_harness/requirements/hr-coverage-matrix.yaml",
-          "sha256": "sha256:2e4e27face996679c0e421af9df2c1d10778c942cf8797171af87a968274bb34"
+          "sha256": "sha256:0279178267e65c52386d7cfacd9b7fdc35cee8bde37f210e7991f2ccf477a49b"
         },
         {
           "path": "_harness/requirements/traceability-matrix.yaml",
-          "sha256": "sha256:da3723b682f88bfa6f44a2b53502e4c5c27cae4c68e5edd3892417df7fdfe8c2"
+          "sha256": "sha256:0c34ad258d0bf09def426bfa5f8841d7f36056840c9f8c90fde8803be111769e"
         },
         {
           "path": "_ops/evidence/release/v21-executable-release-gate.json",
-          "sha256": "sha256:17043f35e1e33750cf7d9c46c7fbc51151a62010fd68654c7641bdc49a0e894b"
+          "sha256": "sha256:384f86b84c1d0d59d0cad9747a41db91df4ac08244de4e5a5a693ac91e627310"
         },
         {
           "path": "tests/contract/test_executable_release_gate.py",
@@ -126,6 +126,74 @@
         "status": "approved",
         "adjudicator": "planner-agent",
         "rationale": "XP-ReleaseA adds a release-blocking executable probe gate with negative tests for missing, malformed, unexercised, and non-blocking release probes."
+      }
+    },
+    {
+      "reviewId": "rv-xp-finalcloseouta-release-closeout",
+      "packetId": "XP-FinalCloseoutA",
+      "reviewType": "implementation",
+      "reviewedCommit": "9f783b8d1b99352885f12441093cc3fe6487770d",
+      "reviewedFiles": [
+        {
+          "path": "_harness/policies/final-closeout-policy.yaml",
+          "sha256": "sha256:143f5bd3ebb58853ea309d182b41fdab86fc50328f7ef85f3993fb21418447d9"
+        },
+        {
+          "path": "_harness/policies/release-behavior-probes.yaml",
+          "sha256": "sha256:63f5a20adc6f523cea3d50c2b4e6eac0033237a4045d8e431a224ab84cd998a3"
+        },
+        {
+          "path": "_harness/policies/validator-catalog.yaml",
+          "sha256": "sha256:bb8461025ca793523b124b96434e49bba49b1256df39df89087da476c4552b57"
+        },
+        {
+          "path": "_harness/requirements/hr-coverage-matrix.yaml",
+          "sha256": "sha256:0279178267e65c52386d7cfacd9b7fdc35cee8bde37f210e7991f2ccf477a49b"
+        },
+        {
+          "path": "_harness/requirements/traceability-matrix.yaml",
+          "sha256": "sha256:0c34ad258d0bf09def426bfa5f8841d7f36056840c9f8c90fde8803be111769e"
+        },
+        {
+          "path": "_harness/schemas/final-closeout-evidence.schema.json",
+          "sha256": "sha256:c179f8b6ef44d31e9830e2c1c4e5c877e2d4af315e875c42d095fd13ee6f95fc"
+        },
+        {
+          "path": "docs/release/v21-conformance-report.md",
+          "sha256": "sha256:822766145bd7ae814febd5138bd26658e8bd69ca43d677d3b9c02f133ce0cd3c"
+        },
+        {
+          "path": "src/standard_harness/completion/v21_conformance.py",
+          "sha256": "sha256:a56720189ce1ccc58a41537d3ade87bd959d010b86bd6e4fdd0a652b10475926"
+        },
+        {
+          "path": "src/standard_harness/validation/final_closeout.py",
+          "sha256": "sha256:422721593a98c9633f98c727f2e9663ccf635b1029cf01501439ba6587257a65"
+        },
+        {
+          "path": "tests/contract/test_v21_final_closeout_gate.py",
+          "sha256": "sha256:2ab70506d45e88fada75cef6b17c9eafe0f16f42f0052f86d806dceca28b76ed"
+        }
+      ],
+      "focusedTestEvidence": {
+        "command": "python -m unittest tests.contract.test_v21_final_closeout_gate tests.contract.test_executable_release_gate tests.contract.test_validator_catalog_entries_have_importable_implementations tests.contract.test_validator_catalog_entries_have_negative_tests tests.contract.test_release_blocking_validators_are_reachable_from_release_validation",
+        "result": "passed"
+      },
+      "fullRegressionEvidence": {
+        "evidenceId": "release-v21-full-regression",
+        "result": "passed"
+      },
+      "deterministicEvidence": [
+        "focusedTestEvidence",
+        "fullRegressionEvidence"
+      ],
+      "findings": [],
+      "acceptedRisks": [],
+      "finalDecision": "pass",
+      "finalAdjudication": {
+        "status": "approved",
+        "adjudicator": "planner-agent",
+        "rationale": "XP-FinalCloseoutA adds a release-blocking final closeout validator with negative tests for missing, stale, unresolved, and malformed final release evidence."
       }
     }
   ]

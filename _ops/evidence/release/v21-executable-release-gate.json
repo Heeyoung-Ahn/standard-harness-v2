@@ -1,20 +1,20 @@
 {
   "evidenceId": "release-v21-executable-release-gate",
   "generatedBy": "executable-release-validator@0.2.0",
-  "generatedAt": "2026-06-26T00:00:00+09:00",
+  "generatedAt": "2026-06-26T00:30:00+09:00",
   "sourceEventRange": "XP-ReleaseA",
   "policy": "_harness/policies/release-behavior-probes.yaml",
   "validatorId": "executable-release-validator",
   "gateId": "executable-release-gate",
   "probeCounts": {
-    "releaseBlockingValidators": 22,
-    "probedReleaseValidators": 22,
-    "blockedInvalidFixtures": 22,
+    "releaseBlockingValidators": 23,
+    "probedReleaseValidators": 23,
+    "blockedInvalidFixtures": 23,
     "malformedOrPassingFixtures": 0
   },
   "coverageMetric": {
     "metricId": "releaseValidatorProbeCoverage",
-    "value": 1.0,
+    "value": 1,
     "unit": "ratio"
   },
   "requiredFamilies": [

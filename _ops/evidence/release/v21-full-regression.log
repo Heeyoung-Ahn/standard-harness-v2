@@ -286,6 +286,13 @@ test_invalid_ratio_type_blocks_v21_conformance (contract.test_v21_conformance_bl
 test_stale_source_watermark_blocks_v21_conformance (contract.test_v21_conformance_blocks_stale_hr200_metrics.V21ConformanceStaleHr200MetricsTests.test_stale_source_watermark_blocks_v21_conformance) ... ok
 test_blocks_release_when_hr200_artifact_has_no_source_watermark (contract.test_v21_conformance_reads_generated_hr200_metrics_artifact.V21ConformanceHr200ArtifactTests.test_blocks_release_when_hr200_artifact_has_no_source_watermark) ... ok
 test_development_scenario_covers_required_journey (contract.test_v21_development_scenario_documented.V21DevelopmentScenarioDocumentationTests.test_development_scenario_covers_required_journey) ... ok
+test_invalid_final_closeout_gate_result_metadata_blocks_release (contract.test_v21_final_closeout_gate.V21FinalCloseoutGateTests.test_invalid_final_closeout_gate_result_metadata_blocks_release) ... ok
+test_missing_final_closeout_evidence_blocks_release (contract.test_v21_final_closeout_gate.V21FinalCloseoutGateTests.test_missing_final_closeout_evidence_blocks_release) ... ok
+test_missing_required_verification_domain_blocks_release (contract.test_v21_final_closeout_gate.V21FinalCloseoutGateTests.test_missing_required_verification_domain_blocks_release) ... ok
+test_repo_local_generated_state_blocks_final_closeout (contract.test_v21_final_closeout_gate.V21FinalCloseoutGateTests.test_repo_local_generated_state_blocks_final_closeout) ... ok
+test_stale_full_regression_evidence_blocks_release (contract.test_v21_final_closeout_gate.V21FinalCloseoutGateTests.test_stale_full_regression_evidence_blocks_release) ... ok
+test_unresolved_final_closeout_blocker_blocks_release (contract.test_v21_final_closeout_gate.V21FinalCloseoutGateTests.test_unresolved_final_closeout_blocker_blocks_release) ... ok
+test_validate_release_surfaces_final_closeout_diagnostics (contract.test_v21_final_closeout_gate.V21FinalCloseoutGateTests.test_validate_release_surfaces_final_closeout_diagnostics) ... ok
 test_v21_conformance_gate_passes_current_release_metadata (contract.test_v21_full_conformance_gate.V21FullConformanceGateTests.test_v21_conformance_gate_passes_current_release_metadata) ... ok
 test_ai_review_alone_cannot_satisfy_release_review (contract.test_v21_review_governance_gate.V21ReviewGovernanceGateTests.test_ai_review_alone_cannot_satisfy_release_review) ... ok
 test_release_blocks_conditional_pass_without_final_adjudication (contract.test_v21_review_governance_gate.V21ReviewGovernanceGateTests.test_release_blocks_conditional_pass_without_final_adjudication) ... ok
@@ -368,6 +375,6 @@ test_validate_all_fails_with_missing_evidence_diagnostics (integration.test_vali
 test_validate_all_passes_for_closed_low_risk_packet (integration.test_validate_command.ValidateCommandTests.test_validate_all_passes_for_closed_low_risk_packet) ... ok
 
 ----------------------------------------------------------------------
-Ran 367 tests in 265.417s
+Ran 374 tests in 254.309s
 
 OK
