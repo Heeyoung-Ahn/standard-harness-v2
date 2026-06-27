@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "security-triggers-policy",
+  "hardGateTriggers": [
+    "auth changed",
+    "permission changed",
+    "DB access changed",
+    "file handling changed",
+    "external API changed",
+    "financial data touched",
+    "personal data touched",
+    "sensitive data touched",
+    "logging behavior changed",
+    "error message behavior changed"
+  ],
+  "frictionSignalBehavior": "emit security_review_required when triggered packet lacks security review",
+  "metricSignalBehavior": "emit security_trigger_count by trigger and packet type"
+}

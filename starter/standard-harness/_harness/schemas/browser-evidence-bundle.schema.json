@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Browser Evidence Bundle",
+  "type": "object",
+  "required": [
+    "scenario_id",
+    "preconditions",
+    "user_actions",
+    "expected_assertions",
+    "actual_assertions",
+    "browser_tool_identity",
+    "viewport",
+    "artifacts_captured",
+    "result_status"
+  ],
+  "properties": {
+    "scenario_id": {"type": "string"},
+    "viewport": {"type": "object"},
+    "result_status": {"type": "string"}
+  }
+}

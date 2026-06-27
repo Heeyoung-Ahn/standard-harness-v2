@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "E2E Applicability",
+  "type": "object",
+  "required": ["packetId", "e2eApplicability"],
+  "properties": {
+    "packetId": {"type": "string"},
+    "changeTypes": {"type": "array", "items": {"type": "string"}},
+    "e2eApplicability": {
+      "enum": ["E2E_REQUIRED", "E2E_SMOKE_REQUIRED", "E2E_NOT_APPLICABLE_WITH_RATIONALE"]
+    },
+    "naDecision": {"type": "object"}
+  }
+}

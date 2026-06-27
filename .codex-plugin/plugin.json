@@ -1,0 +1,38 @@
+{
+  "name": "standard-harness",
+  "version": "2.8.0",
+  "description": "Codex App operating harness for packet-first planning, implementation handoff, evidence gates, and workflow-governed delivery.",
+  "author": {
+    "name": "Standard Harness Maintainers"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "codex",
+    "planning",
+    "packet",
+    "tdd",
+    "evidence",
+    "workflow",
+    "business-applications"
+  ],
+  "skills": "./.agents/skills/",
+  "interface": {
+    "displayName": "Standard Harness",
+    "shortDescription": "Packet-first planning, Codex implementation handoff, and evidence-gated delivery",
+    "longDescription": "Use Standard Harness to run Codex App work through planning packets, implementation handoff, TDD/security/browser evidence, workflow routing, and release gates for business application development.",
+    "developerName": "Standard Harness Maintainers",
+    "category": "Coding",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Start a new standard-harness packet for this feature.",
+      "Create a Codex task brief from the approved packet.",
+      "Capture Playwright screenshot/trace browser evidence for this UI change.",
+      "Verify this change against the standard-harness evidence gates."
+    ],
+    "screenshots": []
+  }
+}

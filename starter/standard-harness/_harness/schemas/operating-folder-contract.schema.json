@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Operating Folder Contract",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "policyId",
+    "filenameRule",
+    "requiredFiles",
+    "requiredDirectories",
+    "zones",
+    "sampleOnlyFiles"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "policyId": {
+      "const": "project-operating-folders"
+    },
+    "filenameRule": {
+      "type": "string",
+      "enum": [
+        "folder_contract_with_minimum_required_files"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "requiredFiles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "requiredDirectories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "zones": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "primaryReader",
+          "purpose"
+        ],
+        "properties": {
+          "primaryReader": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "mustNotContain": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "productPacketWritable": {
+            "type": "boolean"
+          },
+          "starterRule": {
+            "type": "string"
+          },
+          "humanDocumentationSurface": {
+            "type": "boolean"
+          },
+          "proseFormat": {
+            "type": "string"
+          },
+          "pmoTableFormat": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sampleOnlyFiles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "contaminationRules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "frictionSignalBehavior": {
+      "type": "string"
+    },
+    "metricSignalBehavior": {
+      "type": "string"
+    }
+  }
+}

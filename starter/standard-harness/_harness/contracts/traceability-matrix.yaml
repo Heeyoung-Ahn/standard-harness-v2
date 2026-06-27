@@ -1,0 +1,3368 @@
+{
+  "artifact": "_harness/contracts/traceability-matrix.yaml",
+  "artifactRole": "canonical",
+  "baselineVersion": "0.2.0",
+  "ownerXp": "XP-00",
+  "minimumTrace": "HR -> XP -> file -> schema/policy/validator/gate -> evidence type -> test -> release-blocking status",
+  "traceability": [
+    {
+      "hrId": "HR-001V",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/contracts/requirements-index.yaml"
+      ],
+      "schemas": [],
+      "policies": [],
+      "validators": [
+        "requirements-metadata-validator"
+      ],
+      "gates": [
+        "requirements-baseline-gate"
+      ],
+      "evidenceTypes": [
+        "requirements-index"
+      ],
+      "tests": [
+        "tests.contract.test_requirements_metadata_validator"
+      ],
+      "releaseBlocking": false
+    },
+    {
+      "hrId": "HR-002",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/policies/p0-policy.yaml"
+      ],
+      "schemas": [],
+      "policies": [
+        "p0-policy"
+      ],
+      "validators": [
+        "requirements-metadata-validator"
+      ],
+      "gates": [
+        "requirements-baseline-gate"
+      ],
+      "evidenceTypes": [
+        "policy-baseline"
+      ],
+      "tests": [
+        "tests.contract.test_requirements_metadata_validator"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-003",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/policies/non-goal-guardrails.yaml",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
+      ],
+      "schemas": [],
+      "policies": [
+        "non-goal-guardrails",
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
+      "validators": [
+        "requirements-metadata-validator",
+        "wiki-knowledge-validator"
+      ],
+      "gates": [
+        "requirements-baseline-gate",
+        "wiki-governance-gate"
+      ],
+      "evidenceTypes": [
+        "guardrail-policy",
+        "wiki-knowledge-validation-result"
+      ],
+      "tests": [
+        "tests.contract.test_non_goal_guardrails",
+        "tests.contract.test_wiki_knowledge_release_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-004",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/contracts/hr-coverage-matrix.yaml"
+      ],
+      "schemas": [],
+      "policies": [
+        "p0-policy"
+      ],
+      "validators": [
+        "requirements-metadata-validator"
+      ],
+      "gates": [
+        "requirements-baseline-gate"
+      ],
+      "evidenceTypes": [
+        "hr-coverage-matrix"
+      ],
+      "tests": [
+        "tests.contract.test_requirements_metadata_validator"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-005",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/contracts/requirements-index.yaml"
+      ],
+      "schemas": [],
+      "policies": [],
+      "validators": [
+        "requirements-metadata-validator"
+      ],
+      "gates": [
+        "requirements-baseline-gate"
+      ],
+      "evidenceTypes": [
+        "requirements-index"
+      ],
+      "tests": [
+        "tests.contract.test_requirements_metadata_validator"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-006",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/contracts/traceability-matrix.yaml"
+      ],
+      "schemas": [],
+      "policies": [],
+      "validators": [
+        "requirements-metadata-validator"
+      ],
+      "gates": [
+        "requirements-baseline-gate"
+      ],
+      "evidenceTypes": [
+        "traceability-matrix"
+      ],
+      "tests": [
+        "tests.contract.test_requirements_metadata_validator"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-007",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/policies/p0-policy.yaml",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
+      ],
+      "schemas": [],
+      "policies": [
+        "p0-policy",
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
+      "validators": [
+        "requirements-metadata-validator",
+        "wiki-knowledge-validator"
+      ],
+      "gates": [
+        "requirements-baseline-gate",
+        "wiki-governance-gate"
+      ],
+      "evidenceTypes": [
+        "p0-policy",
+        "wiki-knowledge-validation-result"
+      ],
+      "tests": [
+        "tests.contract.test_requirements_metadata_validator",
+        "tests.contract.test_wiki_knowledge_release_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-008",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/policies/p0-policy.yaml"
+      ],
+      "schemas": [],
+      "policies": [
+        "p0-policy"
+      ],
+      "validators": [
+        "requirements-metadata-validator"
+      ],
+      "gates": [
+        "requirements-baseline-gate"
+      ],
+      "evidenceTypes": [
+        "p0-policy"
+      ],
+      "tests": [
+        "tests.contract.test_requirements_metadata_validator"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-010R",
+      "xpOwner": "XP-03",
+      "files": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "_harness/system/standard_harness/policy/zones.py",
+        "_harness/system/standard_harness/policy/permissions.py",
+        "_harness/system/standard_harness/validation/boundary.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/starter/contamination.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml"
+      ],
+      "validators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "gates": [
+        "boundary-gate"
+      ],
+      "evidenceTypes": [
+        "git-diff-boundary-result",
+        "agent-permission-boundary-result"
+      ],
+      "tests": [
+        "tests.contract.test_logical_zone_mapping",
+        "tests.contract.test_git_diff_boundary_validator",
+        "tests.evals.test_product_packet_cannot_modify_harness"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-011R",
+      "xpOwner": "XP-03",
+      "files": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "_harness/system/standard_harness/policy/zones.py",
+        "_harness/system/standard_harness/policy/permissions.py",
+        "_harness/system/standard_harness/validation/boundary.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/starter/contamination.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml"
+      ],
+      "validators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "gates": [
+        "boundary-gate"
+      ],
+      "evidenceTypes": [
+        "git-diff-boundary-result",
+        "agent-permission-boundary-result"
+      ],
+      "tests": [
+        "tests.contract.test_logical_zone_mapping",
+        "tests.contract.test_git_diff_boundary_validator",
+        "tests.evals.test_product_packet_cannot_modify_harness"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-012R",
+      "xpOwner": "XP-03",
+      "files": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "_harness/system/standard_harness/policy/zones.py",
+        "_harness/system/standard_harness/policy/permissions.py",
+        "_harness/system/standard_harness/validation/boundary.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/starter/contamination.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml"
+      ],
+      "validators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "gates": [
+        "boundary-gate"
+      ],
+      "evidenceTypes": [
+        "git-diff-boundary-result",
+        "agent-permission-boundary-result"
+      ],
+      "tests": [
+        "tests.contract.test_logical_zone_mapping",
+        "tests.contract.test_git_diff_boundary_validator",
+        "tests.evals.test_product_packet_cannot_modify_harness",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-013",
+      "xpOwner": "XP-03",
+      "files": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "_harness/system/standard_harness/policy/zones.py",
+        "_harness/system/standard_harness/policy/permissions.py",
+        "_harness/system/standard_harness/validation/boundary.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/starter/contamination.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml"
+      ],
+      "validators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "gates": [
+        "boundary-gate"
+      ],
+      "evidenceTypes": [
+        "git-diff-boundary-result",
+        "agent-permission-boundary-result"
+      ],
+      "tests": [
+        "tests.contract.test_logical_zone_mapping",
+        "tests.contract.test_git_diff_boundary_validator",
+        "tests.evals.test_product_packet_cannot_modify_harness",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-020R",
+      "xpOwner": "XP-07",
+      "files": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "_harness/system/standard_harness/handoff/prompts.py",
+        "_harness/system/standard_harness/handoff/intake.py",
+        "_harness/system/standard_harness/skills/catalog.py",
+        "_harness/system/standard_harness/skills/router.py",
+        "_harness/system/standard_harness/skills/internal/registry.py",
+        "_harness/system/standard_harness/adapters/manifest.py",
+        "_harness/system/standard_harness/cli/main.py"
+      ],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
+      "validators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "gates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "evidenceTypes": [
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
+      ],
+      "tests": [
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability",
+        "tests.contract.test_required_skill_catalog_completion",
+        "tests.contract.test_skill_router_minimum_skills",
+        "tests.contract.test_handoff_skill_cli_commands",
+        "tests.contract.test_unknown_skill_is_blocked",
+        "tests.contract.test_skill_route_preserves_p0_gate_boundary",
+        "tests.contract.test_every_required_skill_has_hr_trace"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-021R",
+      "xpOwner": "XP-07",
+      "files": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "_harness/system/standard_harness/handoff/prompts.py",
+        "_harness/system/standard_harness/handoff/intake.py",
+        "_harness/system/standard_harness/skills/catalog.py",
+        "_harness/system/standard_harness/skills/router.py",
+        "_harness/system/standard_harness/skills/internal/registry.py",
+        "_harness/system/standard_harness/adapters/manifest.py",
+        "_harness/system/standard_harness/cli/main.py"
+      ],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
+      "validators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "gates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "evidenceTypes": [
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
+      ],
+      "tests": [
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-022R",
+      "xpOwner": "XP-07",
+      "files": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "_harness/system/standard_harness/handoff/prompts.py",
+        "_harness/system/standard_harness/handoff/intake.py",
+        "_harness/system/standard_harness/skills/catalog.py",
+        "_harness/system/standard_harness/skills/router.py",
+        "_harness/system/standard_harness/skills/internal/registry.py",
+        "_harness/system/standard_harness/adapters/manifest.py",
+        "_harness/system/standard_harness/cli/main.py"
+      ],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
+      "validators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "gates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "evidenceTypes": [
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
+      ],
+      "tests": [
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-023R",
+      "xpOwner": "XP-07",
+      "files": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "_harness/system/standard_harness/handoff/prompts.py",
+        "_harness/system/standard_harness/handoff/intake.py",
+        "_harness/system/standard_harness/skills/catalog.py",
+        "_harness/system/standard_harness/skills/router.py",
+        "_harness/system/standard_harness/skills/internal/registry.py",
+        "_harness/system/standard_harness/adapters/manifest.py",
+        "_harness/system/standard_harness/cli/main.py"
+      ],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
+      "validators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "gates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "evidenceTypes": [
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
+      ],
+      "tests": [
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-030R",
+      "xpOwner": "XP-01",
+      "files": [
+        "_harness/schemas/packet.schema.json",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py",
+        "_harness/system/standard_harness/state/audit.py",
+        "_harness/system/standard_harness/validation/aggregator.py"
+      ],
+      "schemas": [
+        "packet.schema.json"
+      ],
+      "policies": [
+        "gate-profiles"
+      ],
+      "validators": [
+        "packet-schema-validator"
+      ],
+      "gates": [
+        "packet-kernel-gate"
+      ],
+      "evidenceTypes": [
+        "packet-record"
+      ],
+      "tests": [
+        "tests.contract.test_v02_packet_schema"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-031R",
+      "xpOwner": "XP-01",
+      "files": [
+        "_harness/schemas/packet.schema.json",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py",
+        "_harness/system/standard_harness/state/audit.py",
+        "_harness/system/standard_harness/validation/aggregator.py"
+      ],
+      "schemas": [
+        "packet.schema.json"
+      ],
+      "policies": [],
+      "validators": [
+        "packet-state-validator"
+      ],
+      "gates": [
+        "packet-kernel-gate"
+      ],
+      "evidenceTypes": [
+        "packet-state-transition"
+      ],
+      "tests": [
+        "tests.contract.test_v02_packet_schema"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-032R",
+      "xpOwner": "XP-01",
+      "files": [
+        "_harness/schemas/packet.schema.json",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py"
+      ],
+      "schemas": [
+        "packet.schema.json"
+      ],
+      "policies": [],
+      "validators": [
+        "parallel-metadata-validator"
+      ],
+      "gates": [
+        "packet-kernel-gate"
+      ],
+      "evidenceTypes": [
+        "dag-lock-metadata"
+      ],
+      "tests": [
+        "tests.contract.test_v02_packet_schema"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-033R",
+      "xpOwner": "XP-01",
+      "files": [
+        "_harness/schemas/packet.schema.json",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py"
+      ],
+      "schemas": [
+        "packet.schema.json"
+      ],
+      "policies": [],
+      "validators": [
+        "parallel-metadata-validator"
+      ],
+      "gates": [
+        "packet-kernel-gate"
+      ],
+      "evidenceTypes": [
+        "workspace-isolation-record"
+      ],
+      "tests": [
+        "tests.contract.test_v02_packet_schema"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-040R",
+      "xpOwner": "XP-02",
+      "files": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "_harness/system/standard_harness/evidence/trust.py",
+        "_harness/system/standard_harness/validation/test_plan.py",
+        "_harness/system/standard_harness/validation/evidence_trust.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py",
+        "_harness/system/standard_harness/state/audit.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/validation/review_governance.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json"
+      ],
+      "schemas": [
+        "_harness/schemas/review-governance-evidence.schema.json"
+      ],
+      "policies": [
+        "evidence-trust-policy",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml"
+      ],
+      "validators": [
+        "test-plan-validator",
+        "review-governance-validator"
+      ],
+      "gates": [
+        "test-plan-gate",
+        "review-governance-gate",
+        "v21-conformance-gate"
+      ],
+      "evidenceTypes": [
+        "test-plan",
+        "review-governance-evidence",
+        "gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_test_plan_first_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-041R",
+      "xpOwner": "XP-02",
+      "files": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "_harness/system/standard_harness/evidence/trust.py",
+        "_harness/system/standard_harness/validation/test_plan.py",
+        "_harness/system/standard_harness/validation/evidence_trust.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py",
+        "_harness/system/standard_harness/state/audit.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/validation/review_governance.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "evidence.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "evidence-trust-policy",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "evidence-trust-validator",
+        "review-governance-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "evidence-trust-gate",
+        "review-governance-gate",
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "trusted-test-evidence",
+        "review-governance-evidence",
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_evidence_trust_model_v02",
+        "tests.contract.test_evidence_trust_migration_compatibility",
+        "tests.evals.test_manual_only_evidence_cannot_closeout",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-042R",
+      "xpOwner": "XP-02",
+      "files": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "_harness/system/standard_harness/evidence/trust.py",
+        "_harness/system/standard_harness/validation/test_plan.py",
+        "_harness/system/standard_harness/validation/evidence_trust.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py",
+        "_harness/system/standard_harness/state/audit.py",
+        "_harness/system/standard_harness/validation/aggregator.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "evidence-trust-policy"
+      ],
+      "validators": [
+        "test-plan-validator"
+      ],
+      "gates": [
+        "test-gate"
+      ],
+      "evidenceTypes": [
+        "test-result"
+      ],
+      "tests": [
+        "tests.contract.test_test_plan_first_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-043",
+      "xpOwner": "XP-02",
+      "files": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "_harness/system/standard_harness/evidence/trust.py",
+        "_harness/system/standard_harness/validation/test_plan.py",
+        "_harness/system/standard_harness/validation/evidence_trust.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py",
+        "_harness/system/standard_harness/state/audit.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "evidence-trust-policy",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "evidence-trust-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "evidence-trust-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "evidence-record",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_evidence_trust_model_v02",
+        "tests.contract.test_evidence_trust_migration_compatibility",
+        "tests.evals.test_manual_only_evidence_cannot_closeout",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-044",
+      "xpOwner": "XP-02",
+      "files": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "_harness/system/standard_harness/evidence/trust.py",
+        "_harness/system/standard_harness/validation/test_plan.py",
+        "_harness/system/standard_harness/validation/evidence_trust.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py",
+        "_harness/system/standard_harness/state/audit.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "evidence-trust-policy",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "evidence-trust-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "evidence-trust-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "evidence-trust-policy",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_evidence_trust_model_v02",
+        "tests.contract.test_evidence_trust_migration_compatibility",
+        "tests.evals.test_manual_only_evidence_cannot_closeout",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-045",
+      "xpOwner": "XP-02",
+      "files": [
+        "_harness/schemas/evidence.schema.json",
+        "_harness/policies/evidence-trust-policy.yaml",
+        "_harness/system/standard_harness/evidence/trust.py",
+        "_harness/system/standard_harness/validation/test_plan.py",
+        "_harness/system/standard_harness/validation/evidence_trust.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py",
+        "_harness/system/standard_harness/state/audit.py",
+        "_harness/system/standard_harness/validation/aggregator.py"
+      ],
+      "schemas": [
+        "evidence.schema.json"
+      ],
+      "policies": [
+        "evidence-trust-policy"
+      ],
+      "validators": [
+        "claim-ledger-validator",
+        "evidence-trust-validator"
+      ],
+      "gates": [
+        "closeout-gate",
+        "evidence-trust-gate"
+      ],
+      "evidenceTypes": [
+        "claim-ledger"
+      ],
+      "tests": [
+        "tests.contract.test_evidence_claims",
+        "tests.evals.test_manual_only_evidence_cannot_closeout"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-050R",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-051R",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-052",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-053",
+      "xpOwner": "XP-01",
+      "files": [
+        "_harness/schemas/na-decision.schema.json",
+        "_harness/policies/gate-profiles.yaml",
+        "_harness/system/standard_harness/validation/na_decisions.py"
+      ],
+      "schemas": [
+        "na-decision.schema.json"
+      ],
+      "policies": [
+        "gate-profiles"
+      ],
+      "validators": [
+        "na-decision-validator"
+      ],
+      "gates": [
+        "packet-kernel-gate"
+      ],
+      "evidenceTypes": [
+        "na-decision"
+      ],
+      "tests": [
+        "tests.contract.test_rule_based_na_decision"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-060R",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-061R",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-070R",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py",
+        "_harness/system/standard_harness/validation/review_governance.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator",
+        "review-governance-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate",
+        "review-governance-gate",
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result",
+        "review-governance-evidence",
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-071R",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py",
+        "_harness/system/standard_harness/validation/review_governance.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator",
+        "review-governance-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate",
+        "review-governance-gate",
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result",
+        "review-governance-evidence",
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-080R",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py",
+        "_harness/system/standard_harness/validation/review_governance.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator",
+        "review-governance-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate",
+        "review-governance-gate",
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result",
+        "review-governance-evidence",
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-081R",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py",
+        "_harness/system/standard_harness/validation/review_governance.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator",
+        "review-governance-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate",
+        "review-governance-gate",
+        "v21-conformance-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result",
+        "review-governance-evidence",
+        "gate-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-090R",
+      "xpOwner": "XP-04",
+      "files": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json",
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml",
+        "_harness/system/standard_harness/validation/e2e_applicability.py",
+        "_harness/system/standard_harness/validation/requirements_review.py",
+        "_harness/system/standard_harness/validation/security_review.py",
+        "_harness/system/standard_harness/domain/boundaries.py",
+        "_harness/system/standard_harness/validation/refactor_review.py",
+        "_harness/system/standard_harness/validation/ai_review.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/runtime/browser_contract.py",
+        "_harness/system/standard_harness/evidence/runtime.py",
+        "_harness/system/standard_harness/security/threat_model.py",
+        "_harness/system/standard_harness/reviews/bundles.py"
+      ],
+      "schemas": [
+        "_harness/schemas/e2e-applicability.schema.json",
+        "_harness/schemas/browser-evidence-bundle.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/security-triggers.yaml",
+        "_harness/policies/domain-boundaries.yaml"
+      ],
+      "validators": [
+        "e2e-applicability-validator",
+        "requirements-review-validator",
+        "security-review-validator",
+        "refactor-review-validator",
+        "ai-review-validator"
+      ],
+      "gates": [
+        "e2e-applicability-gate",
+        "requirements-review-gate",
+        "security-review-gate",
+        "refactor-review-gate",
+        "ai-review-gate"
+      ],
+      "evidenceTypes": [
+        "browser-evidence-bundle",
+        "requirements-review-result",
+        "security-review-result",
+        "refactor-review-result",
+        "ai-review-result"
+      ],
+      "tests": [
+        "tests.contract.test_e2e_applicability_gate",
+        "tests.contract.test_security_trigger_applicability",
+        "tests.contract.test_refactor_domain_boundary_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-100R",
+      "xpOwner": "XP-05B",
+      "files": [
+        "_harness/system/standard_harness/documenter/closeout_report.py",
+        "_harness/system/standard_harness/wiki/proposals.py",
+        "_harness/system/standard_harness/wiki/validator.py",
+        "_harness/system/standard_harness/wiki/applier.py",
+        "_harness/system/standard_harness/wiki/index.py",
+        "_harness/system/standard_harness/wiki/provenance.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "wiki-proposal-validator",
+        "wiki-provenance-validator",
+        "wiki-knowledge-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "wiki-proposal-gate",
+        "wiki-apply-gate",
+        "wiki-governance-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index",
+        "wiki-knowledge-validation-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only",
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-101R",
+      "xpOwner": "XP-05",
+      "files": [
+        "_harness/system/standard_harness/documenter/closeout_report.py",
+        "_harness/system/standard_harness/wiki/proposals.py",
+        "_harness/system/standard_harness/wiki/validator.py",
+        "_harness/system/standard_harness/wiki/applier.py",
+        "_harness/system/standard_harness/wiki/index.py",
+        "_harness/system/standard_harness/wiki/provenance.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
+      ],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
+      "validators": [
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
+      ],
+      "gates": [
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
+      ],
+      "evidenceTypes": [
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index"
+      ],
+      "tests": [
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-102R",
+      "xpOwner": "XP-05",
+      "files": [
+        "_harness/system/standard_harness/documenter/closeout_report.py",
+        "_harness/system/standard_harness/wiki/proposals.py",
+        "_harness/system/standard_harness/wiki/validator.py",
+        "_harness/system/standard_harness/wiki/applier.py",
+        "_harness/system/standard_harness/wiki/index.py",
+        "_harness/system/standard_harness/wiki/provenance.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md"
+      ],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
+      "validators": [
+        "wiki-proposal-validator",
+        "wiki-provenance-validator"
+      ],
+      "gates": [
+        "wiki-proposal-gate",
+        "wiki-apply-gate"
+      ],
+      "evidenceTypes": [
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index"
+      ],
+      "tests": [
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-110R",
+      "xpOwner": "XP-05B",
+      "files": [
+        "_harness/system/standard_harness/documenter/closeout_report.py",
+        "_harness/system/standard_harness/wiki/proposals.py",
+        "_harness/system/standard_harness/wiki/validator.py",
+        "_harness/system/standard_harness/wiki/applier.py",
+        "_harness/system/standard_harness/wiki/index.py",
+        "_harness/system/standard_harness/wiki/provenance.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "wiki-proposal-validator",
+        "wiki-provenance-validator",
+        "wiki-knowledge-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "wiki-proposal-gate",
+        "wiki-apply-gate",
+        "wiki-governance-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index",
+        "wiki-knowledge-validation-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only",
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-111R",
+      "xpOwner": "XP-05B",
+      "files": [
+        "_harness/system/standard_harness/documenter/closeout_report.py",
+        "_harness/system/standard_harness/wiki/proposals.py",
+        "_harness/system/standard_harness/wiki/validator.py",
+        "_harness/system/standard_harness/wiki/applier.py",
+        "_harness/system/standard_harness/wiki/index.py",
+        "_harness/system/standard_harness/wiki/provenance.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/architecture.md",
+        "_ops/wiki/decision-log.md",
+        "_ops/wiki/packet-history.md",
+        "_ops/wiki/current-conventions.md",
+        "_ops/wiki/known-frictions.md",
+        "_ops/wiki/agent-lessons.md",
+        "_ops/wiki/deprecated-context.md",
+        "_ops/wiki/skill-facing-index.md",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/wiki-proposal.schema.json",
+        "_harness/schemas/wiki-page.schema.json",
+        "_harness/schemas/wiki-index.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "wiki-proposal-validator",
+        "wiki-provenance-validator",
+        "wiki-knowledge-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "wiki-proposal-gate",
+        "wiki-apply-gate",
+        "wiki-governance-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "closeout-report",
+        "wiki-proposal",
+        "wiki-page-index",
+        "wiki-knowledge-validation-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_closeout_documenter_report",
+        "tests.contract.test_wiki_proposal_validator",
+        "tests.contract.test_wiki_applier_requires_validated_proposal",
+        "tests.contract.test_wiki_page_schema",
+        "tests.contract.test_wiki_index_contract",
+        "tests.contract.test_wiki_provenance_required",
+        "tests.contract.test_skill_facing_index_is_projection_only",
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-119R",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/system/standard_harness/self_improvement/recurring.py",
+        "_harness/system/standard_harness/self_improvement/starter_promotion.py",
+        "_harness/system/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "_harness/system/standard_harness/self_improvement/proposals.py",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/completion/coverage.py"
+      ],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "improvement-candidate.schema.json",
+        "starter-promotion-candidate.seed.schema.json"
+      ],
+      "policies": [],
+      "validators": [
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
+      ],
+      "gates": [
+        "compound-engineering-gate"
+      ],
+      "evidenceTypes": [
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
+      ],
+      "tests": [
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-120R",
+      "xpOwner": "XP-09",
+      "files": [
+        "_harness/system/standard_harness/self_improvement/recurring.py",
+        "_harness/system/standard_harness/self_improvement/starter_promotion.py",
+        "_harness/system/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "_harness/system/standard_harness/self_improvement/proposals.py",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/completion/coverage.py",
+        "_harness/system/standard_harness/validation/executable_release.py",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/release-behavior-probes.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator",
+        "executable-release-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "compound-engineering-gate",
+        "executable-release-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report",
+        "release-behavior-probe-bundle",
+        "executable-release-gate-evidence",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion",
+        "tests.contract.test_executable_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-121R",
+      "xpOwner": "XP-09",
+      "files": [
+        "_harness/system/standard_harness/self_improvement/recurring.py",
+        "_harness/system/standard_harness/self_improvement/starter_promotion.py",
+        "_harness/system/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "_harness/system/standard_harness/self_improvement/proposals.py",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/completion/coverage.py"
+      ],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json"
+      ],
+      "policies": [],
+      "validators": [
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
+      ],
+      "gates": [
+        "compound-engineering-gate"
+      ],
+      "evidenceTypes": [
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
+      ],
+      "tests": [
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-123R",
+      "xpOwner": "XP-09",
+      "files": [
+        "_harness/system/standard_harness/self_improvement/recurring.py",
+        "_harness/system/standard_harness/self_improvement/starter_promotion.py",
+        "_harness/system/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "_harness/system/standard_harness/self_improvement/proposals.py",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/completion/coverage.py"
+      ],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json"
+      ],
+      "policies": [],
+      "validators": [
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
+      ],
+      "gates": [
+        "compound-engineering-gate"
+      ],
+      "evidenceTypes": [
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
+      ],
+      "tests": [
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-124R",
+      "xpOwner": "XP-09",
+      "files": [
+        "_harness/system/standard_harness/self_improvement/recurring.py",
+        "_harness/system/standard_harness/self_improvement/starter_promotion.py",
+        "_harness/system/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "_harness/system/standard_harness/self_improvement/proposals.py",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/completion/coverage.py"
+      ],
+      "schemas": [
+        "_harness/schemas/starter-promotion-candidate.schema.json"
+      ],
+      "policies": [],
+      "validators": [
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator"
+      ],
+      "gates": [
+        "compound-engineering-gate"
+      ],
+      "evidenceTypes": [
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report"
+      ],
+      "tests": [
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-130R",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "_harness/system/standard_harness/handoff/prompts.py",
+        "_harness/system/standard_harness/handoff/intake.py",
+        "_harness/system/standard_harness/skills/catalog.py",
+        "_harness/system/standard_harness/skills/router.py",
+        "_harness/system/standard_harness/skills/internal/registry.py",
+        "_harness/system/standard_harness/adapters/manifest.py",
+        "_harness/system/standard_harness/cli/main.py"
+      ],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
+      "validators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "gates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "evidenceTypes": [
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
+      ],
+      "tests": [
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-131R",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/policies/role-routing.yaml",
+        "_harness/examples/role-routing.codex-claude.yaml",
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json",
+        "_harness/catalog/skill-catalog.yaml",
+        "_harness/system/standard_harness/handoff/prompts.py",
+        "_harness/system/standard_harness/handoff/intake.py",
+        "_harness/system/standard_harness/skills/catalog.py",
+        "_harness/system/standard_harness/skills/router.py",
+        "_harness/system/standard_harness/skills/internal/registry.py",
+        "_harness/system/standard_harness/adapters/manifest.py",
+        "_harness/system/standard_harness/cli/main.py"
+      ],
+      "schemas": [
+        "_harness/schemas/handoff-prompt.schema.json",
+        "_harness/schemas/skill-catalog.schema.json",
+        "_harness/schemas/skill-execution.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/role-routing.yaml"
+      ],
+      "validators": [
+        "handoff-prompt-validator",
+        "skill-catalog-validator",
+        "skill-router-validator"
+      ],
+      "gates": [
+        "handoff-gate",
+        "skill-router-gate"
+      ],
+      "evidenceTypes": [
+        "manual-handoff-evidence",
+        "skill-execution-evidence"
+      ],
+      "tests": [
+        "tests.contract.test_role_routing_policy",
+        "tests.contract.test_handoff_prompt_contract",
+        "tests.contract.test_manual_handoff_evidence_classification",
+        "tests.contract.test_skill_catalog_contract",
+        "tests.contract.test_required_skill_implementation_registry",
+        "tests.contract.test_skill_router_evidence_contract",
+        "tests.contract.test_v1_skill_reference_traceability"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-150R",
+      "xpOwner": "XP-01A",
+      "files": [
+        "_harness/policies/challenge-gate.yaml",
+        "_harness/schemas/human-decision.schema.json",
+        "_ops/decisions/records/.gitkeep",
+        "_harness/system/standard_harness/reviews/adjudication.py",
+        "_harness/system/standard_harness/memory/human_control_snapshot.py",
+        "_harness/system/standard_harness/validation/challenge_gate.py",
+        "_harness/system/standard_harness/validation/challenge_review_evidence.py",
+        "_harness/system/standard_harness/validation/human_decision.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "docs/reviews/v21"
+      ],
+      "schemas": [
+        "human-decision.schema.json"
+      ],
+      "policies": [
+        "challenge-gate",
+        "p0-policy"
+      ],
+      "validators": [
+        "challenge-gate-validator",
+        "challenge-review-evidence-validator"
+      ],
+      "gates": [
+        "challenge-gate"
+      ],
+      "evidenceTypes": [
+        "challenge-review",
+        "challenge-review-evidence-report"
+      ],
+      "tests": [
+        "tests.contract.test_challenge_gate_applicability",
+        "tests.contract.test_challenge_review_required_for_p0_exception",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-151R",
+      "xpOwner": "XP-01A",
+      "files": [
+        "_harness/policies/challenge-gate.yaml",
+        "_harness/schemas/human-decision.schema.json",
+        "_ops/decisions/records/.gitkeep",
+        "_harness/system/standard_harness/reviews/adjudication.py",
+        "_harness/system/standard_harness/memory/human_control_snapshot.py",
+        "_harness/system/standard_harness/validation/challenge_gate.py",
+        "_harness/system/standard_harness/validation/challenge_review_evidence.py",
+        "_harness/system/standard_harness/validation/human_decision.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "docs/reviews/v21"
+      ],
+      "schemas": [
+        "human-decision.schema.json"
+      ],
+      "policies": [
+        "challenge-gate"
+      ],
+      "validators": [
+        "challenge-gate-validator",
+        "challenge-review-evidence-validator"
+      ],
+      "gates": [
+        "challenge-gate"
+      ],
+      "evidenceTypes": [
+        "challenge-review",
+        "decision-record",
+        "gate-result",
+        "challenge-review-evidence-report"
+      ],
+      "tests": [
+        "tests.contract.test_challenge_gate_applicability",
+        "tests.contract.test_challenge_review_required_for_p0_exception",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-152",
+      "xpOwner": "XP-01A",
+      "files": [
+        "_harness/policies/challenge-gate.yaml",
+        "_harness/schemas/human-decision.schema.json",
+        "_ops/decisions/records/.gitkeep",
+        "_harness/system/standard_harness/reviews/adjudication.py",
+        "_harness/system/standard_harness/memory/human_control_snapshot.py",
+        "_harness/system/standard_harness/validation/challenge_gate.py",
+        "_harness/system/standard_harness/validation/challenge_review_evidence.py",
+        "_harness/system/standard_harness/validation/human_decision.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "docs/reviews/v21"
+      ],
+      "schemas": [
+        "human-decision.schema.json"
+      ],
+      "policies": [
+        "p0-policy",
+        "challenge-gate"
+      ],
+      "validators": [
+        "human-decision-validator",
+        "challenge-review-evidence-validator"
+      ],
+      "gates": [
+        "challenge-gate"
+      ],
+      "evidenceTypes": [
+        "human-decision-record",
+        "challenge-review-evidence-report"
+      ],
+      "tests": [
+        "tests.contract.test_human_decision_non_overridable_items",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-160R",
+      "xpOwner": "XP-06",
+      "files": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "_harness/system/standard_harness/context/authority.py",
+        "_harness/system/standard_harness/context/packs.py",
+        "_harness/system/standard_harness/context/budget.py",
+        "_harness/system/standard_harness/validation/context_budget.py",
+        "_harness/system/standard_harness/projection/current_context.py",
+        "_harness/system/standard_harness/reviews/routing.py",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
+      "validators": [
+        "context-authority-validator",
+        "context-budget-validator",
+        "wiki-knowledge-validator"
+      ],
+      "gates": [
+        "context-authority-gate",
+        "context-budget-gate",
+        "wiki-governance-gate"
+      ],
+      "evidenceTypes": [
+        "role-context-pack",
+        "context-budget-validation-result",
+        "wiki-knowledge-validation-result"
+      ],
+      "tests": [
+        "tests.contract.test_context_authority_labels",
+        "tests.contract.test_role_specific_context_pack",
+        "tests.contract.test_token_context_budget_validator",
+        "tests.contract.test_wiki_knowledge_release_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-161R",
+      "xpOwner": "XP-06",
+      "files": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "_harness/system/standard_harness/context/authority.py",
+        "_harness/system/standard_harness/context/packs.py",
+        "_harness/system/standard_harness/context/budget.py",
+        "_harness/system/standard_harness/validation/context_budget.py",
+        "_harness/system/standard_harness/projection/current_context.py",
+        "_harness/system/standard_harness/reviews/routing.py",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml"
+      ],
+      "validators": [
+        "context-authority-validator",
+        "context-budget-validator",
+        "wiki-knowledge-validator"
+      ],
+      "gates": [
+        "context-authority-gate",
+        "context-budget-gate",
+        "wiki-governance-gate"
+      ],
+      "evidenceTypes": [
+        "role-context-pack",
+        "context-budget-validation-result",
+        "wiki-knowledge-validation-result"
+      ],
+      "tests": [
+        "tests.contract.test_context_authority_labels",
+        "tests.contract.test_role_specific_context_pack",
+        "tests.contract.test_token_context_budget_validator",
+        "tests.contract.test_wiki_knowledge_release_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-162",
+      "xpOwner": "XP-06",
+      "files": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "_harness/system/standard_harness/context/authority.py",
+        "_harness/system/standard_harness/context/packs.py",
+        "_harness/system/standard_harness/context/budget.py",
+        "_harness/system/standard_harness/validation/context_budget.py",
+        "_harness/system/standard_harness/projection/current_context.py",
+        "_harness/system/standard_harness/reviews/routing.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml"
+      ],
+      "validators": [
+        "context-authority-validator",
+        "context-budget-validator"
+      ],
+      "gates": [
+        "context-authority-gate",
+        "context-budget-gate"
+      ],
+      "evidenceTypes": [
+        "role-context-pack",
+        "context-budget-validation-result"
+      ],
+      "tests": [
+        "tests.contract.test_context_authority_labels",
+        "tests.contract.test_role_specific_context_pack",
+        "tests.contract.test_token_context_budget_validator"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-163",
+      "xpOwner": "XP-06",
+      "files": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml",
+        "_harness/system/standard_harness/context/authority.py",
+        "_harness/system/standard_harness/context/packs.py",
+        "_harness/system/standard_harness/context/budget.py",
+        "_harness/system/standard_harness/validation/context_budget.py",
+        "_harness/system/standard_harness/projection/current_context.py",
+        "_harness/system/standard_harness/reviews/routing.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/context-authority.yaml",
+        "_harness/policies/token-budget.yaml"
+      ],
+      "validators": [
+        "context-authority-validator",
+        "context-budget-validator"
+      ],
+      "gates": [
+        "context-authority-gate",
+        "context-budget-gate"
+      ],
+      "evidenceTypes": [
+        "role-context-pack",
+        "context-budget-validation-result"
+      ],
+      "tests": [
+        "tests.contract.test_context_authority_labels",
+        "tests.contract.test_role_specific_context_pack",
+        "tests.contract.test_token_context_budget_validator"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-170R",
+      "xpOwner": "XP-08",
+      "files": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/system/standard_harness/security/evidence_classification.py",
+        "_harness/system/standard_harness/validation/sensitive_evidence.py",
+        "_harness/system/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "docs/release/release-packaging-hygiene-v21.md",
+        "tools/release_archive.py",
+        "tools/run_full_regression.py",
+        "_harness/system/standard_harness/starter/contamination.py",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "manual-command-inventory",
+        "evidence-classification-result",
+        "starter-boundary-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_release_packaging_hygiene",
+        "tests.contract.test_full_regression_runner_contract",
+        "tests.contract.test_release_archive_uses_tracked_files_only",
+        "tests.contract.test_release_archive_excludes_untracked_temp_files",
+        "tests.contract.test_full_regression_runner_records_last_test",
+        "tests.contract.test_manual_runbook_command_validation",
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.contract.test_starter_boundary",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-171R",
+      "xpOwner": "XP-08",
+      "files": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/system/standard_harness/security/evidence_classification.py",
+        "_harness/system/standard_harness/validation/sensitive_evidence.py",
+        "_harness/system/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "_harness/system/standard_harness/starter/contamination.py",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "manual-command-inventory",
+        "evidence-classification-result",
+        "starter-boundary-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_manual_runbook_command_validation",
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.contract.test_starter_boundary",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-172R",
+      "xpOwner": "XP-08",
+      "files": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/system/standard_harness/security/evidence_classification.py",
+        "_harness/system/standard_harness/validation/sensitive_evidence.py",
+        "_harness/system/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "_harness/system/standard_harness/starter/contamination.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml"
+      ],
+      "validators": [
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator"
+      ],
+      "gates": [
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate"
+      ],
+      "evidenceTypes": [
+        "manual-command-inventory",
+        "evidence-classification-result",
+        "starter-boundary-result"
+      ],
+      "tests": [
+        "tests.contract.test_manual_runbook_command_validation",
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.contract.test_starter_boundary"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-180R",
+      "xpOwner": "XP-03",
+      "files": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "_harness/system/standard_harness/policy/zones.py",
+        "_harness/system/standard_harness/policy/permissions.py",
+        "_harness/system/standard_harness/validation/boundary.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/starter/contamination.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml"
+      ],
+      "validators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "gates": [
+        "boundary-gate"
+      ],
+      "evidenceTypes": [
+        "git-diff-boundary-result",
+        "agent-permission-boundary-result"
+      ],
+      "tests": [
+        "tests.contract.test_logical_zone_mapping",
+        "tests.contract.test_git_diff_boundary_validator",
+        "tests.evals.test_product_packet_cannot_modify_harness"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-181R",
+      "xpOwner": "XP-03",
+      "files": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "_harness/system/standard_harness/policy/zones.py",
+        "_harness/system/standard_harness/policy/permissions.py",
+        "_harness/system/standard_harness/validation/boundary.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/starter/contamination.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml"
+      ],
+      "validators": [
+        "boundary-validator",
+        "permission-validator"
+      ],
+      "gates": [
+        "boundary-gate"
+      ],
+      "evidenceTypes": [
+        "git-diff-boundary-result",
+        "agent-permission-boundary-result"
+      ],
+      "tests": [
+        "tests.contract.test_logical_zone_mapping",
+        "tests.contract.test_git_diff_boundary_validator",
+        "tests.evals.test_product_packet_cannot_modify_harness"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-182R",
+      "xpOwner": "XP-03",
+      "files": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml",
+        "_harness/system/standard_harness/policy/zones.py",
+        "_harness/system/standard_harness/policy/permissions.py",
+        "_harness/system/standard_harness/validation/boundary.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/system/standard_harness/starter/contamination.py",
+        "tools/release_archive.py"
+      ],
+      "schemas": [],
+      "policies": [
+        "_harness/policies/zones.yaml",
+        "_harness/policies/agent-permissions.yaml"
+      ],
+      "validators": [
+        "boundary-validator",
+        "permission-validator",
+        "starter-contamination-validator"
+      ],
+      "gates": [
+        "boundary-gate"
+      ],
+      "evidenceTypes": [
+        "git-diff-boundary-result",
+        "agent-permission-boundary-result"
+      ],
+      "tests": [
+        "tests.contract.test_logical_zone_mapping",
+        "tests.contract.test_git_diff_boundary_validator",
+        "tests.evals.test_product_packet_cannot_modify_harness",
+        "tests.evals.test_release_archive_rejects_symlink_escape"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-185",
+      "xpOwner": "XP-08A/XP-08",
+      "files": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/system/standard_harness/security/evidence_classification.py",
+        "_harness/system/standard_harness/validation/sensitive_evidence.py",
+        "_harness/system/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "_harness/system/standard_harness/starter/contamination.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "manual-command-inventory",
+        "evidence-classification-result",
+        "starter-boundary-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_manual_runbook_command_validation",
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.contract.test_starter_boundary",
+        "tests.evals.test_secret_evidence_registration_uses_store_root",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-186",
+      "xpOwner": "XP-08A/XP-08",
+      "files": [
+        "docs/manual/standard-harness-runbook-v21.md",
+        "docs/manual/standard-harness-troubleshooting-v21.md",
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/system/standard_harness/security/evidence_classification.py",
+        "_harness/system/standard_harness/validation/sensitive_evidence.py",
+        "_harness/system/standard_harness/docsops/command_inventory.py",
+        "docs/release/final-product-docs-command-inventory-v1.md",
+        "_harness/system/standard_harness/starter/contamination.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/evidence-classification.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "manual-command-inventory-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "manual-command-gate",
+        "sensitive-evidence-gate",
+        "starter-boundary-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "manual-command-inventory",
+        "evidence-classification-result",
+        "starter-boundary-result",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_manual_runbook_command_validation",
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.contract.test_starter_boundary",
+        "tests.evals.test_secret_evidence_registration_uses_store_root",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-190R",
+      "xpOwner": "XP-00",
+      "files": [
+        "_harness/system/standard_harness/validation/requirements_metadata.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/validation/challenge_review_evidence.py",
+        "_harness/system/standard_harness/validation/na_decisions.py",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/system/standard_harness/validation/catalog.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/system/standard_harness/release/evidence.py",
+        "_harness/system/standard_harness/completion/final_gate.py",
+        "tools/release_archive.py",
+        "tools/run_full_regression.py",
+        "_ops/evidence/release/v21-full-regression.json",
+        "docs/release/v21-conformance-report.md",
+        "docs/release/release-packaging-hygiene-v21.md",
+        "docs/manual/standard-harness-v21-development-scenario.md",
+        "docs/release/release-quality-closeout-v1.md",
+        "_harness/system/standard_harness/policy/zones.py",
+        "_harness/system/standard_harness/validation/boundary.py",
+        "_harness/system/standard_harness/evidence/trust.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/wiki/applier.py",
+        "_harness/system/standard_harness/metrics/success.py",
+        "_ops/metrics/hr200-success-metrics.json",
+        "_harness/system/standard_harness/validation/review_governance.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md",
+        "_harness/system/standard_harness/validation/executable_release.py",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "packet.schema.json",
+        "gate-result.schema.json",
+        "na-decision.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "p0-policy",
+        "non-goal-guardrails",
+        "gate-profiles",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "requirements-metadata-validator",
+        "packet-schema-validator",
+        "gate-profile-validator",
+        "challenge-review-evidence-validator",
+        "na-decision-validator",
+        "v21-conformance-validator",
+        "validator-catalog-validator",
+        "boundary-validator",
+        "evidence-trust-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator",
+        "success-metrics-reporter",
+        "review-governance-validator",
+        "wiki-knowledge-validator",
+        "executable-release-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "requirements-baseline-gate",
+        "challenge-review-evidence-gate",
+        "packet-kernel-gate",
+        "v21-conformance-gate",
+        "review-governance-gate",
+        "wiki-governance-gate",
+        "executable-release-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "validator-result",
+        "challenge-review-evidence-report",
+        "release-full-regression-evidence",
+        "v21-conformance-report",
+        "review-governance-evidence",
+        "gate-result",
+        "wiki-knowledge-validation-result",
+        "release-behavior-probe-bundle",
+        "executable-release-gate-evidence",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_requirements_metadata_validator",
+        "tests.contract.test_v02_packet_schema",
+        "tests.contract.test_gate_profile_applicability",
+        "tests.contract.test_rule_based_na_decision",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit",
+        "tests.contract.test_release_packaging_hygiene",
+        "tests.contract.test_full_regression_runner_contract",
+        "tests.contract.test_release_archive_uses_tracked_files_only",
+        "tests.contract.test_release_archive_excludes_untracked_temp_files",
+        "tests.contract.test_full_regression_runner_records_last_test",
+        "tests.contract.test_v21_conformance_blocks_missing_validator_catalog_entries",
+        "tests.contract.test_v21_conformance_blocks_partial_required_hr",
+        "tests.contract.test_v21_conformance_blocks_missing_regression_evidence",
+        "tests.evals.test_release_hygiene_blocks_repo_local_sqlite",
+        "tests.contract.test_v21_conformance_blocks_missing_compound_metrics",
+        "tests.contract.test_validate_release_runs_v21_conformance",
+        "tests.contract.test_v21_development_scenario_documented",
+        "tests.contract.test_release_archive_contains_required_release_docs",
+        "tests.contract.test_v21_conformance_reads_generated_hr200_metrics_artifact",
+        "tests.contract.test_validator_catalog_entries_have_importable_implementations",
+        "tests.contract.test_validator_catalog_entries_have_negative_tests",
+        "tests.contract.test_release_blocking_validators_are_reachable_from_release_validation",
+        "tests.contract.test_validator_catalog_hr190_coverage",
+        "tests.contract.test_v21_full_conformance_gate",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout",
+        "tests.evals.test_secret_evidence_registration_uses_store_root",
+        "tests.evals.test_wiki_applier_rejects_path_traversal",
+        "tests.evals.test_release_archive_rejects_symlink_escape",
+        "tests.contract.test_success_metrics_hr200_required_fields",
+        "tests.contract.test_hr200_metrics_trust_statuses",
+        "tests.contract.test_hr200_metrics_source_watermark",
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_executable_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-191",
+      "xpOwner": "XP-10",
+      "files": [
+        "_harness/schemas/gate-result.schema.json",
+        "_harness/system/standard_harness/domain/gates.py",
+        "_harness/system/standard_harness/state/migrations.py",
+        "_harness/system/standard_harness/state/replay.py",
+        "_harness/system/standard_harness/state/audit.py",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/system/standard_harness/validation/challenge_review_evidence.py",
+        "_harness/system/standard_harness/validation/catalog.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/system/standard_harness/release/evidence.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/completion/final_gate.py",
+        "tools/release_archive.py",
+        "tools/run_full_regression.py",
+        "_ops/evidence/release/v21-full-regression.json",
+        "docs/release/v21-conformance-report.md",
+        "docs/release/release-packaging-hygiene-v21.md",
+        "docs/manual/standard-harness-v21-development-scenario.md",
+        "docs/release/release-quality-closeout-v1.md",
+        "_harness/system/standard_harness/policy/zones.py",
+        "_harness/system/standard_harness/validation/boundary.py",
+        "_harness/system/standard_harness/evidence/trust.py",
+        "_harness/system/standard_harness/domain/evidence.py",
+        "_harness/system/standard_harness/wiki/applier.py",
+        "_harness/system/standard_harness/metrics/success.py",
+        "_ops/metrics/hr200-success-metrics.json",
+        "_harness/system/standard_harness/validation/review_governance.py",
+        "_harness/system/standard_harness/domain/closeout.py",
+        "_harness/policies/review-governance.yaml",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_ops/evidence/release/v21-review-governance.json",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md",
+        "_harness/system/standard_harness/validation/executable_release.py",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "gate-result.schema.json",
+        "_harness/schemas/review-governance-evidence.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "gate-profiles",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/review-governance.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "challenge-review-evidence-validator",
+        "validator-catalog-validator",
+        "v21-conformance-validator",
+        "boundary-validator",
+        "evidence-trust-validator",
+        "sensitive-evidence-validator",
+        "starter-contamination-validator",
+        "success-metrics-reporter",
+        "review-governance-validator",
+        "wiki-knowledge-validator",
+        "executable-release-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "challenge-review-evidence-gate",
+        "v21-conformance-gate",
+        "packet-kernel-gate",
+        "review-governance-gate",
+        "wiki-governance-gate",
+        "executable-release-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "gate-result",
+        "challenge-review-evidence-report",
+        "release-full-regression-evidence",
+        "v21-conformance-report",
+        "review-governance-evidence",
+        "wiki-knowledge-validation-result",
+        "release-behavior-probe-bundle",
+        "executable-release-gate-evidence",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_gate_profile_applicability",
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence",
+        "tests.contract.test_challenge_review_blocks_unresolved_major",
+        "tests.contract.test_challenge_review_loop_limit",
+        "tests.contract.test_v21_conformance_blocks_missing_validator_catalog_entries",
+        "tests.contract.test_v21_conformance_blocks_partial_required_hr",
+        "tests.contract.test_v21_conformance_blocks_missing_regression_evidence",
+        "tests.evals.test_release_hygiene_blocks_repo_local_sqlite",
+        "tests.contract.test_v21_conformance_blocks_missing_compound_metrics",
+        "tests.contract.test_validate_release_runs_v21_conformance",
+        "tests.contract.test_v21_conformance_reads_generated_hr200_metrics_artifact",
+        "tests.contract.test_validator_catalog_entries_have_importable_implementations",
+        "tests.contract.test_validator_catalog_entries_have_negative_tests",
+        "tests.contract.test_release_blocking_validators_are_reachable_from_release_validation",
+        "tests.contract.test_validator_catalog_hr190_coverage",
+        "tests.contract.test_v21_full_conformance_gate",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout",
+        "tests.evals.test_secret_evidence_registration_uses_store_root",
+        "tests.evals.test_wiki_applier_rejects_path_traversal",
+        "tests.evals.test_release_archive_rejects_symlink_escape",
+        "tests.contract.test_success_metrics_hr200_required_fields",
+        "tests.contract.test_hr200_metrics_trust_statuses",
+        "tests.contract.test_hr200_metrics_source_watermark",
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate",
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_executable_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    },
+    {
+      "hrId": "HR-200",
+      "xpOwner": "XP-09/XP-10",
+      "files": [
+        "_harness/system/standard_harness/self_improvement/recurring.py",
+        "_harness/system/standard_harness/self_improvement/starter_promotion.py",
+        "_harness/system/standard_harness/metrics/success.py",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_ops/backlog/harness-improvement-backlog.md",
+        "_harness/system/standard_harness/self_improvement/proposals.py",
+        "_harness/system/standard_harness/domain/packets.py",
+        "_harness/system/standard_harness/completion/coverage.py",
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/system/standard_harness/validation/catalog.py",
+        "_harness/system/standard_harness/completion/v21_conformance.py",
+        "_harness/system/standard_harness/validation/aggregator.py",
+        "_harness/system/standard_harness/completion/final_gate.py",
+        "docs/manual/standard-harness-v21-development-scenario.md",
+        "docs/release/v21-conformance-report.md",
+        "docs/release/release-quality-closeout-v1.md",
+        "_ops/metrics/hr200-success-metrics.json",
+        "_harness/system/standard_harness/validation/wiki_knowledge.py",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_ops/wiki/index.yaml",
+        "_ops/wiki/skill-facing-index.md",
+        "_harness/system/standard_harness/validation/executable_release.py",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_ops/evidence/release/v21-executable-release-gate.json",
+        "_harness/system/standard_harness/validation/final_closeout.py",
+        "_harness/policies/final-closeout-policy.yaml",
+        "_harness/schemas/final-closeout-evidence.schema.json",
+        "_ops/evidence/release/v21-final-closeout.json"
+      ],
+      "schemas": [
+        "_harness/schemas/friction-signal.schema.json",
+        "_harness/schemas/starter-promotion-candidate.schema.json",
+        "_harness/schemas/final-closeout-evidence.schema.json"
+      ],
+      "policies": [
+        "_harness/policies/validator-catalog.yaml",
+        "_harness/policies/wiki-knowledge-policy.yaml",
+        "_harness/policies/release-behavior-probes.yaml",
+        "_harness/policies/final-closeout-policy.yaml"
+      ],
+      "validators": [
+        "recurring-friction-detector",
+        "success-metrics-reporter",
+        "starter-promotion-candidate-validator",
+        "v21-conformance-validator",
+        "validator-catalog-validator",
+        "wiki-knowledge-validator",
+        "executable-release-validator",
+        "final-closeout-validator"
+      ],
+      "gates": [
+        "compound-engineering-gate",
+        "v21-conformance-gate",
+        "wiki-governance-gate",
+        "executable-release-gate",
+        "v21-final-closeout-gate"
+      ],
+      "evidenceTypes": [
+        "friction.signal",
+        "improvement.candidate",
+        "starter-promotion-candidate",
+        "success-metrics-report",
+        "v21-conformance-report",
+        "wiki-knowledge-validation-result",
+        "release-behavior-probe-bundle",
+        "executable-release-gate-evidence",
+        "v21-final-closeout-evidence",
+        "final-closeout-gate-result"
+      ],
+      "tests": [
+        "tests.contract.test_recurring_friction_detector",
+        "tests.contract.test_success_metrics_report",
+        "tests.contract.test_starter_promotion_candidate_registry",
+        "tests.contract.test_compound_event_replay_compatibility",
+        "tests.evals.test_compound_engineering_required_for_v1_completion",
+        "tests.contract.test_validator_catalog_hr190_coverage",
+        "tests.contract.test_v21_full_conformance_gate",
+        "tests.contract.test_friction_signal_schema_conformance",
+        "tests.contract.test_starter_promotion_candidate_schema_conformance",
+        "tests.contract.test_success_metrics_hr200_required_fields",
+        "tests.contract.test_success_metrics_written_to_ops_metrics",
+        "tests.contract.test_success_metrics_include_source_watermark",
+        "tests.contract.test_v21_conformance_blocks_missing_compound_metrics",
+        "tests.contract.test_v21_conformance_reads_generated_hr200_metrics_artifact",
+        "tests.contract.test_validate_release_runs_v21_conformance",
+        "tests.contract.test_hr200_metrics_trust_statuses",
+        "tests.contract.test_hr200_metrics_source_watermark",
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
+        "tests.contract.test_wiki_knowledge_release_gate",
+        "tests.contract.test_executable_release_gate",
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "releaseBlocking": true
+    }
+  ]
+}
+
+

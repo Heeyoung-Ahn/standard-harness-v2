@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "project-operating-folders",
+  "filenameRule": "folder_contract_with_minimum_required_files",
+  "description": "Defines the clean self-hosting starter folder contract. Directory names are contractual. File names are samples except for the minimum required execution and contract files.",
+  "requiredFiles": [
+    "README.md",
+    "START_HERE.md",
+    "_harness/README.md",
+    "_harness/bin/harness_cli.py",
+    "_harness/policies/project-operating-folders.yaml",
+    "_harness/schemas/operating-folder-contract.schema.json"
+  ],
+  "requiredDirectories": [
+    "_harness",
+    "_harness/bin",
+    "_harness/system/standard_harness",
+    "_harness/policies",
+    "_harness/schemas",
+    "_harness/catalog",
+    "_harness/contracts",
+    "_harness/examples",
+    "_ops/packets",
+    "_ops/evidence",
+    "_ops/decisions/records",
+    "_ops/wiki-proposals",
+    "_ops/wiki",
+    "_ops/backlog",
+    "_ops/metrics",
+    "_ops/active-context",
+    "product/src",
+    "product/tests",
+    "product/docs/project/planning",
+    "product/docs/project/architecture",
+    "product/docs/project/implementation",
+    "product/docs/project/api",
+    "product/docs/project/database",
+    "product/docs/project/ui-design",
+    "product/docs/packets",
+    "product/docs/pmo",
+    "product/docs/pmo/daily-wrap-up"
+  ],
+  "zones": {
+    "_harness": {
+      "primaryReader": "AI/validator",
+      "purpose": "Harness system runtime, policies, schemas, catalogs, and requirement trace contracts.",
+      "mustNotContain": [
+        "product-specific requirements",
+        "product evidence",
+        "packet results",
+        "temporary outputs"
+      ],
+      "productPacketWritable": false
+    },
+    "_ops": {
+      "primaryReader": "AI/validator",
+      "purpose": "Operational packet state, evidence, decisions, wiki proposals, wiki projections, backlog, metrics, and active context.",
+      "starterRule": "Seed folders only; no real history, local state, logs, caches, secrets, release evidence, or product-specific artifacts.",
+      "humanDocumentationSurface": false
+    },
+    "product/src": {
+      "primaryReader": "developer",
+      "purpose": "Product source code."
+    },
+    "product/tests": {
+      "primaryReader": "tester",
+      "purpose": "Product-local tests."
+    },
+    "product/docs": {
+      "primaryReader": "human",
+      "purpose": "Human-facing project, packet, and PMO documents.",
+      "proseFormat": ".md",
+      "pmoTableFormat": ".tsv"
+    }
+  },
+  "sampleOnlyFiles": [
+    "product/docs/pmo/wbs.tsv",
+    "_ops/wiki/index.yaml",
+    "_ops/wiki/architecture.md",
+    "_ops/wiki/decision-log.md",
+    "_harness/policies/zones.yaml",
+    "_harness/catalog/skill-catalog.yaml",
+    "_harness/contracts/requirements-index.yaml"
+  ],
+  "contaminationRules": [
+    "no sqlite DB",
+    "no logs",
+    "no cache",
+    "no __pycache__",
+    "no .pytest_cache",
+    "no .env",
+    "no secret or API key",
+    "no release evidence",
+    "no generated validation report",
+    "no real packet or evidence history",
+    "no product-specific artifacts"
+  ],
+  "frictionSignalBehavior": "emit starter_folder_contract_missing or starter_contamination when starter validation blocks promotion",
+  "metricSignalBehavior": "emit starter_contract_validation_count by diagnostic id"
+}

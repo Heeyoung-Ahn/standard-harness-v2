@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-parallel-batch/v2.2",
+  "title": "Parallel Batch Plan v2.2",
+  "type": "object",
+  "required": ["batch_id", "strategy", "units", "conflict_policy"],
+  "properties": {
+    "strategy": { "enum": ["serial", "parallel_shared", "parallel_worktree"] },
+    "baseline": { "type": "object", "required": ["command", "exit_code"] },
+    "worktree": { "type": "object" },
+    "dependency_graph": { "type": "object" },
+    "units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["unit_id", "files"],
+        "properties": {
+          "unit_id": { "type": "string" },
+          "files": { "type": "object" },
+          "actual_files": { "type": "object" },
+          "worktree_path": { "type": "string" },
+          "evidence_output": { "type": "string" }
+        }
+      }
+    },
+    "merge": {
+      "type": "object",
+      "properties": {
+        "order": { "type": "array", "items": { "type": "string" } },
+        "after_each_merge_test": { "type": "object", "required": ["command", "exit_code"] },
+        "conflicts": { "type": "array" },
+        "cleanup_verified": { "type": "boolean" }
+      }
+    }
+  }
+}

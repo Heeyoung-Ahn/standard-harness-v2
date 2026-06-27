@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Starter Promotion Candidate",
+  "type": "object",
+  "required": ["candidateId", "sourceXp", "source", "proposedChange", "expectedBenefit", "risk", "requiresHarnessPacket", "promotionStatus", "evidenceIds"],
+  "properties": {
+    "candidateId": {"type": "string"},
+    "sourceXp": {"type": "string"},
+    "source": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": {"type": "string", "enum": ["friction", "metric", "harness-packet-closeout"]},
+        "id": {"type": "string"}
+      }
+    },
+    "proposedChange": {"type": "string"},
+    "expectedBenefit": {"type": "string"},
+    "risk": {"type": "string"},
+    "requiresHarnessPacket": {"const": true},
+    "promotionStatus": {"type": "string", "enum": ["proposed", "approved", "rejected", "promoted"]},
+    "sourceImprovementId": {"type": "string"},
+    "evidenceIds": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "promotionRationale": {"type": "string"}
+  }
+}

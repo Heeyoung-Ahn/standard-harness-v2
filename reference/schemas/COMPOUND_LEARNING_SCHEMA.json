@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-learning-solution/v2.2",
+  "title": "Standard Harness Compound Learning Solution v2.2",
+  "type": "object",
+  "required": [
+    "solution_id",
+    "source_packet_id",
+    "source_packet_path",
+    "work_item_id",
+    "track",
+    "problem_type",
+    "module",
+    "component",
+    "status",
+    "last_verified_at",
+    "verification_command",
+    "verification_exit_code",
+    "schema_version"
+  ],
+  "properties": {
+    "solution_id": {
+      "type": "string"
+    },
+    "source_packet_id": {
+      "type": "string"
+    },
+    "source_packet_path": {
+      "type": "string"
+    },
+    "work_item_id": {
+      "type": "string"
+    },
+    "track": {
+      "enum": [
+        "bug",
+        "knowledge",
+        "decision",
+        "pattern",
+        "workflow",
+        "implementation",
+        "data",
+        "security",
+        "architecture"
+      ]
+    },
+    "problem_type": {
+      "type": "string"
+    },
+    "module": {
+      "type": "string"
+    },
+    "component": {
+      "type": "string"
+    },
+    "severity": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "active",
+        "fresh",
+        "stale",
+        "superseded",
+        "deprecated",
+        "draft",
+        "pending"
+      ]
+    },
+    "file_refs": {
+      "type": [
+        "array",
+        "string"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "files_changed": {
+      "type": [
+        "array",
+        "string"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "root_cause": {
+      "type": "string"
+    },
+    "solution_summary": {
+      "type": "string"
+    },
+    "related_solutions": {
+      "type": [
+        "array",
+        "string"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "last_verified_at": {
+      "type": "string"
+    },
+    "verification_command": {
+      "type": "string"
+    },
+    "verification_exit_code": {
+      "type": [
+        "integer",
+        "string"
+      ]
+    },
+    "schema_version": {
+      "const": "standard-harness-learning-solution/v2.2"
+    }
+  }
+}

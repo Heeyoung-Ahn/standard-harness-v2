@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-adapter-manifest/v2.4",
+  "title": "Adapter Manifest v2.4",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "adapterBoundary",
+    "capabilitySafety"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "enum": [
+        "standard-harness-adapter-manifest/v2.2",
+        "standard-harness-v2.4-adapter-manifest/v1",
+        "standard-harness-codex-adapter-manifest/v1"
+      ]
+    },
+    "generatedAt": {
+      "type": "string"
+    },
+    "managedBy": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "adapterBoundary": {
+      "type": "string"
+    },
+    "commands": {
+      "type": "object"
+    },
+    "adapters": {
+      "type": "object"
+    },
+    "capabilitySafety": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "findings": {
+          "type": "array"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "codex": {
+      "type": "object"
+    }
+  }
+}

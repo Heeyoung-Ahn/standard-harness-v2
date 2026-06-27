@@ -1,0 +1,46 @@
+---
+name: feature-artifact-sync
+description: Use when a feature, bugfix, workflow, data, UI, API, or release change may require updates to requirements, architecture, API, database, UI, testing, profile, or release artifacts. Detects artifact drift and routes the right workflow before implementation or closeout.
+---
+
+<!--
+GENERATED FILE. DO NOT EDIT DIRECTLY.
+Source: reference/skills-src/feature-artifact-sync/SKILL.md.tmpl
+Regenerate: npm run harness:skills-generate
+Check: npm run harness:skills-check
+-->
+# Feature Artifact Sync
+
+## Use When
+- A feature changes behavior, UI, data model, API, approval state, BI metric, budget rule, asset movement, or release/deploy behavior.
+- Reviewer, Tester, PM, or Orchestrator suspects source/artifact drift.
+- The packet declares docs, architecture, database, UI, test, BI, approval, budget, asset, security, or release impact.
+- Generated context or baton disagrees with active packet or canonical artifacts.
+
+## Do Not Use When
+Trivial typo, comment, or internal refactor changes do not alter behavior, interfaces, data, release behavior, or declared artifacts.
+
+## Authority Boundary
+This skill detects drift and recommends owner routing. It does not approve scope changes, rewrite architecture, approve closeout, or manually edit generated runtime summaries.
+
+## Required Inputs
+Active packet, `ACTIVE_CONTEXT.json` as re-entry summary only, requirements, implementation plan, activated domain profile, changed files, and source artifacts directly relevant to the packet.
+
+## Workflow
+1. Identify declared impact: requirements, architecture, API, DB/migration, UI/design, tests, security, release/deploy, BI, approval workflow, budget, asset management.
+2. Build a feature-to-artifact matrix for every changed behavior or source file.
+3. Compare source changes with canonical artifacts. Flag missing artifacts, stale artifacts, undeclared scope, generated-doc manual edits, missing domain evidence, missing test plan, and missing release note.
+4. Apply truth ownership. Governance Markdown and active packet are authority; generated docs and Active Context are summaries. Regenerate stale summaries instead of editing them.
+5. Recommend next workflow: Planner for scope/artifact gaps, Developer for approved parity edits, Tester for verification gaps, Reviewer for conformance gaps, Orchestrator for approved concrete route, PM for status/handoff readability.
+
+## Evidence To Produce
+- `reference/reports/artifact-sync/<packet-id>.md`
+
+## Output Format
+| Source Change | Required Artifact | Current Status | Required Owner |
+|---|---|---|---|
+
+Include drift findings, generated context status, required SSOT, approval boundary, do-not-cross, and next first action.
+
+## Stop Conditions
+Stop mutation and route to Planner/user when implementation changes scope, active packet does not cover behavior, BI/approval/budget/asset/migration artifact is missing, generated docs conflict with governance truth, or correct SSOT cannot be determined safely.

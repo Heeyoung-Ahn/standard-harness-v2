@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["taskType", "requiredSkill", "selectedBy", "evidenceRequired", "allowedWriteZones"],
+  "properties": {
+    "taskType": {"type": "string"},
+    "requiredSkill": {"type": "string"},
+    "selectedBy": {"const": "skill-router"},
+    "evidenceRequired": {"const": true},
+    "allowedWriteZones": {"type": "array", "items": {"type": "string"}}
+  }
+}

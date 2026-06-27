@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Wiki Index",
+  "type": "object",
+  "required": [
+    "pages",
+    "projectionOnly",
+    "diagnostic_ids"
+  ],
+  "properties": {
+    "pages": {"type": "array"},
+    "projectionOnly": {"const": true},
+    "diagnostic_ids": {"type": "array", "items": {"type": "string"}}
+  }
+}

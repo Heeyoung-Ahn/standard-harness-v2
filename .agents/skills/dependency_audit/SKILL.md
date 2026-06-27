@@ -1,0 +1,51 @@
+---
+name: dependency-audit
+description: Use when a task adds, removes, upgrades, vendors, executes, or deploys third-party dependencies, GitHub Actions, install scripts, AI skills/plugins, build tools, or release-critical packages. Produces dependency, license, supply-chain, CI/CD, and skill-supply-chain evidence before implementation closeout or release.
+---
+
+<!--
+GENERATED FILE. DO NOT EDIT DIRECTLY.
+Source: reference/skills-src/dependency_audit/SKILL.md.tmpl
+Regenerate: npm run harness:skills-generate
+Check: npm run harness:skills-check
+-->
+# Dependency Audit
+
+## Use When
+- Dependency manifests, lockfiles, Dockerfiles, CI workflows, deploy workflows, browser tools, build tools, package manager files, or AI skill/plugin files change.
+- A packet has dependency, security, release, deploy, CI/CD, browser, data, or strict risk overlays.
+- New registry packages, Git URLs, binary downloads, postinstall scripts, GitHub Actions, or plugin/skill instructions are introduced.
+
+## Do Not Use When
+Pure application logic changes do not touch dependency, CI/CD, deploy, install, lockfile, or AI skill/plugin surfaces.
+
+## Authority Boundary
+This skill identifies findings, blockers, required evidence, and next owners. It does not approve dependency adoption, license acceptance, release readiness, or residual risk. It does not run install or upgrade commands unless the active packet explicitly authorizes that action.
+
+## Required Inputs
+1. Active packet and declared lane/risk overlays.
+2. Changed dependency, CI/CD, deploy, or skill/plugin files.
+3. Relevant lockfiles and existing dependency policy.
+4. Prior dependency/security evidence when referenced.
+
+## Workflow
+1. Identify all changed dependency surfaces and classify each as runtime, dev, build, deploy, CI/CD, browser, AI-skill, or unknown.
+2. Check manifest and lockfile consistency. Flag manifest-only changes, unexplained lockfile changes, and lockfile drift.
+3. Classify source and execution risk: registry, Git URL, local file, binary download, postinstall/preinstall, GitHub Action, or AI skill/plugin.
+4. Run available harness checks when safe: `npm run harness:dependency-intake -- --apply`, `npm run harness:secret-scan -- --apply`, `npm run harness:untrusted-scan -- --apply`. If unavailable, record `not_run` and the reason.
+5. Assess concrete security categories: supply chain, install execution, GitHub Actions trust boundary, secret exposure, path traversal, auth/session/permission impact, injection surface, and skill prompt-injection risk.
+6. Assess license and release risk. Runtime dependencies and release-lane changes require rollback/backout notes.
+7. Apply confidence filtering: confirmed, likely, tentative. Do not create blockers from vague best-practice concerns.
+
+## Evidence To Produce
+- `reference/reports/dependency-audit/<packet-id>.md`
+- Optional JSON: `reference/reports/dependency-audit/<packet-id>.json`
+
+## Output Format
+| Finding | Severity | Confidence | Category | Evidence | Required Action | Owner |
+|---|---|---|---|---|---|---|
+
+Also include verdict, surfaces reviewed, commands/evidence, release impact, and handoff.
+
+## Stop Conditions
+Stop and route to Planner or user when license is unclear for runtime release, a dependency/Action/install script/skill can access secrets or unsafe paths, dependency changes affect auth/budget/asset/approval/BI/production behavior, live verification is required but unavailable, or residual risk acceptance is required.

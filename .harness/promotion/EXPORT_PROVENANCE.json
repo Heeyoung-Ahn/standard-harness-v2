@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0",
+  "generatedBy": "ChatGPT clean starter extraction from uploaded repository archive",
+  "generatedAt": "2026-06-20T08:35:05Z",
+  "sourceRoot": "omitted",
+  "targetRoot": "clean-starter-harness",
+  "boundary": "product code, runtime state, evidence reports, generated context, and project-specific planning artifacts removed or templated",
+  "authority": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false
+  },
+  "postExtractionValidation": {
+    "requiredStarterFiles": "47/47 present",
+    "productContaminationScan": "0 hits for source-product, network, and domain-specific patterns",
+    "payloadBoundary": "npm run harness:payload-boundary ok=true forbiddenPathCount=0",
+    "preInitValidate": "expected starter_bootstrap_pending hold",
+    "directNodeTests": "445/447 passed on Node v22.16.0; remaining 2 are official Node >=24 init-path gate failures in this container"
+  }
+}

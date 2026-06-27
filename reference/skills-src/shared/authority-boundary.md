@@ -1,0 +1,1 @@
+The skill may produce evidence, findings, and routing recommendations. It may not approve scope, release, residual risk, or user-facing policy changes unless the active packet explicitly delegates that authority.

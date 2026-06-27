@@ -1,0 +1,39 @@
+---
+name: frontend-design
+description: Use for UI, dashboard, approval screen, workflow form, visual hierarchy, interaction, accessibility, or browser-verifiable frontend behavior changes. Requires design-system detection, pre-build UI plan, and visual/browser evidence when available.
+---
+
+# Frontend Design
+
+## Use When
+Use for BI dashboards, reporting screens, approval forms, workflow screens, budget/asset management UI, navigation, layout, components, visual hierarchy, empty/loading/error states, interaction behavior, screenshots, browser checks, or accessibility review.
+
+## Do Not Use When
+Backend-only changes, internal scripts, pure data migrations, or docs-only changes have no UI impact.
+
+## Authority Boundary
+This skill guides UI planning and verification. It must not override existing design systems, approved product requirements, active packet scope, or domain profile artifacts. Ambiguous UX/product decisions route to Planner or user.
+
+## Required Inputs
+Active packet, existing design system/component patterns, relevant BI or approval profile, route/component files, and browser/test environment details if available.
+
+## Workflow
+1. Detect design context: CSS variables, design tokens, Tailwind/theme config, component library, typography, layout/grid, chart libraries, accessibility helpers.
+2. Classify mode: existing_system, partial_system, greenfield, or ambiguous.
+3. Ask the user in Codex chat and wait when context is ambiguous.
+4. Write a pre-build UI plan: visual thesis, content plan, interaction plan, accessibility plan, and data/metric or approval-state assumptions.
+5. Apply domain checks. BI work must match metric catalog, filters, drill-downs, loading/error states, governance, and certification status. Approval work must match state machine, role visibility, permission matrix, approval rule matrix, and audit-visible actions.
+6. Verify visually when possible: route, viewport, screenshot path, console errors, interaction steps, result. If unavailable, record `not_run` and blocker.
+
+## Evidence To Produce
+- `reference/reports/frontend-design/<packet-id>.md`
+- Screenshot/browser evidence paths when available.
+
+## Output Format
+| Route | Viewport | Screenshot | Console | Interaction | Result |
+|---|---|---|---|---|---|
+
+Include design context, pre-build plan, domain checks, verdict, next workflow, next first action, and do-not-cross.
+
+## Stop Conditions
+Stop and route to Planner/user when design signals conflict, UX behavior changes product scope, BI metric or approval artifact is missing, accessibility requirements cannot be met in scope, or browser evidence is required for release but cannot be produced.

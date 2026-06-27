@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness://schemas/final-closeout-evidence.schema.json",
+  "title": "V2.1 Final Closeout Evidence",
+  "type": "object",
+  "required": [
+    "evidenceId",
+    "generatedBy",
+    "generatedAt",
+    "release",
+    "gateResult",
+    "verifications",
+    "unresolvedBlockers",
+    "metrics"
+  ],
+  "properties": {
+    "evidenceId": {"const": "release-v21-final-closeout"},
+    "generatedBy": {"type": "string"},
+    "generatedAt": {"type": "string"},
+    "release": {
+      "type": "object",
+      "required": ["headCommit", "status"],
+      "properties": {
+        "headCommit": {"type": "string"},
+        "status": {"enum": ["pass", "blocked"]}
+      }
+    },
+    "gateResult": {
+      "type": "object",
+      "required": [
+        "gateId",
+        "validatorId",
+        "status",
+        "diagnostic_ids",
+        "releaseBlocking",
+        "policyVersion",
+        "validatorVersion",
+        "evidenceIds"
+      ],
+      "properties": {
+        "gateId": {"const": "v21-final-closeout-gate"},
+        "validatorId": {"const": "final-closeout-validator"},
+        "status": {"enum": ["PASS", "BLOCKED"]},
+        "diagnostic_ids": {"type": "array", "items": {"type": "string"}},
+        "releaseBlocking": {"const": true},
+        "policyVersion": {"type": "string"},
+        "validatorVersion": {"type": "string"},
+        "evidenceIds": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "verifications": {"type": "object"},
+    "unresolvedBlockers": {"type": "array", "items": {"type": "string"}},
+    "metrics": {
+      "type": "object",
+      "required": ["finalCloseoutVerificationCoverage"],
+      "properties": {
+        "finalCloseoutVerificationCoverage": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    }
+  }
+}

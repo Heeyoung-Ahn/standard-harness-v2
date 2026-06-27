@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "evidence-classification-policy",
+  "classifications": [
+    "PUBLIC",
+    "INTERNAL",
+    "SENSITIVE",
+    "SECRET"
+  ],
+  "defaults": {
+    "classification": "INTERNAL"
+  },
+  "promotionRules": {
+    "PUBLIC": {
+      "wikiPromotionAllowed": true,
+      "handoffAllowed": true
+    },
+    "INTERNAL": {
+      "wikiPromotionAllowed": true,
+      "handoffAllowed": true
+    },
+    "SENSITIVE": {
+      "wikiPromotionAllowed": false,
+      "handoffAllowed": false
+    },
+    "SECRET": {
+      "wikiPromotionAllowed": false,
+      "handoffAllowed": false
+    }
+  },
+  "registrationRules": {
+    "SECRET": {
+      "blocked": true,
+      "diagnostic": "secret_evidence_registered"
+    }
+  },
+  "handoffRules": {
+    "SECRET": {
+      "blocked": true,
+      "diagnostic": "secret_evidence_registered"
+    },
+    "SENSITIVE": {
+      "allowedForm": "summary_or_redacted_only",
+      "diagnostic": "sensitive_handoff_requires_redaction"
+    }
+  },
+  "screenshotRules": {
+    "browserScreenshotClassificationRequired": true,
+    "sensitiveScreenshotStorage": "restricted_or_redacted"
+  },
+  "retentionPolicy": "retention-evidence-default",
+  "frictionSignalBehavior": "emit secret_evidence_registered or sensitive_wiki_promotion when evidence classification blocks registration, wiki promotion, or LLM handoff",
+  "metricSignalBehavior": "emit evidence_classification_count by classification and target"
+}

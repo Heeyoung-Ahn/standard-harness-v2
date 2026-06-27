@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "standard-harness-reviewer-profile-catalog/v1",
+  "profiles": {
+    "qa-lead": {
+      "profileId": "qa-lead",
+      "label": "QA Lead",
+      "mode": "qa",
+      "focus": ["acceptance evidence", "regression", "failure fixtures"]
+    },
+    "cso": {
+      "profileId": "cso",
+      "label": "Chief Security Officer",
+      "mode": "cso",
+      "focus": ["threat model", "secrets", "auth/permission", "dependency supply chain", "CI/CD"]
+    },
+    "data-correctness": {
+      "profileId": "data-correctness",
+      "label": "Data Correctness Reviewer",
+      "mode": "data-review",
+      "focus": ["authoritative source", "spreadsheet mapping", "metric lineage", "reconciliation"]
+    },
+    "governance": {
+      "profileId": "governance",
+      "label": "Governance Reviewer",
+      "mode": "governance",
+      "focus": ["approval boundary", "role/permission", "audit trail", "state transition"]
+    },
+    "staff-engineer": {
+      "profileId": "staff-engineer",
+      "label": "Staff Engineer",
+      "mode": "staff-engineer",
+      "focus": ["architecture", "API contracts", "load-bearing code", "integration boundary"]
+    },
+    "release-sre": {
+      "profileId": "release-sre",
+      "label": "Release/SRE Reviewer",
+      "mode": "release-sre",
+      "focus": ["cutover", "rollback", "monitoring", "operational safety"]
+    },
+    "ux-reviewer": {
+      "profileId": "ux-reviewer",
+      "label": "UX Reviewer",
+      "mode": "ux-review",
+      "focus": ["human taste", "interaction", "user-visible ship value"]
+    },
+    "automation-governor": {
+      "profileId": "automation-governor",
+      "label": "Automation Governor",
+      "mode": "compound-system",
+      "focus": ["50/50 allocation", "automation promotion", "learning capture"]
+    }
+  }
+}

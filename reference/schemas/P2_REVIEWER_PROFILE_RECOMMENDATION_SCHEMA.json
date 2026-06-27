@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standard Harness P2 Reviewer Profile Recommendation",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "requiredProfiles",
+    "minimumReviewSet"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "standard-harness-v2.2-conductor-p2/v1"
+    },
+    "requiredProfiles": {
+      "type": "array"
+    },
+    "recommendedProfiles": {
+      "type": "array"
+    },
+    "minimumReviewSet": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

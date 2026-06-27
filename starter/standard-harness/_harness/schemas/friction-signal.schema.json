@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://standard-harness.local/schemas/friction-signal.schema.json",
+  "title": "Standard Harness friction signal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["eventType", "sourceXp", "signalType", "severity", "observedAtGate", "evidenceIds", "dedupeKey", "preventableByHarness", "candidateFixType", "remediationTarget"],
+  "properties": {
+    "eventType": {"const": "friction.signal"},
+    "sourceXp": {"type": "string", "pattern": "^XP-[0-9]{2}[A-Z]?$"},
+    "packetId": {"type": ["string", "null"]},
+    "signalType": {
+      "type": "string",
+      "enum": [
+        "repeated_test_failure",
+        "misunderstood_instruction",
+        "packet_scope_creep",
+        "docs_implementation_mismatch",
+        "missed_review",
+        "missing_e2e",
+        "missing_closeout",
+        "harness_file_contamination",
+        "misplaced_product_artifact",
+        "lost_long_term_context",
+        "token_overuse",
+        "unsafe_user_instruction_conflict",
+        "manual_rework",
+        "missing_evidence",
+        "stale_context",
+        "boundary_violation",
+        "docs_drift"
+      ]
+    },
+    "severity": {"type": "string", "enum": ["low", "medium", "high"]},
+    "observedAtGate": {"type": "string"},
+    "evidenceIds": {"type": "array", "items": {"type": "string"}},
+    "dedupeKey": {"type": "string"},
+    "preventableByHarness": {"type": "boolean"},
+    "candidateFixType": {"type": "string", "enum": ["schema", "policy", "validator", "gate", "docs", "manual", "starter", "skill", "handoff", "context", "evidence", "test", "workflow", "starter-promotion"]},
+    "remediationTarget": {"type": "string"},
+    "rationale": {"type": "string"}
+  }
+}

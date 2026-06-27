@@ -1,0 +1,108 @@
+{
+  "artifact": "_harness/policies/gate-profiles.yaml",
+  "artifactRole": "canonical",
+  "policyVersion": "0.2.0",
+  "ownerXp": "XP-01",
+  "packetTypes": {
+    "docs-only": {
+      "version": "docs-only@1",
+      "requiredGates": [
+        "schema",
+        "boundary",
+        "docs-command-if-command-changed",
+        "closeout"
+      ]
+    },
+    "product-feature": {
+      "version": "product-feature@1",
+      "requiredGates": [
+        "test-plan",
+        "implementation",
+        "evidence-trust",
+        "test",
+        "e2e-applicability",
+        "requirements",
+        "security",
+        "ai-review",
+        "refactor",
+        "closeout"
+      ]
+    },
+    "product-bugfix": {
+      "version": "product-bugfix@1",
+      "requiredGates": [
+        "test-plan",
+        "regression",
+        "evidence-trust",
+        "requirements",
+        "security-if-triggered",
+        "refactor",
+        "closeout"
+      ]
+    },
+    "product-refactor": {
+      "version": "product-refactor@1",
+      "requiredGates": [
+        "test-plan",
+        "regression",
+        "contract-if-applicable",
+        "refactor",
+        "ai-review",
+        "closeout"
+      ]
+    },
+    "security-data": {
+      "version": "security-data@1",
+      "requiredGates": [
+        "security-hard-gate",
+        "test",
+        "regression",
+        "e2e-or-rationale",
+        "human-risk-decision-if-residual-risk"
+      ]
+    },
+    "harness-system": {
+      "version": "harness-system@1",
+      "requiredGates": [
+        "harness-validation",
+        "boundary",
+        "manual-command-if-docs-changed",
+        "starter-impact",
+        "closeout"
+      ]
+    },
+    "starter-promotion": {
+      "version": "starter-promotion@1",
+      "requiredGates": [
+        "starter-contamination",
+        "manual-smoke",
+        "harness-validation",
+        "closeout"
+      ]
+    }
+  },
+  "naRules": {
+    "docs-only-no-runtime-change": {
+      "packetTypes": [
+        "docs-only"
+      ],
+      "gates": [
+        "e2e-gate",
+        "e2e-applicability"
+      ],
+      "requiredSubstituteChecks": [
+        "docs-command-inventory",
+        "requirements-metadata-validation"
+      ],
+      "cannotBeUsedWhen": [
+        "runtime-path-changed",
+        "browser-workflow-claim"
+      ]
+    }
+  },
+  "frictionMetricBehavior": {
+    "friction": "XP-01 validators emit missing_e2e when a required N/A decision is invalid or absent.",
+    "metric": "XP-01 validators emit na_decision_validated and gate_profile_selected counts.",
+    "aggregation": "Signal aggregation remains XP-09-owned."
+  }
+}

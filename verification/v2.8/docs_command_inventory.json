@@ -1,0 +1,1660 @@
+{
+  "ok": true,
+  "schemaVersion": "standard-harness-docs-command-inventory/v2.8",
+  "docCount": 47,
+  "commandCount": 303,
+  "uniqueScripts": [
+    "browser:evidence:audit",
+    "browser:evidence:intake",
+    "browser:evidence:prompt",
+    "docs:commands:check",
+    "harness:abstain",
+    "harness:agent",
+    "harness:ai-review-runner",
+    "harness:brief",
+    "harness:browser-evidence",
+    "harness:codex-ready",
+    "harness:codex-start",
+    "harness:codex-task",
+    "harness:context",
+    "harness:context-brief",
+    "harness:context-budget-policy",
+    "harness:context-meter",
+    "harness:context-prune",
+    "harness:cutover-preflight",
+    "harness:cutover-report",
+    "harness:day-start-brief",
+    "harness:day-wrap-up-brief",
+    "harness:dependency-intake",
+    "harness:directional-pilot",
+    "harness:doc-policy",
+    "harness:doctor",
+    "harness:evidence",
+    "harness:evidence-quality",
+    "harness:explain",
+    "harness:first-packet",
+    "harness:friction-report",
+    "harness:guard",
+    "harness:handoff",
+    "harness:init",
+    "harness:lane",
+    "harness:learn",
+    "harness:manual-route",
+    "harness:migration-apply",
+    "harness:migration-preview",
+    "harness:next",
+    "harness:npm-diagnostic",
+    "harness:operator-digest",
+    "harness:orchestrate",
+    "harness:packaging-readiness",
+    "harness:packet-lean",
+    "harness:packet-preflight",
+    "harness:payload-boundary",
+    "harness:promote-starter",
+    "harness:recovery-rehearsal",
+    "harness:refactor-audit",
+    "harness:repro-check",
+    "harness:risk",
+    "harness:risk-gate",
+    "harness:secret-scan",
+    "harness:status",
+    "harness:sync-state",
+    "harness:task-brief",
+    "harness:trace-matrix",
+    "harness:transition",
+    "harness:untrusted-scan",
+    "harness:v23",
+    "harness:v24",
+    "harness:v24-policy-audit",
+    "harness:v28",
+    "harness:validate",
+    "harness:validation-report"
+  ],
+  "unique_scripts": [
+    "browser:evidence:audit",
+    "browser:evidence:intake",
+    "browser:evidence:prompt",
+    "docs:commands:check",
+    "harness:abstain",
+    "harness:agent",
+    "harness:ai-review-runner",
+    "harness:brief",
+    "harness:browser-evidence",
+    "harness:codex-ready",
+    "harness:codex-start",
+    "harness:codex-task",
+    "harness:context",
+    "harness:context-brief",
+    "harness:context-budget-policy",
+    "harness:context-meter",
+    "harness:context-prune",
+    "harness:cutover-preflight",
+    "harness:cutover-report",
+    "harness:day-start-brief",
+    "harness:day-wrap-up-brief",
+    "harness:dependency-intake",
+    "harness:directional-pilot",
+    "harness:doc-policy",
+    "harness:doctor",
+    "harness:evidence",
+    "harness:evidence-quality",
+    "harness:explain",
+    "harness:first-packet",
+    "harness:friction-report",
+    "harness:guard",
+    "harness:handoff",
+    "harness:init",
+    "harness:lane",
+    "harness:learn",
+    "harness:manual-route",
+    "harness:migration-apply",
+    "harness:migration-preview",
+    "harness:next",
+    "harness:npm-diagnostic",
+    "harness:operator-digest",
+    "harness:orchestrate",
+    "harness:packaging-readiness",
+    "harness:packet-lean",
+    "harness:packet-preflight",
+    "harness:payload-boundary",
+    "harness:promote-starter",
+    "harness:recovery-rehearsal",
+    "harness:refactor-audit",
+    "harness:repro-check",
+    "harness:risk",
+    "harness:risk-gate",
+    "harness:secret-scan",
+    "harness:status",
+    "harness:sync-state",
+    "harness:task-brief",
+    "harness:trace-matrix",
+    "harness:transition",
+    "harness:untrusted-scan",
+    "harness:v23",
+    "harness:v24",
+    "harness:v24-policy-audit",
+    "harness:v28",
+    "harness:validate",
+    "harness:validation-report"
+  ],
+  "doc_count": 47,
+  "command_count": 303,
+  "commands": [
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:doctor",
+      "script": "harness:doctor"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:next",
+      "script": "harness:next"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:friction-report",
+      "script": "harness:friction-report"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:learn",
+      "script": "harness:learn"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:payload-boundary",
+      "script": "harness:payload-boundary"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:codex-ready",
+      "script": "harness:codex-ready"
+    },
+    {
+      "docPath": "README.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:payload-boundary",
+      "script": "harness:payload-boundary"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:codex-start",
+      "script": "harness:codex-start"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:codex-ready",
+      "script": "harness:codex-ready"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:codex-task",
+      "script": "harness:codex-task"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:lane",
+      "script": "harness:lane"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:manual-route",
+      "script": "harness:manual-route"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:context-brief",
+      "script": "harness:context-brief"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:packet-lean",
+      "script": "harness:packet-lean"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:day-start-brief",
+      "script": "harness:day-start-brief"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:context-brief",
+      "script": "harness:context-brief"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:manual-route",
+      "script": "harness:manual-route"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:evidence",
+      "script": "harness:evidence"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:day-wrap-up-brief",
+      "script": "harness:day-wrap-up-brief"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:friction-report",
+      "script": "harness:friction-report"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:context-brief",
+      "script": "harness:context-brief"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:doc-policy",
+      "script": "harness:doc-policy"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:codex-start",
+      "script": "harness:codex-start"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:codex-ready",
+      "script": "harness:codex-ready"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:codex-task",
+      "script": "harness:codex-task"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run browser:evidence:prompt",
+      "script": "browser:evidence:prompt"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run browser:evidence:intake",
+      "script": "browser:evidence:intake"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run browser:evidence:audit",
+      "script": "browser:evidence:audit"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "START_HERE.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "reference/manuals/browser-evidence.md",
+      "command": "npm run browser:evidence:prompt",
+      "script": "browser:evidence:prompt"
+    },
+    {
+      "docPath": "reference/manuals/browser-evidence.md",
+      "command": "npm run browser:evidence:intake",
+      "script": "browser:evidence:intake"
+    },
+    {
+      "docPath": "reference/manuals/browser-evidence.md",
+      "command": "npm run harness:browser-evidence",
+      "script": "harness:browser-evidence"
+    },
+    {
+      "docPath": "reference/manuals/browser-evidence.md",
+      "command": "npm run browser:evidence:audit",
+      "script": "browser:evidence:audit"
+    },
+    {
+      "docPath": "reference/manuals/browser-evidence.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/browser-evidence.md",
+      "command": "npm run harness:browser-evidence",
+      "script": "harness:browser-evidence"
+    },
+    {
+      "docPath": "reference/manuals/closeout.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/closeout.md",
+      "command": "npm run harness:codex-ready",
+      "script": "harness:codex-ready"
+    },
+    {
+      "docPath": "reference/manuals/closeout.md",
+      "command": "npm run harness:v28",
+      "script": "harness:v28"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:payload-boundary",
+      "script": "harness:payload-boundary"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/HARNESS_MANUAL.md",
+      "command": "npm run harness:npm-diagnostic",
+      "script": "harness:npm-diagnostic"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:v24",
+      "script": "harness:v24"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:v24",
+      "script": "harness:v24"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:repro-check",
+      "script": "harness:repro-check"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:abstain",
+      "script": "harness:abstain"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:dependency-intake",
+      "script": "harness:dependency-intake"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:context-meter",
+      "script": "harness:context-meter"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:context-prune",
+      "script": "harness:context-prune"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:evidence-quality",
+      "script": "harness:evidence-quality"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:secret-scan",
+      "script": "harness:secret-scan"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:untrusted-scan",
+      "script": "harness:untrusted-scan"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:guard",
+      "script": "harness:guard"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:task-brief",
+      "script": "harness:task-brief"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:v24-policy-audit",
+      "script": "harness:v24-policy-audit"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:v24",
+      "script": "harness:v24"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:repro-check",
+      "script": "harness:repro-check"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:abstain",
+      "script": "harness:abstain"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:dependency-intake",
+      "script": "harness:dependency-intake"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:context-meter",
+      "script": "harness:context-meter"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:evidence-quality",
+      "script": "harness:evidence-quality"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:secret-scan",
+      "script": "harness:secret-scan"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:untrusted-scan",
+      "script": "harness:untrusted-scan"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:guard",
+      "script": "harness:guard"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:task-brief",
+      "script": "harness:task-brief"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:next",
+      "script": "harness:next"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:doctor",
+      "script": "harness:doctor"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:handoff",
+      "script": "harness:handoff"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:explain",
+      "script": "harness:explain"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:transition",
+      "script": "harness:transition"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:transition",
+      "script": "harness:transition"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:transition",
+      "script": "harness:transition"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:transition",
+      "script": "harness:transition"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:transition",
+      "script": "harness:transition"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:transition",
+      "script": "harness:transition"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:risk",
+      "script": "harness:risk"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:risk",
+      "script": "harness:risk"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:risk",
+      "script": "harness:risk"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:risk",
+      "script": "harness:risk"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:first-packet",
+      "script": "harness:first-packet"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:first-packet",
+      "script": "harness:first-packet"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:first-packet",
+      "script": "harness:first-packet"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:evidence",
+      "script": "harness:evidence"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:evidence",
+      "script": "harness:evidence"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:evidence",
+      "script": "harness:evidence"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:evidence",
+      "script": "harness:evidence"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:brief",
+      "script": "harness:brief"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:agent",
+      "script": "harness:agent"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:directional-pilot",
+      "script": "harness:directional-pilot"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:directional-pilot",
+      "script": "harness:directional-pilot"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:trace-matrix",
+      "script": "harness:trace-matrix"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:trace-matrix",
+      "script": "harness:trace-matrix"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:refactor-audit",
+      "script": "harness:refactor-audit"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:refactor-audit",
+      "script": "harness:refactor-audit"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:refactor-audit",
+      "script": "harness:refactor-audit"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:operator-digest",
+      "script": "harness:operator-digest"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:operator-digest",
+      "script": "harness:operator-digest"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:recovery-rehearsal",
+      "script": "harness:recovery-rehearsal"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:recovery-rehearsal",
+      "script": "harness:recovery-rehearsal"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:context-budget-policy",
+      "script": "harness:context-budget-policy"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:context-budget-policy",
+      "script": "harness:context-budget-policy"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:context-budget-policy",
+      "script": "harness:context-budget-policy"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:packaging-readiness",
+      "script": "harness:packaging-readiness"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:packaging-readiness",
+      "script": "harness:packaging-readiness"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:ai-review-runner",
+      "script": "harness:ai-review-runner"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:ai-review-runner",
+      "script": "harness:ai-review-runner"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:orchestrate",
+      "script": "harness:orchestrate"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:migration-preview",
+      "script": "harness:migration-preview"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:migration-apply",
+      "script": "harness:migration-apply"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:cutover-preflight",
+      "script": "harness:cutover-preflight"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:cutover-report",
+      "script": "harness:cutover-report"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:risk-gate",
+      "script": "harness:risk-gate"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:transition",
+      "script": "harness:transition"
+    },
+    {
+      "docPath": "reference/manuals/human/commands.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run browser:evidence:prompt",
+      "script": "browser:evidence:prompt"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run browser:evidence:audit",
+      "script": "browser:evidence:audit"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:packaging-readiness",
+      "script": "harness:packaging-readiness"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/first-run-rehearsal.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:migration-preview",
+      "script": "harness:migration-preview"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:migration-apply",
+      "script": "harness:migration-apply"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/getting-started.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:first-packet",
+      "script": "harness:first-packet"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:transition",
+      "script": "harness:transition"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:evidence",
+      "script": "harness:evidence"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:evidence",
+      "script": "harness:evidence"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:evidence",
+      "script": "harness:evidence"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/operations.md",
+      "command": "npm run harness:next",
+      "script": "harness:next"
+    },
+    {
+      "docPath": "reference/manuals/human/post-validation-coverage-map.md",
+      "command": "npm run harness:directional-pilot",
+      "script": "harness:directional-pilot"
+    },
+    {
+      "docPath": "reference/manuals/human/post-validation-coverage-map.md",
+      "command": "npm run harness:trace-matrix",
+      "script": "harness:trace-matrix"
+    },
+    {
+      "docPath": "reference/manuals/human/post-validation-coverage-map.md",
+      "command": "npm run harness:ai-review-runner",
+      "script": "harness:ai-review-runner"
+    },
+    {
+      "docPath": "reference/manuals/human/post-validation-coverage-map.md",
+      "command": "npm run harness:operator-digest",
+      "script": "harness:operator-digest"
+    },
+    {
+      "docPath": "reference/manuals/human/post-validation-coverage-map.md",
+      "command": "npm run harness:refactor-audit",
+      "script": "harness:refactor-audit"
+    },
+    {
+      "docPath": "reference/manuals/human/post-validation-coverage-map.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/post-validation-coverage-map.md",
+      "command": "npm run harness:context-budget-policy",
+      "script": "harness:context-budget-policy"
+    },
+    {
+      "docPath": "reference/manuals/human/post-validation-coverage-map.md",
+      "command": "npm run harness:packaging-readiness",
+      "script": "harness:packaging-readiness"
+    },
+    {
+      "docPath": "reference/manuals/human/post-validation-coverage-map.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:promote-starter",
+      "script": "harness:promote-starter"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:payload-boundary",
+      "script": "harness:payload-boundary"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/starter-promotion.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:doctor",
+      "script": "harness:doctor"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:next",
+      "script": "harness:next"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/human/troubleshooting.md",
+      "command": "npm run harness:validation-report",
+      "script": "harness:validation-report"
+    },
+    {
+      "docPath": "reference/manuals/operator/DRIFT_RECOVERY_RUNBOOK.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/operator/DRIFT_RECOVERY_RUNBOOK.md",
+      "command": "npm run harness:sync-state",
+      "script": "harness:sync-state"
+    },
+    {
+      "docPath": "reference/manuals/operator/DRIFT_RECOVERY_RUNBOOK.md",
+      "command": "npm run harness:context",
+      "script": "harness:context"
+    },
+    {
+      "docPath": "reference/manuals/operator/DRIFT_RECOVERY_RUNBOOK.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/operator/DRIFT_RECOVERY_RUNBOOK.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run harness:status",
+      "script": "harness:status"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run browser:evidence:prompt",
+      "script": "browser:evidence:prompt"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run browser:evidence:intake",
+      "script": "browser:evidence:intake"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run browser:evidence:audit",
+      "script": "browser:evidence:audit"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/operator/OPERATOR_QUICKSTART.md",
+      "command": "npm run harness:validate",
+      "script": "harness:validate"
+    },
+    {
+      "docPath": "reference/manuals/operator/TOKEN_AND_FRICTION_GUIDE.md",
+      "command": "npm run harness:v23",
+      "script": "harness:v23"
+    },
+    {
+      "docPath": "reference/manuals/operator/TOKEN_AND_FRICTION_GUIDE.md",
+      "command": "npm run harness:v23",
+      "script": "harness:v23"
+    },
+    {
+      "docPath": "reference/manuals/operator/TOKEN_AND_FRICTION_GUIDE.md",
+      "command": "npm run harness:v23",
+      "script": "harness:v23"
+    },
+    {
+      "docPath": "reference/manuals/troubleshooting.md",
+      "command": "npm run harness:init",
+      "script": "harness:init"
+    },
+    {
+      "docPath": "reference/manuals/troubleshooting.md",
+      "command": "npm run harness:packet-preflight",
+      "script": "harness:packet-preflight"
+    },
+    {
+      "docPath": "reference/manuals/troubleshooting.md",
+      "command": "npm run browser:evidence:audit",
+      "script": "browser:evidence:audit"
+    },
+    {
+      "docPath": "reference/manuals/troubleshooting.md",
+      "command": "npm run browser:evidence:intake",
+      "script": "browser:evidence:intake"
+    },
+    {
+      "docPath": "reference/manuals/troubleshooting.md",
+      "command": "npm run docs:commands:check",
+      "script": "docs:commands:check"
+    }
+  ],
+  "diagnostics": []
+}

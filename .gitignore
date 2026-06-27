@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Harness runtime/generated local state
+.agents/runtime/
+.harness/state/
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs and local environment
+*.log
+.env
+.env.*
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

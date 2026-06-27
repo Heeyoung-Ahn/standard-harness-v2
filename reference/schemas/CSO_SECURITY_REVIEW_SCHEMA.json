@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-cso-security-review/v2.2",
+  "title": "Standard Harness CSO Security Review v2.2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "mode",
+    "phases_run",
+    "decision",
+    "findings"
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "packet_id"
+      ]
+    },
+    {
+      "required": [
+        "packet_path"
+      ]
+    },
+    {
+      "required": [
+        "work_item_id"
+      ]
+    }
+  ],
+  "properties": {
+    "artifact_type": {
+      "const": "security_review_report"
+    },
+    "schema_version": {
+      "const": "standard-harness-security-review/v2.2"
+    },
+    "packet_id": {
+      "type": "string"
+    },
+    "packet_path": {
+      "type": "string"
+    },
+    "work_item_id": {
+      "type": "string"
+    },
+    "mode": {
+      "enum": [
+        "daily",
+        "comprehensive",
+        "scoped",
+        "diff",
+        "release"
+      ]
+    },
+    "phases_run": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 14
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": 0
+          }
+        },
+        {
+          "contains": {
+            "const": 1
+          }
+        },
+        {
+          "contains": {
+            "const": 12
+          }
+        },
+        {
+          "contains": {
+            "const": 13
+          }
+        },
+        {
+          "contains": {
+            "const": 14
+          }
+        }
+      ]
+    },
+    "attack_surface": {
+      "type": "object"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "filter_stats": {
+      "type": "object",
+      "required": [
+        "raw_candidates",
+        "suppressed_false_positives",
+        "main_findings"
+      ],
+      "properties": {
+        "raw_candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "suppressed_false_positives": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "main_findings": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "trend": {
+      "type": "object"
+    },
+    "decision": {
+      "enum": [
+        "pass",
+        "pass_with_findings",
+        "block"
+      ]
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": [
+        "id",
+        "severity",
+        "status",
+        "confidence",
+        "phase",
+        "fingerprint",
+        "file",
+        "line",
+        "evidence_quote_redacted",
+        "exploit_scenario",
+        "impact",
+        "recommendation"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        "status": {
+          "enum": [
+            "open",
+            "fixed",
+            "accepted",
+            "false-positive",
+            "false_positive",
+            "suppressed",
+            "closed"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "phase": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 14
+        },
+        "fingerprint": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidence_quote_redacted": {
+          "type": "string"
+        },
+        "exploit_scenario": {
+          "type": "string"
+        },
+        "impact": {
+          "type": "string"
+        },
+        "recommendation": {
+          "type": "string"
+        },
+        "accepted_risk": {
+          "type": "object",
+          "properties": {
+            "approved_by": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

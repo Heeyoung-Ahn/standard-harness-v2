@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-review-scope/v2.2",
+  "title": "Review Scope Artifact v2.2",
+  "type": "object",
+  "required": ["base_ref", "head_ref", "mode", "review_mode", "changed_files"],
+  "properties": {
+    "review_mode": { "enum": ["no-mutation", "read-only"] },
+    "changed_files": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "deleted_files": { "type": "array", "items": { "type": "string" } },
+    "protected_artifact_deletion_approved_by": { "type": "string" }
+  }
+}

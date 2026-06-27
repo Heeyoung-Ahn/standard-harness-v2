@@ -1,0 +1,190 @@
+{
+  "schemaVersion": "standard-harness-repository-layout-ownership/v1",
+  "precedence": "Most-specific path pattern wins; ties use earlier rule order.",
+  "rules": [
+    {
+      "pathPattern": "AGENTS.md",
+      "ownerLayer": "harness-governance",
+      "defaultChangeZone": "core",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Entry adapter changes affect every Codex session."
+    },
+    {
+      "pathPattern": ".agents/rules/**",
+      "ownerLayer": "harness-governance",
+      "defaultChangeZone": "core",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Workspace constitution changes are load-bearing for all roles."
+    },
+    {
+      "pathPattern": ".harness/runtime/**",
+      "ownerLayer": "harness-runtime",
+      "defaultChangeZone": "core",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Runtime command behavior can reroute approvals, validation, and state."
+    },
+    {
+      "pathPattern": "reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md",
+      "ownerLayer": "packet-contract",
+      "defaultChangeZone": "core",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "The packet template defines the reusable approval and evidence contract."
+    },
+    {
+      "pathPattern": "reference/artifacts/REPOSITORY_LAYOUT_OWNERSHIP.json",
+      "ownerLayer": "harness-governance",
+      "defaultChangeZone": "core",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "The machine-readable ownership map controls change-zone routing."
+    },
+    {
+      "pathPattern": "package.json",
+      "ownerLayer": "harness-command-wrapper",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Root command ownership affects harness and product script boundaries."
+    },
+    {
+      "pathPattern": ".agents/artifacts/**",
+      "ownerLayer": "governance-truth",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Governance truth changes affect planning and closeout context."
+    },
+    {
+      "pathPattern": ".agents/runtime/generated-state-docs/**",
+      "ownerLayer": "generated-projection",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "generated-only",
+      "exceptionRationale": "Generated projections are not write authority but can affect re-entry context."
+    },
+    {
+      "pathPattern": ".harness/test/**",
+      "ownerLayer": "harness-tests",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Harness tests guard reusable runtime behavior."
+    },
+    {
+      "pathPattern": "reference/artifacts/**",
+      "ownerLayer": "reference-artifacts",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Reference artifacts can become approval or verification inputs."
+    },
+    {
+      "pathPattern": "reference/manuals/**",
+      "ownerLayer": "operator-manuals",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Manuals shape operator decisions and starter use."
+    },
+    {
+      "pathPattern": "standard-template/reference/manuals/**",
+      "ownerLayer": "starter-operator-manuals",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Starter manuals shape copied-starter operator decisions and must be classified explicitly rather than through unclassified fallback."
+    },
+    {
+      "pathPattern": "reference/profiles/**",
+      "ownerLayer": "optional-profiles",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Profile contracts constrain product packet readiness."
+    },
+    {
+      "pathPattern": "reference/packets/**",
+      "ownerLayer": "packet-history",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Concrete packets are approval/evidence history, not disposable scratch."
+    },
+    {
+      "pathPattern": "src/api/**",
+      "ownerLayer": "product-api",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "API paths are public or cross-component contracts."
+    },
+    {
+      "pathPattern": "app/api/**",
+      "ownerLayer": "product-api",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "API paths are public or cross-component contracts."
+    },
+    {
+      "pathPattern": "backend/**",
+      "ownerLayer": "product-backend",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Backend paths often carry data, auth, API, or service boundaries."
+    },
+    {
+      "pathPattern": "server/**",
+      "ownerLayer": "product-backend",
+      "defaultChangeZone": "load-bearing",
+      "routeImplication": "packet-path",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Server paths often carry data, auth, API, or service boundaries."
+    },
+    {
+      "pathPattern": "customizations/**",
+      "ownerLayer": "project-customization",
+      "defaultChangeZone": "padded",
+      "routeImplication": "fast-path-eligible",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Project customization is isolated by convention and can be routed lightly when it does not cross contracts."
+    },
+    {
+      "pathPattern": "frontend/**",
+      "ownerLayer": "product-ui",
+      "defaultChangeZone": "padded",
+      "routeImplication": "fast-path-eligible",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Frontend-only paths are padded unless they cross API, auth, schema, or shared dependency boundaries."
+    },
+    {
+      "pathPattern": "src/**",
+      "ownerLayer": "product-source",
+      "defaultChangeZone": "padded",
+      "routeImplication": "fast-path-eligible",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Default product source is padded until more specific API/shared/backend ownership rules match."
+    },
+    {
+      "pathPattern": "app/**",
+      "ownerLayer": "product-app",
+      "defaultChangeZone": "padded",
+      "routeImplication": "fast-path-eligible",
+      "productionEligibility": "allowed",
+      "exceptionRationale": "Default app UI/source paths are padded until more specific API/shared/backend ownership rules match."
+    },
+    {
+      "pathPattern": "prototypes/**",
+      "ownerLayer": "prototype-lane",
+      "defaultChangeZone": "prototype",
+      "routeImplication": "production-forbidden",
+      "productionEligibility": "forbidden-until-promoted",
+      "exceptionRationale": "Prototype work must not be promoted to production without a later modeling gate."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standard Harness V2.3 Friction Report",
+  "type": "object",
+  "required": ["schemaVersion", "generatedAt", "lane", "routeReadCount", "routeTargetTokens", "frictionRisks"],
+  "properties": {
+    "schemaVersion": { "const": "standard-harness-v2.3-lean-conductor/v1" },
+    "generatedAt": { "type": "string" },
+    "lane": { "type": "string" },
+    "routeReadCount": { "type": "integer" },
+    "routeTargetTokens": { "type": "integer" },
+    "frictionRisks": { "type": "array", "items": { "type": "string" } }
+  }
+}

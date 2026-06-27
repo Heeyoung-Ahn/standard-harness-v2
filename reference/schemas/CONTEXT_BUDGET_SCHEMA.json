@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standard Harness Context Budget V2.3/V2.4",
+  "type": "object",
+  "required": ["schemaVersion", "defaultReadSetMaxDocuments", "budgets", "neverAutoRead"],
+  "properties": {
+    "schemaVersion": {
+      "enum": [
+        "standard-harness-v2.3-context-budget/v1",
+        "standard-harness-v2.4-context-budget/v1"
+      ]
+    },
+    "defaultReadSetMaxDocuments": { "type": "integer", "minimum": 1 },
+    "budgets": { "type": "object" },
+    "maxDocuments": { "type": "object" },
+    "neverAutoRead": { "type": "array", "items": { "type": "string" } },
+    "rawEvidencePolicy": { "type": "string" },
+    "duplicateReadPolicy": { "type": "string" },
+    "riskOverlayPolicy": { "type": "string" }
+  }
+}

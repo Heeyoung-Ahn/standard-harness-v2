@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "domain-boundaries-policy",
+  "reviewRequiredAreas": [
+    "core-domain",
+    "business-rule",
+    "authority",
+    "data-model",
+    "api-contract",
+    "service-boundary"
+  ],
+  "allowedRefactorResults": [
+    "NO_REFACTOR_REQUIRED",
+    "REFACTOR_WITHIN_PACKET_REQUIRED",
+    "FOLLOW_UP_REFACTOR_PACKET_REQUIRED"
+  ],
+  "lightweightAreas": [
+    "small-utility",
+    "docs",
+    "test-only"
+  ],
+  "frictionSignalBehavior": "emit domain_boundary_review_required or refactor_review_required when blocked",
+  "metricSignalBehavior": "emit refactor_review_count by result and domain area"
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-v2.1/evidence.schema.json",
+  "title": "Standard Harness V2.1 Evidence",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "evidenceId",
+    "type",
+    "path",
+    "producerRole",
+    "producerProvider",
+    "producedVia",
+    "command",
+    "exitCode",
+    "baseCommit",
+    "headCommit",
+    "workspaceId",
+    "hash",
+    "claims",
+    "trustStatus",
+    "validationStatus"
+  ],
+  "properties": {
+    "evidenceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "producerRole": {
+      "type": "string",
+      "minLength": 1
+    },
+    "producerProvider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "producedVia": {
+      "enum": [
+        "manual-handoff",
+        "harness-reproduction",
+        "trusted-ci",
+        "human-accepted-manual"
+      ]
+    },
+    "command": {
+      "type": "string"
+    },
+    "exitCode": {
+      "type": "integer"
+    },
+    "baseCommit": {
+      "type": "string"
+    },
+    "headCommit": {
+      "type": "string"
+    },
+    "workspaceId": {
+      "type": "string"
+    },
+    "hash": {
+      "type": "string"
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "trustStatus": {
+      "enum": [
+        "RECORDED",
+        "STRUCTURALLY_VALID",
+        "CLAIM_LINKED",
+        "REPRODUCED_BY_HARNESS",
+        "TRUSTED_CI",
+        "MANUAL_ONLY",
+        "MANUAL_ACCEPTED_BY_HUMAN",
+        "STALE",
+        "INVALID"
+      ]
+    },
+    "validationStatus": {
+      "enum": [
+        "RECORDED",
+        "STRUCTURALLY_VALID",
+        "STALE",
+        "INVALID"
+      ]
+    }
+  }
+}

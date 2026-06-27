@@ -1,0 +1,39 @@
+---
+name: operating-common-rollout
+description: Use when rolling standard-harness updates, Codex plugin metadata, reference skills, runtime rules, or common operating artifacts into sibling projects. Requires inventory, payload boundary, dry-run diff, managed manifest safety, validation, and rollback plan.
+---
+
+# Operating Common Rollout
+
+## Use When
+Use when standard-harness changes must be copied into sibling projects, Codex plugin metadata or reference skills are updated across projects, common runtime/workflow/governance artifacts need rollout, or the team wants a dry-run impact report.
+
+## Do Not Use When
+Normal feature implementation inside a product project should not use this skill. Do not use it to overwrite project-specific requirements, architecture, packets, or generated runtime state.
+
+## Authority Boundary
+This skill may plan and execute approved harness rollout. It must not overwrite project-specific artifacts, delete files outside a managed manifest, edit generated summaries, assume all projects have identical profiles, or apply to multiple repositories without dry-run and user approval.
+
+## Required Inputs
+Source and target standard-harness versions, target project list, managed artifact manifest if present, payload boundary rules, and approval for multi-project apply.
+
+## Workflow
+1. Inventory targets: current harness version, Codex plugin manifest, skill count, local harness modifications, uncommitted changes.
+2. Classify files: managed harness artifact, project-specific governance artifact, generated runtime summary, unknown/local customization.
+3. Run boundary checks: relative paths only, reject `..` and absolute paths, keep target inside managed root, run payload boundary validation.
+4. Produce dry-run diff: create, modify, remove, skip, manual review.
+5. Ask for approval before apply. Silence is not approval.
+6. Apply one target at a time. After each target run validation, plugin manifest check, payload boundary, and rollback notes.
+7. Produce rollout report.
+
+## Evidence To Produce
+- `reference/reports/operating-rollout/<date>-rollout.md`
+
+## Output Format
+| Project | Current Version | Planned Version | Status | Reason |
+|---|---|---|---|---|
+
+Include dry run, apply results, risks, rollback, next workflow, next first action, and do-not-cross.
+
+## Stop Conditions
+Stop when targets have unrelated uncommitted changes, local harness modifications cannot be classified, payload boundary fails, managed manifest contains unsafe paths, project-specific artifacts would be overwritten, or user approval is missing for multi-project apply.

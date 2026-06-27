@@ -1,0 +1,381 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "release-behavior-probes",
+  "requiredFamilies": [
+    "security-boundary",
+    "review",
+    "wiki",
+    "metrics",
+    "release-evidence"
+  ],
+  "probes": [
+    {
+      "validatorId": "requirements-metadata-validator",
+      "family": "requirements",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "requirements-baseline-gate",
+        "validatorId": "requirements-metadata-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "packet-schema-validator",
+      "family": "packet",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "packet-kernel-gate",
+        "validatorId": "packet-schema-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "gate-profile-validator",
+      "family": "packet",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "packet-kernel-gate",
+        "validatorId": "gate-profile-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "boundary-validator",
+      "family": "security-boundary",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "boundary-gate",
+        "validatorId": "boundary-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "na-decision-validator",
+      "family": "packet",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "packet-kernel-gate",
+        "validatorId": "na-decision-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "challenge-gate-validator",
+      "family": "challenge",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "challenge-gate",
+        "validatorId": "challenge-gate-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "challenge-review-evidence-validator",
+      "family": "challenge",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "challenge-review-evidence-gate",
+        "validatorId": "challenge-review-evidence-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "review-governance-validator",
+      "family": "review",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "review-governance-gate",
+        "validatorId": "review-governance-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "wiki-knowledge-validator",
+      "family": "wiki",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "wiki-governance-gate",
+        "validatorId": "wiki-knowledge-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "human-decision-validator",
+      "family": "challenge",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "challenge-gate",
+        "validatorId": "human-decision-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "test-plan-validator",
+      "family": "test",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "test-plan-gate",
+        "validatorId": "test-plan-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "evidence-trust-validator",
+      "family": "evidence",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "evidence-trust-gate",
+        "validatorId": "evidence-trust-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "claim-ledger-validator",
+      "family": "evidence",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "closeout-gate",
+        "validatorId": "claim-ledger-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "manual-command-inventory-validator",
+      "family": "manual",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "manual-command-gate",
+        "validatorId": "manual-command-inventory-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "sensitive-evidence-validator",
+      "family": "security-boundary",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "sensitive-evidence-gate",
+        "validatorId": "sensitive-evidence-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "starter-contamination-validator",
+      "family": "security-boundary",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "starter-boundary-gate",
+        "validatorId": "starter-contamination-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "recurring-friction-detector",
+      "family": "metrics",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "compound-engineering-gate",
+        "validatorId": "recurring-friction-detector",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "success-metrics-reporter",
+      "family": "metrics",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "compound-engineering-gate",
+        "validatorId": "success-metrics-reporter",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "starter-promotion-candidate-validator",
+      "family": "metrics",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "compound-engineering-gate",
+        "validatorId": "starter-promotion-candidate-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "validator-catalog-validator",
+      "family": "release-evidence",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "v21-conformance-gate",
+        "validatorId": "validator-catalog-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "v21-conformance-validator",
+      "family": "release-evidence",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "v21-conformance-gate",
+        "validatorId": "v21-conformance-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "executable-release-validator",
+      "family": "release-evidence",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "executable-release-gate",
+        "validatorId": "executable-release-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    },
+    {
+      "validatorId": "final-closeout-validator",
+      "family": "release-evidence",
+      "invalidFixture": {
+        "expectedDiagnostic": "fixture_blocks_release"
+      },
+      "observedResult": {
+        "gateId": "v21-final-closeout-gate",
+        "validatorId": "final-closeout-validator",
+        "status": "BLOCKED",
+        "diagnostic_ids": [
+          "fixture_blocks_release"
+        ],
+        "releaseBlocking": true
+      }
+    }
+  ]
+}

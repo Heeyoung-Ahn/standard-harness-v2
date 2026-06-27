@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-tdd-evidence/v2.2",
+  "title": "Standard Harness TDD Evidence Contract v2.2",
+  "type": "object",
+  "required": ["mode"],
+  "properties": {
+    "mode": { "enum": ["required", "exempt", "not-applicable"] },
+    "red": {
+      "type": "object",
+      "required": ["test_file", "command", "exit_code", "failure_kind", "ran_at", "output_artifact"],
+      "properties": {
+        "test_file": { "type": "string" },
+        "command": { "type": "string" },
+        "exit_code": { "type": "integer", "not": { "const": 0 } },
+        "failure_kind": { "enum": ["expected-behavior-failure", "expected-regression-failure", "expected-contract-failure", "expected-test-failure"] },
+        "ran_at": { "type": "string", "format": "date-time" },
+        "output_artifact": { "type": "string" },
+        "output_sha256": { "type": "string" }
+      }
+    },
+    "green": {
+      "type": "object",
+      "required": ["command", "exit_code", "ran_at", "output_artifact"],
+      "properties": {
+        "command": { "type": "string" },
+        "exit_code": { "const": 0 },
+        "ran_at": { "type": "string", "format": "date-time" },
+        "output_artifact": { "type": "string" },
+        "output_sha256": { "type": "string" }
+      }
+    },
+    "refactor_verified": { "type": ["boolean", "string"] },
+    "behavior_level_test": { "type": ["boolean", "string"] },
+    "test_only_production_hook": { "type": ["boolean", "string"] },
+    "production_code_written_first": { "type": ["boolean", "string"] },
+    "production_first_remediation": { "type": "string" },
+    "exception_reason": { "type": "string" },
+    "approved_by": { "type": "string" }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "token-budget-policy",
+  "defaultMaxTokens": 12000,
+  "roleBudgets": {
+    "planner": 12000,
+    "developer": 10000,
+    "tester": 9000,
+    "reviewer": 9000,
+    "security-reviewer": 8000,
+    "refactor-reviewer": 8000,
+    "documenter": 9000,
+    "adjudicator": 9000
+  },
+  "rules": [
+    "summary-first",
+    "large-file-selective-read",
+    "evidence-index-before-full-evidence",
+    "wiki-compaction",
+    "stale-context-pruning",
+    "role-specific-context-pack",
+    "context-authority-labels"
+  ],
+  "frictionSignalBehavior": "emit context_budget_exceeded when pack exceeds role budget",
+  "metricSignalBehavior": "emit context_pack_token_estimate by role"
+}

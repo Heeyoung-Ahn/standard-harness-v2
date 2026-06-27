@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "runtime": "codex",
+  "default_reviewers": [
+    "correctness",
+    "scope-guardian"
+  ],
+  "lane_reviewers": {
+    "micro": [
+      "correctness"
+    ],
+    "docs-only": [
+      "scope-guardian"
+    ],
+    "light": [
+      "correctness",
+      "scope-guardian"
+    ],
+    "standard": [
+      "correctness",
+      "scope-guardian"
+    ],
+    "strict": [
+      "correctness",
+      "scope-guardian",
+      "security"
+    ],
+    "release": [
+      "release-readiness",
+      "security",
+      "scope-guardian"
+    ]
+  },
+  "profile_reviewers": {
+    "PRF-06_WORKFLOW_APPROVAL_APPLICATION_PROFILE": [
+      "approval-workflow",
+      "security",
+      "data-integrity"
+    ],
+    "PRF-10_BI_ANALYTICS_PLATFORM_PROFILE": [
+      "bi-semantic-model",
+      "data-integrity",
+      "ux-accessibility"
+    ],
+    "budget_management": [
+      "data-integrity",
+      "approval-workflow",
+      "security"
+    ],
+    "asset_management": [
+      "data-integrity",
+      "approval-workflow",
+      "security"
+    ]
+  }
+}

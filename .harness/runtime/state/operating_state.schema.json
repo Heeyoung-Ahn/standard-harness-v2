@@ -1,0 +1,365 @@
+{
+  "schemaVersion": 4,
+  "schemaRole": "authoritative_runtime_schema",
+  "engine": "sqlite",
+  "defaultDbPath": ".harness/operating_state.sqlite",
+  "compatibilitySummaryPath": ".agents/runtime/operating_state.schema.json",
+  "tables": [
+    {
+      "name": "abstention_decision",
+      "primaryKey": "decision_id",
+      "kind": "append_only",
+      "fields": [
+        "decision_id",
+        "work_item_id",
+        "issue_status",
+        "code_change_required",
+        "evidence_path",
+        "decision",
+        "metadata_json",
+        "created_at"
+      ]
+    },
+    {
+      "name": "agent_session",
+      "primaryKey": "session_id",
+      "kind": "mutable",
+      "fields": [
+        "session_id",
+        "role",
+        "operator_id",
+        "work_item_id",
+        "adapter",
+        "status",
+        "context_path",
+        "prompt_path",
+        "output_path",
+        "metadata_json",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "artifact_index",
+      "primaryKey": "artifact_id",
+      "kind": "mutable",
+      "fields": [
+        "artifact_id",
+        "path",
+        "category",
+        "title",
+        "source_ref",
+        "render_hash",
+        "metadata_json",
+        "version",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "context_usage_event",
+      "primaryKey": "event_id",
+      "kind": "append_only",
+      "fields": [
+        "event_id",
+        "work_item_id",
+        "lane",
+        "phase",
+        "file_path",
+        "estimated_tokens",
+        "read_reason",
+        "reused_from_cache",
+        "metadata_json",
+        "created_at"
+      ]
+    },
+    {
+      "name": "decision_registry",
+      "primaryKey": "decision_id",
+      "kind": "mutable",
+      "fields": [
+        "decision_id",
+        "title",
+        "decision_needed",
+        "impact_summary",
+        "no_response_behavior",
+        "due_at",
+        "source_ref",
+        "status",
+        "metadata_json",
+        "version",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "dependency_intake",
+      "primaryKey": "intake_id",
+      "kind": "append_only",
+      "fields": [
+        "intake_id",
+        "work_item_id",
+        "package_name",
+        "ecosystem",
+        "version",
+        "registry_verified",
+        "install_script_risk",
+        "decision",
+        "evidence_json",
+        "created_at"
+      ]
+    },
+    {
+      "name": "evidence_quality_report",
+      "primaryKey": "report_id",
+      "kind": "append_only",
+      "fields": [
+        "report_id",
+        "work_item_id",
+        "packet_id",
+        "mode",
+        "decision",
+        "evidence_json",
+        "created_at"
+      ]
+    },
+    {
+      "name": "gate_risk_registry",
+      "primaryKey": "risk_id",
+      "kind": "mutable",
+      "fields": [
+        "risk_id",
+        "title",
+        "severity",
+        "status",
+        "unblock_condition",
+        "next_escalation",
+        "source_ref",
+        "metadata_json",
+        "version",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "generation_state",
+      "primaryKey": "projection_name",
+      "kind": "mutable",
+      "fields": [
+        "projection_name",
+        "checksum",
+        "generated_at",
+        "source_revision",
+        "freshness_state",
+        "metadata_json",
+        "version",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "handoff_log",
+      "primaryKey": "handoff_id",
+      "kind": "append_only",
+      "fields": [
+        "handoff_id",
+        "created_at",
+        "handoff_summary",
+        "from_role",
+        "to_role",
+        "source_ref",
+        "supersedes_handoff_id",
+        "payload_json"
+      ]
+    },
+    {
+      "name": "learning_solution",
+      "primaryKey": "solution_id",
+      "kind": "mutable",
+      "fields": [
+        "solution_id",
+        "source_packet_id",
+        "work_item_id",
+        "problem_type",
+        "solution_path",
+        "metadata_json",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "parallel_batch",
+      "primaryKey": "batch_id",
+      "kind": "mutable",
+      "fields": [
+        "batch_id",
+        "packet_id",
+        "work_item_id",
+        "strategy",
+        "status",
+        "units_json",
+        "conflict_policy_json",
+        "metadata_json",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "release_state",
+      "primaryKey": "release_id",
+      "kind": "mutable",
+      "fields": [
+        "release_id",
+        "current_stage",
+        "release_gate_state",
+        "current_focus",
+        "release_goal",
+        "source_ref",
+        "updated_by",
+        "metadata_json",
+        "version",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "route_event",
+      "primaryKey": "event_id",
+      "kind": "append_only",
+      "fields": [
+        "event_id",
+        "route_job_id",
+        "session_id",
+        "from_role",
+        "to_role",
+        "event_type",
+        "result",
+        "evidence_paths_json",
+        "payload_json",
+        "created_at"
+      ]
+    },
+    {
+      "name": "route_job",
+      "primaryKey": "route_job_id",
+      "kind": "mutable",
+      "fields": [
+        "route_job_id",
+        "work_item_id",
+        "delivery_route_mode",
+        "status",
+        "current_role",
+        "loop_count",
+        "same_finding_counts_json",
+        "closeout_package_json",
+        "metadata_json",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "secret_scan_report",
+      "primaryKey": "report_id",
+      "kind": "append_only",
+      "fields": [
+        "report_id",
+        "work_item_id",
+        "severity",
+        "status",
+        "findings_json",
+        "created_at"
+      ]
+    },
+    {
+      "name": "security_review_report",
+      "primaryKey": "report_id",
+      "kind": "mutable",
+      "fields": [
+        "report_id",
+        "packet_id",
+        "work_item_id",
+        "risk_class",
+        "decision",
+        "report_path",
+        "findings_json",
+        "metadata_json",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "tdd_evidence",
+      "primaryKey": "evidence_id",
+      "kind": "mutable",
+      "fields": [
+        "evidence_id",
+        "packet_id",
+        "work_item_id",
+        "mode",
+        "status",
+        "red_command",
+        "green_command",
+        "refactor_verified",
+        "evidence_json",
+        "created_at",
+        "updated_at"
+      ]
+    },
+    {
+      "name": "untrusted_content_report",
+      "primaryKey": "report_id",
+      "kind": "append_only",
+      "fields": [
+        "report_id",
+        "work_item_id",
+        "trust_label",
+        "status",
+        "findings_json",
+        "created_at"
+      ]
+    },
+    {
+      "name": "work_item_registry",
+      "primaryKey": "work_item_id",
+      "kind": "mutable",
+      "fields": [
+        "work_item_id",
+        "title",
+        "status",
+        "next_action",
+        "source_ref",
+        "domain_hint",
+        "risk_hint",
+        "owner",
+        "metadata_json",
+        "version",
+        "created_at",
+        "updated_at"
+      ]
+    }
+  ],
+  "commandSurface": [
+    "setReleaseState",
+    "upsertWorkItem",
+    "transitionWorkItem",
+    "recordDecision",
+    "recordGateRisk",
+    "appendHandoff",
+    "upsertArtifact",
+    "refreshProjection",
+    "recordAgentSession",
+    "createRouteJob",
+    "updateRouteJob",
+    "appendRouteEvent",
+    "recordTddEvidence",
+    "recordSecurityReviewReport",
+    "recordParallelBatch",
+    "recordLearningSolution",
+    "recordAbstentionDecision",
+    "recordContextUsageEvent",
+    "recordDependencyIntake",
+    "recordEvidenceQualityReport",
+    "recordSecretScanReport",
+    "recordUntrustedContentReport"
+  ]
+}

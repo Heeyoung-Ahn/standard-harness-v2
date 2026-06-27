@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standard Harness V2.3 Evidence Digest",
+  "type": "object",
+  "required": ["packet_id", "lane", "status", "summary"],
+  "properties": {
+    "packet_id": { "type": "string" },
+    "lane": { "type": "string" },
+    "status": { "enum": ["pass", "fail", "warning", "not_required", "unknown"] },
+    "summary": { "type": "string" },
+    "artifact_path": { "type": "string" },
+    "sha256": { "type": "string" },
+    "raw_log_read_policy": { "type": "string" }
+  }
+}

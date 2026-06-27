@@ -1,0 +1,46 @@
+{
+  "artifact": "_harness/policies/challenge-gate.yaml",
+  "artifactRole": "canonical",
+  "policyVersion": "0.2.0",
+  "ownerXp": "XP-01A",
+  "gateId": "challenge-gate",
+  "gateLevel": "P0-Conditional",
+  "challengeTriggers": [
+    "security",
+    "data_integrity",
+    "requirements_consistency",
+    "long_term_maintainability",
+    "harness_boundary",
+    "legal_or_operational_risk",
+    "technical_feasibility",
+    "p0_gate_exception_request"
+  ],
+  "requiredArtifacts": [
+    "_ops/evidence/<packet-id>/challenge-review.md",
+    "_ops/decisions/records/<decision-id>.md"
+  ],
+  "reviewChecks": [
+    "requirements_conflict",
+    "security_or_data_risk",
+    "harness_contamination",
+    "long_term_structure_damage",
+    "safer_smaller_alternative",
+    "human_decision_required"
+  ],
+  "releaseBlocking": {
+    "validator": "challenge-gate-validator",
+    "gateId": "challenge-gate",
+    "diagnosticIds": [
+      "missing_challenge_review",
+      "missing_human_decision_record",
+      "missing_challenge_review_check",
+      "invalid_challenge_trigger"
+    ],
+    "waivable": false,
+    "enforcementPoint": "validate, closeout"
+  },
+  "frictionMetricBehavior": {
+    "friction": "Emit unsafe_user_instruction_conflict or missed_review when a triggered challenge lacks review or decision artifacts.",
+    "metric": "Emit challenge_gate_evaluated and challenge_gate_blocked counts. XP-09 remains responsible for aggregation."
+  }
+}

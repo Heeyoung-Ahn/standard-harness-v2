@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-review-finding/v2.2",
+  "title": "Review Finding Artifact v2.2",
+  "type": "object",
+  "required": ["id", "severity", "confidence", "reviewer", "file", "line", "title", "evidence", "recommendation", "fingerprint", "validation_status"],
+  "properties": {
+    "severity": { "enum": ["P0", "P1", "P2", "P3"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+    "validation_status": { "enum": ["verified", "unverified", "tentative", "false-positive", "suppressed"] }
+  }
+}

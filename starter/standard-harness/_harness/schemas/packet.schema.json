@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-v2.1/packet.schema.json",
+  "title": "Standard Harness V2.1 Packet",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "packetId",
+    "title",
+    "type",
+    "riskLevel",
+    "maturityLevel",
+    "objective",
+    "scope",
+    "outOfScope",
+    "dependsOn",
+    "changeZones",
+    "locks",
+    "acceptanceCriteria",
+    "testPlan",
+    "e2eTestGate",
+    "reviewPlan",
+    "securityReviewPlan",
+    "refactorReviewPlan",
+    "closeoutPlan",
+    "policyVersion",
+    "gateProfileVersion"
+  ],
+  "properties": {
+    "packetId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "enum": [
+        "docs-only",
+        "product-feature",
+        "product-bugfix",
+        "product-refactor",
+        "security-data",
+        "harness-system",
+        "starter-promotion"
+      ]
+    },
+    "riskLevel": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "maturityLevel": {
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3"
+      ]
+    },
+    "lifecycleState": {
+      "enum": [
+        "proposed",
+        "challenge_required",
+        "planned",
+        "ready",
+        "in_progress",
+        "blocked",
+        "implemented",
+        "tested",
+        "e2e_verified",
+        "reviewed",
+        "closeout_pending",
+        "closed",
+        "reopened",
+        "cancelled",
+        "superseded",
+        "reverted"
+      ]
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "outOfScope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dependsOn": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "changeZones": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "locks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "testPlan": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "e2eTestGate": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "reviewPlan": {
+      "type": "object"
+    },
+    "securityReviewPlan": {
+      "type": "object"
+    },
+    "refactorReviewPlan": {
+      "type": "object"
+    },
+    "closeoutPlan": {
+      "type": "object"
+    },
+    "policyVersion": {
+      "const": "0.2.0"
+    },
+    "gateProfileVersion": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+@1$"
+    }
+  }
+}

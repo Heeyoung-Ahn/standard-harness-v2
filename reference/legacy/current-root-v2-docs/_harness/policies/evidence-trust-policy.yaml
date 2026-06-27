@@ -1,0 +1,52 @@
+{
+  "artifact": "_harness/policies/evidence-trust-policy.yaml",
+  "artifactRole": "canonical",
+  "policyVersion": "0.2.0",
+  "ownerXp": "XP-02",
+  "trustedForCloseout": [
+    "REPRODUCED_BY_HARNESS",
+    "TRUSTED_CI",
+    "MANUAL_ACCEPTED_BY_HUMAN"
+  ],
+  "manualOnlyCloseoutAllowed": false,
+  "defaultMigration": {
+    "passedResultStatus": {
+      "validationStatus": "STRUCTURALLY_VALID",
+      "trustStatus": "MANUAL_ONLY"
+    },
+    "failedResultStatus": {
+      "validationStatus": "INVALID",
+      "trustStatus": "INVALID"
+    },
+    "staleResultStatus": {
+      "validationStatus": "STALE",
+      "trustStatus": "STALE"
+    }
+  },
+  "testPlanRequiredFields": [
+    "acceptanceCriteria",
+    "behaviorsUnderTest",
+    "testTypes",
+    "commands",
+    "e2eApplicability",
+    "naConditions",
+    "substituteValidation"
+  ],
+  "releaseBlocking": {
+    "validator": "evidence-trust-validator",
+    "gateId": "evidence-trust-gate",
+    "diagnosticIds": [
+      "missing_test_plan",
+      "test_plan_first_gate",
+      "missing_trusted_evidence",
+      "manual_only_evidence",
+      "unsupported_claim_ledger"
+    ],
+    "waivable": false,
+    "enforcementPoint": "validate, closeout"
+  },
+  "frictionMetricBehavior": {
+    "friction": "Emit missing_evidence, missing_closeout, or manual_rework when evidence is manual-only or test plans are absent.",
+    "metric": "Emit trusted_evidence_ratio and closeout_claim_ledger_coverage counts. XP-09 remains responsible for aggregation."
+  }
+}

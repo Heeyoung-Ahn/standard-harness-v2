@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "standard-harness-learning-entry/v1",
+  "type": "object",
+  "required": [
+    "version",
+    "key",
+    "insight",
+    "authority"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "ts": {
+      "type": "string"
+    },
+    "packet": {
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "pattern",
+        "pitfall",
+        "decision",
+        "domain_rule",
+        "test_strategy",
+        "rollback_rule"
+      ]
+    },
+    "key": {
+      "type": "string"
+    },
+    "insight": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number"
+    },
+    "applies_to": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "authority": {
+      "const": "learning_non_authoritative"
+    }
+  }
+}

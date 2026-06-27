@@ -1,0 +1,697 @@
+{
+  "schemaVersion": "0.2.0",
+  "policyId": "validator-catalog",
+  "validators": [
+    {
+      "validatorId": "requirements-metadata-validator",
+      "hrIds": [
+        "HR-190R"
+      ],
+      "gateId": "requirements-baseline-gate",
+      "implementation": "standard_harness.validation.requirements_metadata:RequirementsMetadataValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_requirements_metadata_validator"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --requirements-metadata"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "requirements-baseline-gate",
+        "validatorId": "requirements-metadata-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "packet-schema-validator",
+      "hrIds": [
+        "HR-010R",
+        "HR-011R",
+        "HR-012R",
+        "HR-190R"
+      ],
+      "gateId": "packet-kernel-gate",
+      "implementation": "standard_harness.validation.aggregator:ValidationService",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_v02_packet_schema"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "packet-kernel-gate",
+        "validatorId": "packet-schema-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "gate-profile-validator",
+      "hrIds": [
+        "HR-010R",
+        "HR-011R",
+        "HR-191",
+        "HR-190R"
+      ],
+      "gateId": "packet-kernel-gate",
+      "implementation": "standard_harness.policy.gate_profiles:GateProfilePolicy",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_gate_profile_applicability"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "packet-kernel-gate",
+        "validatorId": "gate-profile-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "boundary-validator",
+      "hrIds": [
+        "HR-010R",
+        "HR-011R",
+        "HR-012R",
+        "HR-013",
+        "HR-180R",
+        "HR-181R",
+        "HR-190R",
+        "HR-191"
+      ],
+      "gateId": "boundary-gate",
+      "implementation": "standard_harness.validation.boundary:BoundaryValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_git_diff_boundary_validator",
+        "tests.evals.test_boundary_rejects_internal_parent_traversal"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "boundary-gate",
+        "validatorId": "boundary-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "na-decision-validator",
+      "hrIds": [
+        "HR-040R",
+        "HR-041R",
+        "HR-190R"
+      ],
+      "gateId": "packet-kernel-gate",
+      "implementation": "standard_harness.validation.na_decisions:NaDecisionValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_rule_based_na_decision"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "packet-kernel-gate",
+        "validatorId": "na-decision-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "challenge-gate-validator",
+      "hrIds": [
+        "HR-150R",
+        "HR-151R",
+        "HR-152",
+        "HR-190R",
+        "HR-191"
+      ],
+      "gateId": "challenge-gate",
+      "implementation": "standard_harness.validation.challenge_gate:ChallengeGateValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_challenge_gate_applicability"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "challenge-gate",
+        "validatorId": "challenge-gate-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "challenge-review-evidence-validator",
+      "hrIds": [
+        "HR-150R",
+        "HR-151R",
+        "HR-152",
+        "HR-190R",
+        "HR-191"
+      ],
+      "gateId": "challenge-review-evidence-gate",
+      "implementation": "standard_harness.validation.challenge_review_evidence:ChallengeReviewEvidenceValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_challenge_review_evidence_required",
+        "tests.contract.test_challenge_review_requires_commit_and_test_evidence"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "challenge-review-evidence-gate",
+        "validatorId": "challenge-review-evidence-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "review-governance-validator",
+      "hrIds": [
+        "HR-040R",
+        "HR-041R",
+        "HR-070R",
+        "HR-071R",
+        "HR-080R",
+        "HR-081R",
+        "HR-190R",
+        "HR-191"
+      ],
+      "gateId": "review-governance-gate",
+      "implementation": "standard_harness.validation.review_governance:ReviewGovernanceValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_v21_review_governance_gate",
+        "tests.contract.test_review_governance_closeout_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "review-governance-gate",
+        "validatorId": "review-governance-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "wiki-knowledge-validator",
+      "hrIds": [
+        "HR-003",
+        "HR-007",
+        "HR-100R",
+        "HR-110R",
+        "HR-111R",
+        "HR-160R",
+        "HR-161R",
+        "HR-190R",
+        "HR-191",
+        "HR-200"
+      ],
+      "gateId": "wiki-governance-gate",
+      "implementation": "standard_harness.validation.wiki_knowledge:WikiKnowledgeValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_wiki_knowledge_release_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "wiki-governance-gate",
+        "validatorId": "wiki-knowledge-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "human-decision-validator",
+      "hrIds": [
+        "HR-152",
+        "HR-190R"
+      ],
+      "gateId": "challenge-gate",
+      "implementation": "standard_harness.validation.human_decision:HumanDecisionValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_human_decision_non_overridable_items"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "challenge-gate",
+        "validatorId": "human-decision-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "test-plan-validator",
+      "hrIds": [
+        "HR-020R",
+        "HR-021R",
+        "HR-190R"
+      ],
+      "gateId": "test-plan-gate",
+      "implementation": "standard_harness.validation.test_plan:TestPlanValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_test_plan_first_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "test-plan-gate",
+        "validatorId": "test-plan-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "evidence-trust-validator",
+      "hrIds": [
+        "HR-020R",
+        "HR-021R",
+        "HR-041R",
+        "HR-043",
+        "HR-044",
+        "HR-090R",
+        "HR-190R"
+      ],
+      "gateId": "evidence-trust-gate",
+      "implementation": "standard_harness.validation.evidence_trust:EvidenceTrustValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_evidence_trust_model_v02",
+        "tests.evals.test_forged_trusted_ci_cannot_closeout"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "evidence-trust-gate",
+        "validatorId": "evidence-trust-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "claim-ledger-validator",
+      "hrIds": [
+        "HR-021R",
+        "HR-090R",
+        "HR-190R"
+      ],
+      "gateId": "closeout-gate",
+      "implementation": "standard_harness.validation.aggregator:ValidationService",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_project_completion_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "closeout-gate",
+        "validatorId": "claim-ledger-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "manual-command-inventory-validator",
+      "hrIds": [
+        "HR-170R",
+        "HR-171R",
+        "HR-190R"
+      ],
+      "gateId": "manual-command-gate",
+      "implementation": "standard_harness.docsops.command_inventory:CommandInventoryService",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_docs_command_inventory"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "manual-command-gate",
+        "validatorId": "manual-command-inventory-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "sensitive-evidence-validator",
+      "hrIds": [
+        "HR-170R",
+        "HR-171R",
+        "HR-185",
+        "HR-186",
+        "HR-190R"
+      ],
+      "gateId": "sensitive-evidence-gate",
+      "implementation": "standard_harness.validation.sensitive_evidence:SensitiveEvidenceValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_sensitive_evidence_classification",
+        "tests.evals.test_secret_evidence_registration_uses_store_root"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "sensitive-evidence-gate",
+        "validatorId": "sensitive-evidence-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "starter-contamination-validator",
+      "hrIds": [
+        "HR-170R",
+        "HR-171R",
+        "HR-182R",
+        "HR-190R"
+      ],
+      "gateId": "starter-boundary-gate",
+      "implementation": "standard_harness.starter.contamination:StarterContaminationChecker",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_starter_boundary",
+        "tests.evals.test_release_archive_rejects_symlink_escape"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "starter-boundary-gate",
+        "validatorId": "starter-contamination-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "recurring-friction-detector",
+      "hrIds": [
+        "HR-200",
+        "HR-190R"
+      ],
+      "gateId": "compound-engineering-gate",
+      "implementation": "standard_harness.self_improvement.recurring:RecurringFrictionDetector",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_recurring_friction_detector"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "compound-engineering-gate",
+        "validatorId": "recurring-friction-detector",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "success-metrics-reporter",
+      "hrIds": [
+        "HR-200",
+        "HR-190R",
+        "HR-191"
+      ],
+      "gateId": "compound-engineering-gate",
+      "implementation": "standard_harness.metrics.success:SuccessMetricsReporter",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_success_metrics_hr200_required_fields",
+        "tests.contract.test_hr200_metrics_trust_statuses",
+        "tests.contract.test_hr200_metrics_source_watermark"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "compound-engineering-gate",
+        "validatorId": "success-metrics-reporter",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "starter-promotion-candidate-validator",
+      "hrIds": [
+        "HR-200",
+        "HR-190R"
+      ],
+      "gateId": "compound-engineering-gate",
+      "implementation": "standard_harness.self_improvement.starter_promotion:StarterPromotionCandidateRegistry",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_starter_promotion_candidate_schema_conformance"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "compound-engineering-gate",
+        "validatorId": "starter-promotion-candidate-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "final-closeout-validator",
+      "hrIds": [
+        "HR-041R",
+        "HR-043",
+        "HR-044",
+        "HR-070R",
+        "HR-071R",
+        "HR-080R",
+        "HR-081R",
+        "HR-100R",
+        "HR-110R",
+        "HR-111R",
+        "HR-120R",
+        "HR-170R",
+        "HR-171R",
+        "HR-185",
+        "HR-186",
+        "HR-190R",
+        "HR-191",
+        "HR-200"
+      ],
+      "gateId": "v21-final-closeout-gate",
+      "implementation": "standard_harness.validation.final_closeout:FinalCloseoutValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_v21_final_closeout_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "v21-final-closeout-gate",
+        "validatorId": "final-closeout-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "executable-release-validator",
+      "hrIds": [
+        "HR-120R",
+        "HR-190R",
+        "HR-191",
+        "HR-200"
+      ],
+      "gateId": "executable-release-gate",
+      "implementation": "standard_harness.validation.executable_release:ExecutableReleaseValidator",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_executable_release_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance",
+        "validate --all"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "executable-release-gate",
+        "validatorId": "executable-release-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "validator-catalog-validator",
+      "hrIds": [
+        "HR-190R",
+        "HR-191",
+        "HR-200"
+      ],
+      "gateId": "v21-conformance-gate",
+      "implementation": "standard_harness.validation.catalog:ValidatorCatalog",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_validator_catalog_entries_have_negative_tests"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "v21-conformance-gate",
+        "validatorId": "validator-catalog-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    },
+    {
+      "validatorId": "v21-conformance-validator",
+      "hrIds": [
+        "HR-190R",
+        "HR-191",
+        "HR-200"
+      ],
+      "gateId": "v21-conformance-gate",
+      "implementation": "standard_harness.completion.v21_conformance:V21ConformanceGate",
+      "cliEntrypoint": "validate --release",
+      "negativeTests": [
+        "tests.contract.test_v21_conformance_blocks_partial_required_hr",
+        "tests.contract.test_v21_conformance_blocks_missing_regression_evidence",
+        "tests.evals.test_release_hygiene_blocks_repo_local_sqlite",
+        "tests.contract.test_v21_conformance_blocks_stale_hr200_metrics",
+        "tests.contract.test_v21_review_governance_gate"
+      ],
+      "reachableFrom": [
+        "validate --release",
+        "validate --v21-conformance"
+      ],
+      "releaseBlocking": true,
+      "gateResultMetadata": {
+        "gateId": "v21-conformance-gate",
+        "validatorId": "v21-conformance-validator",
+        "policyVersion": "0.2.0",
+        "sourceWatermarkRequired": true,
+        "diagnosticIdsRequired": true,
+        "evidenceIdsRequired": true
+      }
+    }
+  ]
+}
