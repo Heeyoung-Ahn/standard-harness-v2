@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { buildDocsCommandInventory, runDocsCommandInventoryCommand } from "../runtime/state/docs-command-inventory.js";
+import { DOCS_COMMAND_INVENTORY_OUTPUT, buildDocsCommandInventory, runDocsCommandInventoryCommand } from "../runtime/state/docs-command-inventory.js";
 
 function tempRepo(prefix = "v28-docs-") {
   const repoRoot = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
@@ -45,7 +45,7 @@ test("docs command inventory command can write verification artifact", () => {
     fs.writeFileSync(path.join(repoRoot, "README.md"), "Run `npm run harness:validate`.\n", "utf8");
     const result = runDocsCommandInventoryCommand({ repoRoot, args: ["audit", "--write"] });
     assert.equal(result.ok, true);
-    assert.equal(result.outputPath, "verification/v2.8/docs_command_inventory.json");
+    assert.equal(result.outputPath, DOCS_COMMAND_INVENTORY_OUTPUT);
     assert.equal(fs.existsSync(path.join(repoRoot, result.outputPath)), true);
   } finally {
     fs.rmSync(repoRoot, { recursive: true, force: true });

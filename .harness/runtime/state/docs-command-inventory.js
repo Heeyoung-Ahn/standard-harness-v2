@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 export const DOCS_COMMAND_SCHEMA_VERSION = "standard-harness-docs-command-inventory/v2.8";
+export const DOCS_COMMAND_INVENTORY_OUTPUT = "reference/reports/docs-command-inventory/docs_command_inventory.json";
 
 export function runDocsCommandInventoryCommand({ repoRoot = process.cwd(), args = [] } = {}) {
   const parsed = parseArgs(args);
@@ -18,7 +19,7 @@ export function runDocsCommandInventoryCommand({ repoRoot = process.cwd(), args 
   }
   const result = buildDocsCommandInventory({ repoRoot });
   if (options.write || options.apply) {
-    const outputPath = normalizeRelativePath(options.output ?? "verification/v2.8/docs_command_inventory.json");
+    const outputPath = normalizeRelativePath(options.output ?? DOCS_COMMAND_INVENTORY_OUTPUT);
     if (!outputPath) {
       result.diagnostics.push(errorDiagnostic("output", "unsafe_path", "Output path must be repository-relative."));
     } else {

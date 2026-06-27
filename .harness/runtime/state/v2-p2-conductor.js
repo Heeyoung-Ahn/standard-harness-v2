@@ -2774,7 +2774,7 @@ function buildDefaultPackagingReadinessManifest(repoRoot) {
     checks: {
       payloadBoundary: packagingPathCheck(repoRoot, "package.json", "reusable_payload"),
       starterCopy: packagingPathCheck(repoRoot, ".agents/scripts/init-project.js", "initialized_project"),
-      commandTaxonomy: packagingMultiPathCheck(repoRoot, ["reference/commands/COMMAND_TAXONOMY.md", "verification/v2.8/docs_command_inventory.json"], "reusable_payload"),
+      commandTaxonomy: packagingMultiPathCheck(repoRoot, ["reference/commands/COMMAND_TAXONOMY.md", "reference/reports/docs-command-inventory/docs_command_inventory.json"], "reusable_payload"),
       manualEntryPoints: packagingMultiPathCheck(repoRoot, ["START_HERE.md", "README.md", "reference/manuals/human/HARNESS_MANUAL.md"], "reusable_payload"),
       migrationNotes: packagingMultiPathCheck(repoRoot, ["reference/commands/COMPATIBILITY_COMMAND_POLICY.md", "reference/artifacts/MIGRATION_RECONCILIATION_PLAN.md"], "reusable_payload"),
       versionNotes: packagingPathCheck(repoRoot, "package.json", "reusable_payload"),
