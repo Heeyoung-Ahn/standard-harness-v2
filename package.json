@@ -103,5 +103,8 @@
     "browser:evidence:audit": "node .harness/runtime/state/harness-cli.js browser-evidence audit"
   },
   "version": "2.8.0",
-  "description": "Clean starter candidate exported from a standard-harness product project."
+  "description": "Clean starter candidate exported from a standard-harness product project.",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
 }

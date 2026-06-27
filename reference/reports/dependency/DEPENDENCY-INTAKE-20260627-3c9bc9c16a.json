@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "standard-harness-v2.4-dependency-intake/v1",
+  "generatedAt": "2026-06-27T22:11:35.920Z",
+  "ok": true,
+  "dependencySurface": [],
+  "changedFiles": [],
+  "registryVerified": "no",
+  "lockfileReviewed": "no",
+  "installScriptRisk": "absent",
+  "lifecycleScripts": [],
+  "declaredPackages": [
+    "@playwright/test"
+  ],
+  "packageNameFindings": [],
+  "checks": [
+    {
+      "item": "dependency surface",
+      "status": "not-present",
+      "detail": "no dependency-sensitive file declared"
+    },
+    {
+      "item": "registry verification",
+      "status": "not-needed",
+      "detail": "no"
+    },
+    {
+      "item": "lockfile review",
+      "status": "not-needed",
+      "detail": "no"
+    },
+    {
+      "item": "package name validity",
+      "status": "pass",
+      "detail": "0 finding(s)"
+    },
+    {
+      "item": "install lifecycle scripts",
+      "status": "pass",
+      "detail": "absent"
+    }
+  ],
+  "decision": "allow",
+  "nextAction": "Proceed with dependency-sensitive overlay evidence; keep lockfile and registry decision in the closeout digest."
+}
