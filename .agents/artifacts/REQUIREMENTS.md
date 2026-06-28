@@ -230,7 +230,11 @@ The copied starter uses three primary zones:
 Human-facing product documents live under `product/docs/`. They are grouped by purpose:
 - `product/docs/project/`: project-wide planning, requirements, architecture, implementation plan, API, database, and UI design documents.
 - `product/docs/packets/`: packet-level human summaries and maximum two-page packet closeout reports with evidence index links.
-- `product/docs/pmo/`: source-intake materials, WBS-compatible TSV/CSV files, daily reports, day-start briefings, day-wrap-up reports, status, risks, and blockers.
+- `product/docs/pmo/`: compact human PMO surface. The required starter surface is
+  `day-wrap-up` for durable Markdown close reports and `wbs` for TSV/CSV-compatible
+  tracking. Day-start is a generated/screen-oriented brief by default. Source intake,
+  daily records, status, risks, and blockers are structured/indexed operating records
+  or report sections, not mandatory Markdown folder surfaces.
 
 Folder names are contractual. File names inside those folders are samples unless an
 approved schema, validator, or minimum starter contract explicitly requires a file.
@@ -296,7 +300,7 @@ Documenter output must not directly mutate wiki memory. The flow is:
 ## PM Operating Rhythm
 
 PM Agent supports daily continuity:
-- Day start reports what happened last, what packet or decision is next, current blockers, risks, and decisions needed from the Human Owner. Each day-start report is limited to a maximum of one page.
+- Day start reports what happened last, what packet or decision is next, current blockers, risks, and decisions needed from the Human Owner. Day-start is generated/screen-oriented by default; if persisted as Markdown, it is limited to a maximum of one page.
 - Day wrap-up reports completed work, incomplete work, new risks, WBS changes, next work, blockers, and questions for the Human Owner. Each day-wrap-up report is limited to a maximum of one page.
 - WBS and PM tracking must remain spreadsheet-compatible through TSV or CSV where practical.
 - PM output coordinates and summarizes; it does not approve implementation, testing, review, release, closeout, or human gates.
@@ -461,13 +465,18 @@ Out of scope for the first packet:
 - Which provider examples are useful without making any provider the product identity?
 - Which minimum PM artifacts should v2.2 require as starter contract versus leave as sample files?
 - Which review lenses are mandatory for the first copied-repo lifecycle and which remain risk-triggered?
-- What exact maximum two-page closeout report template and evidence index schema should become the starter minimum contract?
+- Closed by PKT-03: the starter minimum contract uses one `product/docs/packets/<packet-id>/closeout.md` report linked to `_ops/evidence/<packet-id>/evidence-index.json`, with required-gate evidence, N/A record, raw-dump, length, and wiki proposal boundary validation.
 - Which risk level names should become canonical in the starter schema: low, standard, high, critical, release-sensitive, or a smaller set?
 - Which long-memory pages are mandatory in the starter seed versus created on demand during project operation?
 - Which structured store should be authoritative for hot operating state in the first v2.0 starter cut?
 
 ## Deferred Items
-- First packet selection is no longer open; PKT-01 Project Operating Folder Contract is the first implementation packet candidate and still requires explicit `Ready For Code`.
+- First packet selection, PKT-01 `Ready For Code`, implementation, testing, review, and Planner closeout are closed for PKT-01 Project Operating Folder Contract.
+- PKT-02A Naming And Status Reconciliation is closed for root-harness v1.0, starter-payload v2.0, legacy version-label wording, and post-PKT-01 status truth cleanup.
+- PKT-02B Implementation Plan Requirement Alignment is closed for implementation-plan coverage and sequencing cleanup before PKT-02.
+- PKT-02 Risk-Adaptive Gate Profile Engine is closed for the approved gate resolver scope.
+- PKT-03 Documenter Closeout And Evidence Index is closed for the approved Documenter closeout report, evidence-index contract, PKT-02 required-gate consumption, N/A evidence, raw-dump/length guard, and wiki proposal boundary scope.
+- PKT-04 PM Daily Rhythm And WBS Loop is closed for approved PM day-start/day-wrap-up reports, WBS TSV, PMO placement, stale-summary blocking, authority-boundary diagnostics, and evidence-index link scope.
 - Full XP-00 through XP-10 implementation sequence remains a roadmap and must be packetized.
 - v1 zip artifacts remain reference-only unless separately promoted by approved plan.
 - Full skill catalog/router implementation follows the folder and starter boundary baseline.

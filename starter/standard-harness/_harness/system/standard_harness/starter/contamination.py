@@ -43,7 +43,18 @@ REQUIRED_STARTER_DIRECTORIES = {
     "product/docs/project/ui-design": "missing_starter_product_docs_project_ui_design",
     "product/docs/packets": "missing_starter_product_docs_packets",
     "product/docs/pmo": "missing_starter_product_docs_pmo",
-    "product/docs/pmo/daily-wrap-up": "missing_starter_product_docs_pmo_daily_wrap_up",
+    "product/docs/pmo/day-wrap-up": "missing_starter_product_docs_pmo_day_wrap_up",
+    "product/docs/pmo/wbs": "missing_starter_product_docs_pmo_wbs",
+}
+
+FORBIDDEN_STARTER_DIRECTORIES = {
+    "product/docs/pmo/daily-wrap-up": "legacy_pmo_folder",
+    "product/docs/pmo/source-intake": "structured_pmo_state_as_markdown_folder",
+    "product/docs/pmo/daily-reports": "structured_pmo_state_as_markdown_folder",
+    "product/docs/pmo/status": "structured_pmo_state_as_markdown_folder",
+    "product/docs/pmo/risks": "structured_pmo_state_as_markdown_folder",
+    "product/docs/pmo/blockers": "structured_pmo_state_as_markdown_folder",
+    "product/docs/pmo/day-start": "generated_pmo_view_as_required_markdown_folder",
 }
 
 
@@ -168,6 +179,10 @@ def _missing_required_paths(starter_root: Path) -> list[dict[str, object]]:
     for relative, error_code in REQUIRED_STARTER_DIRECTORIES.items():
         path = starter_root / relative
         if not path.is_dir():
+            diagnostics.append(_path_diagnostic(error_code, str(path)))
+    for relative, error_code in FORBIDDEN_STARTER_DIRECTORIES.items():
+        path = starter_root / relative
+        if path.is_dir():
             diagnostics.append(_path_diagnostic(error_code, str(path)))
     return diagnostics
 

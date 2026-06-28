@@ -118,7 +118,7 @@ Use these commands for learning, friction, dashboard, context budget, and daily 
 
 ### compatibility namespaces
 
-Use these commands when a historical namespace, schema, or compatibility behavior must be checked. These names do not mean the current project identity is older than V2.8.
+Use these commands when a historical namespace, schema, or compatibility behavior must be checked. These names are compatibility metadata and do not define the visible root or starter product identity.
 
 | Script | Group | Operator use |
 |---|---|---|

@@ -61,6 +61,20 @@ If it conflicts with `CURRENT_STATE`, `TASK_LIST`, packet status, DB hot-state, 
 - Security review JSON should keep actual findings separate from deferred risks so out-of-scope rollout or promotion decisions do not inflate packet findings.
 - Serial implementation is valid closeout evidence when the packet is intentionally not parallelized; a serial plan should state that no fan-out occurred rather than requiring mock parallel artifacts.
 
+### Risk-Adaptive Gate Profile Engine
+- Declarative gate policy lives in `starter/standard-harness/_harness/policies/gate-profiles.yaml`.
+- Root computation lives in `.harness/runtime/state/gate-profile-engine.js` and is surfaced by packet preflight when a packet declares `Packet type`.
+- Starter computation lives in `standard_harness.policy.gate_profiles.GateProfilePolicy`.
+- Canonical base risks are `low`, `standard`, `high`, and `critical`; `normal` and `medium` map to `standard`, while `release-sensitive` is an overlay that escalates to critical-grade gates.
+- N/A checks, changed-zone contradiction checks, and closeout missing/stale/untrusted gate diagnostics are coupled root/starter behavior and should stay parity-tested.
+
+### PM Daily Rhythm And WBS Loop
+- PM day-start is a generated/screen-oriented starter PMO brief under `_ops/views/pmo/day-start/` by default; PM day-wrap-up is the durable human Markdown output under `product/docs/pmo/day-wrap-up/`.
+- PM reports are coordination-only; they must not approve implementation, testing, review, release, closeout, or residual risk.
+- PM reports and WBS TSV rows must carry source or evidence links instead of raw evidence dumps.
+- PM report validation treats stale source watermarks as blocking diagnostics.
+- Required starter PMO folders are compact: `day-wrap-up` and `wbs`. Source-intake, daily records, status, risks, and blockers are structured/indexed state or report sections, not mandatory Markdown folders.
+
 ## What Not To Record Here
 - today's active work item
 - packet approval status

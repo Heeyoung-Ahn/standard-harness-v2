@@ -1,6 +1,6 @@
 # Compatibility Command Policy
 
-The current visible product identity is Standard Harness V2.8. Older command namespaces remain compatibility wrappers unless a future packet explicitly deprecates them.
+The visible product identity is Standard Harness v2.0 for the clean starter payload and root development harness v1.0 for this development repository. Versioned command namespaces remain compatibility wrappers unless a future packet explicitly deprecates them.
 
 ## Compatibility namespaces retained
 

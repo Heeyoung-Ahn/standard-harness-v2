@@ -165,12 +165,16 @@ The intended document groups are:
   implementation, API, database, and UI design documents.
 - `product/docs/packets/`: packet-level human summaries and one closeout report per
   packet.
-- `product/docs/pmo/`: source-intake material, WBS-compatible TSV/CSV, day-start,
-  day-wrap-up, status, risk, blocker, and PMO documents.
+- `product/docs/pmo/`: compact PMO human surface. Required starter folders are
+  `day-wrap-up` for durable Markdown and `wbs` for TSV/CSV-compatible tracking.
+  Day-start is a generated/screen-oriented brief by default. Source-intake, daily
+  records, status, risks, and blockers are structured/indexed operating records or
+  report sections, not required Markdown folders.
 
 Human-facing prose documents use Markdown. WBS and spreadsheet-compatible PMO material
 uses TSV or CSV. Packet closeout reports are capped at two pages plus evidence index
-links. Day-start and day-wrap-up reports are capped at one page each.
+links. Day-wrap-up reports are capped at one page. Day-start briefs are generated views
+by default and capped at one page if persisted.
 
 ## Kernel Components
 The current v2 starter kernel should be preserved and hardened rather than replaced.
@@ -268,6 +272,21 @@ Architecture direction:
 - block closeout when required gates are missing, stale, untrusted, or unresolved,
 - require separate review lenses when triggered: challenge, user-workflow/E2E,
   adversarial/security, code structure, architecture/boundary.
+
+PKT-02 implements this as a reusable gate profile engine contract:
+- root development runtime: `.harness/runtime/state/gate-profile-engine.js`,
+- root preflight integration: `.harness/runtime/state/packet-preflight.js` adds a
+  computed gate profile summary when a packet declares `Packet type`,
+- starter runtime policy API:
+  `starter/standard-harness/_harness/system/standard_harness/policy/gate_profiles.py`,
+- declarative starter policy:
+  `starter/standard-harness/_harness/policies/gate-profiles.yaml`.
+
+The engine keeps `low`, `standard`, `high`, and `critical` as canonical base risks.
+`normal` and `medium` are compatibility aliases for `standard`; `release-sensitive`
+is an escalation overlay that drives critical-grade gates without becoming a fifth base
+risk. Packet type baselines remain lightweight by default, and overlays add stricter
+evidence only when the packet claims or changed zones require it.
 
 AI review can support the gate package, but deterministic tests, browser evidence,
 trusted command evidence, or explicit N/A substitute checks are required when applicable.
@@ -421,7 +440,7 @@ The architecture follows the implementation waves.
 |---|---|---|
 | Wave 0 | Planning freeze and baseline sync | Align requirements, architecture, and implementation plan without code approval. |
 | Wave 1 | Project operating folder contract | Enforce `_harness/_ops/product`, reset/init, document placement, and starter cleanliness. |
-| Wave 2 | Risk-adaptive gate profile engine | Resolve required gates from packet type, risk, changed zone, and release sensitivity. |
+| Wave 2 | Risk-adaptive gate profile engine | Resolve required gates from packet type, risk, changed zone, release sensitivity, and declared claims; validate N/A contradiction and closeout missing/stale/untrusted gates. |
 | Wave 3 | Documenter closeout and evidence index | Produce two-page human report plus structured evidence index and wiki proposal. |
 | Wave 4 | PM daily rhythm and WBS loop | Produce one-page daily reports and spreadsheet-compatible PMO updates. |
 | Wave 5 | Long memory and question-answering index | Connect packet, evidence, closeout, wiki, PM, and active context for compact answers. |
@@ -460,6 +479,7 @@ hook is required to preserve the folder contract.
 | Use structured operating records for high-volume LLM state. | closed by requirement | Prevents Markdown explosion and reduces token load. |
 | Require all planning baselines to close before packet Ready For Code. | architecture baseline | Matches v1.0 discipline and prevents premature packet opening. |
 | Open Project Operating Folder Contract first. | selected for PKT-01 | It protects all later packets from placing files in the wrong zone. |
+| Use a policy-backed gate profile engine for Wave 2. | selected for PKT-02 | It reduces v1.0 gate-profile principles into v2-native root/starter resolver APIs, tests, and preflight diagnostics without copying v1 files wholesale. |
 
 ## Open Architecture Questions
 These questions do not block the architecture baseline, but they must be resolved in the
@@ -468,10 +488,10 @@ named implementation waves before the related capability is claimed complete.
 | Question | Owning Wave |
 |---|---|
 | What exact `_ops` reset command and retention behavior should ship? | Wave 1 |
-| What exact gate resolver API and schema should represent packet type, risk, changed zones, and release sensitivity? | Wave 2 |
-| What exact closeout report length metric counts as two human-readable pages? | Wave 3 |
-| What exact evidence index schema should become the starter minimum contract? | Wave 3 |
-| Which PMO TSV/CSV columns are mandatory for WBS and daily tracking? | Wave 4 |
+| How should later packets persist computed gate results into the full evidence index and closeout report? | closed by PKT-03 for closeout validation; PM and memory consumers remain PKT-04/PKT-05 |
+| What exact closeout report length metric counts as two human-readable pages? | closed by PKT-03 as a 120 non-empty body-line validation limit plus evidence index links |
+| What exact evidence index schema should become the starter minimum contract? | closed by PKT-03 with required evidence id/type/path/status/trust/freshness/resolution/redaction/gate fields |
+| Which PMO TSV/CSV columns are mandatory for WBS and daily tracking? | closed by PKT-04 with `wbs_id`, `parent_id`, `packet_id`, `title`, `status`, `owner_role`, `priority`, `risk_level`, `planned_start`, `planned_finish`, `evidence_index_path`, `closeout_report_path`, and `updated_at` |
 | Which query index is authoritative for Human Owner project-status answers? | Wave 5 |
 | What is the minimum useful provider adapter contract without automating provider control too early? | Wave 6 |
 | Which skill-routing failures should block packets versus warn? | Wave 7 |

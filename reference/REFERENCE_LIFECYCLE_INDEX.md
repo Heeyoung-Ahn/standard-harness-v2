@@ -47,6 +47,8 @@ Default AI entry remains governed by `AGENTS.md`, `.agents/runtime/ACTIVE_CONTEX
 | `reference/schemas/` | generated schema/reference contract | Runtime maintainer / Reviewer | Route-selected for schema validation | Machine-readable schemas and contracts. |
 | `reference/skills-src/` | optional artifact template | Maintainer / Documenter | Route-selected for skill generation | `reference/skills-src/*` is a generation source for selected active skills, not a runtime skill surface. |
 | `reference/legacy/current-root-v2-docs/` | compatibility reference | Maintainer / Planner | Route-selected for V2.1 migration, comparison, or starter-payload continuity work | Archived requirements, architecture, policies, release evidence, and productization packet docs from the previous root harness. It is not default context and not clean starter payload. |
+| `reference/legacy/v1/` | compatibility reference | Maintainer / Planner | Route-selected for v1.0 behavior comparison, skill-friction analysis, or starter-payload continuity work | Current v1.0 harness archive. It may inform v2-native design but must not be copied into `starter/standard-harness/` or promoted as runtime code without an explicit promotion plan. |
+| `reference/legacy/v2-ideas/` | compatibility reference | Maintainer / Planner | Route-selected for V2.x hardening idea review | Archived hardening idea notes split out from the previous root docs for easier lookup. They are reference material, not current product identity or active packet scope. |
 
 ## Compatibility Notes
 

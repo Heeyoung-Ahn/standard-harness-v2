@@ -1,7 +1,7 @@
 # Harness Operating Contract
 
 ## Status
-- Active governance contract for standard-harness V2.8 Codex-only operation.
+- Active governance contract for root development harness v1.0 Codex-only operation.
 - Replaces the prior planning-draft status.
 - This document is a reusable harness operating contract, not a project architecture document.
 - This document does not replace workflow-local role contracts, current execution state, or project-specific packets.

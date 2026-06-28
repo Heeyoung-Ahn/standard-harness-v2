@@ -39,7 +39,7 @@ V2.1 작업은 새 기능을 임의로 추가하는 작업이 아니다. v0.2에
 | Architecture inputs | `docs/architecture/standard-harness-architecture-guide-v1.md`, `docs/architecture/standard-harness-repository-topology-v1.md` | 현재 architecture baseline |
 | Implementation inputs | `src/standard_harness/**`, `tests/**`, `tools/harness_cli.py` | 현재 구현 및 검증 자산 |
 | Excluded intake | Spreadsheet candidate requirements | Not a V2.1 scope or requirement source unless explicitly reopened by the user |
-| Legacy reference | v1.0 harness / `docs/reference/v1/clean-starter-harness.zip` | Comparative evidence and skill-behavior reference only; no direct copy, bulk promotion, or V2.1 goal/scope change |
+| Legacy reference | v1.0 harness / `reference/legacy/v1/standard-harness-v1.zip` | Comparative evidence and skill-behavior reference only; no direct copy, bulk promotion, or V2.1 goal/scope change |
 | Skill reference candidates | Superpowers skills, v1 harness skill behavior | Candidate skill patterns for catalog review; no direct adoption unless adapted to V2.1 contracts |
 | External design references | Anthropic-style skill and context architecture patterns | Reference-only design evidence for progressive disclosure, procedural knowledge, provenance, and context curation; not a V2.1 requirement source, scope expansion, or XP ownership change |
 
@@ -116,7 +116,7 @@ XP-00 may not start until any change to these defaults is explicitly recorded as
 
 ### 3.8 v1.0 reference boundary
 
-`docs/reference/v1/clean-starter-harness.zip` may be referenced during V2.1 implementation to understand v1.0 behavior, friction patterns, skill candidates, prompts, manuals, and acceptance-test ideas.
+`reference/legacy/v1/standard-harness-v1.zip` may be referenced during V2.1 implementation to understand v1.0 behavior, friction patterns, skill candidates, prompts, manuals, and acceptance-test ideas.
 
 This reference is one-way only:
 
@@ -974,7 +974,7 @@ src/standard_harness/roles/cards.py
 src/standard_harness/roles/skill_policy.py
 src/standard_harness/workflow/orchestration.py
 src/standard_harness/cloud/orchestration.py
-docs/reference/v1/clean-starter-harness.zip (reference-only skill behavior and friction patterns)
+reference/legacy/v1/standard-harness-v1.zip (reference-only skill behavior and friction patterns)
 Superpowers skills (reference-only process skill candidates: TDD, debugging, review, planning, verification, parallel agents, subagent development)
 ```
 
@@ -1002,7 +1002,7 @@ Skill implementation policy:
 - V2.1 must implement skills required by v0.2/XP execution when no compliant existing skill is available.
 - Required skills are implemented as v2-native internal extensions, not as ad hoc core branches.
 - Skill catalog is mandatory and records id, purpose, owner, source, permission scope, input/output schema, evidence contract, fallback behavior, validation command, and HR/XP trace.
-- `docs/reference/v1/clean-starter-harness.zip` is the reference for candidate skill behavior and acceptance-test ideas only. Do not copy v1 skill files, prompts, runtime state, or plugin structure without an explicit promotion plan.
+- `reference/legacy/v1/standard-harness-v1.zip` is the reference for candidate skill behavior and acceptance-test ideas only. Do not copy v1 skill files, prompts, runtime state, or plugin structure without an explicit promotion plan.
 - Superpowers skills are major reference candidates for workflow/process skills. They may inform V2.1 skill behavior, naming, checks, and acceptance tests, but any adopted capability must be represented as a cataloged V2.1 skill or adapter with harness-native permission, evidence, fallback, and validation contracts.
 - External skills may be used only through adapters that satisfy the same catalog, permission, evidence, and fallback contracts. If an external/v1 skill does not fit V2.1 architecture, implement the V2.1 skill instead.
 ```
@@ -1266,4 +1266,3 @@ These decisions are closed defaults for starting XP-00. They do not reopen the r
 | Wiki storage | Markdown files plus structured YAML/JSON index, with provenance metadata and projection-only skill-facing index | XP-05 |
 | Required skill scope | XP-00 freezes the minimum required skill list; XP-07 owns catalog schema, router, and extension/adaptation boundary | XP-00, XP-07 |
 | V2.1 release boundary | release after XP-10; XP-00 through XP-03 may be internal milestones only | XP-00, XP-10 |
-

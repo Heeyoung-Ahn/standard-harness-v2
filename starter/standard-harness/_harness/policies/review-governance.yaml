@@ -23,6 +23,32 @@
       "securityReview"
     ]
   },
+  "reviewerLensMinimums": {
+    "challenge_review": [
+      "approved scope, user intent, Planner-approved SSOT, and packet acceptance were not narrowed or omitted",
+      "implementation satisfies work/product intent, not only tests",
+      "scope was not reinterpreted without Planner approval"
+    ],
+    "adversarial_security_review": [
+      "auth/authz bypass",
+      "secret/session/token exposure",
+      "injection/path traversal/untrusted input",
+      "fail-closed behavior for protected flows",
+      "residual security risk and owner decision"
+    ],
+    "code_quality_review": [
+      "module boundary and dependency direction",
+      "error handling and transaction/state consistency",
+      "testability and meaningful negative cases",
+      "temporary workaround or modeling bypass",
+      "maintainability/regression risk"
+    ],
+    "evidence_review": [
+      "packet acceptance maps to tests and evidence",
+      "schema-only, API-only, or render-only evidence is not overvalued",
+      "browser evidence, DB restart persistence, and audit proof meet the actual requirement level when applicable"
+    ]
+  },
   "diagnostics": [
     "missing_review_governance_evidence",
     "missing_required_review",

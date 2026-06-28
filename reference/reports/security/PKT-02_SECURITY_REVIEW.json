@@ -1,0 +1,44 @@
+{
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE.md",
+  "work_item_id": "PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE",
+  "mode": "scoped",
+  "decision": "pass",
+  "scope": "Risk-adaptive gate profile resolver, packet preflight diagnostics, N/A substitution validation, closeout gate diagnostics, starter policy/runtime parity, and validation-report security wording. No secrets, authentication, authorization, external service, dependency, CI/CD, deployment, release, publish, package metadata, or starter-promotion action changed.",
+  "phases_run": [0, 1, 2, 5, 8, 12, 13, 14],
+  "reviewed_paths": [
+    "reference/packets/PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE.md",
+    ".harness/runtime/state/gate-profile-engine.js",
+    ".harness/runtime/state/packet-preflight.js",
+    ".harness/runtime/state/validation-report.js",
+    ".harness/test/pkt02-gate-profile-engine.test.js",
+    "starter/standard-harness/_harness/policies/gate-profiles.yaml",
+    "starter/standard-harness/_harness/system/standard_harness/policy/gate_profiles.py",
+    "starter/standard-harness/_harness/test/test_gate_profile_engine.py",
+    ".agents/artifacts/ARCHITECTURE_GUIDE.md",
+    ".agents/artifacts/SYSTEM_CONTEXT.md",
+    ".agents/artifacts/IMPLEMENTATION_PLAN.md",
+    ".agents/artifacts/REQUIREMENTS.md",
+    ".agents/artifacts/PROJECT_PROGRESS.md",
+    "reference/reports/artifact-sync/PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE.md",
+    "reference/reports/implementation/PKT-02_DEVELOPER_REPORT.md"
+  ],
+  "findings": [],
+  "deferred_risks": [
+    {
+      "id": "PKT-02-PKT-03-EVIDENCE-INDEX",
+      "status": "deferred",
+      "rationale": "PKT-02 provides computed required-gate diagnostics; PKT-03 owns Documenter closeout report generation and evidence-index consumption."
+    },
+    {
+      "id": "PKT-02-ORG-SECURITY-SIGNOFF",
+      "status": "accepted",
+      "rationale": "Local validation-report security scans prepare evidence only and do not replace formal organization-specific security signoff."
+    }
+  ],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  }
+}

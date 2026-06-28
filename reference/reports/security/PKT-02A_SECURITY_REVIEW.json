@@ -1,0 +1,33 @@
+{
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-02A_NAMING_AND_STATUS_RECONCILIATION.md",
+  "work_item_id": "PKT-02A_NAMING_AND_STATUS_RECONCILIATION",
+  "mode": "scoped",
+  "decision": "pass",
+  "scope": "Docs-only naming/status cleanup for root entry contract, operating contract, command documentation, and governance status docs. No auth, secret, permission, CI/CD, dependency, runtime, package-version, schema-version, or release-path change.",
+  "phases_run": [0, 1, 12, 13, 14],
+  "reviewed_paths": [
+    "AGENTS.md",
+    ".agents/rules/HARNESS_OPERATING_CONTRACT.md",
+    "reference/commands/COMPATIBILITY_COMMAND_POLICY.md",
+    "reference/commands/COMMAND_TAXONOMY.md",
+    "reference/skills-src/shared/codex-runtime-note.md",
+    ".agents/artifacts/IMPLEMENTATION_PLAN.md",
+    ".agents/artifacts/PROJECT_PROGRESS.md",
+    ".agents/artifacts/REQUIREMENTS.md",
+    "reference/packets/PKT-02A_NAMING_AND_STATUS_RECONCILIATION.md"
+  ],
+  "findings": [],
+  "deferred_risks": [
+    {
+      "id": "PKT-02A-COMPAT-NAMESPACE",
+      "status": "accepted",
+      "rationale": "Version-like compatibility names are retained as compatibility metadata, not product identity. Deprecation or rename requires a separate packet."
+    }
+  ],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  }
+}

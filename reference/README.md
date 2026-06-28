@@ -28,6 +28,8 @@ At project kickoff, most people only need:
 - `reports/`: optional review or transfer report material that can be created later when a task needs it
 - `mockups/`: optional visual review assets that can be created later when a task needs them
 - `legacy/`: optional archive area for old or superseded reference material
+- `legacy/v1/`: current v1.0 harness archive for route-selected comparison only; the ZIP is reference material, not starter payload
+- `legacy/v2-ideas/`: archived V2.x hardening idea notes split out from the old root docs for easier lookup
 - `legacy/current-root-v2-docs/`: archived V2.1 development repository knowledge from
   the previous root harness; use only when rebuilding or comparing Standard Harness v2
   starter-payload requirements, architecture, policies, or release evidence

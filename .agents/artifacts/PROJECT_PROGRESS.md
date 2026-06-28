@@ -1,23 +1,24 @@
 # Project Progress
 
 ## Summary
-Track the whole project kickoff-to-release board for Standard Harness v2 Starter Payload Development here. Human-facing summaries stay readable here, while AI-facing state is generated into ACTIVE_CONTEXT artifacts.
+Track the whole project kickoff-to-release board for Standard Harness v2 Starter Payload Development here. Human-facing summaries stay readable here, while AI-facing live route state is generated into ACTIVE_CONTEXT artifacts.
+
+Status reconciled on 2026-06-28 from `.agents/artifacts/REQUIREMENTS.md`, `.agents/artifacts/IMPLEMENTATION_PLAN.md`, and `reference/packets/PKT-01_PROJECT_OPERATING_FOLDER_CONTRACT.md`.
+
+`ACTIVE_CONTEXT.json` may show no active task after packet closeout. That is not the same as "no work has happened"; completed planning and packet history lives in the canonical planning and packet artifacts.
 
 ## Progress Board
 | Phase | Task ID | Task | Status | Notes | Source |
 | --- | --- | --- | --- | --- | --- |
-| Planning | PLN-00 | Kickoff interview | in_progress | Close implementation-critical discovery and approval boundaries first. | reference/planning/PLN-00_DEEP_INTERVIEW.md |
-| Planning | PLN-01 | Requirements freeze | todo | Freeze the project-specific requirements baseline after user confirmation. | .agents/artifacts/REQUIREMENTS.md |
-| Planning | PLN-02 | Baseline sync | todo | Align architecture / implementation / UI after requirements approval. | .agents/artifacts/ARCHITECTURE_GUIDE.md |
-| Design | DSG-01 | Rough UX direction | todo | Lock the rough direction and global behavior contract. | reference/artifacts/UI_DESIGN.md |
-| Packet | PKT-01 | First work packet approval | todo | Use the standard packet template before any code starts. | reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md |
-| Build | DEV-01 | First approved implementation packet | todo | Replace this starter row with the first real implementation packet. | reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md |
-| Build | DEV-02 | Implementation and canonical-doc sync | todo | Keep code and live artifacts aligned while building. | .agents/artifacts/IMPLEMENTATION_PLAN.md |
-| Test | DEV-03 | Generated docs / validator verification | todo | Check generated docs and validator parity. | .agents/artifacts/IMPLEMENTATION_PLAN.md |
-| Test | DEV-04 | Active context and operator re-entry check | todo | Verify CLI-first context and operator re-entry against the approved baseline. | reference/artifacts/UI_DESIGN.md |
-| Release | DEV-05 | Deploy / test / cutover readiness | todo | Close environment topology, rollback, and release-readiness checks. | reference/artifacts/DEPLOYMENT_PLAN.md |
-| Quality | QLT-01 | Packet exit quality gate | todo | Record closeout evidence before moving to the next packet. | reference/artifacts/PACKET_EXIT_QUALITY_GATE.md |
-| Security | SEC-01 | Security and operational risk review | todo | Review code path, scripts, dependencies, and release risks. | .agents/artifacts/IMPLEMENTATION_PLAN.md |
-| Test | TST-01 | Acceptance and parity verification | todo | Check acceptance, generated docs, and live truth parity. | .agents/artifacts/IMPLEMENTATION_PLAN.md |
-| Test | TST-02 | Operator comprehension check | todo | Confirm first-view comprehension before release. | reference/artifacts/UI_DESIGN.md |
-| Review | REV-01 | Release review gate | todo | Close the release gate with evidence and review alignment. | .agents/artifacts/IMPLEMENTATION_PLAN.md |
+| Planning | PLN-00 | Kickoff interview | completed | Requirements-relevant discovery closed for the current baseline. | reference/planning/PLN-00_DEEP_INTERVIEW.md |
+| Planning | PLN-01 | Requirements freeze | completed | Requirements baseline approved by the Human Owner on 2026-06-28. | .agents/artifacts/REQUIREMENTS.md |
+| Planning | PLN-02 | Baseline sync | completed | Architecture and implementation plan were rebased for PKT-01 sequencing. | .agents/artifacts/ARCHITECTURE_GUIDE.md |
+| Packet | PKT-01 | Project Operating Folder Contract | completed | Ready For Code, implementation, testing, review, and Planner closeout completed on 2026-06-28. | reference/packets/PKT-01_PROJECT_OPERATING_FOLDER_CONTRACT.md |
+| Build | DEV-01 | PKT-01 implementation | completed | Folder contract, reset/init behavior, starter validation, and documentation parity closed for PKT-01 scope. | reference/packets/PKT-01_PROJECT_OPERATING_FOLDER_CONTRACT.md |
+| Test | TST-01 | PKT-01 acceptance and parity verification | completed | PKT-01 closeout records starter tests, copied-starter smoke, root `npm.cmd test`, and `harness:validate` pass evidence. | reference/packets/PKT-01_PROJECT_OPERATING_FOLDER_CONTRACT.md |
+| Review | REV-01 | PKT-01 review and Planner closeout | completed | Reviewer had no blocking findings remaining; Planner closeout accepted the approved scope. | reference/packets/PKT-01_PROJECT_OPERATING_FOLDER_CONTRACT.md |
+| Packet | PKT-02A | Naming And Status Reconciliation | completed | Closed root-harness v1.0, starter-payload v2.0, and post-PKT-01 status truth cleanup before PKT-02. | reference/packets/PKT-02A_NAMING_AND_STATUS_RECONCILIATION.md |
+| Packet | PKT-02B | Implementation Plan Requirement Alignment | completed | Closed requirement-coverage, open-question gate, and roadmap-order alignment through Orchestrator routing and Planner closeout. | reference/packets/PKT-02B_IMPLEMENTATION_PLAN_REQUIREMENT_ALIGNMENT.md |
+| Packet | PKT-02 | Risk-Adaptive Gate Profile Engine | completed | Closed risk-adaptive gate profile engine implementation with root/starter parity, focused tests, starter validation, full regression, security review, and Planner closeout. | reference/packets/PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE.md |
+| Packet | PKT-03 | Documenter Closeout And Evidence Index | completed | Closed Documenter closeout and evidence-index behavior with root/starter parity, focused tests, starter validation, full regression, security review, and Reviewer evidence. | reference/packets/PKT-03_DOCUMENTER_CLOSEOUT_AND_EVIDENCE_INDEX.md |
+| Packet | PKT-04 | PM Daily Rhythm And WBS Loop | completed | Closed PM day-start/day-wrap-up reports, PMO placement, WBS TSV, stale-summary blocking, authority-boundary diagnostics, evidence-index links, root/starter parity, focused tests, starter validation, full regression, security review, and Reviewer evidence. | reference/packets/PKT-04_PM_DAILY_RHYTHM_AND_WBS_LOOP.md |
