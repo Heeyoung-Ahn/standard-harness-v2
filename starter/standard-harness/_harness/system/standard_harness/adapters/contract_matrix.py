@@ -8,7 +8,15 @@ from standard_harness.adapters.envelope import AdapterOutputEnvelope
 from standard_harness.adapters.manifest import AdapterManifest
 
 
-SUPPORTED_EXECUTION_MODES = {"local", "remote", "manual", "mock"}
+SUPPORTED_EXECUTION_MODES = {
+    "local",
+    "remote",
+    "manual",
+    "mock",
+    "local_subscription_cli",
+    "api_key",
+    "future_provider",
+}
 SUPPORTED_EVIDENCE_MODES = {
     "cli_command",
     "unit_test",
@@ -22,7 +30,59 @@ SUPPORTED_EVIDENCE_MODES = {
     "device_execution",
     "manual_runtime",
     "substitute_evidence",
+    "artifact_manifest",
 }
+SUPPORTED_CREDENTIAL_MODES = {
+    "not_declared",
+    "none",
+    "local_subscription",
+    "api_key",
+    "manual",
+    "future_provider",
+}
+FORBIDDEN_CREDENTIAL_MATERIAL_KEYS = {
+    "api_key",
+    "access_token",
+    "auth_token",
+    "bearer_token",
+    "refresh_token",
+    "session_token",
+    "session_cookie",
+    "cookie_file",
+    "credential",
+    "credentials",
+    "password",
+    "provider_cache_path",
+    "session_path",
+    "token",
+}
+FORBIDDEN_CREDENTIAL_KEY_FRAGMENTS = (
+    "api_key",
+    "apikey",
+    "access_token",
+    "auth_token",
+    "bearer_token",
+    "refresh_token",
+    "session",
+    "cookie",
+    "credential",
+    "password",
+    "provider_cache",
+    "cache_path",
+    "token",
+)
+FORBIDDEN_CREDENTIAL_VALUE_FRAGMENTS = (
+    "openai_api_key",
+    "anthropic_api_key",
+    "authorization: bearer",
+    "bearer ",
+    "session_token",
+    "session_cookie",
+    "cookie_file",
+    "provider_cache",
+    ".codex",
+    ".claude",
+)
 SUPPORTED_READ_WRITE_CAPABILITIES = {"read_only", "read_artifacts", "write_artifacts"}
 SUPPORTED_ARTIFACT_EXPORT_CAPABILITIES = {"none", "write_artifacts", "artifact_manifest"}
 DIRECT_WRITE_EVENT_TYPES = {"sqlite.write", "database.write", "state.mutate", "direct_state_write"}
@@ -40,6 +100,7 @@ OUTCOME_MATRIX = {
     "mock_success": ("rejected", "adapter_mock_success"),
     "direct_state_mutation": ("rejected", "adapter_direct_state_mutation"),
     "path_escape": ("rejected", "adapter_path_escape"),
+    "provider_unavailable": ("blocked", "provider_cli_unavailable"),
 }
 
 
@@ -83,9 +144,24 @@ class AdapterContractMatrix:
             not in SUPPORTED_ARTIFACT_EXPORT_CAPABILITIES
             else None
         )
+        unsupported_credential_mode = (
+            manifest.credential_mode
+            if manifest.credential_mode not in SUPPORTED_CREDENTIAL_MODES
+            else None
+        )
         invalid_permission_roots = [
             root for root in manifest.permission_roots if not _looks_absolute(root)
         ]
+        diagnostics: list[str] = []
+        if unsupported_credential_mode:
+            diagnostics.append("unsupported_credential_mode")
+        if _declares_credential_material(manifest.capabilities):
+            diagnostics.append("credential_material_declared")
+        if (
+            "local_subscription_cli" in manifest.execution_modes
+            and manifest.credential_mode != "local_subscription"
+        ):
+            diagnostics.append("local_subscription_cli_requires_local_subscription")
         blocked = any(
             [
                 unsupported_failure_modes,
@@ -93,7 +169,9 @@ class AdapterContractMatrix:
                 unsupported_evidence_modes,
                 unsupported_read_write,
                 unsupported_artifact_export,
+                unsupported_credential_mode,
                 invalid_permission_roots,
+                diagnostics,
             ]
         )
         return {
@@ -104,14 +182,22 @@ class AdapterContractMatrix:
             "unsupported_evidence_modes": unsupported_evidence_modes,
             "unsupported_read_write_capability": unsupported_read_write,
             "unsupported_artifact_export_capability": unsupported_artifact_export,
+            "unsupported_credential_mode": unsupported_credential_mode,
             "invalid_permission_roots": invalid_permission_roots,
+            "diagnostics": diagnostics,
         }
 
 
 class AdapterBoundaryValidator:
     """Validate adapter envelopes before they can influence harness state."""
 
-    def validate_envelope(self, data: dict[str, Any]) -> dict[str, Any]:
+    def validate_envelope(
+        self,
+        data: dict[str, Any],
+        *,
+        trusted_permission_roots: list[str] | None = None,
+        expected_input_snapshot_hash: str | None = None,
+    ) -> dict[str, Any]:
         try:
             envelope = AdapterOutputEnvelope.from_dict(data)
         except ValueError as exc:
@@ -120,9 +206,20 @@ class AdapterBoundaryValidator:
                 return _rejected("direct_state_mutation", message)
             return _rejected("malformed_envelope", message)
 
+        if trusted_permission_roots is None:
+            return _rejected("path_escape", "Trusted permission roots are required for adapter output ingestion")
+        if (
+            expected_input_snapshot_hash is not None
+            and envelope.input_snapshot_hash != expected_input_snapshot_hash
+        ):
+            return _rejected("stale", "Adapter input snapshot does not match the trusted orchestration snapshot")
+        if _expands_permission_roots(
+            envelope.permission_roots, trusted_permission_roots
+        ):
+            return _rejected("path_escape", "Adapter envelope expands trusted permission roots")
         if _contains_direct_mutation(envelope.event_request):
             return _rejected("direct_state_mutation", "Adapter event request mutates state directly")
-        if self._has_path_escape(envelope):
+        if self._has_path_escape(envelope, trusted_permission_roots):
             return _rejected("path_escape", "Adapter artifact path escapes permission roots")
         if envelope.evidence_provenance.get("execution_mode") == "mock" and (
             envelope.evidence_provenance.get("result_status") == "passed"
@@ -141,10 +238,15 @@ class AdapterBoundaryValidator:
             "diagnostic_code": result["diagnostic_code"],
         }
 
-    def _has_path_escape(self, envelope: AdapterOutputEnvelope) -> bool:
-        if any(not _looks_absolute(root) for root in envelope.permission_roots):
+    def _has_path_escape(
+        self,
+        envelope: AdapterOutputEnvelope,
+        trusted_permission_roots: list[str] | None = None,
+    ) -> bool:
+        permission_roots = trusted_permission_roots or envelope.permission_roots
+        if any(not _looks_absolute(root) for root in permission_roots):
             return True
-        roots = [_normalize_path(root) for root in envelope.permission_roots]
+        roots = [_normalize_path(root) for root in permission_roots]
         if not roots:
             return True
         for artifact in envelope.artifact_manifest:
@@ -225,3 +327,41 @@ def _contains_direct_mutation(value: Any) -> bool:
 
 def _missing_required_provenance(provenance: dict[str, Any]) -> bool:
     return any(not provenance.get(field) for field in ("execution_mode", "result_status", "evidence_id"))
+
+
+def _declares_credential_material(value: Any) -> bool:
+    if isinstance(value, dict):
+        for key, item in value.items():
+            key_normalized = _normalize_identifier(str(key))
+            if key_normalized in FORBIDDEN_CREDENTIAL_MATERIAL_KEYS:
+                return True
+            if any(fragment in key_normalized for fragment in FORBIDDEN_CREDENTIAL_KEY_FRAGMENTS):
+                return True
+            if _declares_credential_material(item):
+                return True
+    elif isinstance(value, list):
+        return any(_declares_credential_material(item) for item in value)
+    elif isinstance(value, str):
+        value_normalized = value.strip().lower().replace("-", "_")
+        if any(fragment in value_normalized for fragment in FORBIDDEN_CREDENTIAL_VALUE_FRAGMENTS):
+            return True
+    return False
+
+
+def _normalize_identifier(value: str) -> str:
+    return value.strip().lower().replace("-", "_").replace(" ", "_")
+
+
+def _expands_permission_roots(
+    envelope_roots: list[str], trusted_permission_roots: list[str]
+) -> bool:
+    if not trusted_permission_roots:
+        return True
+    if any(not _looks_absolute(root) for root in envelope_roots):
+        return True
+    trusted = [_normalize_path(root) for root in trusted_permission_roots]
+    for root in envelope_roots:
+        normalized = _normalize_path(root)
+        if not any(_is_relative_to(normalized, trusted_root) for trusted_root in trusted):
+            return True
+    return False

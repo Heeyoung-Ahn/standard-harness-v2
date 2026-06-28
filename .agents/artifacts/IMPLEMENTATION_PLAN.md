@@ -69,6 +69,8 @@ when the coverage matrix below is closed.
 ## Current Plan Summary
 - Build the clean Standard Harness v2 starter payload through packetized waves.
 - Preserve generated-doc immutability, packet-before-code, Active Context derived authority, clean starter boundaries, and provider-neutral product identity.
+- Require independent `packet_doc_review` before `Ready For Code` for every root-harness v1.0 and starter-payload v2.0 packet.
+- Require four independent closeout review lens agents for every packet: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`.
 - Use this implementation plan as the long-range sequencing map; individual packets own
   implementation approval.
 
@@ -234,6 +236,13 @@ Acceptance:
 - Product-feature packets require test plan, evidence trust, test, E2E applicability,
   requirements review, security review, AI review, refactor review, and closeout where
   applicable.
+- Every packet must pass independent packet-document review before Ready For Code, so
+  requirements direction, implementation-plan sequencing, architecture/source SSOT,
+  acceptance strength, verification scope, and v1.0/v2.0 operating philosophy are not
+  weakened before implementation.
+- Every packet closeout must produce four independent review-lens evidence artifacts or
+  lens-specific independent N/A evidence for challenge, adversarial security, code quality,
+  and evidence quality.
 - Security-data packets require security hard gate and human residual-risk decision when
   residual risk exists.
 - Harness-system and starter-promotion packets require boundary/starter validation.
@@ -475,7 +484,7 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-028 | Wave 2 | Wave 3 | TDD/test-plan evidence distinguishes RED/GREEN or rationale, regression evidence, and closeout support. |
 | SHV2-REQ-029 | Wave 2 | Wave 7 | Domain/refactor gates and long-running refactor proposal checks pass. |
 | SHV2-REQ-030 | Wave 2 | Wave 3 | Product functional-test validators reject marker-only or file-existence-only evidence. |
-| SHV2-REQ-031 | Wave 2 | Wave 6 | Challenge, user-workflow/E2E, adversarial-security, and code-structure review gates trigger by packet type/risk. |
+| SHV2-REQ-031 | Wave 2 | Wave 6 | Independent `packet_doc_review` blocks implementation transition when missing or non-pass; four independent closeout-review lens agents block closeout when missing, duplicated, self-reviewed, or unbound. |
 | SHV2-REQ-032 | Wave 7 | none | Skill router selects required skills by task/risk/role and records permission, evidence, manifest, fallback, and source authority. |
 | SHV2-REQ-033 | Wave 3 | Wave 5 | Maintenance docs and wiki proposal/apply governance are generated from evidence-backed closeout. |
 | SHV2-REQ-034 | Wave 2 | Waves 6, 7 | Review/adjudication and skill-routing tests record uncertainty and block unsupported or unsafe instructions. |
@@ -488,7 +497,7 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-041 | Wave 3 | none | Each packet can produce one max two-page closeout report plus evidence index links. |
 | SHV2-REQ-042 | Wave 5 | Wave 8 | Long memory preserves compact evidence-backed project intent, decisions, conventions, packet history, frictions, risks, and deprecated context. |
 | SHV2-REQ-043 | Wave 4 | none | PKT-04 day-start/day-wrap-up reports provide daily continuity, WBS updates, blockers, risks, next work, and human decision prompts within one page. |
-| SHV2-REQ-044 | Wave 2 | Waves 3, 4, 6 | Wave 2 supplies packet/gate/role evidence enforcement but cannot close the requirement alone; full closure requires Human/Planner, Developer, Tester, Reviewer, Documenter, PM, and Orchestrator evidence across Waves 2, 3, 4, and 6. |
+| SHV2-REQ-044 | Wave 2 | Waves 3, 4, 6 | Wave 2 supplies packet/gate/role evidence enforcement including independent pre-implementation packet review and closeout review-lens gates, but cannot close the requirement alone; full closure requires Human/Planner, Developer, Tester, Reviewer, Documenter, PM, and Orchestrator evidence across Waves 2, 3, 4, and 6. |
 | SHV2-REQ-045 | Wave 2 | none | Baseline gate profiles exist and are validated for all required packet types. |
 | SHV2-REQ-046 | Wave 2 | none | Risk escalation/de-escalation tests prove hard stops cannot be waived. |
 | SHV2-REQ-047 | Wave 3 | Wave 4 | Evidence index links cover tests, regression, browser/E2E, reviews, gates, risk decisions, wiki/memory, and PM/WBS impact. |
@@ -505,7 +514,7 @@ implementation starts.
 | Exact `_ops/` reset command and evidence-retention policy | Operating-state reset and evidence-retention gate | PKT-03, PKT-04, PKT-05 | Packet must state whether `_ops` reset/retention behavior is in scope, N/A, or deferred to a named follow-up before implementation. |
 | Provider examples that remain provider-neutral | Provider-neutral example gate | PKT-06 | Packet must classify provider examples as policy examples only and prove no provider-specific file becomes starter identity. |
 | Minimum PM artifacts required as starter contract vs sample files | PMO artifact minimum-contract gate | PKT-04 | closed by PKT-04 with required PMO folders, WBS TSV columns, one-page report limit, stale-summary checks, evidence-index links, and coordination-only authority validation. |
-| Mandatory review lenses vs risk-triggered review lenses | Review-lens trigger gate | PKT-02, PKT-07 | Packet must define which review lenses are baseline, which are risk-triggered, and which N/A substitute checks are valid. |
+| Mandatory packet-document and closeout review lenses vs risk-triggered supplemental lenses | Review-lens trigger gate | PKT-02, PKT-07 | Packet must preserve independent `packet_doc_review` as a baseline pre-implementation gate, preserve four independent closeout-review lens agents as baseline closeout gates, define only supplemental risk-triggered lenses separately, and state which N/A substitute checks are valid. |
 | Two-page closeout report template and evidence index schema | Closeout report and evidence-index schema gate | PKT-03 | closed by PKT-03 with report length validation, evidence-index links, required-gate evidence checks, N/A records, raw-dump guard, and wiki-proposal boundaries. |
 | Canonical risk level names | Risk taxonomy gate | PKT-02 | Packet must decide or explicitly defer canonical risk names before implementing gate resolver behavior. |
 | Mandatory starter long-memory pages vs on-demand memory | Long-memory seed gate | PKT-05 | Packet must define required seed pages or on-demand creation rules before memory snapshot/query behavior is implemented. |
@@ -544,6 +553,7 @@ Starter validation must avoid creating bytecode/cache contamination. Use
 Stop before implementation when:
 - no approved packet exists,
 - `Ready For Code` is missing,
+- independent `packet_doc_review` is missing, failed, pending, self-reviewed, or not tied to packet evidence,
 - the packet does not name packet type, risk level, changed zones, acceptance criteria,
   evidence expectations, review expectations, and closeout expectations,
 - a proposed change would copy v1 `.agents`, `.harness`, `AGENTS.md`, root runtime state,
@@ -551,6 +561,14 @@ Stop before implementation when:
 - a product packet would mutate `_harness/**` without a harness-system packet,
 - a PM, Documenter, Wiki, generated summary, or LLM discussion tries to become approval
   authority.
+
+Stop before closeout when:
+- any of the four independent closeout review lens artifacts is missing, duplicated-agent,
+  self-reviewed, unbound to packet evidence, pending, failed, or replaced by Orchestrator
+  summary prose,
+- Reviewer adjudication does not explicitly disposition the four lens outputs,
+- Planner closeout would rely on tests, vocabulary alignment, or fluent explanation without
+  source parity and evidence quality review.
 
 ## Alternative Strategy: Full Rebuild
 A full rebuild is not the recommended path.
@@ -565,9 +583,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING` active handoff is `reviewer -> planner`.
-- Plan the next approved lane or close remaining planning decisions.
-- Source packet: `reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md`.
+- `PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT` is closed; latest closeout handoff is `planner -> planner`.
+- Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Source packet: `reference/packets/PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

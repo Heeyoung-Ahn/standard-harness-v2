@@ -17,7 +17,7 @@
 - Route an approved packet from Planner to Developer, Tester, Reviewer, remediation, blocked-human, or Planner closeout using the approved handoff/transition runtime.
 - Require each downstream workflow to read the original evidence path instead of relying on Orchestrator summaries when a finding, test report, or review report drives the route.
 - Track bounded fix-loop history and escalate when the same blocking finding repeats twice or the full delivery loop runs three times.
-- Assemble a closeout package for Planner decision when implementation, test, review, and SSOT conformance evidence are present.
+- Assemble a closeout package for Planner decision when independent `packet_doc_review`, implementation, test, four independent review-lens artifacts, Reviewer adjudication, and SSOT conformance evidence are present.
 
 ## Non-Authority
 - Do not implement code, run Tester verification as a substitute for Tester, or perform Reviewer conformance judgment as a substitute for Reviewer.
@@ -44,8 +44,8 @@
 
 ## First Implementation Readiness
 - When receiving `planner-to-orchestrator` for the first implementation entry of a packet, read the role brief `firstImplementationReadiness` section before routing Developer.
-- Confirm Ready For Code, active packet, selected route, canonical/generated boundary, validation blocker/warning meaning, and root / `standard-template` parity relevance.
-- If readiness reports stale context, missing packet, unapproved Ready For Code, or scope ambiguity, stop routing and return to Planner.
+- Confirm Ready For Code, active packet, independent `packet_doc_review` pass evidence, selected route, canonical/generated boundary, validation blocker/warning meaning, and root / `standard-template` parity relevance.
+- If readiness reports stale context, missing packet, missing/failed `packet_doc_review`, unapproved Ready For Code, or scope ambiguity, stop routing and return to Planner.
 
 ## Conditional Supporting References
 - Use `.agents/artifacts/ARCHITECTURE_GUIDE.md` as an always-readable SSOT candidate for downstream project implementation conformance; record applicable or not-applicable when the active packet makes that decision relevant.
@@ -56,15 +56,16 @@
 - Select the next workflow owner from approved routing state and record the transition through the harness runtime.
 - Issue a fix request to Developer when Tester, Reviewer, or validator evidence contains blocking remediation requirements.
 - Return to Tester after Developer remediation unless Planner or user approval changes the route.
-- Route to Reviewer only after Tester evidence and validator evidence are present.
-- Route to Planner closeout only after Tester pass, Reviewer pass, SSOT conformance pass, and closeout package fields are available.
+- Route to Reviewer only after Tester evidence and validator evidence are present, and instruct Reviewer to run the four mandatory independent review lens agents in parallel when practical.
+- Route to Planner closeout only after independent `packet_doc_review` pass evidence, Tester pass, all four independent review-lens artifacts are present or lens-specific N/A is independently recorded, Reviewer pass, SSOT conformance pass, and closeout package fields are available.
 - When an orchestration request explicitly asks for end-to-end completion, keep routing within the same turn until Tester verification, Reviewer closeout, and Planner closeout are either completed or blocked by explicit evidence.
 
 ## Single-Session Evidence Route
-- If the user explicitly requests implementation, testing, review, and closeout in one turn, Orchestrator may assemble the closeout route from real Developer, Tester, Reviewer, validator, security, and packet-preflight evidence produced in the same session.
+- If the user explicitly requests implementation, testing, review, and closeout in one turn, Orchestrator may assemble the closeout route from real independent `packet_doc_review`, Developer, Tester, four independent review-lens agents, Reviewer adjudication, validator, security, and packet-preflight evidence produced in the same session.
 - Do not create mock `harness:orchestrate` agent sessions merely to satisfy closeout evidence. Mock route artifacts are evidence of the route runner only, not a substitute for implementation, test, review, or Planner closeout evidence.
-- The closeout package must cite original evidence paths directly, such as Developer report, WALKTHROUGH/Test report, REVIEW_REPORT, security review JSON, parallel/serial batch plan, validation report, and packet-preflight output.
+- The closeout package must cite original evidence paths directly, such as `packet_doc_review`, Developer report, WALKTHROUGH/Test report, each independent review-lens artifact, REVIEW_REPORT, security review JSON, parallel/serial batch plan, validation report, and packet-preflight output.
 - When a packet is implemented serially in a single workspace, record that fact as serial evidence instead of inventing parallel subagent artifacts.
+- Serial workspace implementation does not waive the independent review-lens requirement; only the implementation/test execution mode may be serial.
 
 ## Forbidden Actions
 - Creating a new multi-agent runtime, scheduler, queue, or autonomous background process as part of this workflow contract.
@@ -97,7 +98,7 @@
 - When docs parity is `pending` or `fail` for declared docs impact, route back to Developer or Planner rather than treating documentation cleanup as closeout approval.
 
 ## Stop Conditions
-- Ready For Code approval is missing for a plan-to-orchestrator delivery start.
+- Ready For Code approval or independent `packet_doc_review` pass evidence is missing for a plan-to-orchestrator delivery start.
 - The next owner, required SSOT, source evidence, or route reason cannot be stated concretely.
 - The same blocking finding appears twice or the full delivery loop has run three times.
 - Residual risk, scope change, SSOT applicability, or closeout decision requires Planner or user authority.
@@ -113,6 +114,7 @@
 
 Orchestrator owns routing only after all are true:
 - Ready For Code is explicit.
+- independent `packet_doc_review` pass evidence is present.
 - Active packet is approved for post-plan delivery.
 - next workflow, next first action, required SSOT, route reason, and evidence paths are concrete.
 - the route does not require scope, residual risk, release, or user approval decisions.

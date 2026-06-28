@@ -54,6 +54,44 @@ const PLANNER_PACKET_CHALLENGE_REQUIRED_FIELDS = [
   "Required corrections applied",
   "No self-approval claim"
 ];
+const PACKET_DOCUMENT_REVIEW_HEADING = "## Packet Document Review";
+const PACKET_DOCUMENT_REVIEW_REQUIRED_FIELDS = [
+  "Packet doc reviewer",
+  "Packet doc reviewer independence basis",
+  "Packet doc review evidence path",
+  "Requirements direction alignment",
+  "Implementation-plan sequencing alignment",
+  "Architecture/source SSOT alignment",
+  "Human/Planner intent preservation",
+  "v1.0 root-harness operating constraint coverage",
+  "v2.0 product philosophy coverage",
+  "Acceptance strength",
+  "Verification scope strength",
+  "Deferred/out-of-scope ownership",
+  "Findings disposition",
+  "No self-approval claim"
+];
+const INDEPENDENT_REVIEW_LENS_HEADING = "## Independent Review Lens Evidence";
+const INDEPENDENT_REVIEW_LENSES = [
+  "challenge_review",
+  "adversarial_security_review",
+  "code_quality_review",
+  "evidence_review"
+];
+const DISALLOWED_INDEPENDENT_AGENT_VALUES = new Set([
+  "self",
+  "same-agent",
+  "main-agent",
+  "main-session",
+  "planner",
+  "developer",
+  "tester",
+  "orchestrator",
+  "generated-summary",
+  "none",
+  "n/a",
+  "not-applicable"
+]);
 export function runPacketPreflightCommand({
   repoRoot = process.cwd(),
   dbPath = DEFAULT_DB_PATH,
@@ -118,6 +156,13 @@ function buildPacketPreflight({ store, repoRoot, options }) {
         gateProfile,
         changeZone,
         routeClass: changeZoneClassification?.effectiveRouteClass ?? routeClass
+      })
+    : null;
+  const packetDocumentReview = content
+    ? evaluatePacketDocumentReview({
+        repoRoot,
+        content,
+        stage
       })
     : null;
   const firstImplementationReadiness = content
@@ -192,6 +237,13 @@ function buildPacketPreflight({ store, repoRoot, options }) {
         strict: Boolean(options.strictBrowserEvidence || options.requireBrowserEvidence || options.strictEvidenceManifest)
       })
     : null;
+  const independentReviewLenses = content
+    ? evaluateIndependentReviewLenses({
+        repoRoot,
+        content,
+        stage
+      })
+    : null;
 
   addHeaderCheck(checks, findings, packet, "Ready For Code");
   addHeaderCheck(checks, findings, packet, "Gate profile");
@@ -262,6 +314,18 @@ function buildPacketPreflight({ store, repoRoot, options }) {
     findings.push(...plannerPacketChallenge.diagnostics);
     if (!plannerPacketChallenge.ok && plannerPacketChallenge.blocking) {
       errors.push(...plannerPacketChallenge.diagnostics.map((diagnostic) => diagnostic.message));
+    }
+  }
+  if (packetDocumentReview) {
+    checks.push({
+      field: "Packet Document Review",
+      status: packetDocumentReview.blocking ? "block" : packetDocumentReview.ok ? "pass" : "hold",
+      current: packetDocumentReview.current,
+      expected: packetDocumentReview.expected
+    });
+    findings.push(...packetDocumentReview.diagnostics);
+    if (packetDocumentReview.blocking) {
+      errors.push(...packetDocumentReview.diagnostics.map((diagnostic) => diagnostic.message));
     }
   }
   if (firstImplementationReadiness) {
@@ -379,6 +443,18 @@ function buildPacketPreflight({ store, repoRoot, options }) {
         .map((item) => item.message));
     }
   }
+  if (independentReviewLenses) {
+    checks.push({
+      field: "Independent Review Lens Evidence",
+      status: independentReviewLenses.blocking ? "block" : independentReviewLenses.ok ? "pass" : "hold",
+      current: independentReviewLenses.current,
+      expected: independentReviewLenses.expected
+    });
+    findings.push(...independentReviewLenses.diagnostics);
+    if (independentReviewLenses.blocking) {
+      errors.push(...independentReviewLenses.diagnostics.map((diagnostic) => diagnostic.message));
+    }
+  }
 
   findings.push(...stageDecision.findings);
   if (stageDecision.blocking) {
@@ -419,6 +495,7 @@ function buildPacketPreflight({ store, repoRoot, options }) {
     changeZoneClassification,
     modelingImpact,
     plannerPacketChallenge,
+    packetDocumentReview,
     firstImplementationReadiness,
     tddEvidence,
     securityReview,
@@ -427,6 +504,7 @@ function buildPacketPreflight({ store, repoRoot, options }) {
     computedGateProfile,
     evidenceManifest,
     browserEvidence,
+    independentReviewLenses,
     authoringGuide,
     risk,
     checks,
@@ -632,6 +710,34 @@ function buildAuthoringGuide({ semanticDiagnostics, enumDiagnostics }) {
         "- No self-approval claim: independent reviewer, not packet author"
       ]
     },
+    packetDocumentReview: {
+      heading: PACKET_DOCUMENT_REVIEW_HEADING,
+      requiredWhen: "every packet before Ready For Code; planning-open may hold, implementation-transition and closeout block when missing or non-pass",
+      minimalExample: [
+        "- Packet doc reviewer: independent packet document reviewer",
+        "- Packet doc reviewer independence basis: reviewer is not the packet author, Developer, Tester, or Orchestrator",
+        "- Packet doc review evidence path: reference/reviews/WI-01-packet-doc-review.md",
+        "- Packet doc review status: pass",
+        "- Packet doc review completed before Ready For Code: yes",
+        "- Requirements direction alignment: pass",
+        "- Implementation-plan sequencing alignment: pass",
+        "- Architecture/source SSOT alignment: pass",
+        "- Human/Planner intent preservation: pass",
+        "- v1.0 root-harness operating constraint coverage: pass or not-needed with rationale",
+        "- v2.0 product philosophy coverage: pass",
+        "- Acceptance strength: behavior/evidence acceptance is sufficient",
+        "- Verification scope strength: test/review/evidence scope catches shortcut implementation",
+        "- Deferred/out-of-scope ownership: none or named follow-up",
+        "- Required corrections: not-needed",
+        "- Findings disposition: no findings remain",
+        "- No self-approval claim: independent reviewer, not packet author"
+      ]
+    },
+    independentReviewLenses: {
+      heading: INDEPENDENT_REVIEW_LENS_HEADING,
+      requiredWhen: "every packet closeout",
+      lenses: INDEPENDENT_REVIEW_LENSES
+    },
     closeoutMetadataExample: {
       reference: CLOSEOUT_REFERENCE,
       fields: CLOSEOUT_ENUMS.map((entry) => ({
@@ -641,6 +747,291 @@ function buildAuthoringGuide({ semanticDiagnostics, enumDiagnostics }) {
       narrativeDestination: NARRATIVE_DESTINATION
     }
   };
+}
+
+function evaluatePacketDocumentReview({ repoRoot, content, stage }) {
+  const required = true;
+  const section = sliceSection(content, PACKET_DOCUMENT_REVIEW_HEADING) ?? "";
+  const status = normalizePacketHeaderValue(readPacketBulletFieldValueFromContent(section, "Packet doc review status") ?? "");
+  const reviewer = readPacketBulletFieldValueFromContent(section, "Packet doc reviewer") ?? "";
+  const independence = readPacketBulletFieldValueFromContent(section, "Packet doc reviewer independence basis") ?? "";
+  const evidencePath = readPacketBulletFieldValueFromContent(section, "Packet doc review evidence path") ?? "";
+  const completedBeforeRfc = normalizePacketHeaderValue(
+    readPacketBulletFieldValueFromContent(section, "Packet doc review completed before Ready For Code") ?? ""
+  );
+  const diagnostics = [];
+  const blockingStatus = stage === "implementation-transition" || stage === "closeout" ? "block" : "hold";
+
+  if (!section) {
+    diagnostics.push(buildPacketDocDiagnostic({
+      field: "Packet Document Review",
+      status: blockingStatus,
+      current: "missing",
+      expected: PACKET_DOCUMENT_REVIEW_HEADING,
+      message: "Packet Document Review is required before Ready For Code for every packet."
+    }));
+  }
+
+  if (status !== "pass") {
+    diagnostics.push(buildPacketDocDiagnostic({
+      field: "Packet doc review status",
+      status: blockingStatus,
+      current: status || "missing",
+      expected: "pass",
+      message: `Packet Document Review requires Packet doc review status: pass before implementation transition; current value is ${status || "missing"}.`
+    }));
+  }
+
+  if (completedBeforeRfc !== "yes") {
+    diagnostics.push(buildPacketDocDiagnostic({
+      field: "Packet doc review completed before Ready For Code",
+      status: blockingStatus,
+      current: completedBeforeRfc || "missing",
+      expected: "yes",
+      message: "Packet Document Review must be completed before Ready For Code."
+    }));
+  }
+
+  const missingFields = PACKET_DOCUMENT_REVIEW_REQUIRED_FIELDS.filter((field) => {
+    const value = readPacketBulletFieldValueFromContent(section, field);
+    return !isClosedChallengeField(value);
+  });
+  for (const field of missingFields) {
+    diagnostics.push(buildPacketDocDiagnostic({
+      field,
+      status: blockingStatus,
+      current: readPacketBulletFieldValueFromContent(section, field) || "missing",
+      expected: "closed independent packet-document review evidence",
+      message: `Packet Document Review field "${field}" must be closed before implementation transition.`
+    }));
+  }
+
+  if (!isIndependentAgentValue(reviewer)) {
+    diagnostics.push(buildPacketDocDiagnostic({
+      field: "Packet doc reviewer",
+      status: blockingStatus,
+      current: reviewer || "missing",
+      expected: "independent packet document reviewer",
+      message: "Packet Document Review reviewer must be independent and cannot be self, Planner, Developer, Tester, Orchestrator, or generated summary."
+    }));
+  }
+
+  if (independence && !/independent|separate|not the packet author|not self/i.test(independence)) {
+    diagnostics.push(buildPacketDocDiagnostic({
+      field: "Packet doc reviewer independence basis",
+      status: blockingStatus,
+      current: independence,
+      expected: "explicit independent reviewer basis",
+      message: "Packet Document Review must state why the reviewer is independent."
+    }));
+  }
+
+  const evidence = inspectEvidencePath({ repoRoot, evidencePath });
+  if (!evidence.ok) {
+    diagnostics.push(buildPacketDocDiagnostic({
+      field: "Packet doc review evidence path",
+      status: blockingStatus,
+      current: evidencePath || "missing",
+      expected: "existing relative evidence path or packet-local evidence",
+      message: evidence.message
+    }));
+  }
+
+  const blocking = required && (stage === "implementation-transition" || stage === "closeout") && diagnostics.length > 0;
+  return {
+    schemaVersion: "standard-harness-packet-doc-review/v1",
+    required,
+    ok: diagnostics.length === 0,
+    blocking,
+    status: status || "missing",
+    reviewer: reviewer || "missing",
+    evidencePath: evidencePath || null,
+    current: `required; status=${status || "missing"}; diagnostics=${diagnostics.length}`,
+    expected: "independent Packet Document Review pass before Ready For Code",
+    diagnostics
+  };
+}
+
+function evaluateIndependentReviewLenses({ repoRoot, content, stage }) {
+  const required = stage === "closeout";
+  const section = sliceSection(content, INDEPENDENT_REVIEW_LENS_HEADING) ?? "";
+  const diagnostics = [];
+  const agents = new Map();
+  const lenses = [];
+
+  if (!required) {
+    return {
+      schemaVersion: "standard-harness-independent-review-lenses/v1",
+      required,
+      ok: true,
+      blocking: false,
+      current: "not required before closeout",
+      expected: "four independent review lens agents at closeout",
+      lenses,
+      diagnostics
+    };
+  }
+
+  if (!section) {
+    diagnostics.push(buildLensDiagnostic({
+      field: "Independent Review Lens Evidence",
+      current: "missing",
+      expected: INDEPENDENT_REVIEW_LENS_HEADING,
+      message: "Independent Review Lens Evidence is required for every packet closeout."
+    }));
+  }
+
+  for (const lens of INDEPENDENT_REVIEW_LENSES) {
+    const agent = readPacketBulletFieldValueFromContent(section, `${lens} agent`) ?? "";
+    const independence = readPacketBulletFieldValueFromContent(section, `${lens} independence basis`) ?? "";
+    const evidencePath = readPacketBulletFieldValueFromContent(section, `${lens} evidence path`) ?? "";
+    const status = normalizePacketHeaderValue(readPacketBulletFieldValueFromContent(section, `${lens} status`) ?? "");
+    const findingCount = readPacketBulletFieldValueFromContent(section, `${lens} finding count`) ?? "";
+    const disposition = readPacketBulletFieldValueFromContent(section, `${lens} reviewer disposition`) ?? "";
+    const notApplicableRationale = readPacketBulletFieldValueFromContent(section, `${lens} not applicable rationale`) ?? "";
+    const normalizedAgent = normalizeAgentValue(agent);
+
+    lenses.push({
+      lens,
+      agent: agent || "missing",
+      evidencePath: evidencePath || null,
+      status: status || "missing"
+    });
+
+    if (!isIndependentAgentValue(agent)) {
+      diagnostics.push(buildLensDiagnostic({
+        field: `${lens} agent`,
+        current: agent || "missing",
+        expected: "unique independent review agent",
+        message: `${lens} requires a unique independent review agent.`
+      }));
+    } else if (agents.has(normalizedAgent)) {
+      diagnostics.push(buildLensDiagnostic({
+        field: `${lens} agent`,
+        current: agent,
+        expected: "agent not reused by another lens",
+        message: `${lens} reuses review agent "${agent}" already used by ${agents.get(normalizedAgent)}.`
+      }));
+    } else {
+      agents.set(normalizedAgent, lens);
+    }
+
+    if (!independence || !/independent|separate|not developer|not tester|not orchestrator|not planner|not self/i.test(independence)) {
+      diagnostics.push(buildLensDiagnostic({
+        field: `${lens} independence basis`,
+        current: independence || "missing",
+        expected: "explicit independent reviewer basis",
+        message: `${lens} must state why the lens reviewer is independent.`
+      }));
+    }
+
+    if (!["pass", "pass_with_findings", "passwithfindings", "not-applicable"].includes(status)) {
+      diagnostics.push(buildLensDiagnostic({
+        field: `${lens} status`,
+        current: status || "missing",
+        expected: "pass / pass_with_findings / not-applicable",
+        message: `${lens} status must be pass, pass_with_findings, or not-applicable before closeout.`
+      }));
+    }
+
+    if (status === "not-applicable" && !isClosedChallengeField(notApplicableRationale)) {
+      diagnostics.push(buildLensDiagnostic({
+        field: `${lens} not applicable rationale`,
+        current: notApplicableRationale || "missing",
+        expected: "closed no-surface rationale from the independent lens reviewer",
+        message: `${lens} not-applicable status requires an independent no-surface rationale.`
+      }));
+    }
+
+    for (const [field, value] of [
+      [`${lens} finding count`, findingCount],
+      [`${lens} reviewer disposition`, disposition]
+    ]) {
+      if (!isClosedChallengeField(value)) {
+        diagnostics.push(buildLensDiagnostic({
+          field,
+          current: value || "missing",
+          expected: "closed lens-review evidence",
+          message: `${field} must be closed before packet closeout.`
+        }));
+      }
+    }
+
+    const evidence = inspectEvidencePath({ repoRoot, evidencePath });
+    if (!evidence.ok) {
+      diagnostics.push(buildLensDiagnostic({
+        field: `${lens} evidence path`,
+        current: evidencePath || "missing",
+        expected: "existing relative evidence path or packet-local evidence",
+        message: evidence.message
+      }));
+    }
+  }
+
+  return {
+    schemaVersion: "standard-harness-independent-review-lenses/v1",
+    required,
+    ok: diagnostics.length === 0,
+    blocking: diagnostics.length > 0,
+    current: `required; lenses=${INDEPENDENT_REVIEW_LENSES.length}; diagnostics=${diagnostics.length}`,
+    expected: "four unique independent review lens agents with packet-bound evidence",
+    lenses,
+    diagnostics
+  };
+}
+
+function buildPacketDocDiagnostic({ field, status, current, expected, message }) {
+  return {
+    field,
+    status,
+    current,
+    expected,
+    reason: message,
+    message
+  };
+}
+
+function buildLensDiagnostic({ field, current, expected, message }) {
+  return {
+    field,
+    status: "block",
+    current,
+    expected,
+    reason: message,
+    message
+  };
+}
+
+function inspectEvidencePath({ repoRoot, evidencePath }) {
+  const raw = String(evidencePath ?? "").trim();
+  if (!raw) {
+    return { ok: false, message: "Evidence path is missing." };
+  }
+  if (/^packet-local\b|^inline\b/i.test(raw)) {
+    return { ok: true, message: null };
+  }
+  const normalized = normalizeRelativePath(stripInlineFormatting(raw));
+  if (!normalized || path.isAbsolute(normalized)) {
+    return { ok: false, message: `Evidence path must be a relative path: ${raw}.` };
+  }
+  const root = path.resolve(repoRoot);
+  const target = path.resolve(repoRoot, normalized);
+  if (!target.startsWith(root)) {
+    return { ok: false, message: `Evidence path escapes the repository: ${raw}.` };
+  }
+  if (!fs.existsSync(target)) {
+    return { ok: false, message: `Evidence path does not exist: ${normalized}.` };
+  }
+  return { ok: true, message: null };
+}
+
+function isIndependentAgentValue(value) {
+  const normalized = normalizeAgentValue(value);
+  return Boolean(normalized) && !DISALLOWED_INDEPENDENT_AGENT_VALUES.has(normalized);
+}
+
+function normalizeAgentValue(value) {
+  return normalizePacketHeaderValue(stripInlineFormatting(value ?? ""));
 }
 
 function evaluatePlannerPacketChallenge({ content, stage, effectiveRisk, gateProfile, changeZone, routeClass }) {

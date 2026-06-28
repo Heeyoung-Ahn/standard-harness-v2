@@ -97,6 +97,36 @@ function writePacket(repoRoot, packetPath, overrides = {}) {
   const challengeReview = Object.hasOwn(overrides, "challengeReview")
     ? overrides.challengeReview
     : defaultChallengeReview;
+  fs.mkdirSync(path.join(repoRoot, "reference", "reviews"), { recursive: true });
+  fs.writeFileSync(
+    path.join(repoRoot, "reference", "reviews", "OPS-E2E-03-packet-doc-review.md"),
+    "# Packet Document Review\n\nIndependent packet document review fixture.\n",
+    "utf8"
+  );
+  const defaultPacketDocumentReview = [
+    "## Packet Document Review",
+    "- Packet doc review policy: independent-reviewer-required-before-ready-for-code",
+    "- Packet doc reviewer: independent packet document reviewer",
+    "- Packet doc reviewer independence basis: independent reviewer is not the packet author, Developer, Tester, or Orchestrator.",
+    "- Packet doc review evidence path: reference/reviews/OPS-E2E-03-packet-doc-review.md",
+    "- Packet doc review status: pass",
+    "- Packet doc review completed before Ready For Code: yes",
+    "- Requirements direction alignment: pass",
+    "- Implementation-plan sequencing alignment: pass",
+    "- Architecture/source SSOT alignment: pass",
+    "- Human/Planner intent preservation: pass",
+    "- v1.0 root-harness operating constraint coverage: pass",
+    "- v2.0 product philosophy coverage: pass",
+    "- Acceptance strength: behavior evidence is sufficient.",
+    "- Verification scope strength: verification scope catches shortcut implementation.",
+    "- Deferred/out-of-scope ownership: none",
+    "- Required corrections: not-needed",
+    "- Findings disposition: no findings remain.",
+    "- No self-approval claim: independent reviewer, not packet author."
+  ].join("\n");
+  const packetDocumentReview = Object.hasOwn(overrides, "packetDocumentReview")
+    ? overrides.packetDocumentReview
+    : defaultPacketDocumentReview;
   const defaultModelingImpact = [
     "## Modeling Impact",
     "- Modeling impact status: required",
@@ -165,9 +195,61 @@ function writePacket(repoRoot, packetPath, overrides = {}) {
     "- review closeout: required before packet close",
     "",
     ...(challengeReview ? [challengeReview, ""] : []),
+    ...(packetDocumentReview ? [packetDocumentReview, ""] : []),
     closeout
   ].join("\n");
   fs.writeFileSync(path.join(repoRoot, packetPath), content, "utf8");
+}
+
+function writeIndependentReviewArtifacts(repoRoot) {
+  fs.mkdirSync(path.join(repoRoot, "reference", "reviews"), { recursive: true });
+  for (const lens of ["challenge", "security", "quality", "evidence"]) {
+    fs.writeFileSync(
+      path.join(repoRoot, "reference", "reviews", `OPS-E2E-03-${lens}.md`),
+      `# ${lens} review\n\nIndependent review fixture.\n`,
+      "utf8"
+    );
+  }
+}
+
+function independentReviewLensSection() {
+  return [
+    "## Independent Review Lens Evidence",
+    "- Independent review lens policy: four-independent-closeout-agents-required",
+    "- Parallel review execution: parallel",
+    "- challenge_review agent: challenge-review-agent",
+    "- challenge_review independence basis: independent agent, not developer, not tester, not orchestrator, not planner, not self.",
+    "- challenge_review evidence path: reference/reviews/OPS-E2E-03-challenge.md",
+    "- challenge_review status: pass_with_findings",
+    "- challenge_review finding count: 0",
+    "- challenge_review limitations: none",
+    "- challenge_review reviewer disposition: accepted",
+    "- challenge_review not applicable rationale: not-needed",
+    "- adversarial_security_review agent: security-review-agent",
+    "- adversarial_security_review independence basis: independent agent, not developer, not tester, not orchestrator, not planner, not self.",
+    "- adversarial_security_review evidence path: reference/reviews/OPS-E2E-03-security.md",
+    "- adversarial_security_review status: pass",
+    "- adversarial_security_review finding count: 0",
+    "- adversarial_security_review limitations: none",
+    "- adversarial_security_review reviewer disposition: accepted",
+    "- adversarial_security_review not applicable rationale: not-needed",
+    "- code_quality_review agent: code-quality-review-agent",
+    "- code_quality_review independence basis: independent agent, not developer, not tester, not orchestrator, not planner, not self.",
+    "- code_quality_review evidence path: reference/reviews/OPS-E2E-03-quality.md",
+    "- code_quality_review status: pass",
+    "- code_quality_review finding count: 0",
+    "- code_quality_review limitations: none",
+    "- code_quality_review reviewer disposition: accepted",
+    "- code_quality_review not applicable rationale: not-needed",
+    "- evidence_review agent: evidence-review-agent",
+    "- evidence_review independence basis: independent agent, not developer, not tester, not orchestrator, not planner, not self.",
+    "- evidence_review evidence path: reference/reviews/OPS-E2E-03-evidence.md",
+    "- evidence_review status: pass",
+    "- evidence_review finding count: 0",
+    "- evidence_review limitations: none",
+    "- evidence_review reviewer disposition: accepted",
+    "- evidence_review not applicable rationale: not-needed"
+  ].join("\n");
 }
 
 function registerWorkItem(dbPath, packetPath, metadata = {}) {
@@ -415,6 +497,28 @@ test("packet-preflight blocks required implementation-transition when challenge 
   assert.equal(result.disposition, "implementation-blocked");
   assert.equal(result.plannerPacketChallenge.required, true);
   assert.match(result.errors.join("\n"), /Planner Packet Challenge Review/);
+});
+
+test("packet-preflight blocks implementation-transition when packet document review is missing", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "normal",
+    packetDocumentReview: null
+  });
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "implementation-transition"]
+  });
+
+  assert.equal(result.ok, false);
+  assert.equal(result.disposition, "implementation-blocked");
+  assert.equal(result.packetDocumentReview.required, true);
+  assert.match(result.errors.join("\n"), /Packet Document Review/);
 });
 
 test("packet-preflight blocks required implementation-transition when challenge status is not pass", () => {
@@ -930,6 +1034,107 @@ test("packet-preflight blocks docs parity pending only at closeout for declared 
     true
   );
   assert.match(closeout.errors.join("\n"), /Docs parity status/);
+});
+
+test("packet-preflight blocks closeout when independent review lens evidence is missing", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: none",
+      "- Docs parity status: not-needed"
+    ].join("\n"),
+    closeout: [
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit metadata validation / security / cleanup evidence: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Exit recommendation: approved",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+
+  assert.equal(result.ok, false);
+  assert.equal(result.independentReviewLenses.required, true);
+  assert.equal(result.independentReviewLenses.blocking, true);
+  assert.match(result.errors.join("\n"), /Independent Review Lens Evidence/);
+});
+
+test("packet-preflight accepts complete independent review lens evidence", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: none",
+      "- Docs parity status: not-needed"
+    ].join("\n"),
+    closeout: [
+      independentReviewLensSection(),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit metadata validation / security / cleanup evidence: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Exit recommendation: approved",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+
+  assert.equal(result.independentReviewLenses.required, true);
+  assert.equal(result.independentReviewLenses.ok, true);
+  assert.equal(
+    result.findings.some((finding) => finding.field === "Independent Review Lens Evidence" && finding.status === "block"),
+    false
+  );
 });
 
 test("packet-preflight allows consistent none context and docs impact", () => {

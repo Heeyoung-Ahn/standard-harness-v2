@@ -204,9 +204,10 @@ The v2 operating loop is packet-centered.
 ```text
 Human Owner planning intent
   -> Planner packet scope, acceptance, non-goals, evidence expectations
+  -> Independent packet_doc_review before Ready For Code
   -> Developer LLM implementation inside approved packet boundary
   -> Tester LLM deterministic and workflow verification
-  -> Reviewer LLM challenge, E2E, security, code, and architecture lenses
+  -> Reviewer LLM four independent closeout lenses
   -> Gate resolver and validation
   -> Documenter closeout report plus evidence index
   -> Wiki proposal validation and application
@@ -270,8 +271,12 @@ Architecture direction:
 - compute required gates with a runtime resolver,
 - validate N/A decisions against changed zones and claims,
 - block closeout when required gates are missing, stale, untrusted, or unresolved,
-- require separate review lenses when triggered: challenge, user-workflow/E2E,
-  adversarial/security, code structure, architecture/boundary.
+- require independent `packet_doc_review` before Ready For Code for every packet,
+- require four independent closeout review lens agents for every packet:
+  `challenge_review`, `adversarial_security_review`, `code_quality_review`, and
+  `evidence_review`,
+- keep any additional user-workflow/E2E or architecture/boundary lenses as supplemental
+  risk-triggered reviews, not substitutes for the mandatory baseline reviews.
 
 PKT-02 implements this as a reusable gate profile engine contract:
 - root development runtime: `.harness/runtime/state/gate-profile-engine.js`,
@@ -413,7 +418,7 @@ v1.0 is a reference source, not a payload source.
 Carry forward as v2-native concepts:
 - risk-adaptive gate profiles,
 - packet preflight discipline,
-- independent review lenses,
+- independent packet-document review and independent closeout review lenses,
 - browser evidence concepts,
 - day-start and day-wrap-up behavior,
 - context budget and active-context ideas,
@@ -502,6 +507,8 @@ Stop before implementation when:
 - requirements freeze, architecture baseline, implementation plan, or first packet planning
   is not closed enough,
 - `Ready For Code` is missing,
+- independent `packet_doc_review` is missing, failed, pending, self-reviewed, or not tied
+  to packet evidence,
 - proposed work mutates `_harness/**` under a product packet,
 - proposed work copies root `.agents`, root `.harness`, root `AGENTS.md`, root generated
   state, evidence, packet history, or local DB files into starter,
@@ -509,6 +516,10 @@ Stop before implementation when:
 - evidence, PM summaries, wiki pages, or LLM discussions are treated as approval authority,
 - sensitive evidence would enter wiki, handoff context, starter payload, or LLM context
   packs.
+
+Stop before closeout when mandatory independent closeout review lenses are missing,
+duplicated-agent, self-reviewed, unbound to packet evidence, pending, failed, or replaced
+by Orchestrator summary prose.
 
 ## Architecture Memory Boundary
 Architecture decisions live here and in approved packet decisions. Do not create a

@@ -70,3 +70,41 @@ No blocking findings after second pass.
 
 ## Adjudication
 - PKT-04B is acceptable for Planner closeout of the approved packet scope.
+
+---
+
+# PKT-05 Review Report
+
+## Review Scope
+- Packet: `PKT-05 Long Memory And Question Answering Index`
+- Review date: 2026-06-28
+- Review lenses: source alignment, acceptance and evidence coverage, authority-boundary preservation, security/adversarial risk, residual debt, and closeout readiness.
+
+## Findings
+No blocking findings after second pass.
+
+## Second-Pass Note
+- Source alignment: implementation matches the approved PKT-05 boundary for long-memory category indexing, source/evidence refs, read-model authority, freshness diagnostics, sensitive evidence exclusion, and compact answer result shape.
+- Acceptance and evidence coverage: focused TDD tests, starter regression, starter validation, root validation, root test suite, packet TDD evidence, and scoped security review cover the packet acceptance items.
+- Risk and regression pressure: unsupported answer paths fail closed for stale, low-authority, missing-evidence, missing-source, and sensitive-source conditions; generated answers remain read models.
+- Authority boundaries: answers do not approve Ready For Code, implementation, closeout, release, or residual-risk acceptance. Canonical packet/evidence/wiki/PM/decision/operating records remain the source authority.
+
+## Source Parity Review
+- Matches `REQUIREMENTS.md` SHV2-REQ-042 by covering project intent, architecture decisions, current conventions, packet history, known frictions, open risks, and deprecated context as required source categories.
+- Matches `IMPLEMENTATION_PLAN.md` Wave 5 by adding a bounded long-memory/question-answering source index while explicitly deferring provider orchestration, skill routing, compound feedback, starter promotion, and exact `_ops` reset mechanics.
+- Matches `ARCHITECTURE_GUIDE.md` by treating the query index as a read model over canonical sources, not as approval or evidence authority.
+- Matches packet non-goals: no browser UI, release/publish, provider orchestration, skill routing, compound feedback, starter promotion, or `_ops` reset command implementation was added.
+
+## Evidence Quality Review
+- Positive evidence: targeted question-answering unittest, full starter unittest discovery, starter installed-runtime validation, root validation, and full root test suite all passed.
+- Negative evidence: tests cover stale source, low authority source, missing evidence refs, missing required long-memory categories, and sensitive evidence exclusion.
+- TDD evidence is present with a real RED failure before implementation and GREEN pass after implementation.
+- Security evidence is present in `reference/reports/security/PKT-05-security-review.json` and records a scoped pass with a low finding fixed by implementation behavior.
+
+## Residual Risks
+- Exact `_ops` reset command mechanics and evidence-retention execution remain deferred by packet decision gate.
+- PKT-08 owns automated friction mining, compound feedback, and learned-remediation promotion.
+- Future integration with concrete wiki/context/PM storage adapters should preserve this packet's read-model and fail-closed contract.
+
+## Adjudication
+- PKT-05 is acceptable for Planner closeout of the approved packet scope.

@@ -33,6 +33,7 @@ class AdapterManifest:
     known_limitations: list[str]
     failure_modes: list[str]
     provider: str | None = None
+    credential_mode: str = "not_declared"
     capabilities: dict[str, Any] | None = None
     restricted_write_zones: list[str] | None = None
 
@@ -53,6 +54,7 @@ class AdapterManifest:
             known_limitations=_string_list(data, "known_limitations"),
             failure_modes=_string_list(data, "failure_modes"),
             provider=data.get("provider"),
+            credential_mode=data.get("credential_mode", "not_declared"),
             capabilities=data.get("capabilities"),
             restricted_write_zones=data.get("restricted_write_zones"),
         )

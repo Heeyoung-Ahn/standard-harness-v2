@@ -23,6 +23,27 @@
       "securityReview"
     ]
   },
+  "mandatoryPacketDocReview": {
+    "requiredBefore": "Ready For Code / implementation transition",
+    "mustBeIndependentAgent": true,
+    "coverage": [
+      "human_planner_intent",
+      "requirements_direction",
+      "implementation_plan",
+      "architecture_source_ssot",
+      "acceptance_strength",
+      "verification_scope",
+      "v1_root_constraints",
+      "v2_product_philosophy"
+    ],
+    "purpose": "Verify that every packet is written to satisfy the human-authored project direction, ultimate purpose, Requirements, and Implementation Plan before code starts."
+  },
+  "mandatoryCloseoutReviewLenses": [
+    "challenge_review",
+    "adversarial_security_review",
+    "code_quality_review",
+    "evidence_review"
+  ],
   "reviewerLensMinimums": {
     "challenge_review": [
       "approved scope, user intent, Planner-approved SSOT, and packet acceptance were not narrowed or omitted",
@@ -60,7 +81,18 @@
     "p1_review_requires_risk_acceptance",
     "missing_review_final_adjudication",
     "ai_review_cannot_release_alone",
-    "missing_required_review_governance"
+    "missing_required_review_governance",
+    "missing_packet_doc_review",
+    "packet_doc_review_not_pass",
+    "packet_doc_review_not_independent",
+    "missing_packet_doc_review_evidence",
+    "missing_packet_doc_review_coverage",
+    "missing_independent_closeout_review_lens",
+    "independent_closeout_review_not_pass",
+    "independent_closeout_review_not_independent",
+    "missing_independent_closeout_review_evidence",
+    "duplicate_independent_review_agent",
+    "missing_independent_closeout_review_na_rationale"
   ],
   "frictionSignalBehavior": "Emit missed_review or missing_evidence when release/closeout review governance is missing, stale, AI-only, or unadjudicated.",
   "metricSignalBehavior": "Emit review_governance_validation_count by status and finding severity."

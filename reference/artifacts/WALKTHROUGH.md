@@ -80,3 +80,56 @@ All commands were run from `C:\Newface\30 Github\standard-harness-v2`.
 ## Untested Or Out Of Scope
 - Release packaging, starter promotion, and PKT-05 long-memory work remain out of scope.
 - Global PLN-00/PLN-01 baseline hold remains a separate project-state blocker, not a PKT-04B behavior failure.
+
+---
+
+# PKT-05 Walkthrough Evidence
+
+## Packet
+- Packet: `PKT-05 Long Memory And Question Answering Index`
+- Date: 2026-06-28
+- Route: Orchestrator -> Developer -> Tester -> Reviewer -> Planner closeout
+- Scope: add a starter source index and bounded question-answering read model for long-memory categories, source/evidence refs, authority/freshness labels, sensitive evidence exclusion, and fail-closed unsupported claims.
+
+## Implemented Behavior
+- Added `standard_harness.memory.question_answering.LongMemorySourceIndexBuilder`.
+- Added required long-memory category coverage for project intent, architecture decisions, current conventions, packet history, known frictions, open risks, and deprecated context.
+- Added no-source diagnostics when required categories lack eligible authoritative source records.
+- Added sensitive/secret source omission diagnostics and answer refusal behavior.
+- Added stale, low-authority, and missing-evidence fail-closed diagnostics.
+- Added compact answer result shape with read-model labeling, source refs, evidence refs, redaction disposition, next-boundary text, and token estimate.
+- Preserved `_ops` reset and evidence-retention boundaries by keeping the source/query index as a read model and not implementing reset mechanics.
+
+## Verification Commands
+| Command | Cwd | Result |
+|---|---|---|
+| `python -m unittest _harness.test.test_long_memory_question_answering` | `starter/standard-harness` | RED pass as expected before implementation, exit 1, `ModuleNotFoundError: No module named 'standard_harness.memory.question_answering'` |
+| `python -m unittest _harness.test.test_long_memory_question_answering` | `starter/standard-harness` | pass, 3 tests |
+| `python -m unittest discover _harness\test` | `starter/standard-harness` | pass, 31 tests |
+| `python _harness\bin\harness_cli.py --json --harness-root . validate --starter --installed-runtime` | `starter/standard-harness` | pass, `status=ok`, diagnostics empty |
+| `node .harness/runtime/state/dev05-cli.js validate` | repo root | pass, `ok=true`, `structuralReady=true`, `cutoverReady=true`, findings empty |
+| `npm.cmd test` | repo root | pass, 468 tests |
+
+## Acceptance Mapping
+| Acceptance | Evidence |
+|---|---|
+| Source index covers required source types and REQ-042 memory categories | focused source-index test checks category coverage and source refs |
+| Missing eligible required categories produce no-source diagnostics | focused source-index test checks `no_source:deprecated_context` |
+| Query index and answers are read models with minimum result shape | focused answer test checks status, answer, source refs, evidence refs, diagnostics, redaction disposition, next boundary, and token estimate |
+| Representative status/evidence answer cites canonical sources | focused answer test uses packet, evidence, closeout, PM, decision, risk, active-context, and memory sources |
+| Stale, low-authority, missing-evidence, and sensitive sources fail closed | focused negative test checks blocking diagnostics and refusal answer |
+| Sensitive/secret evidence is omitted from answer/context source set | focused negative test checks sensitive source omission and `blocked_sensitive_source` |
+| `_ops` reset/evidence retention is not implemented or bypassed | source index reset policy records `resetCommandImplemented=false` and `evidenceRetentionBypassed=false` |
+| Provider orchestration, skill routing, compound feedback, and promotion remain out of scope | packet boundaries preserved; no PKT-06/PKT-07/PKT-08 surfaces changed |
+
+## Evidence Artifacts
+- TDD RED: `reference/reports/tdd/PKT-05-red.md`
+- TDD GREEN: `reference/reports/tdd/PKT-05-green.md`
+- Security review: `reference/reports/security/PKT-05-security-review.json`
+
+## Untested Or Out Of Scope
+- Browser evidence is N/A because PKT-05 changed Python starter runtime behavior and tests only.
+- Provider-neutral multi-LLM orchestration remains PKT-06.
+- Skill routing remains PKT-07.
+- Compound feedback and starter promotion remain PKT-08.
+- Exact `_ops` reset command mechanics and evidence-retention execution remain deferred to a later approved packet.

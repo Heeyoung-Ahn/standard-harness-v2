@@ -673,9 +673,10 @@ function buildTransitionPlan({ store, repoRoot, dbPath = DEFAULT_DB_PATH, option
     }
   }
 
-  const transitionPreflightStage = options.apply
-    ? preflightStageForTransition({ transition, requestedStage: options.preflightStage ?? options.stage })
-    : null;
+  const transitionPreflightStage = preflightStageForTransition({
+    transition,
+    requestedStage: options.preflightStage ?? options.stage
+  });
   const transitionPreflight = transitionPreflightStage
     ? runPacketPreflightCommand({
         repoRoot,

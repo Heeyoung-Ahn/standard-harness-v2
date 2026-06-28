@@ -31,6 +31,8 @@ class AdapterInvocationLedger:
         retry_count: int,
         cancel_status: str,
         idempotency_key: str,
+        trusted_permission_roots: list[str] | None = None,
+        expected_input_snapshot_hash: str | None = None,
     ) -> dict[str, Any]:
         existing_event = self.store.event_for_idempotency_key(idempotency_key)
         if existing_event is not None:
@@ -50,7 +52,11 @@ class AdapterInvocationLedger:
             "failure_classification": failure_classification,
             "evidence_provenance": evidence_provenance,
         }
-        boundary = AdapterBoundaryValidator().validate_envelope(envelope)
+        boundary = AdapterBoundaryValidator().validate_envelope(
+            envelope,
+            trusted_permission_roots=trusted_permission_roots,
+            expected_input_snapshot_hash=expected_input_snapshot_hash,
+        )
         if boundary["status"] == "rejected":
             raise ValueError(f"Adapter invocation rejected: {boundary['failure_classification']}")
 

@@ -22,6 +22,35 @@ REQUIRED_REVIEW_GATES_BY_PACKET_TYPE = {
     "product-refactor": {"aiReview", "refactorReview"},
     "security-data": {"securityReview"},
 }
+MANDATORY_PACKET_DOC_REVIEW_COVERAGE = {
+    "human_planner_intent",
+    "requirements_direction",
+    "implementation_plan",
+    "architecture_source_ssot",
+    "acceptance_strength",
+    "verification_scope",
+    "v1_root_constraints",
+    "v2_product_philosophy",
+}
+MANDATORY_CLOSEOUT_REVIEW_LENSES = {
+    "challenge_review",
+    "adversarial_security_review",
+    "code_quality_review",
+    "evidence_review",
+}
+PASSING_REVIEW_STATUSES = {"pass", "passed", "pass_with_findings", "not-applicable", "not_applicable"}
+PACKET_DOC_PASSING_STATUSES = {"pass", "passed"}
+NOT_APPLICABLE_STATUSES = {"not-applicable", "not_applicable"}
+DISALLOWED_INDEPENDENT_AGENT_IDS = {
+    "",
+    "developer",
+    "tester",
+    "planner",
+    "orchestrator",
+    "packet-author",
+    "generated-summary",
+    "self",
+}
 
 
 class ReviewGovernanceValidator:
@@ -51,20 +80,74 @@ class ReviewGovernanceValidator:
             self._validate_review(review, diagnostics)
         return self._result(diagnostics)
 
+    def implementation_transition_diagnostics(self, packet: dict[str, Any]) -> list[str]:
+        review_plan = packet.get("review_plan") or packet.get("reviewPlan")
+        if not isinstance(review_plan, dict):
+            return ["missing_packet_doc_review"]
+        review = review_plan.get("packetDocReview") or review_plan.get("packet_doc_review")
+        if not isinstance(review, dict):
+            return ["missing_packet_doc_review"]
+
+        diagnostics: list[str] = []
+        status = str(review.get("status", "")).lower()
+        if status not in PACKET_DOC_PASSING_STATUSES:
+            _add(diagnostics, "packet_doc_review_not_pass")
+        agent_id = _agent_id(review)
+        if _not_independent_agent_id(agent_id):
+            _add(diagnostics, "packet_doc_review_not_independent")
+        evidence_path = _text(review.get("evidencePath") or review.get("evidence_path"))
+        if not evidence_path or not _evidence_path_exists(self.repo_root, evidence_path):
+            _add(diagnostics, "missing_packet_doc_review_evidence")
+        coverage = _string_set(review.get("coverage"))
+        if not MANDATORY_PACKET_DOC_REVIEW_COVERAGE.issubset(coverage):
+            _add(diagnostics, "missing_packet_doc_review_coverage")
+        return diagnostics
+
     def closeout_diagnostics(self, packet: dict[str, Any]) -> list[str]:
-        packet_type = str(packet.get("packet_type", "docs-only"))
-        required = REQUIRED_REVIEW_GATES_BY_PACKET_TYPE.get(packet_type, set())
-        if not required:
-            return []
-        closeout_plan = packet.get("closeout_plan")
+        diagnostics: list[str] = []
+        closeout_plan = packet.get("closeout_plan") or packet.get("closeoutPlan")
         if not isinstance(closeout_plan, dict):
-            return ["missing_required_review_governance"]
+            return ["missing_required_review_governance", "missing_independent_closeout_review_lens"]
         review_gates = closeout_plan.get("reviewGates") or closeout_plan.get("review_gates")
         if not isinstance(review_gates, dict) or not review_gates:
-            return ["missing_required_review_governance"]
-        if not required.issubset(review_gates):
-            return ["missing_required_review_governance"]
-        return []
+            return ["missing_required_review_governance", "missing_independent_closeout_review_lens"]
+
+        self._validate_independent_closeout_lenses(review_gates, diagnostics)
+
+        packet_type = str(packet.get("packet_type", "docs-only"))
+        required = REQUIRED_REVIEW_GATES_BY_PACKET_TYPE.get(packet_type, set())
+        if required and not required.issubset(review_gates):
+            _add(diagnostics, "missing_required_review_governance")
+        return diagnostics
+
+    def _validate_independent_closeout_lenses(
+        self,
+        review_gates: dict[str, Any],
+        diagnostics: list[str],
+    ) -> None:
+        if not MANDATORY_CLOSEOUT_REVIEW_LENSES.issubset(review_gates):
+            _add(diagnostics, "missing_independent_closeout_review_lens")
+
+        seen_agents: set[str] = set()
+        for lens in sorted(MANDATORY_CLOSEOUT_REVIEW_LENSES):
+            review = review_gates.get(lens)
+            if not isinstance(review, dict):
+                continue
+            status = str(review.get("status", "")).lower()
+            if status not in PASSING_REVIEW_STATUSES:
+                _add(diagnostics, "independent_closeout_review_not_pass")
+            if status in NOT_APPLICABLE_STATUSES and not _text(review.get("rationale")):
+                _add(diagnostics, "missing_independent_closeout_review_na_rationale")
+            evidence_path = _text(review.get("evidencePath") or review.get("evidence_path"))
+            if not evidence_path or not _evidence_path_exists(self.repo_root, evidence_path):
+                _add(diagnostics, "missing_independent_closeout_review_evidence")
+            agent_id = _agent_id(review)
+            if _not_independent_agent_id(agent_id):
+                _add(diagnostics, "independent_closeout_review_not_independent")
+            elif agent_id in seen_agents:
+                _add(diagnostics, "duplicate_independent_review_agent")
+            else:
+                seen_agents.add(agent_id)
 
     def _validate_review(self, review: dict[str, Any], diagnostics: list[str]) -> None:
         if not review.get("reviewId") or not review.get("packetId"):
@@ -178,6 +261,33 @@ def _valid_final_adjudication(value: Any) -> bool:
         and bool(value.get("adjudicator"))
         and bool(value.get("rationale"))
     )
+
+
+def _agent_id(review: dict[str, Any]) -> str:
+    return _text(review.get("agentId") or review.get("agent_id") or review.get("reviewerId") or review.get("reviewer_id"))
+
+
+def _not_independent_agent_id(agent_id: str) -> bool:
+    return agent_id.lower() in DISALLOWED_INDEPENDENT_AGENT_IDS
+
+
+def _evidence_path_exists(repo_root: Path, relative_path: str) -> bool:
+    path = (repo_root / relative_path).resolve()
+    try:
+        path.relative_to(repo_root.resolve())
+    except ValueError:
+        return False
+    return path.is_file()
+
+
+def _string_set(value: Any) -> set[str]:
+    if not isinstance(value, list):
+        return set()
+    return {str(item).strip() for item in value if str(item).strip()}
+
+
+def _text(value: Any) -> str:
+    return str(value or "").strip()
 
 
 def _add(diagnostic_ids: list[str], diagnostic_id: str) -> None:

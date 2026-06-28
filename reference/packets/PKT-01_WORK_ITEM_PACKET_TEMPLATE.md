@@ -28,6 +28,9 @@
 - 새 기획 문서, 정책, 연동 명세가 active work에 영향을 주면 approved authoritative source intake reference와 conflict / impact analysis 없이 `Ready For Code`로 올리지 않는다.
 - 새 기획 문서를 접수하면 authoritative source impact와 충돌 분석을 먼저 다시 연다.
 - 한 authoritative source change가 여러 open packet에 동시에 영향을 주면 approved `Authoritative source wave ledger reference`와 impacted packet set scope / packet disposition 없이는 `Ready For Code`로 올리지 않는다.
+- Every packet must pass independent `packet_doc_review` before `Ready For Code`. This applies to root-harness v1.0 packets and starter-payload v2.0 packets.
+- `packet_doc_review` must check whether the packet document satisfies Human/Planner intent, requirements direction, implementation-plan sequencing, architecture/source SSOT, acceptance strength, verification scope, and v1.0/v2.0 operating philosophy.
+- The packet author, Developer, Tester, Orchestrator, generated summaries, and main-session self-review do not count as the independent packet document reviewer.
 - high/critical effective risk, `core` 또는 `load-bearing` Change zone, `contract` 또는 `release` Gate profile, `strict-path`, explicit challenge-required declaration, broad deferred scope, or non-obvious parent objective coverage가 있으면 `Planner Packet Challenge Review`가 `pass`되기 전에는 `Ready For Code`로 올리지 않는다.
 - `Planner Packet Challenge Review`는 구현물이 아니라 Planner가 작성한 packet 자체를 검토한다. parent objective coverage, deferred scope, acceptance strength, failure fixture, Reviewer closeout hold basis, first-wave objective avoidance, guidance-vs-runtime 수준을 닫는다.
 - 구현 중 새 detail이 생기면 이 packet을 다시 열고 sync한 뒤 진행한다.
@@ -67,6 +70,7 @@
 | Risk if started now | low / medium / high | [남아 있는 모호성] | draft |
 | Ship value status | pending / approved / hold | [사용자 가치와 인간 taste decision 닫힘 여부] | draft |
 | Required reviewer profiles | qa-lead / cso / data-correctness / governance / staff-engineer / release-sre / ux-reviewer / automation-governor | [P2 reviewer-profile 결과] | draft |
+| Packet doc review status | pending / pass / fail | [independent pre-implementation packet document review result] | draft |
 
 ## Lane-Typed Minimum Contract
 - Lane-type declaration:
@@ -389,6 +393,25 @@
 - Required corrections applied:
 - No self-approval claim:
 
+## Packet Document Review
+- Packet doc review policy: independent-reviewer-required-before-ready-for-code
+- Packet doc reviewer:
+- Packet doc reviewer independence basis:
+- Packet doc review evidence path:
+- Packet doc review status: pending / pass / fail
+- Packet doc review completed before Ready For Code: yes / no
+- Requirements direction alignment:
+- Implementation-plan sequencing alignment:
+- Architecture/source SSOT alignment:
+- Human/Planner intent preservation:
+- v1.0 root-harness operating constraint coverage:
+- v2.0 product philosophy coverage:
+- Acceptance strength:
+- Verification scope strength:
+- Deferred/out-of-scope ownership:
+- Required corrections:
+- Findings disposition:
+- No self-approval claim:
 
 ## P2 Specialist Review Mode Contract
 - Required reviewer profiles:
@@ -464,6 +487,7 @@
 - Docs/smoke packet note: keep `reference/manuals/human/HARNESS_MANUAL.md` as the primary human guide; keep `START_HERE.md` as the human start document; do not ship root maintainer history/evidence to `standard-template`; split if a new smoke fixture or install/copy execution flow grows; smoke evidence should name targeted docs/smoke tests, root full tests, starter full tests, validation-report, validate, status, and context when applicable.
 - Packet preflight note: use `npm run harness:packet-preflight -- --work-item [id] --stage planning-open|implementation-transition|closeout` to preview effective risk, RFC enforcement, registration semantic-contract diagnostics, exact field enum diagnostics, and exact closeout enum diagnostics before transition or closeout.
 - Planner Packet Challenge Review note: required challenge packets need `Challenge status: pass` and closed parent/deferred/acceptance/failure/hold/first-wave/guidance fields before implementation-transition. Planning-open may hold without blocking packet opening; implementation-transition blocks missing or non-pass challenge evidence.
+- Packet Document Review note: every packet needs independent `Packet doc review status: pass` and closed reviewer/independence/evidence/disposition fields before implementation-transition. Planning-open may hold without blocking packet opening; implementation-transition blocks missing or non-pass packet document review evidence.
 - First-packet readiness note: before `npm run harness:first-packet -- --apply`, fix diagnostics for `Quick Decision Header > Work item`, open bootstrap decisions/risks, active profile evidence, and `## Verification Manifest`.
 - Strict literal copy examples:
   - `Change zone: core`
@@ -476,6 +500,7 @@
   - `- targeted: packet-specific regression`
   - `- validator: harness validator pass`
   - `- active context: regenerated or not-needed`
+  - `- packet doc review: independent packet_doc_review pass`
   - `- review closeout: Reviewer report or not-needed`
 - [어떻게 검증할지]
 
@@ -550,6 +575,42 @@
 - Changed files from actual diff:
 - Protected artifact deletion approval:
 - Finding dedupe/fingerprint status:
+
+## Independent Review Lens Evidence
+- Independent review lens policy: four-independent-closeout-agents-required
+- Parallel review execution: parallel / serial-with-rationale
+- challenge_review agent:
+- challenge_review independence basis:
+- challenge_review evidence path:
+- challenge_review status: pending / pass / pass_with_findings / block / not-applicable
+- challenge_review finding count:
+- challenge_review limitations:
+- challenge_review reviewer disposition:
+- challenge_review not applicable rationale:
+- adversarial_security_review agent:
+- adversarial_security_review independence basis:
+- adversarial_security_review evidence path:
+- adversarial_security_review status: pending / pass / pass_with_findings / block / not-applicable
+- adversarial_security_review finding count:
+- adversarial_security_review limitations:
+- adversarial_security_review reviewer disposition:
+- adversarial_security_review not applicable rationale:
+- code_quality_review agent:
+- code_quality_review independence basis:
+- code_quality_review evidence path:
+- code_quality_review status: pending / pass / pass_with_findings / block / not-applicable
+- code_quality_review finding count:
+- code_quality_review limitations:
+- code_quality_review reviewer disposition:
+- code_quality_review not applicable rationale:
+- evidence_review agent:
+- evidence_review independence basis:
+- evidence_review evidence path:
+- evidence_review status: pending / pass / pass_with_findings / block / not-applicable
+- evidence_review finding count:
+- evidence_review limitations:
+- evidence_review reviewer disposition:
+- evidence_review not applicable rationale:
 
 ## 50/50 Allocation Review
 - Feature-building work:

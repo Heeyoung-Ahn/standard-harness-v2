@@ -8,7 +8,10 @@ import re
 SECRET_PATTERNS = [
     re.compile(r"sk-(?:proj-)?[A-Za-z0-9_-]{16,}"),
     re.compile(r"ghp_[A-Za-z0-9_]{12,}"),
+    re.compile(r"AKIA[0-9A-Z]{16}"),
+    re.compile(r"(?i)-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     re.compile(r"(?i)(api[_-]?key|token|secret)=([A-Za-z0-9_./+=-]{8,})"),
+    re.compile(r"(?i)(password|passwd|credential|private[_ -]?key)=([^\s]+)"),
 ]
 
 

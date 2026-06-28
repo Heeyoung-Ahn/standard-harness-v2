@@ -2,7 +2,7 @@
   "ok": true,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-06-28T11:52:33.217Z",
+  "executedAt": "2026-06-28T14:33:07.398Z",
   "cutoverReady": true,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
@@ -233,24 +233,79 @@
         ]
       },
       "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX",
+      "packetPath": "reference/packets/PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX.md",
+      "declaredRiskClass": null,
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 4,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "api contract",
+          "schema boundary",
+          "auth/security boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT",
+      "packetPath": "reference/packets/PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT.md",
+      "declaredRiskClass": null,
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 5,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "api contract",
+          "schema boundary",
+          "auth/security boundary",
+          "shared dependency boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
     }
   ],
   "findings": [],
-  "nextAction": "Wait for the upstream planning gate to close.",
+  "nextAction": "Keep the reusable baseline on planning hold until a new approved lane is selected.",
   "gateDecision": "pass",
-  "traceSummary": {
-    "path": ".agents/runtime/agent-traces/DEV-01.json",
-    "workItemId": "DEV-01",
-    "packetId": "PKT-01_WORK_ITEM_PACKET_TEMPLATE",
-    "turnClosedAt": "2026-06-28T11:52:33.217Z",
-    "semanticTraceStatus": "pass",
-    "warningCount": 0,
-    "candidateGateCount": 6,
-    "workflowDisciplineStatus": "pass",
-    "workflowDisciplineWarningCount": 0,
-    "workflowDisciplineCloseoutHoldCount": 0,
-    "workflowDisciplineHardErrorCount": 0
-  },
+  "traceSummary": null,
   "candidateGates": [
     {
       "id": "required-evidence-present",
@@ -286,106 +341,23 @@
   "riskAdaptive": {
     "schemaVersion": "standard-harness-v2.5-validation-summary/v1",
     "gateEffect": "blocking-in-packet-preflight-and-transition",
-    "activeWorkItemId": "DEV-01",
-    "packetPath": "reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md",
+    "activeWorkItemId": null,
+    "packetPath": null,
     "gateStage": "implementation-transition",
     "lane": "standard",
-    "phase": "implementation",
+    "phase": "day-start",
     "riskOverlays": [],
-    "readCount": 6,
+    "readCount": 3,
     "targetTokens": 2200,
     "maxDocuments": 3,
-    "contextBudgetStatus": "warn",
-    "estimatedTokensRead": 1854,
+    "contextBudgetStatus": "pass",
+    "estimatedTokensRead": 904,
     "humanManualAutoRead": false,
     "overlayEvidence": [],
     "diagnostics": [],
     "blocking": false,
     "nextAction": "No V2.5 risk overlay evidence is currently routed; keep default context lean."
   },
-  "securityReview": {
-    "contractStatus": "not-applicable",
-    "activationSource": "packet metadata",
-    "notApplicableReason": "Reusable security-review evidence is not requested by current packet/runtime metadata."
-  },
   "contextBudget": null,
-  "llmJudge": {
-    "schemaVersion": "standard-harness-llm-judge/v1",
-    "status": "not-run",
-    "gateEffect": "advisory-only",
-    "workItemId": "DEV-01",
-    "packetPath": "reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md",
-    "providerInvocation": "not-used",
-    "contextPackage": {
-      "schemaVersion": "standard-harness-llm-judge-input-package/v1",
-      "status": "ready",
-      "allowedInputFields": [
-        "requirementsSummary",
-        "modelingImpact",
-        "packetAcceptance",
-        "diffSummary",
-        "testEvidenceResult"
-      ],
-      "forbiddenContextPolicy": "full chat/history, raw transcripts, unbounded generated docs, and workspace dumps are excluded",
-      "sourceRefs": [
-        {
-          "field": "requirementsSummary",
-          "path": ".agents/artifacts/REQUIREMENTS.md",
-          "status": "present"
-        },
-        {
-          "field": "modelingImpact",
-          "path": "reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md",
-          "status": "present"
-        },
-        {
-          "field": "packetAcceptance",
-          "path": "reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md",
-          "status": "present"
-        },
-        {
-          "field": "diffSummary",
-          "path": "reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md",
-          "status": "present"
-        },
-        {
-          "field": "testEvidenceResult",
-          "path": ".agents/artifacts/VALIDATION_REPORT.json",
-          "status": "present"
-        }
-      ],
-      "inputs": {
-        "requirementsSummary": {
-          "sourceRef": ".agents/artifacts/REQUIREMENTS.md",
-          "summary": "# Requirements > AUTHORITATIVE. Governance requirements SSOT. Edit only through an approved planning boundary or packet. ## Status - v2.0 charter baseline prepared from Human Owner direction and legacy v0.2 requirements. - This document is the hope, direction, and goal of Standard Harness v2.0. - It intentionally prioritizes the Human Owner's operating mo..."
-        },
-        "modelingImpact": {
-          "sourceRef": "reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md",
-          "status": "not-declared"
-        },
-        "packetAcceptance": {
-          "sourceRef": "reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md",
-          "summary": "- [사용자가 확인 가능한 acceptance 1] - [사용자가 확인 가능한 acceptance 2] - [검증 가능한 acceptance 3]"
-        },
-        "diffSummary": {
-          "sourceRef": "reference/packets/PKT-01_WORK_ITEM_PACKET_TEMPLATE.md",
-          "summary": "Use packet-declared changed-file/classification evidence and implementation closeout diff summary; raw workspace dumps are excluded."
-        },
-        "testEvidenceResult": {
-          "sourceRef": ".agents/artifacts/VALIDATION_REPORT.json",
-          "summary": "Use current validation-report gate decision, findings, and explicit test evidence; this is not product verification."
-        }
-      }
-    },
-    "result": {
-      "status": "not-run",
-      "sourceMode": "not-run",
-      "sourcePath": ".agents/runtime/judge/DEV-01.json",
-      "canClaimLiveIndependentReview": false,
-      "rationale": "No LLM judge result artifact exists for this work item.",
-      "findings": [],
-      "disagreements": []
-    },
-    "diagnostics": []
-  }
+  "llmJudge": null
 }

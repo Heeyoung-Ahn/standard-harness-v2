@@ -15,6 +15,16 @@ intent, evidence, decisions, wiki proposals, active context, and validation resu
 packet should leave enough record for a later agent or human reviewer to understand what
 was built, which tests and reviews were run, and which claims are supported by evidence.
 
+Human-authored requirements are treated as project-direction authority, not a loose
+feature list. Before Ready For Code, an independent packet-document reviewer must check
+that the packet preserves the Human Owner and Planner intent, Requirements direction,
+Implementation Plan, architecture SSOT, acceptance strength, and verification scope.
+
+After implementation, closeout requires four separate independent review lenses:
+`challenge_review`, `adversarial_security_review`, `code_quality_review`, and
+`evidence_review`. These reviews verify that the implemented work satisfies the approved
+packet and source requirements, not only that tests happen to pass.
+
 ## Folder Contract
 
 Directory names are contractual. File names are samples except for the minimum files

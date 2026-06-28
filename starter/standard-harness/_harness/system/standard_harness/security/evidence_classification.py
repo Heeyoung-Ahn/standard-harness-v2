@@ -87,4 +87,10 @@ class EvidenceClassifier:
 
 def _secret_path(path: str) -> bool:
     name = Path(path).name.lower()
-    return name in {".env", ".env.local"} or "secret" in path or "api_key" in path
+    return (
+        name in {".env", ".env.local"}
+        or name.endswith((".pem", ".key"))
+        or "secret" in path
+        or "api_key" in path
+        or "credential" in path
+    )

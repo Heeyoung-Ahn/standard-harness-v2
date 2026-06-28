@@ -11,7 +11,9 @@
 - when a packet declares developer-documentation impact, `Docs parity status: pending` or `Docs parity status: fail` blocks closeout unless Planner records an approved follow-up/defer disposition.
 - docs parity does not replace Developer implementation evidence, Tester verification, Reviewer closeout, Planner closeout, product acceptance, or release/cutover approval.
 - long-context and memory impact must be explicit when the packet changed context artifacts, packet templates, closeout gates, workflows, architecture boundaries, domain/source truth, project history, or preventive memory guidance.
+- independent `packet_doc_review` evidence must be present and passed before `Ready For Code`; closeout stays on hold if it is missing, failed, pending, self-reviewed, or does not cover requirements direction, implementation-plan sequencing, architecture/source SSOT, acceptance strength, verification scope, and v1.0/v2.0 operating philosophy.
 - If the packet required `Planner Packet Challenge Review`, closeout stays on hold when the challenge review is missing, failed, pending, self-approved by the packet author, missing source refs/findings disposition, or has unresolved required corrections.
+- closeout requires four independent review lens agents: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`. Missing, duplicated-agent, self-reviewed, or unbound lens evidence blocks closeout. Lens-specific N/A is valid only when that lens's independent reviewer records a no-surface rationale and evidence path.
 - source parity status 또는 validation / cleanup status가 `unknown`이거나 unresolved UX / topology / schema confusion이 남아 있으면 packet closeout hold를 유지한다.
 - closeout stays on hold when required long-context status is `unknown`, `stale`, unsupported, or `rebaseline-required` without Planner disposition.
 - core는 closeout criteria와 decision shape만 제공한다. project-specific bug list, code diff, one-off cleanup step은 packet이나 상세 운영 문서에서 닫는다.
@@ -70,8 +72,22 @@ Copy-ready closeout metadata example:
 - Packet vs canonical docs parity:
 - Packet vs generated docs / active context parity:
 - Source trace gaps:
+- Packet doc review status:
+- Packet doc review evidence path:
+- Packet doc reviewer independence:
 - Planner Packet Challenge Review status:
 - Challenge reviewer independence / source refs / findings disposition:
+
+## 3A. Independent Review Lens Evidence
+| Lens | Independent Agent | Evidence Path | Status | Findings | Limitations | Reviewer Disposition |
+|---|---|---|---|---|---|---|
+| challenge_review |  |  | pending / pass / pass_with_findings / block / not-applicable |  |  |  |
+| adversarial_security_review |  |  | pending / pass / pass_with_findings / block / not-applicable |  |  |  |
+| code_quality_review |  |  | pending / pass / pass_with_findings / block / not-applicable |  |  |  |
+| evidence_review |  |  | pending / pass / pass_with_findings / block / not-applicable |  |  |  |
+
+- Lens N/A rationale path:
+- Duplicated/self-review check:
 
 ## 4A. Memory Impact Review
 - Long-context update needed: yes / no

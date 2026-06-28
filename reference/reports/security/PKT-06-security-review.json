@@ -1,0 +1,69 @@
+{
+  "schema_version": "standard-harness-cso-security-review/v2.2",
+  "packet": "PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT",
+  "packet_path": "reference/packets/PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT.md",
+  "work_item_id": "PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT",
+  "mode": "daily",
+  "phases_run": [0, 1, 2, 5, 8, 12, 13, 14],
+  "filter_stats": {
+    "raw_candidates": 4,
+    "suppressed_false_positives": 0,
+    "main_findings": 0
+  },
+  "decision": "pass",
+  "review_type": "security",
+  "status": "pass",
+  "reviewed_on": "2026-06-28",
+  "scope": [
+    "starter/standard-harness/_harness/system/standard_harness/adapters/manifest.py",
+    "starter/standard-harness/_harness/system/standard_harness/adapters/contract_matrix.py",
+    "starter/standard-harness/_harness/system/standard_harness/workflow/provider_orchestration.py",
+    "starter/standard-harness/_harness/test/test_provider_neutral_orchestration.py"
+  ],
+  "findings": [],
+  "security_controls": [
+    {
+      "control": "credential_material_exclusion",
+      "result": "pass",
+      "evidence": "AdapterContractMatrix rejects manifest capabilities containing exact credential keys and common env/token/cache/session patterns including OPENAI_API_KEY, ANTHROPIC_API_KEY, auth_token, bearer_token, cookie_file, session_path, provider_cache_path, token-like keys, and provider cache/session path values."
+    },
+    {
+      "control": "local_subscription_boundary",
+      "result": "pass",
+      "evidence": "local_subscription_cli execution mode is valid only when credential_mode is local_subscription; no token, session, cache, or subscription state is stored."
+    },
+    {
+      "control": "provider_unavailable_fail_closed",
+      "result": "pass",
+      "evidence": "ProviderOrchestrationPolicy.prepare_execution returns manual_required with provider_cli_unavailable and a manual_run_bundle instead of a success claim when the local CLI is unavailable."
+    },
+    {
+      "control": "automatic_execution_preconditions",
+      "result": "pass",
+      "evidence": "ProviderOrchestrationPolicy.prepare_execution returns execution_blocked unless approved packet boundary, explicit local configuration, outside-repo authentication, command descriptor, timeout, cancel support, non-interactive capture, and current input snapshot are all represented."
+    },
+    {
+      "control": "direct_state_mutation_denial",
+      "result": "pass",
+      "evidence": "Provider output is modeled as route/evidence/adjudication read-model data. AdapterBoundaryValidator negative tests reject direct state mutation events."
+    },
+    {
+      "control": "path_and_provenance_boundary",
+      "result": "pass",
+      "evidence": "AdapterBoundaryValidator requires harness-trusted permission roots, validates artifact paths against those roots, rejects worker-supplied root expansion, rejects stale input snapshot mismatch, and rejects missing provenance, malformed envelopes, and mock success. AdapterInvocationLedger has a negative test proving omitted trusted roots cannot self-authorize ingestion."
+    },
+    {
+      "control": "provider_neutral_identity",
+      "result": "pass",
+      "evidence": "Routing results expose provider labels and adapter ids as replaceable adapter attributes and always report product_identity false."
+    },
+    {
+      "control": "queryable_read_model_boundary",
+      "result": "pass",
+      "evidence": "ProviderOrchestrationLedger validates output envelopes before persistence, records provider_orchestration.run_recorded and provider_orchestration.adjudication_recorded events, keeps truth_claim false, supports query by packet, role, adapter, provider, status, and adjudication state, and has replay coverage proving provider orchestration event types do not block recovery."
+    }
+  ],
+  "residual_risk": [
+    "PKT-06 does not execute real Codex CLI or Claude Code CLI processes. Future packets that add command execution must repeat security review for command construction, process isolation, timeout/cancel behavior, and local provider terms."
+  ]
+}

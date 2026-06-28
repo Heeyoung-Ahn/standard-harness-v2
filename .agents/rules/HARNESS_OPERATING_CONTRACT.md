@@ -62,6 +62,23 @@ Planner fallback is not allowed for implementation, document/code mutation that 
 - Implementation does not start before the active packet closes the required planning boundary.
 - Workflow, validator, runtime, user-facing, deploy, migration, and data-impact work keep their packet and evidence requirements.
 - When approved direction changes, planning artifacts and packet boundaries must be updated before implementation continues.
+- Detailed Human/Planner intent is not optional implementation guidance. Developer and Reviewer must treat approved intent and packet acceptance as the work definition. An LLM may not narrow scope, reinterpret the acceptance target, substitute fixture-only evidence for real behavior, or close work because the implementation is easier than the approved plan.
+
+## Mandatory Packet Document Review
+Every packet must pass independent `packet_doc_review` before `Ready For Code`.
+This applies to root-harness v1.0 packets and starter-payload v2.0 packets.
+
+`packet_doc_review` checks the packet document itself, before implementation:
+- Human/Planner intent is preserved without scope narrowing.
+- Requirements, implementation plan, architecture/source SSOT, and packet acceptance align.
+- v1.0 root-harness operating constraints and v2.0 product direction are represented when applicable.
+- Deferred/out-of-scope items have named ownership and do not hide required acceptance.
+- Verification and closeout evidence expectations are strong enough to catch implementation shortcuts.
+
+The packet author, Developer, Tester, Orchestrator, generated summaries, and main-session
+self-review do not count as the independent packet document reviewer. Missing,
+self-reviewed, duplicated, or unbound `packet_doc_review` evidence blocks `Ready For Code`
+and any `planner-to-developer` or `planner-to-orchestrator` transition.
 
 ## Skill Routing Audit
 - Resolve matching skills from the active `.agents/skills/*/SKILL.md` surface before substantive work when the user request, active workflow, packet route, risk surface, or role task indicates skill use.
@@ -91,6 +108,26 @@ Do not use baton text to redefine architecture, reopen approval, or override wor
 
 No role may silently absorb another role's approval authority.
 
+## Mandatory Independent Review Lenses
+Every packet closeout must include four independent review lens agents:
+- `challenge_review`
+- `adversarial_security_review`
+- `code_quality_review`
+- `evidence_review`
+
+These agents run in parallel when practical and produce separate packet-bound evidence. The
+same agent must not satisfy more than one lens for the same packet, and Developer, Tester,
+Orchestrator, and Planner output must not be reused as any of the four independent lens
+results. Reviewer closeout may summarize and adjudicate the lens outputs, but it cannot
+replace them.
+
+Lens-specific N/A is allowed only when the independent lens agent records a concrete
+no-surface rationale and evidence path. Missing, self-reviewed, duplicated-agent, or
+unbound lens evidence blocks Reviewer closeout and Planner closeout for every packet.
+The `challenge_review` lens must explicitly check for LLM convenience closeout: scope
+narrowing, acceptance reinterpretation, fixture-only behavior, vocabulary-only
+conformance, or premature completion claims against the Human/Planner-approved intent.
+
 ## Decision Authority Matrix
 Use the decision type to choose authority. Do not use a single global priority list when the conflict is about route, scope, evidence, approval, or execution-state drift.
 
@@ -103,7 +140,8 @@ Use the decision type to choose authority. Do not use a single global priority l
 | Approved post-plan delivery routing | Orchestrator | Ready For Code, active packet, handoff payload, transition runtime, evidence paths | PM after route is concrete |
 | Implementation inside approved scope | Developer | packet, task brief, source files | PM, Orchestrator |
 | Test execution and defect evidence | Tester | test plan, test output, validation report | PM, Orchestrator, Developer for pass/fail claims |
-| Conformance, source parity, evidence quality, closeout readiness | Reviewer | reviewer report, evidence package, SSOT | PM, Orchestrator |
+| Packet-document readiness before implementation | Independent packet document reviewer | `packet_doc_review` evidence, requirements, implementation plan, active packet, SSOT | Planner |
+| Conformance, source parity, evidence quality, closeout readiness | Reviewer | reviewer report, four independent review-lens evidence artifacts, evidence package, SSOT | PM, Orchestrator |
 | Generated context freshness | Runtime/context command | generated docs, DB, artifacts | all workflows until regenerated |
 | Baton text | No independent authority | latest valid handoff only | all workflows if baton conflicts with higher authority |
 

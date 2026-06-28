@@ -48,7 +48,7 @@
 - Use `reference/manuals/AUTOMATION_CATALOG.md` when planning recurring reminders or repeated operational checks.
 - Use `reference/manuals/CLOUD_LOCAL_MERGE_PLAYBOOK.md` when a packet uses cloud, separate worktrees, branches, patches, or PRs as parallel candidate outputs.
 - Use `.agents/artifacts/SYSTEM_CONTEXT.md` when a packet changes or depends on system boundaries, integration ownership, shared modules, external dependencies, or known hotspots.
-- Use `.agents/skills/adversarial_review/SKILL.md` before Ready For Code when packet quality itself needs challenge review. Every user-requested planning packet create/open must run the Planner Packet Challenge Loop unless an explicit sourced low-risk exemption record is written in the packet; silent skip is not allowed.
+- Use `.agents/skills/adversarial_review/SKILL.md` before Ready For Code when packet quality itself needs challenge review. Every user-requested planning packet create/open must run the Planner Packet Challenge Loop and independent `packet_doc_review` unless an explicit sourced low-risk exemption record is written in the packet; silent skip is not allowed.
 - Use `.agents/skills/retrospective/SKILL.md` during Planner closeout when completed work produced repeated friction, remediation loops, review/test gaps, operator confusion, or a candidate lesson for `.agents/artifacts/PREVENTIVE_MEMORY.md`.
 
 ## Allowed Actions
@@ -71,6 +71,7 @@
 
 ## Planner Packet Challenge Loop
 - When the user asks Planner to create or open a planning packet, Planner must draft/open the packet and immediately run `Planner Packet Challenge Review` before any Ready For Code request.
+- Planner must also route an independent `packet_doc_review` before any Ready For Code request. This is a packet-document review, not an implementation review, and it applies to both root-harness v1.0 packets and starter-payload v2.0 packets.
 - Low-risk padded `fast-path` packets may use an explicit sourced exemption record only when the packet records the exemption basis, source refs, affected surface, no-self-approval basis, findings disposition, required corrections status, and Ready For Code boundary. Silent skip is not allowed.
 - The review target is the Planner-authored packet, not the implementation.
 - Use an independent planning reviewer or `.agents/skills/adversarial_review/SKILL.md`; for high/core/load-bearing/contract/release packet quality, adversarial review is the default challenge lens unless a more specific approved reviewer contract exists.
@@ -85,9 +86,13 @@
   - whether a first-wave limit is being used as objective avoidance;
   - whether guidance-only scope is intentionally sufficient or runtime enforcement is required;
   - where the challenge evidence can be audited, either as packet-local ledger text or as a separate evidence artifact path.
+- The independent `packet_doc_review` checks whether the packet document satisfies requirements direction, implementation-plan sequencing, architecture/source SSOT, acceptance strength, verification scope, v1.0 root-harness constraints, and v2.0 product philosophy. The packet author, Developer, Tester, Orchestrator, generated summaries, and main-session self-review do not count as the reviewer.
 - If the challenge finds a packet defect, Planner revises the packet and reruns preflight/review before asking for Ready For Code.
+- If `packet_doc_review` finds a packet defect, Planner revises the packet and reruns `packet_doc_review` before asking for Ready For Code.
 - Only record `Challenge status: pass` when the reviewer's required corrections are incorporated or explicitly resolved in packet scope.
+- Only record `Packet doc review status: pass` when the independent packet-document reviewer's required corrections are incorporated or explicitly resolved in packet scope.
 - Challenge review does not approve implementation, close human approval, replace Planner authority, or replace Reviewer closeout.
+- `packet_doc_review` does not approve implementation, close human approval, replace Planner authority, or replace Reviewer closeout.
 - Planner must report the corrected packet with a plain-language packet explanation and explicit decision items before asking for Ready For Code.
 
 ## Packet Approval Explanation Rule

@@ -4,45 +4,19 @@
 
 ## Current Release Target
 - Define the first approved project baseline for Standard Harness v2 Starter Payload Development on top of the standard harness starter.
-- Generated At: 2026-06-28T11:51:56.926Z
-- Active work item count: 14
+- Generated At: 2026-06-28T14:32:58.231Z
+- Active work item count: 0
 
 ## Active Locks
 | Task ID | Scope | Owner | Status | Started At | Notes |
 |---|---|---|---|---|---|
-| PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING | Clean Starter Lifecycle Hardening | planner | active | 2026-06-28 | reviewer-to-planner; gate contract; Plan the next approved lane or close remaining planning decisions. |
-| REV-01 | Release review gate | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
-| TST-02 | Operator comprehension check | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
-| SEC-01 | Security and operational risk review | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
-| TST-01 | Acceptance and parity verification | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
-| DEV-05 | Deploy / test / cutover readiness | - | active | - | generated; gate unknown; Close environment topology, rollback, and release-readiness checks. |
-| QLT-01 | Packet exit quality gate | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
-| DEV-03 | Generated docs / validator verification | - | active | - | generated; gate unknown; Run validator and generated-doc checks after the first implementation packet changes live truth. |
-| DEV-04 | Active context and operator re-entry check | - | active | - | generated; gate unknown; Verify active context and operator-facing re-entry surfaces against the approved baseline. |
-| DEV-02 | Implementation and canonical-doc sync | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
-| DEV-01 | First approved implementation packet | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
-| PKT-01 | First work packet approval | - | active | - | generated; gate unknown; Open the first project packet only after PLN-01 is approved and the baseline sync is complete. |
-| DSG-01 | Rough UX direction | - | active | - | generated; gate unknown; Lock the rough direction and global behavior contract. |
-| PLN-02 | Baseline sync | - | active | - | generated; gate unknown; Sync architecture, implementation, and UI after requirements approval. |
+| - | None | - | clear | - | - |
 
 ## Active Tasks
 | Task ID | Title | Scope | Owner | Status | Priority | Depends On | Verification |
 |---|---|---|---|---|---|---|---|
-| PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING | Clean Starter Lifecycle Hardening | Clean Starter Lifecycle Hardening | planner | planning | P0 | - | gate contract; Plan the next approved lane or close remaining planning decisions. |
-| REV-01 | Release review gate | Release review gate | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
-| TST-02 | Operator comprehension check | Operator comprehension check | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
-| SEC-01 | Security and operational risk review | Security and operational risk review | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
-| TST-01 | Acceptance and parity verification | Acceptance and parity verification | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
-| DEV-05 | Deploy / test / cutover readiness | Deploy / test / cutover readiness | - | todo | P0 | - | gate unknown; Close environment topology, rollback, and release-readiness checks. |
-| QLT-01 | Packet exit quality gate | Packet exit quality gate | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
-| DEV-03 | Generated docs / validator verification | Generated docs / validator verification | - | todo | P0 | - | gate unknown; Run validator and generated-doc checks after the first implementation packet changes live truth. |
-| DEV-04 | Active context and operator re-entry check | Active context and operator re-entry check | - | todo | P0 | - | gate unknown; Verify active context and operator-facing re-entry surfaces against the approved baseline. |
-| DEV-02 | Implementation and canonical-doc sync | Implementation and canonical-doc sync | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
-| DEV-01 | First approved implementation packet | First approved implementation packet | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
-| PKT-01 | First work packet approval | First work packet approval | - | todo | P0 | - | gate unknown; Open the first project packet only after PLN-01 is approved and the baseline sync is complete. |
-| DSG-01 | Rough UX direction | Rough UX direction | - | todo | P0 | - | gate unknown; Lock the rough direction and global behavior contract. |
-| PLN-02 | Baseline sync | Baseline sync | - | todo | P0 | - | gate unknown; Sync architecture, implementation, and UI after requirements approval. |
-- Next first action: Plan the next approved lane or close remaining planning decisions.
+| - | None | - | - | clear | - | - | - |
+- Next first action: Keep the reusable baseline on planning hold until a new approved lane is selected.
 - Generated compatibility fallback only; regenerate rather than editing this file manually.
 
 ## Blocked Tasks
@@ -53,14 +27,43 @@
 ## Completed Tasks
 | Task ID | Title | Completed At | Verification | Notes |
 |---|---|---|---|---|
+| PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT | PKT-06 Provider-Neutral Orchestration Contract | 2026-06-28 | transition planner -> planner; gate contract | Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold. Keep the reusable baseline on planning hold until a new approved lane is selected. |
+| PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX | PKT-05 Long Memory And Question Answering Index | 2026-06-28 | transition planner -> planner; gate contract | Planner recorded PKT-05 closeout after Developer implementation, Tester verification, Reviewer pass, security evidence, TDD evidence, and closeout preflight passed. Keep the reusable baseline on planning hold until a new approved lane is selected. |
+| PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING | Clean Starter Lifecycle Hardening | 2026-06-28 | transition planner -> planner; gate contract | PKT-04B closeout was approved and committed; close residual planner state before opening PKT-05. Open PKT-05 as the next Planner packet. |
+| PLN-02 | Baseline sync | 2026-06-28 | transition planner -> planner; gate standard | Close reconciled starter placeholder PLN-02 before opening PKT-05. Continue PKT-05 planner opening. |
+| DSG-01 | Rough UX direction | 2026-06-28 | transition planner -> planner; gate standard | Close reconciled starter placeholder DSG-01 before opening PKT-05. Continue PKT-05 planner opening. |
+| PKT-01 | First work packet approval | 2026-06-28 | transition planner -> planner; gate standard | Close reconciled starter placeholder PKT-01 before opening PKT-05. Continue PKT-05 planner opening. |
+| DEV-01 | First approved implementation packet | 2026-06-28 | transition planner -> planner; gate standard | Close reconciled starter placeholder DEV-01 before opening PKT-05. Continue PKT-05 planner opening. |
+| DEV-02 | Implementation and canonical-doc sync | 2026-06-28 | transition planner -> planner; gate standard | Close reconciled starter placeholder DEV-02 before opening PKT-05. Continue PKT-05 planner opening. |
+| DEV-04 | Active context and operator re-entry check | 2026-06-28 | transition planner -> planner; gate standard | Close reconciled starter placeholder DEV-04 before opening PKT-05. Continue PKT-05 planner opening. |
+| DEV-03 | Generated docs / validator verification | 2026-06-28 | transition planner -> planner; gate standard | Close reconciled starter placeholder DEV-03 before opening PKT-05. Continue PKT-05 planner opening. |
+| QLT-01 | Packet exit quality gate | 2026-06-28 | transition planner -> planner; gate standard | Closed in canonical operational state. Continue PKT-05 planner opening. |
+| DEV-05 | Deploy / test / cutover readiness | 2026-06-28 | transition planner -> planner; gate standard | Closed in canonical operational state. Continue PKT-05 planner opening. |
+| TST-01 | Acceptance and parity verification | 2026-06-28 | transition planner -> planner; gate standard | Closed in canonical operational state. Continue PKT-05 planner opening. |
+| SEC-01 | Security and operational risk review | 2026-06-28 | transition planner -> planner; gate standard | Closed in canonical operational state. Continue PKT-05 planner opening. |
+| TST-02 | Operator comprehension check | 2026-06-28 | transition planner -> planner; gate standard | Closed in canonical operational state. Continue PKT-05 planner opening. |
+| REV-01 | Release review gate | 2026-06-28 | transition planner -> planner; gate standard | Closed in canonical operational state. Continue PKT-05 planner opening. |
 | PLN-01 | Requirements freeze | - | transition unknown -> planner; gate unknown | Closed in canonical operational state. PLN-01 requirements freeze is closed; Planner may choose the next approved lane without granting Ready For Code. |
 | PLN-00 | Kickoff interview | - | transition unknown -> planner; gate unknown | Closed in canonical operational state. PLN-00 kickoff interview is closed; use PLN-01 requirements freeze and approved packets for next planning. |
 
 ## Handoff Log
-- 2026-06-28: [planner -> planner] [planner -> planner] PLN-00/PLN-01 baseline blockers and decisions are closed from approved requirements evidence; Planner should choose the next approved lane.
-- 2026-06-28: [reviewer -> planner] [reviewer -> planner] Packet exit approved; Planner should choose or refine the next lane.
-- 2026-06-28: [tester -> reviewer] [tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.
-- 2026-06-28: [developer -> tester] [developer -> tester] Developer implementation completed; Tester should verify the approved scope.
-- 2026-06-28: [orchestrator -> developer] [orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.
+- 2026-06-28: [planner -> planner] [planner -> planner] Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold.
+- 2026-06-28: [orchestrator -> planner] [orchestrator -> planner] Orchestrator routed the packet to Planner for closeout, clarification, or escalation.
 - 2026-06-28: [planner -> orchestrator] [planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.
-- 2026-06-27: [bootstrap -> planner] Bootstrapped Standard Harness v2 Starter Payload Development from the standard harness starter and opened kickoff discovery plus starter-doc-pack closure.
+- 2026-06-28: [planner -> planner] [planner -> planner] Opened PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT as the selected Planner packet for review before implementation opens.
+- 2026-06-28: [planner -> planner] [planner -> planner] Planner recorded PKT-05 closeout after Developer implementation, Tester verification, Reviewer pass, security evidence, TDD evidence, and closeout preflight passed.
+- 2026-06-28: [orchestrator -> planner] [orchestrator -> planner] Orchestrator assembled complete PKT-05 closeout package: implementation, Tester evidence, Reviewer pass, TDD logs, security review, and closeout preflight are ready for Planner closeout.
+- 2026-06-28: [reviewer -> orchestrator] [reviewer -> orchestrator] Reviewer found no blocking PKT-05 findings after second pass; source parity, authority boundaries, security evidence, residual debt, and closeout readiness are documented in REVIEW_REPORT.md.
+- 2026-06-28: [tester -> reviewer] [tester -> reviewer] Tester verified PKT-05 focused TDD test, starter regression, starter installed-runtime validation, root validation, and root npm test evidence recorded in WALKTHROUGH.md.
+- 2026-06-28: [developer -> tester] [developer -> tester] Developer implemented PKT-05 source index and bounded question-answering read model with TDD, sensitive evidence exclusion, no-source diagnostics, and read-model authority boundaries.
+- 2026-06-28: [orchestrator -> developer] [orchestrator -> developer] Orchestrator routed PKT-05 approved implementation to Developer.
+- 2026-06-28: [planner -> orchestrator] [planner -> orchestrator] PKT-05 Ready For Code approved; Orchestrator should route long memory and question-answering delivery.
+- 2026-06-28: [planner -> planner] [planner -> planner] Opened PKT-05 as the Planner packet for long memory and question answering index planning.
+- 2026-06-28: [planner -> planner] [planner -> planner] PKT-04B closeout was approved and committed; close residual planner state before opening PKT-05.
+- 2026-06-28: [planner -> planner] [planner -> planner] Close reconciled starter placeholder PLN-02 before opening PKT-05.
+- 2026-06-28: [planner -> planner] [planner -> planner] Close reconciled starter placeholder DSG-01 before opening PKT-05.
+- 2026-06-28: [planner -> planner] [planner -> planner] Close reconciled starter placeholder PKT-01 before opening PKT-05.
+- 2026-06-28: [planner -> planner] [planner -> planner] Close reconciled starter placeholder DEV-01 before opening PKT-05.
+- 2026-06-28: [planner -> planner] [planner -> planner] Close reconciled starter placeholder DEV-02 before opening PKT-05.
+- 2026-06-28: [planner -> planner] [planner -> planner] Close reconciled starter placeholder DEV-04 before opening PKT-05.
+- 2026-06-28: [planner -> planner] [planner -> planner] Close reconciled starter placeholder DEV-03 before opening PKT-05.

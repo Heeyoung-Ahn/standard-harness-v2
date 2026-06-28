@@ -55,7 +55,15 @@ v2.0 must therefore optimize for:
 - compact human review surfaces,
 - structured LLM-readable operating state,
 - long-running context continuity,
-- clean starter portability.
+- clean starter portability,
+- independent packet-document review before implementation, so an LLM cannot turn
+  hard planning into a weaker packet and then ask for `Ready For Code`.
+
+Human planning intent is a hard authority boundary. When the Human Owner or Planner has
+done detailed planning, an implementing LLM must not narrow, reinterpret, shortcut, or
+close the work from its own convenience. Passing tests, matching vocabulary, or producing
+plausible review prose is not enough when the implementation does not satisfy the approved
+intent and packet acceptance.
 
 ## Product Anti-Goal
 v2.0 must not become a system where the Human Owner is expected to inspect code,
@@ -95,6 +103,9 @@ The v2 product direction is:
 The following hard-stop principles are part of the v2 operating philosophy:
 - No evidence, no completion claim.
 - No trusted evidence, no closeout.
+- No LLM convenience closeout: implementation that narrows, reinterprets, or only
+  superficially satisfies Human/Planner-approved intent must return to Developer or
+  Planner instead of closing.
 - No product agent writes to the harness system.
 - No harness mutation without a harness packet.
 - No memory without evidence.
@@ -115,6 +126,16 @@ The v2 quality model is:
 - Product tests must verify real user-visible behavior, not only marker files or superficial command success.
 - Web-facing changes require browser-based verification or a documented E2E N/A decision.
 - Challenge review, user-workflow E2E review, adversarial/security review, and code structure review are distinct review lenses; AI review is supporting evidence and cannot replace deterministic tests or trusted command/browser evidence.
+- Packet-document quality is a separate pre-implementation gate. Every packet,
+  including root-harness v1.0 packets and starter-payload v2.0 packets, must be
+  reviewed by an independent `packet_doc_review` agent before `Ready For Code`.
+  This review checks whether the packet itself preserves Human/Planner intent,
+  requirements direction, implementation-plan sequencing, acceptance strength,
+  scope/defer boundaries, and v1.0/v2.0 operating philosophy. It cannot be
+  performed by the packet author, Developer, Tester, Orchestrator, or the same
+  agent that later claims implementation closeout.
+- Packet closeout review must run four independent review agents in parallel by default: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`. Each agent must produce its own bounded evidence and may not be the Developer, Tester, Orchestrator, Planner, or the same agent as another lens for that packet.
+- The four independent review agents are required for every packet closeout. A packet may record a lens-specific N/A only when the packet and Reviewer evidence show why the lens has no applicable surface; N/A does not remove the requirement for an independent agent to make and record that judgment.
 
 ## Gate Profile Model
 
@@ -245,7 +266,7 @@ Each packet follows this operating flow:
 1. Human Owner and Planner define planning intent, acceptance criteria, non-goals, review questions, evidence expectations, and approval boundaries.
 2. Developer LLM implements within the approved packet scope, using TDD where practical or recording why strict TDD is impractical.
 3. Tester LLM verifies behavior, regression coverage, browser/E2E applicability, and evidence trust.
-4. Reviewer LLMs apply distinct lenses: challenge review, user-workflow/E2E review, adversarial/security review, and code/architecture review when triggered.
+4. Reviewer LLMs run the four independent closeout-review agents in parallel: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`. These lenses are mandatory for every packet closeout unless a lens-specific independent reviewer records a valid N/A judgment with evidence.
 5. Documenter LLM writes the maximum two-page packet closeout report, creates wiki proposals, and records long-memory candidates.
 6. PM Agent uses packet state, closeout, evidence, and blockers for day-wrap-up and day-start continuity.
 
@@ -400,7 +421,7 @@ decisions.
 | SHV2-REQ-028 | Implementation should use TDD or record why strict TDD is impractical; packet evidence must distinguish test-plan, RED/GREEN or equivalent proof, and regression evidence. | P0 | User direction, HR-040R~HR-045 |
 | SHV2-REQ-029 | Domain-driven implementation and refactor review must prevent spaghetti code; long-running work must surface refactor proposals when complexity accumulates. | P1 | User direction, HR-060R, HR-090R |
 | SHV2-REQ-030 | Product functional tests must be substantive and user-workflow oriented; marker-only, file-existence-only, or superficial success checks cannot satisfy product behavior acceptance. | P0 | User direction, HR-040R~HR-045, HR-050R~HR-053 |
-| SHV2-REQ-031 | Review gates must include distinct challenge, user-workflow/E2E, adversarial-security, and code-structure lenses when triggered by packet type or risk. | P0 | User direction, HR-070R~HR-081R, HR-150R~HR-152 |
+| SHV2-REQ-031 | Review gates must include one independent pre-implementation `packet_doc_review` agent for every packet and four independent parallel closeout-review agents for every packet: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`. Each review must produce separate packet-bound evidence; N/A is valid only when that review's independent reviewer records the no-surface rationale. | P0 | User direction, HR-070R~HR-081R, HR-150R~HR-152 |
 | SHV2-REQ-032 | Skill routing must select required skills automatically by task type or risk surface and record skill use, manifest, permission scope, fallback behavior, and evidence. | P1 | User direction, HR-130R~HR-131R |
 | SHV2-REQ-033 | Maintenance documents must be generated or updated from evidence-backed closeout and documenter flow, with Wiki proposal/apply governance for long memory. | P1 | User direction, HR-100R~HR-111R |
 | SHV2-REQ-034 | v2 must control overconfidence and blind user-following by challenging unsafe or unsupported instructions, recording uncertainty, and preferring evidence over assertion. | P0 | User direction, HR-150R~HR-152 |
@@ -413,7 +434,7 @@ decisions.
 | SHV2-REQ-041 | Each packet must produce one comprehensive human-readable closeout report, limited to a maximum of two pages plus evidence index links, that summarizes original intent, implemented result, acceptance check, test evidence, review evidence, remaining risks, follow-up work, wiki or memory updates, and PM impact. | P0 | User direction, HR-100R~HR-111R |
 | SHV2-REQ-042 | LLM long memory must preserve compact, evidence-backed project knowledge including project intent, architecture decisions, current conventions, packet history, known frictions, open risks, and deprecated context. | P1 | User direction, HR-100R~HR-111R, HR-160R~HR-163 |
 | SHV2-REQ-043 | PM day-start and day-wrap-up must provide daily continuity, WBS-compatible updates, blocker/risk tracking, next-work recommendations, and human decision prompts without becoming approval authority; each report is limited to a maximum of one page. | P1 | User direction |
-| SHV2-REQ-044 | Packet execution must follow the role flow Human/Planner intent definition, Developer LLM implementation, Tester LLM verification, Reviewer LLM review lenses, Documenter closeout/wiki proposal, and PM continuity. | P0 | User direction, HR-030R~HR-033R, HR-040R~HR-045, HR-100R~HR-111R |
+| SHV2-REQ-044 | Packet execution must follow the role flow Human/Planner intent definition, independent `packet_doc_review` before Ready For Code, Developer LLM implementation, Tester LLM verification, four independent parallel Reviewer lens agents, Documenter closeout/wiki proposal, and PM continuity. | P0 | User direction, HR-030R~HR-033R, HR-040R~HR-045, HR-100R~HR-111R |
 | SHV2-REQ-045 | The starter must define baseline gate profiles for `docs-only`, `product-feature`, `product-bugfix`, `product-refactor`, `security-data`, `harness-system`, and `starter-promotion` packet types, including required test, review, evidence, boundary, closeout, and N/A substitute checks. | P0 | legacy gate-profiles.yaml, review-governance.yaml |
 | SHV2-REQ-046 | Risk level must escalate or de-escalate gate strength without waiving hard stops: high, critical, security-sensitive, release-sensitive, browser-facing, harness-system, and starter-promotion packets require stricter evidence, review, adjudication, and human residual-risk handling. | P0 | HR-052, legacy gate-profiles.yaml |
 | SHV2-REQ-047 | Closeout evidence must use an evidence index link structure for test commands, regression evidence, browser/E2E evidence, review findings, gate results, security or residual-risk decisions, wiki or memory updates, and PM/WBS impact records instead of embedding raw evidence in the report body. | P0 | User direction, HR-100R~HR-111R |

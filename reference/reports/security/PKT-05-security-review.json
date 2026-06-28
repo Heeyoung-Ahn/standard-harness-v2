@@ -1,0 +1,53 @@
+{
+  "artifact_type": "security_review_report",
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX.md",
+  "work_item_id": "PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX",
+  "mode": "scoped",
+  "decision": "pass",
+  "scope": "PKT-05 long-memory source index and bounded question-answering read model.",
+  "phases_run": [0, 1, 12, 13, 14],
+  "attack_surface": {
+    "changed_files": [
+      "starter/standard-harness/_harness/system/standard_harness/memory/question_answering.py",
+      "starter/standard-harness/_harness/test/test_long_memory_question_answering.py"
+    ],
+    "sensitive_data_boundary": "Sensitive and restricted evidence records are omitted from source/query index outputs.",
+    "authority_boundary": "Question answers are read models and cannot grant approval, closeout, release, or residual-risk authority."
+  },
+  "filter_stats": {
+    "raw_candidates": 1,
+    "suppressed_false_positives": 0,
+    "main_findings": 1
+  },
+  "findings": [
+    {
+      "id": "PKT05-SEC-001",
+      "severity": "low",
+      "status": "fixed",
+      "confidence": 9,
+      "phase": 13,
+      "fingerprint": "sha256:pkt05-sensitive-source-omission",
+      "file": "starter/standard-harness/_harness/system/standard_harness/memory/question_answering.py",
+      "line": 30,
+      "evidence_quote_redacted": "Sensitive or restricted evidence cannot enter memory/query context.",
+      "exploit_scenario": "A restricted evidence record is supplied as a source and a status answer attempts to include it.",
+      "impact": "The source is omitted and the answer reports a redaction disposition instead of exposing the source content.",
+      "recommendation": "Keep negative coverage for omitted sensitive sources and read-model authority boundaries."
+    }
+  ],
+  "deferred_risks": [
+    {
+      "id": "PKT05-DEFER-001",
+      "status": "deferred",
+      "owner": "PKT-08",
+      "summary": "Automated friction mining and compound feedback promotion are outside PKT-05."
+    },
+    {
+      "id": "PKT05-DEFER-002",
+      "status": "deferred",
+      "owner": "future reset packet",
+      "summary": "The exact _ops reset command is not implemented by PKT-05; source/query index preserves evidence-retention boundaries."
+    }
+  ]
+}

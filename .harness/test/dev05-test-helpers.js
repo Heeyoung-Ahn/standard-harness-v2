@@ -42,6 +42,7 @@ export function writeOpsPacket(
     ["Authoritative source intake status", "not-needed", "Uses local packet evidence", "not-needed"],
     ["Shared-source wave status", "not-needed", "No source wave", "not-needed"],
     ["Packet exit gate status", "pending", "Implementation pending", "draft"],
+    ["Packet doc review status", "pass", "Independent packet-document review fixture", "approved"],
     ["Improvement promotion status", "approved", "FLOW-01 promoted into reusable regression coverage", "approved"],
     ["Existing system dependency", "none", "No legacy system", "not-needed"],
     ["New authoritative source impact", "none", "No new external source", "not-needed"],
@@ -54,6 +55,7 @@ export function writeOpsPacket(
     "- targeted: gate profile and transition tests",
     "- validator: run harness validator",
     "- active context: regenerate ACTIVE_CONTEXT artifacts",
+    "- packet doc review: independent packet_doc_review pass",
     "- review closeout: required before packet close"
   ];
   const manifest = includeManifest
@@ -80,6 +82,27 @@ export function writeOpsPacket(
     "- Required corrections applied: not-needed",
     "- No self-approval claim: fixture records independent challenge-review evidence and no Planner self-approval"
   ].join("\n");
+  const packetDocumentReview = [
+    "## Packet Document Review",
+    "- Packet doc review policy: independent-reviewer-required-before-ready-for-code",
+    "- Packet doc reviewer: fixture independent packet document reviewer",
+    "- Packet doc reviewer independence basis: independent fixture reviewer is not the packet author, Developer, Tester, or Orchestrator",
+    "- Packet doc review evidence path: packet-local fixture evidence in .harness/test/dev05-test-helpers.js",
+    "- Packet doc review status: pass",
+    "- Packet doc review completed before Ready For Code: yes",
+    "- Requirements direction alignment: pass",
+    "- Implementation-plan sequencing alignment: pass",
+    "- Architecture/source SSOT alignment: pass",
+    "- Human/Planner intent preservation: pass",
+    "- v1.0 root-harness operating constraint coverage: pass",
+    "- v2.0 product philosophy coverage: pass",
+    "- Acceptance strength: transition assertions exercise behavior, not marker-only existence",
+    "- Verification scope strength: packet-preflight and transition assertions catch missing required evidence",
+    "- Deferred/out-of-scope ownership: none",
+    "- Required corrections: not-needed",
+    "- Findings disposition: no findings remain",
+    "- No self-approval claim: independent fixture reviewer, not packet author"
+  ].join("\n");
   const content = [
     `# ${packetTitle}`,
     "",
@@ -102,7 +125,9 @@ export function writeOpsPacket(
     "",
     manifest,
     "",
-    challengeReview
+    challengeReview,
+    "",
+    packetDocumentReview
   ].join("\n");
   fs.writeFileSync(path.join(repoRoot, packetPath), content, "utf8");
 }

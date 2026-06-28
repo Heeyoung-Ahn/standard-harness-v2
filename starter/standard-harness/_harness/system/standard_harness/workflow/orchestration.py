@@ -7,6 +7,7 @@ from typing import Any
 
 from standard_harness.domain.packets import PacketService
 from standard_harness.state.store import HarnessStore
+from standard_harness.validation.review_governance import ReviewGovernanceValidator
 
 
 class WorkflowOrchestrationService:
@@ -32,8 +33,10 @@ class WorkflowOrchestrationService:
         packet = PacketService(self.store).get_packet(packet_id)
         source_watermark = self.store.latest_event_seq()
         blockers: list[str] = []
-        if phase == "implementation" and packet["approval_state"] != "approved":
-            blockers.append("missing_approval")
+        if phase == "implementation":
+            if packet["approval_state"] != "approved":
+                blockers.append("missing_approval")
+            blockers.extend(ReviewGovernanceValidator(self.store.harness_root).implementation_transition_diagnostics(packet))
         record = {
             "workflow_run_id": workflow_run_id,
             "packet_id": packet_id,

@@ -24,13 +24,42 @@
 - Do not redefine requirements or architecture as part of review findings.
 - Do not close release readiness without the required evidence.
 
+## Mandatory Independent Review Lens Agents
+Every packet closeout requires four independent review lens agents. Run them in parallel
+when practical and record each lens output as packet-bound evidence before Reviewer
+closeout can pass.
+
+Required lenses:
+- `challenge_review`
+- `adversarial_security_review`
+- `code_quality_review`
+- `evidence_review`
+
+Independence requirements:
+- The same agent must not satisfy more than one lens for the same packet.
+- Developer, Tester, Orchestrator, Planner, generated summaries, and main-session self-review do not count as any of the four independent lens agents.
+- A lens-specific N/A requires that lens's independent agent to record the no-surface rationale and evidence path.
+- Missing, duplicated-agent, self-reviewed, or unbound lens evidence is a blocking closeout finding.
+
+## Pre-Implementation Packet Document Review Check
+Every packet closeout must verify that independent `packet_doc_review` evidence was
+present before `Ready For Code`. This applies to root-harness v1.0 packets and
+starter-payload v2.0 packets.
+
+Reviewer must hold closeout when `packet_doc_review` is missing, failed, pending,
+self-reviewed by the packet author, performed by Developer/Tester/Orchestrator,
+or does not check requirements direction, implementation-plan sequencing,
+architecture/source SSOT, acceptance strength, verification scope, and v1.0/v2.0
+operating philosophy.
+
 ## Review Lens Minimums
-Use these four minimum lenses when reviewing packet closeout. Keep findings evidence-backed and route remediation instead of absorbing another role's authority.
+Use these four mandatory lenses when reviewing packet closeout. Keep findings evidence-backed and route remediation instead of absorbing another role's authority.
 
 ### `challenge_review`
 - Check whether approved scope, user intent, Planner-approved SSOT, and packet acceptance were narrowed or omitted.
 - Check whether the implementation satisfies work/product intent, not only tests.
 - Check whether scope was reinterpreted without Planner approval.
+- Check whether the LLM took a convenience closeout path: fixture-only behavior, shape-only tests, vocabulary-only conformance, superficial implementation, or premature completion against the Human/Planner-approved intent.
 
 ### `adversarial_security_review`
 - Check auth/authz bypass.
@@ -91,6 +120,8 @@ Use these four minimum lenses when reviewing packet closeout. Keep findings evid
 - Act as an evidence reviewer, not a self-verifier. Fluent explanations, prior assistant answers, user-expected conclusions, and matching vocabulary are not evidence.
 - Map requirement intent to changed behavior and evidence. Word-only conformance is not enough when the behavior, acceptance evidence, or authority boundary is unclear.
 - Treat missing source refs, missing Tester evidence, missing packet evidence, or missing challenge evidence as findings until concrete evidence closes them.
+- Treat missing independent `packet_doc_review` evidence as a blocking finding before accepting implementation conformance or closeout.
+- Treat missing independent review-lens evidence for `challenge_review`, `adversarial_security_review`, `code_quality_review`, or `evidence_review` as a blocking closeout finding for every packet.
 - For high-risk, core, load-bearing, contract, release, or zero-finding closeout, record an adversarial second-pass note that names source alignment, acceptance/evidence coverage, risk/regression pressure, and authority-boundary checks.
 - Separate reviewed-scope approval from release-ready approval.
 
@@ -109,12 +140,15 @@ Use these four minimum lenses when reviewing packet closeout. Keep findings evid
 - Explicit residual risks and testing gaps when no blocking finding is present.
 - Explicit note when cloud/worktree candidate output was reviewed and locally validated before closeout.
 - Created or updated `reference/artifacts/REVIEW_REPORT.md` when the reviewed scope requires persistent review evidence.
+- A four-lens evidence table that lists lens id, independent agent id, evidence path, status, finding count, limitations, and Reviewer disposition.
+- Pre-implementation `packet_doc_review` status, independent agent id, evidence path, finding disposition, and whether it was completed before Ready For Code.
 - Clear recommendation on whether the scope returns to `Developer` or can move toward deploy/closeout.
 - A conformance matrix against applicable SSOT, including `REQUIREMENTS.md`, `IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_GUIDE.md` when applicable, design/profile/system SSOT when applicable, documentation impact when applicable, and the active packet.
 - An intent-to-behavior conformance matrix comparing user original requirement, Planner-approved SSOT/source artifact, active packet acceptance, changed behavior, Tester evidence, and Reviewer judgment.
 - Modeling-error handling status: none found, stopped-and-remodeled, not-needed, or blocking patched-around-modeling-error.
 - Planner Packet Challenge Review status when required, including reviewer independence, source refs reviewed, findings disposition, required corrections applied, and no-self-approval evidence.
 - Adversarial second-pass status for high-risk, core, load-bearing, contract, release, or zero-finding closeout.
+- Independent review-lens status for all four mandatory lenses, including any lens-specific N/A rationale and evidence path.
 
 ## Turn Close Reporting
 - At the end of every turn, report in two blocks: `Current Work` and `Next Work`.

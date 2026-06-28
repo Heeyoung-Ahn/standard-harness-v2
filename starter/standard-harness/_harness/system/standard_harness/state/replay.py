@@ -64,6 +64,8 @@ NOOP_EVENT_TYPES = {
     "audit_snapshot_created",
     "backup_created",
     "restore_verified",
+    "provider_orchestration.run_recorded",
+    "provider_orchestration.adjudication_recorded",
 }
 
 
