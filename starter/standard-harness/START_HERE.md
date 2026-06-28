@@ -8,10 +8,16 @@ From the copied repository root, initialize the harness:
 python _harness\bin\harness_cli.py --json --harness-root . init
 ```
 
-Then validate the clean starter contract:
+Then validate the copied starter runtime contract:
 
 ```powershell
-python _harness\bin\harness_cli.py --json --harness-root . validate --starter
+python _harness\bin\harness_cli.py --json --harness-root . validate --starter --installed-runtime
+```
+
+Use clean export validation only for a starter export candidate before distribution:
+
+```powershell
+python _harness\bin\harness_cli.py --json --harness-root . validate --starter --clean-export
 ```
 
 If you need to discard copied-project operating history later, reset only `_ops/`:

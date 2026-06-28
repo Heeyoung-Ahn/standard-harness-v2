@@ -22,6 +22,8 @@ from standard_harness.operating_folders import OperatingFolderInitializer
 from standard_harness.projection.current_context import CurrentContextProjection
 from standard_harness.skills.router import SkillRouter
 from standard_harness.starter.contamination import StarterContaminationChecker
+from standard_harness.starter.contamination import CLEAN_EXPORT_MODE
+from standard_harness.starter.contamination import INSTALLED_RUNTIME_MODE
 from standard_harness.state.store import HarnessStore, resolve_harness_root
 from standard_harness.validation.aggregator import ValidationService
 from standard_harness.validation.readiness import ReadinessService
@@ -161,18 +163,22 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "validate":
         store = HarnessStore(resolve_harness_root(args.harness_root))
         try:
-            diagnostics = _handle_validate(store, command_args)
+            validation = _handle_validate(store, command_args)
         except Exception as exc:  # noqa: BLE001 - CLI must convert validation errors to diagnostics.
             if args.json_output:
                 print(_error_response("command_failed", str(exc), args.command))
             else:
                 print(str(exc), file=sys.stderr)
             return 1
+        diagnostics = validation["diagnostics"]
         status = "ok" if not diagnostics else "error"
+        payload = {"status": status, "diagnostics": diagnostics}
+        if validation["metadata"]:
+            payload["validation"] = validation["metadata"]
         if args.json_output:
-            print(json.dumps({"status": status, "diagnostics": diagnostics}, sort_keys=True))
+            print(json.dumps(payload, sort_keys=True))
         else:
-            print(json.dumps({"diagnostics": diagnostics}, sort_keys=True))
+            print(json.dumps(payload, sort_keys=True))
         return 0 if not diagnostics else 1
 
     if args.command == "project-completion":
@@ -636,14 +642,23 @@ def _handle_starter_check(store: HarnessStore, argv: list[str]) -> dict[str, Any
     parser = _command_parser("starter-check")
     parser.add_argument("--paths", default="")
     parser.add_argument("--root", default=None)
+    parser.add_argument("--clean-export", action="store_true")
+    parser.add_argument("--installed-runtime", action="store_true")
     parsed = parser.parse_args(argv)
+    mode = _starter_validation_mode_arg(parsed)
     checker = StarterContaminationChecker()
     if parsed.root:
-        diagnostics = checker.check_root(Path(parsed.root))
+        diagnostics = checker.check_root(Path(parsed.root), validation_mode=mode)
     else:
         paths = _csv(parsed.paths)
         diagnostics = checker.check_paths(paths)
-    return {"starter": {"status": "ok" if not diagnostics else "blocked", "diagnostics": diagnostics}}
+    return {
+        "starter": {
+            "status": "ok" if not diagnostics else "blocked",
+            "diagnostics": diagnostics,
+            "validationMode": mode,
+        }
+    }
 
 
 def _handle_project_completion(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
@@ -677,12 +692,14 @@ def _default_completion_result_id(
     return f"project-completion-{normalized}-{source_watermark}"
 
 
-def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any]]:
+def _handle_validate(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
     parser = _command_parser("validate")
     parser.add_argument("--state", action="store_true")
     parser.add_argument("--packet", dest="packet_scope", default=None)
     parser.add_argument("--packet-id", default=None)
     parser.add_argument("--starter", action="store_true")
+    parser.add_argument("--clean-export", action="store_true")
+    parser.add_argument("--installed-runtime", action="store_true")
     parser.add_argument("--projection", action="store_true")
     parser.add_argument("--requirements-metadata", action="store_true")
     parser.add_argument("--v21-conformance", action="store_true")
@@ -692,8 +709,12 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any
     packet_id = parsed.packet_id or parsed.packet_scope
     service = _validation_service_for_store(store)
     diagnostics: list[dict[str, Any]] = []
+    metadata: dict[str, Any] = {}
     if parsed.all:
-        return service.validate_all(packet_id=packet_id)
+        starter_mode = _starter_validation_mode_arg(parsed, default=service.starter_validation_mode())
+        diagnostics.extend(service.validate_all(packet_id=packet_id, starter_mode=starter_mode))
+        metadata["starter"] = _starter_validation_metadata(starter_mode)
+        return {"diagnostics": diagnostics, "metadata": metadata}
     if parsed.release:
         diagnostics.extend(service.validate_release())
     if parsed.v21_conformance:
@@ -707,7 +728,9 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any
             raise ValueError("validate --packet requires a packet id")
         diagnostics.extend(service.validate_packet(packet_id))
     if parsed.starter:
-        diagnostics.extend(service.validate_starter())
+        starter_mode = _starter_validation_mode_arg(parsed, default=service.starter_validation_mode())
+        diagnostics.extend(service.validate_starter(mode=starter_mode))
+        metadata["starter"] = _starter_validation_metadata(starter_mode)
     if parsed.projection:
         if packet_id is None:
             raise ValueError("validate --projection requires --packet-id")
@@ -725,7 +748,25 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> list[dict[str, Any
         ]
     ):
         diagnostics.extend(service.validate_state())
-    return diagnostics
+    return {"diagnostics": diagnostics, "metadata": metadata}
+
+
+def _starter_validation_mode_arg(parsed: argparse.Namespace, *, default: str = CLEAN_EXPORT_MODE) -> str:
+    if parsed.clean_export and parsed.installed_runtime:
+        raise ValueError("Use exactly one starter validation mode flag: --clean-export or --installed-runtime")
+    if parsed.clean_export:
+        return CLEAN_EXPORT_MODE
+    if parsed.installed_runtime:
+        return INSTALLED_RUNTIME_MODE
+    return default
+
+
+def _starter_validation_metadata(mode: str) -> dict[str, Any]:
+    return {
+        "validationMode": mode,
+        "cleanExportProof": mode == CLEAN_EXPORT_MODE,
+        "runtimeGeneratedStateTolerated": mode == INSTALLED_RUNTIME_MODE,
+    }
 
 
 def _validation_service_for_store(store: HarnessStore) -> ValidationService:

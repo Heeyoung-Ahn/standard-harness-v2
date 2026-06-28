@@ -15,6 +15,10 @@ REQUIRED_STARTER_FILES = {
     "_harness/schemas/operating-folder-contract.schema.json": "missing_starter_operating_folder_contract_schema",
 }
 
+CLEAN_EXPORT_MODE = "clean-export"
+INSTALLED_RUNTIME_MODE = "installed-runtime"
+STARTER_VALIDATION_MODES = {CLEAN_EXPORT_MODE, INSTALLED_RUNTIME_MODE}
+
 
 REQUIRED_STARTER_DIRECTORIES = {
     "_harness": "missing_starter_harness_root",
@@ -85,7 +89,9 @@ class StarterContaminationChecker:
         root: str | Path,
         *,
         allow_runtime_generated: bool = False,
+        validation_mode: str | None = None,
     ) -> list[dict[str, object]]:
+        mode = _validation_mode(validation_mode, allow_runtime_generated=allow_runtime_generated)
         starter_root = Path(root)
         diagnostics: list[dict[str, object]] = []
         if not starter_root.exists():
@@ -94,13 +100,22 @@ class StarterContaminationChecker:
         diagnostics.extend(_missing_required_paths(starter_root))
         paths = [str(path) for path in starter_root.rglob("*")]
         diagnostics.extend(self.check_paths(paths))
-        if allow_runtime_generated:
+        if mode == INSTALLED_RUNTIME_MODE:
             diagnostics = [
                 diagnostic
                 for diagnostic in diagnostics
                 if not _is_runtime_generated_diagnostic(starter_root, diagnostic)
             ]
         return diagnostics
+
+
+def _validation_mode(mode: str | None, *, allow_runtime_generated: bool) -> str:
+    if mode is None:
+        return INSTALLED_RUNTIME_MODE if allow_runtime_generated else CLEAN_EXPORT_MODE
+    normalized = mode.strip().lower().replace("_", "-")
+    if normalized not in STARTER_VALIDATION_MODES:
+        raise ValueError(f"Unknown starter validation mode: {mode}")
+    return normalized
 
 
 def _classify(path: str) -> str | None:
@@ -123,7 +138,12 @@ def _classify(path: str) -> str | None:
         return "local_logs"
     if name in {".env", ".env.local"} or "secret" in lower or "api_key" in lower:
         return "secrets"
-    if "__pycache__" in lowered_parts or ".pytest_cache" in lowered_parts or ".mypy_cache" in lowered_parts:
+    if (
+        "__pycache__" in lowered_parts
+        or ".pytest_cache" in lowered_parts
+        or ".mypy_cache" in lowered_parts
+        or name.endswith(".pyc")
+    ):
         return "cache_files"
     if "external-review-attachments" in lower or "pasted-text" in lower:
         return "external_review_attachments"
@@ -195,7 +215,7 @@ def _is_runtime_generated_diagnostic(starter_root: Path, diagnostic: dict[str, o
     except (OSError, ValueError):
         return False
     normalized = relative.as_posix().lower()
-    if error_code == "cache_files" and "__pycache__" in normalized:
+    if error_code == "cache_files":
         return True
     if error_code == "development_packet_state" and normalized.startswith(".harness/"):
         return True

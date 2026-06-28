@@ -13,6 +13,8 @@ from standard_harness.completion.v21_conformance import V21ConformanceGate
 from standard_harness.evidence.trust import EvidenceTrustPolicy
 from standard_harness.policy.gate_profiles import GateProfilePolicy
 from standard_harness.starter.contamination import StarterContaminationChecker
+from standard_harness.starter.contamination import CLEAN_EXPORT_MODE
+from standard_harness.starter.contamination import INSTALLED_RUNTIME_MODE
 from standard_harness.state.store import HarnessStore
 from standard_harness.validation.boundary import BoundaryValidator
 from standard_harness.validation.boundary import boundary_input_from_packet
@@ -42,11 +44,16 @@ class ValidationService:
             starter_root is not None and self.starter_root.resolve() == self.repo_root.resolve()
         )
 
-    def validate_all(self, *, packet_id: str | None = None) -> list[dict[str, Any]]:
+    def validate_all(
+        self,
+        *,
+        packet_id: str | None = None,
+        starter_mode: str | None = None,
+    ) -> list[dict[str, Any]]:
         diagnostics = []
         diagnostics.extend(self.validate_requirements_metadata())
         diagnostics.extend(self.validate_state())
-        diagnostics.extend(self.validate_starter())
+        diagnostics.extend(self.validate_starter(mode=starter_mode))
         if packet_id is not None:
             diagnostics.extend(self.validate_packet(packet_id))
             diagnostics.extend(self.validate_projection(packet_id))
@@ -138,7 +145,13 @@ class ValidationService:
             )
         ]
 
-    def validate_starter(self) -> list[dict[str, Any]]:
+    def starter_validation_mode(self, mode: str | None = None) -> str:
+        if mode is not None:
+            return mode.strip().lower().replace("_", "-")
+        return INSTALLED_RUNTIME_MODE if self.installed_starter_mode else CLEAN_EXPORT_MODE
+
+    def validate_starter(self, *, mode: str | None = None) -> list[dict[str, Any]]:
+        validation_mode = self.starter_validation_mode(mode)
         return [
             _diagnostic(
                 error_code=str(diagnostic["error_code"]),
@@ -150,7 +163,7 @@ class ValidationService:
             )
             for diagnostic in StarterContaminationChecker().check_root(
                 self.starter_root,
-                allow_runtime_generated=self.installed_starter_mode,
+                validation_mode=validation_mode,
             )
         ]
 

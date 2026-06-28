@@ -1,9 +1,9 @@
 {
-  "ok": true,
+  "ok": false,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-06-28T08:47:07.691Z",
-  "cutoverReady": true,
+  "executedAt": "2026-06-28T10:43:33.847Z",
+  "cutoverReady": false,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
     "status": "empty",
@@ -11,7 +11,39 @@
   },
   "riskClassifications": [
     {
-      "artifactId": "PKT-02A_NAMING_AND_STATUS_RECONCILIATION",
+      "artifactId": "PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING",
+      "packetPath": "reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md",
+      "declaredRiskClass": null,
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 3,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "api contract",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "discovered:reference/packets/PKT-02A_NAMING_AND_STATUS_RECONCILIATION.md",
       "packetPath": "reference/packets/PKT-02A_NAMING_AND_STATUS_RECONCILIATION.md",
       "declaredRiskClass": null,
       "derivedRiskClass": "high",
@@ -43,7 +75,7 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     },
     {
-      "artifactId": "PKT-02B_IMPLEMENTATION_PLAN_REQUIREMENT_ALIGNMENT",
+      "artifactId": "discovered:reference/packets/PKT-02B_IMPLEMENTATION_PLAN_REQUIREMENT_ALIGNMENT.md",
       "packetPath": "reference/packets/PKT-02B_IMPLEMENTATION_PLAN_REQUIREMENT_ALIGNMENT.md",
       "declaredRiskClass": null,
       "derivedRiskClass": "high",
@@ -74,7 +106,7 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     },
     {
-      "artifactId": "PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE",
+      "artifactId": "discovered:reference/packets/PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE.md",
       "packetPath": "reference/packets/PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE.md",
       "declaredRiskClass": null,
       "derivedRiskClass": "high",
@@ -107,7 +139,7 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     },
     {
-      "artifactId": "PKT-03_DOCUMENTER_CLOSEOUT_AND_EVIDENCE_INDEX",
+      "artifactId": "discovered:reference/packets/PKT-03_DOCUMENTER_CLOSEOUT_AND_EVIDENCE_INDEX.md",
       "packetPath": "reference/packets/PKT-03_DOCUMENTER_CLOSEOUT_AND_EVIDENCE_INDEX.md",
       "declaredRiskClass": null,
       "derivedRiskClass": "high",
@@ -139,7 +171,7 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     },
     {
-      "artifactId": "PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT",
+      "artifactId": "discovered:reference/packets/PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md",
       "packetPath": "reference/packets/PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md",
       "declaredRiskClass": null,
       "derivedRiskClass": "high",
@@ -171,7 +203,7 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     },
     {
-      "artifactId": "PKT-04_PM_DAILY_RHYTHM_AND_WBS_LOOP",
+      "artifactId": "discovered:reference/packets/PKT-04_PM_DAILY_RHYTHM_AND_WBS_LOOP.md",
       "packetPath": "reference/packets/PKT-04_PM_DAILY_RHYTHM_AND_WBS_LOOP.md",
       "declaredRiskClass": null,
       "derivedRiskClass": "high",
@@ -203,10 +235,69 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     }
   ],
-  "findings": [],
-  "nextAction": "Keep the reusable baseline on planning hold until a new approved lane is selected.",
-  "gateDecision": "pass",
-  "traceSummary": null,
+  "findings": [
+    {
+      "code": "task_packet_registration_missing",
+      "severity": "error",
+      "packetPath": "reference/packets/PKT-02A_NAMING_AND_STATUS_RECONCILIATION.md",
+      "message": "reference/packets/PKT-02A_NAMING_AND_STATUS_RECONCILIATION.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet."
+    },
+    {
+      "code": "task_packet_registration_missing",
+      "severity": "error",
+      "packetPath": "reference/packets/PKT-02B_IMPLEMENTATION_PLAN_REQUIREMENT_ALIGNMENT.md",
+      "message": "reference/packets/PKT-02B_IMPLEMENTATION_PLAN_REQUIREMENT_ALIGNMENT.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet."
+    },
+    {
+      "code": "task_packet_registration_missing",
+      "severity": "error",
+      "packetPath": "reference/packets/PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE.md",
+      "message": "reference/packets/PKT-02_RISK_ADAPTIVE_GATE_PROFILE_ENGINE.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet."
+    },
+    {
+      "code": "task_packet_registration_missing",
+      "severity": "error",
+      "packetPath": "reference/packets/PKT-03_DOCUMENTER_CLOSEOUT_AND_EVIDENCE_INDEX.md",
+      "message": "reference/packets/PKT-03_DOCUMENTER_CLOSEOUT_AND_EVIDENCE_INDEX.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet."
+    },
+    {
+      "code": "task_packet_registration_missing",
+      "severity": "error",
+      "packetPath": "reference/packets/PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md",
+      "message": "reference/packets/PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet."
+    },
+    {
+      "code": "task_packet_registration_missing",
+      "severity": "error",
+      "packetPath": "reference/packets/PKT-04_PM_DAILY_RHYTHM_AND_WBS_LOOP.md",
+      "message": "reference/packets/PKT-04_PM_DAILY_RHYTHM_AND_WBS_LOOP.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet."
+    },
+    {
+      "code": "structural_preflight_failed",
+      "severity": "error",
+      "message": "Structural preflight failed because unresolved generated-doc or harness-state findings remain."
+    },
+    {
+      "code": "cutover_preflight_failed",
+      "severity": "error",
+      "message": "Compatibility alias: cutover preflight failed because unresolved structural findings remain."
+    }
+  ],
+  "nextAction": "Update or register the concrete task packet, then rerun validation.",
+  "gateDecision": "hold",
+  "traceSummary": {
+    "path": ".agents/runtime/agent-traces/PLN-00.json",
+    "workItemId": "PLN-00",
+    "packetId": "PLN-00_DEEP_INTERVIEW",
+    "turnClosedAt": "2026-06-28T10:43:33.847Z",
+    "semanticTraceStatus": "pass",
+    "warningCount": 0,
+    "candidateGateCount": 6,
+    "workflowDisciplineStatus": "pass",
+    "workflowDisciplineWarningCount": 0,
+    "workflowDisciplineCloseoutHoldCount": 0,
+    "workflowDisciplineHardErrorCount": 0
+  },
   "candidateGates": [
     {
       "id": "required-evidence-present",
@@ -242,23 +333,106 @@
   "riskAdaptive": {
     "schemaVersion": "standard-harness-v2.5-validation-summary/v1",
     "gateEffect": "blocking-in-packet-preflight-and-transition",
-    "activeWorkItemId": null,
-    "packetPath": null,
+    "activeWorkItemId": "PLN-00",
+    "packetPath": "reference/planning/PLN-00_DEEP_INTERVIEW.md",
     "gateStage": "implementation-transition",
     "lane": "standard",
-    "phase": "day-start",
+    "phase": "implementation",
     "riskOverlays": [],
-    "readCount": 3,
-    "targetTokens": 3000,
+    "readCount": 6,
+    "targetTokens": 2200,
     "maxDocuments": 3,
-    "contextBudgetStatus": "pass",
-    "estimatedTokensRead": 836,
+    "contextBudgetStatus": "warn",
+    "estimatedTokensRead": 1854,
     "humanManualAutoRead": false,
     "overlayEvidence": [],
     "diagnostics": [],
     "blocking": false,
     "nextAction": "No V2.5 risk overlay evidence is currently routed; keep default context lean."
   },
+  "securityReview": {
+    "contractStatus": "not-applicable",
+    "activationSource": "not declared",
+    "notApplicableReason": "Reusable security-review evidence is not requested by current packet/runtime metadata."
+  },
   "contextBudget": null,
-  "llmJudge": null
+  "llmJudge": {
+    "schemaVersion": "standard-harness-llm-judge/v1",
+    "status": "not-run",
+    "gateEffect": "advisory-only",
+    "workItemId": "PLN-00",
+    "packetPath": "reference/planning/PLN-00_DEEP_INTERVIEW.md",
+    "providerInvocation": "not-used",
+    "contextPackage": {
+      "schemaVersion": "standard-harness-llm-judge-input-package/v1",
+      "status": "ready",
+      "allowedInputFields": [
+        "requirementsSummary",
+        "modelingImpact",
+        "packetAcceptance",
+        "diffSummary",
+        "testEvidenceResult"
+      ],
+      "forbiddenContextPolicy": "full chat/history, raw transcripts, unbounded generated docs, and workspace dumps are excluded",
+      "sourceRefs": [
+        {
+          "field": "requirementsSummary",
+          "path": ".agents/artifacts/REQUIREMENTS.md",
+          "status": "present"
+        },
+        {
+          "field": "modelingImpact",
+          "path": "reference/planning/PLN-00_DEEP_INTERVIEW.md",
+          "status": "present"
+        },
+        {
+          "field": "packetAcceptance",
+          "path": "reference/planning/PLN-00_DEEP_INTERVIEW.md",
+          "status": "present"
+        },
+        {
+          "field": "diffSummary",
+          "path": "reference/planning/PLN-00_DEEP_INTERVIEW.md",
+          "status": "present"
+        },
+        {
+          "field": "testEvidenceResult",
+          "path": ".agents/artifacts/VALIDATION_REPORT.json",
+          "status": "present"
+        }
+      ],
+      "inputs": {
+        "requirementsSummary": {
+          "sourceRef": ".agents/artifacts/REQUIREMENTS.md",
+          "summary": "# Requirements > AUTHORITATIVE. Governance requirements SSOT. Edit only through an approved planning boundary or packet. ## Status - v2.0 charter baseline prepared from Human Owner direction and legacy v0.2 requirements. - This document is the hope, direction, and goal of Standard Harness v2.0. - It intentionally prioritizes the Human Owner's operating mo..."
+        },
+        "modelingImpact": {
+          "sourceRef": "reference/planning/PLN-00_DEEP_INTERVIEW.md",
+          "status": "not-declared"
+        },
+        "packetAcceptance": {
+          "sourceRef": "reference/planning/PLN-00_DEEP_INTERVIEW.md",
+          "summary": "section missing"
+        },
+        "diffSummary": {
+          "sourceRef": "reference/planning/PLN-00_DEEP_INTERVIEW.md",
+          "summary": "Use packet-declared changed-file/classification evidence and implementation closeout diff summary; raw workspace dumps are excluded."
+        },
+        "testEvidenceResult": {
+          "sourceRef": ".agents/artifacts/VALIDATION_REPORT.json",
+          "summary": "Use current validation-report gate decision, findings, and explicit test evidence; this is not product verification."
+        }
+      }
+    },
+    "result": {
+      "status": "not-run",
+      "sourceMode": "not-run",
+      "sourcePath": ".agents/runtime/judge/PLN-00.json",
+      "canClaimLiveIndependentReview": false,
+      "rationale": "No LLM judge result artifact exists for this work item.",
+      "findings": [],
+      "disagreements": []
+    },
+    "diagnostics": []
+  }
 }

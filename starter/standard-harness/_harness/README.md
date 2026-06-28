@@ -64,7 +64,8 @@ The starter CLI file is `_harness/bin/harness_cli.py`.
 ```powershell
 python _harness\bin\harness_cli.py --json --harness-root . init
 python _harness\bin\harness_cli.py --json --harness-root . ops-reset
-python _harness\bin\harness_cli.py --json --harness-root . validate --starter
+python _harness\bin\harness_cli.py --json --harness-root . validate --starter --installed-runtime
+python _harness\bin\harness_cli.py --json --harness-root . validate --starter --clean-export
 ```
 
 `init` creates the harness state database and recreates missing `_ops/**` and
@@ -74,6 +75,12 @@ not overwrite existing product documents or operational records.
 `ops-reset` removes copied-project operating records under `_ops/` and recreates the
 required `_ops/**` and `product/docs/**` folder surface. It preserves `_harness/**` and
 existing product deliverables under `product/**`.
+
+`validate --starter --installed-runtime` checks a copied starter after local use and
+tolerates only approved runtime-generated state such as caches and `.harness` state.
+It is not clean export proof. `validate --starter --clean-export` is the strict export
+candidate check and rejects runtime state, caches, logs, generated reports, provider
+entry contracts, secrets, release evidence, and real operating history.
 
 Create the first low-risk packet before implementation starts:
 

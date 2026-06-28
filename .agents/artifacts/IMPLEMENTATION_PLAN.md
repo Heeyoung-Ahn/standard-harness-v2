@@ -565,9 +565,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT` is closed; latest closeout handoff is `planner -> planner`.
-- Keep the reusable baseline on planning hold until a new approved lane is selected.
-- Source packet: `reference/packets/PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md`.
+- `PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING` active handoff is `developer -> tester`.
+- Verify the implementation against the packet acceptance criteria.
+- Source packet: `reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary
