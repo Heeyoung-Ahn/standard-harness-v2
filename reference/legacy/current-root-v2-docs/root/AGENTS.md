@@ -35,7 +35,7 @@ it explains how a new project uses a copied clean payload. Harness contracts bel
 
 ## Product Direction
 
-Standard Harness v2 is not a direct copy of the existing `clean-starter-harness.zip`
+Standard Harness v2 is not a direct copy of the existing `reference/legacy/v1/standard-harness-v1.zip`
 system. The zip is the current production-use v1 harness and may be used as reference
 material, but v2 must be designed and implemented from the v2 requirements,
 architecture, and validation contracts in this repository.
@@ -47,7 +47,7 @@ reimplement it in the v2 architecture. Do not paste or bulk-promote v1 payload,
 runtime, `.agents`, `.harness`, plugin, reference, or generated-state files into this
 repository without explicit user approval and a documented promotion plan.
 
-V2.1 may inspect `clean-starter-harness.zip` as the current v1.0 harness reference,
+V2.1 may inspect `reference/legacy/v1/standard-harness-v1.zip` as the current v1.0 harness reference,
 but v1.0 must never redefine V2.1 goals, scope, priorities, architecture, or
 definition of done. Any v1.0 concept considered for V2.1 must be modified,
 completed, or reimplemented so it fits the V2.1 requirements, architecture, policy,
@@ -167,4 +167,3 @@ The first implementation goal should be XP-00 only unless the user explicitly
 authorizes a broader scope. XP-00 must close the requirement baseline, P0 policy,
 HR-003 guardrails, telemetry seed, minimum required skill list, and baseline
 regression status before XP-01 begins.
-

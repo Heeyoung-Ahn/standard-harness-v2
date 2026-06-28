@@ -76,13 +76,19 @@ when the coverage matrix below is closed.
 - none
 
 ## Current Iteration
-- PKT-01 Project Operating Folder Contract is the active first implementation packet.
+- No active implementation packet is currently open.
+- PKT-01 Project Operating Folder Contract is closed for its approved scope.
+- PKT-02A Naming And Status Reconciliation is closed for root-harness v1.0, starter-payload v2.0, and post-PKT-01 status truth cleanup.
+- PKT-02B Implementation Plan Requirement Alignment is closed for its approved scope after Orchestrator closeout routing and Planner closeout.
+- PKT-02 Risk-Adaptive Gate Profile Engine is closed after Orchestrator-routed implementation, testing, review, security evidence, and Planner closeout.
+- PKT-03 Documenter Closeout And Evidence Index is closed after Orchestrator-routed implementation, testing, review, security evidence, and Planner closeout for closeout report/evidence-index behavior.
 
 ## Dependency Order And Blocking Conditions
 - Requirements freeze precedes architecture sync, implementation-plan sync, and packet
   implementation.
-- PKT-01 folder contract precedes gate engine, documenter closeout, PM rhythm, long
-  memory, provider orchestration, skill routing, and compound feedback work.
+- PKT-01 folder contract is closed and remains the prerequisite for gate engine,
+  documenter closeout, PM rhythm, long memory, provider orchestration, skill routing, and
+  compound feedback work.
 - No wave may claim completion without tests, starter validation, review evidence, and
   planner closeout for its packet scope.
 
@@ -111,9 +117,9 @@ these reusable guardrails.
 | Clean starter payload | `starter/standard-harness/` has `_harness/`, `_ops/`, `product/` and passes starter validation when runtime caches are absent. | Good baseline, but copy/use smoke needs to remain part of every starter change. | Preserve and harden. |
 | Folder contract | `_harness/policies/project-operating-folders.yaml` defines folders and contamination rules. | Needs stronger reset/init behavior and explicit report/document placement validation. | Harden as first implementation wave. |
 | Packet kernel | `PacketService` supports packet type, risk level, gate profile version, approval, lifecycle, test plan, review plans, and closeout plan. | Packet creation CLI defaults are still thin; packet type/risk are not ergonomic enough for real operators. | Keep kernel, add packet authoring/preflight. |
-| Gate profile model | `gate-profiles.yaml` defines packet-type profiles and N/A rules. | Risk level does not yet materially adjust gate strength in a complete runtime gate engine. | Add risk-adaptive gate resolver and validators. |
-| Evidence and closeout | Evidence, claims, gate results, and closeout records exist. | Human closeout report contract is wrong location/shape; it must be max two pages in `product/docs/packets` with evidence index links. | Add Documenter report generator and evidence index. |
-| PM rhythm | PMO projection table/service exists. | No complete one-page day-start/day-wrap-up report generator and no WBS TSV update loop. | Build PM daily report surface. |
+| Gate profile model | `gate-profiles.yaml` defines packet-type profiles, risk levels, overlays, review-lens triggers, and N/A rules. | PM and memory consumers still need to use the evidence index in later waves. | Keep PKT-02 resolver/validator behavior and PKT-03 closeout consumption; route PM consumption to PKT-04 and memory consumption to PKT-05. |
+| Evidence and closeout | Closeout reports now target `product/docs/packets/` and validate linked `_ops/evidence/<packet-id>/` evidence indexes. PKT-04 PM reports and WBS output now cite evidence-index links. | Long-memory question answering does not yet consume the index. | Build long-memory source index next. |
+| PM rhythm | PMO projection table/service exists, and PKT-04 adds one-page day-start/day-wrap-up report generation, PMO placement validation, stale-summary checks, authority-boundary diagnostics, and WBS TSV support. | Long-memory question answering still needs to cite PM summaries without treating them as truth authority. | Route PM-summary consumption to PKT-05. |
 | Long memory | Wiki proposal validator/applier and operational memory snapshots exist. | Wiki pages are not yet fully connected to closeout/report/evidence index flow. | Build Documenter -> Wiki proposal -> validated apply path. |
 | Multi-LLM routing | Adapter manifest and workflow run records exist. | No practical provider-neutral orchestration workflow for assigning roles across Codex/GPT, Claude Code, and future providers. | Add manual-first routing contract, then adapter execution. |
 | Skill routing | Skill catalog/router exists. | Current starter does not yet expose a complete skill auto-use workflow for copied projects. | Add catalog validation and handoff prompts after core packet loop. |
@@ -201,6 +207,12 @@ Verification:
 ### Wave 2: Risk-Adaptive Gate Profile Engine
 Goal: make packet type and risk level drive real test/review strength.
 
+Implementation status: PKT-02 adds a root/starter gate profile engine contract. The root
+runtime computes required gates in `.harness/runtime/state/gate-profile-engine.js` and
+surfaces opt-in packet computation from packet preflight. The starter runtime mirrors the
+same behavior in `standard_harness.policy.gate_profiles.GateProfilePolicy`, backed by
+`_harness/policies/gate-profiles.yaml`.
+
 Scope:
 - Support `docs-only`, `product-feature`, `product-bugfix`, `product-refactor`,
   `security-data`, `harness-system`, and `starter-promotion`.
@@ -226,6 +238,10 @@ Acceptance:
   residual risk exists.
 - Harness-system and starter-promotion packets require boundary/starter validation.
 - N/A is rejected when changed files or claims contradict the N/A reason.
+- Wave 2 provides the gate and role-evidence backbone for `SHV2-REQ-044`, but it does not
+  close the full role-flow requirement by itself. Full closure also requires Documenter
+  evidence from Wave 3, PM continuity evidence from Wave 4, and Orchestrator/provider
+  routing evidence from Wave 6.
 
 Verification:
 - focused Python unit tests for gate resolver and validators
@@ -234,6 +250,14 @@ Verification:
 
 ### Wave 3: Documenter Closeout And Evidence Index
 Goal: turn packet completion into a compact human-readable report backed by structured evidence.
+
+Implementation status: PKT-03 adds root/starter closeout report and evidence-index
+contracts. The root runtime validates report placement, evidence index links, required
+gate evidence quality, N/A records, raw dumps, length limits, and wiki proposal
+boundaries in `.harness/runtime/state/closeout-evidence-index.js`. The starter mirrors
+the behavior in `standard_harness.evidence.index.EvidenceIndexContract`,
+`standard_harness.documenter.closeout_report.CloseoutReportDocumenter`, and
+`standard_harness.wiki.proposals.validate_documenter_output_paths`.
 
 Scope:
 - One closeout report per packet in `product/docs/packets/`.
@@ -267,24 +291,36 @@ Verification:
 ### Wave 4: PM Daily Rhythm And WBS Loop
 Goal: give the Human Owner a daily control surface without forcing code or MD-file review.
 
+Implementation status: closed by PKT-04 for the approved PM daily rhythm and WBS loop scope; PKT-04A narrows the starter PMO surface so high-volume PMO state stays structured instead of becoming many Markdown folders.
+
 Scope:
-- Day-start report: maximum one page.
+- Day-start report: generated/screen-oriented brief by default; maximum one page if persisted.
 - Day-wrap-up report: maximum one page.
+- `product/docs/pmo/` required starter surface is compact: `day-wrap-up` for durable
+  Markdown and `wbs` for TSV/CSV-compatible tracking.
+- PMO source-intake materials, daily records, status, risks, and blockers are structured
+  records, indexes, report sections, or optional exports without becoming mandatory
+  Markdown folder surfaces.
 - WBS and PM tracking remain TSV/CSV compatible.
 - PM summaries coordinate; they do not approve implementation, testing, review, release,
   closeout, or human gates.
 
 Implementation tasks:
-- Add PM report generator from packet state, PMO projection, evidence index, blockers,
-  risks, and decisions.
-- Add day-start and day-wrap-up output placement under `product/docs/pmo/`.
+- Add PM report generator from packet state, PMO projection, evidence index, source intake,
+  status, blockers, risks, daily report records, and decisions.
+- Add day-wrap-up output placement under `product/docs/pmo/`; day-start uses generated
+  view placement unless a later packet explicitly selects a persisted export.
 - Add WBS TSV update support.
+- Add PMO placement/metadata validation for compact human folders, WBS TSV, generated
+  day-start classification, and structured-state PMO records.
 - Add freshness checks so stale PM summaries cannot override canonical state.
 
 Acceptance:
 - Day-start reports last state, next packet/decision, blockers, risks, and decisions needed.
 - Day-wrap-up reports completed work, incomplete work, new risks, WBS changes, next work,
   blockers, and Human Owner questions.
+- PMO source-intake materials, daily records, status, risks, and blockers have explicit
+  structured or indexable references without requiring separate human Markdown folders.
 - Each report stays within the one-page limit.
 - PM outputs cite packet/evidence/state sources.
 
@@ -292,6 +328,7 @@ Verification:
 - PM projection tests
 - report length tests
 - TSV generation tests
+- PMO compact surface, structured-state, generated day-start, and legacy-folder tests
 - stale projection tests
 
 ### Wave 5: Long Memory And Human Question Answering
@@ -433,8 +470,8 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-023 | Wave 2 | none | Gate resolver computes versioned profile from packet type, risk level, changed zone, and release sensitivity. |
 | SHV2-REQ-024 | Wave 1 | none | Product source and human document folder validation passes. |
 | SHV2-REQ-025 | Wave 1 | Wave 3 | Packet document placement and closeout/evidence organization validation pass without making sample file names contractual. |
-| SHV2-REQ-026 | Wave 4 | none | PMO document placement, WBS TSV/CSV, day-start, and day-wrap-up tests pass. |
-| SHV2-REQ-027 | Wave 4 | Wave 6 | PM outputs are generated as coordination summaries and fail if treated as approval authority. |
+| SHV2-REQ-026 | Wave 4 | none | PKT-04 PMO placement, source-intake, WBS TSV, daily reports, day-start, day-wrap-up, status, risk, and blocker tests pass. |
+| SHV2-REQ-027 | Wave 4 | Wave 6 | PKT-04 PM outputs are generated as coordination summaries and fail if treated as approval authority; Wave 6 owns provider-neutral orchestration boundaries. |
 | SHV2-REQ-028 | Wave 2 | Wave 3 | TDD/test-plan evidence distinguishes RED/GREEN or rationale, regression evidence, and closeout support. |
 | SHV2-REQ-029 | Wave 2 | Wave 7 | Domain/refactor gates and long-running refactor proposal checks pass. |
 | SHV2-REQ-030 | Wave 2 | Wave 3 | Product functional-test validators reject marker-only or file-existence-only evidence. |
@@ -450,23 +487,43 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-040 | Wave 0 | Wave 2 | Planning intent remains human-reviewable Markdown and implementation packets cannot proceed without reviewed planning baseline. |
 | SHV2-REQ-041 | Wave 3 | none | Each packet can produce one max two-page closeout report plus evidence index links. |
 | SHV2-REQ-042 | Wave 5 | Wave 8 | Long memory preserves compact evidence-backed project intent, decisions, conventions, packet history, frictions, risks, and deprecated context. |
-| SHV2-REQ-043 | Wave 4 | none | Day-start/day-wrap-up reports provide daily continuity, WBS updates, blockers, risks, next work, and human decision prompts within one page. |
-| SHV2-REQ-044 | Wave 2 | Waves 3, 4, 6 | Human/Planner, Developer, Tester, Reviewer, Documenter, PM, and Orchestrator flow is enforceable by packet/gate/role evidence. |
+| SHV2-REQ-043 | Wave 4 | none | PKT-04 day-start/day-wrap-up reports provide daily continuity, WBS updates, blockers, risks, next work, and human decision prompts within one page. |
+| SHV2-REQ-044 | Wave 2 | Waves 3, 4, 6 | Wave 2 supplies packet/gate/role evidence enforcement but cannot close the requirement alone; full closure requires Human/Planner, Developer, Tester, Reviewer, Documenter, PM, and Orchestrator evidence across Waves 2, 3, 4, and 6. |
 | SHV2-REQ-045 | Wave 2 | none | Baseline gate profiles exist and are validated for all required packet types. |
 | SHV2-REQ-046 | Wave 2 | none | Risk escalation/de-escalation tests prove hard stops cannot be waived. |
 | SHV2-REQ-047 | Wave 3 | Wave 4 | Evidence index links cover tests, regression, browser/E2E, reviews, gates, risk decisions, wiki/memory, and PM/WBS impact. |
+
+## Packet Decision Gates For Open Questions
+Open questions from `REQUIREMENTS.md` remain allowed planning questions, but they must not
+silently block or rewrite packet scope. Each affected packet must either close its gate,
+record a valid N/A or defer disposition, or route the decision back to Planner before
+implementation starts.
+
+| Open Question | Decision Gate | Affected Packet(s) | Required Disposition Before Ready For Code |
+|---|---|---|---|
+| Root-to-starter changes directly in packet scope vs later `harness:promote-starter` flow | Starter sync and promotion boundary gate | PKT-02, PKT-08 | PKT-02 must not imply promotion; PKT-08 owns reusable starter-promotion mechanics unless a future packet explicitly changes that boundary. |
+| Exact `_ops/` reset command and evidence-retention policy | Operating-state reset and evidence-retention gate | PKT-03, PKT-04, PKT-05 | Packet must state whether `_ops` reset/retention behavior is in scope, N/A, or deferred to a named follow-up before implementation. |
+| Provider examples that remain provider-neutral | Provider-neutral example gate | PKT-06 | Packet must classify provider examples as policy examples only and prove no provider-specific file becomes starter identity. |
+| Minimum PM artifacts required as starter contract vs sample files | PMO artifact minimum-contract gate | PKT-04 | closed by PKT-04 with required PMO folders, WBS TSV columns, one-page report limit, stale-summary checks, evidence-index links, and coordination-only authority validation. |
+| Mandatory review lenses vs risk-triggered review lenses | Review-lens trigger gate | PKT-02, PKT-07 | Packet must define which review lenses are baseline, which are risk-triggered, and which N/A substitute checks are valid. |
+| Two-page closeout report template and evidence index schema | Closeout report and evidence-index schema gate | PKT-03 | closed by PKT-03 with report length validation, evidence-index links, required-gate evidence checks, N/A records, raw-dump guard, and wiki-proposal boundaries. |
+| Canonical risk level names | Risk taxonomy gate | PKT-02 | Packet must decide or explicitly defer canonical risk names before implementing gate resolver behavior. |
+| Mandatory starter long-memory pages vs on-demand memory | Long-memory seed gate | PKT-05 | Packet must define required seed pages or on-demand creation rules before memory snapshot/query behavior is implemented. |
+| Authoritative hot operating state store | Hot-state authority gate | PKT-05, PKT-06 | Packet must state which structured state source is authoritative for the implemented behavior and how generated summaries remain read models. |
 
 ## Initial Packet Roadmap
 | Order | Packet | Purpose | Risk Mode | Required Verification |
 |---|---|---|---|---|
 | 1 | PKT-01 Project Operating Folder Contract | Enforce clean starter folder semantics and reset/init boundary. | guarded | starter validation, folder policy tests, contamination checks |
-| 2 | PKT-02 Risk-Adaptive Gate Profile Engine | Make packet type and risk level compute real required gates. | guarded | gate resolver tests, packet validation tests, closeout negative tests |
-| 3 | PKT-03 Documenter Closeout And Evidence Index | Produce max two-page human closeout reports with linked evidence index. | guarded | report schema/length tests, evidence index tests, wiki proposal tests |
-| 4 | PKT-04 PM Daily Rhythm And WBS Loop | Produce max one-page day-start/day-wrap-up reports and WBS TSV updates. | standard | PM report tests, TSV tests, stale projection tests |
-| 5 | PKT-05 Long Memory And Question Answering Index | Connect closeout, wiki, PM, evidence, and active context for compact answers. | guarded | memory/context tests, sensitive evidence tests |
-| 6 | PKT-06 Provider-Neutral Orchestration Contract | Add manual-first multi-provider role routing and adjudication records. | guarded | adapter/routing tests, contamination tests |
-| 7 | PKT-07 Skill Routing And Operator Ergonomics | Make required skills discoverable and evidence-linked. | standard | skill router tests, context budget tests |
-| 8 | PKT-08 Compound Feedback And Starter Promotion | Convert friction into improvement and starter-promotion candidates. | guarded | friction/proposal tests, promote-starter smoke |
+| 2 | PKT-02A Naming And Status Reconciliation | Reconcile root-harness v1.0, starter-payload v2.0, legacy version-label wording, and current status truth. | contract | naming search, status parity, packet preflight, validator, root tests |
+| 3 | PKT-02B Implementation Plan Requirement Alignment | Align requirement coverage, open-question gates, and packet ordering before PKT-02. | contract | requirement trace check, roadmap order check, packet preflight, validator |
+| 4 | PKT-02 Risk-Adaptive Gate Profile Engine | Make packet type and risk level compute real required gates. | completed | gate resolver tests, packet validation tests, closeout negative tests, starter validation, full regression |
+| 5 | PKT-03 Documenter Closeout And Evidence Index | Produce max two-page human closeout reports with linked evidence index. | completed | report schema/length tests, evidence index tests, wiki proposal tests, required-gate evidence tests, starter validation, full regression |
+| 6 | PKT-04 PM Daily Rhythm And WBS Loop | Produce max one-page day-start/day-wrap-up reports and WBS TSV updates. | completed | PM report tests, WBS TSV tests, stale projection tests, authority-boundary tests, PMO placement tests, starter validation, full regression |
+| 7 | PKT-05 Long Memory And Question Answering Index | Connect closeout, wiki, PM, evidence, and active context for compact answers. | guarded | memory/context tests, sensitive evidence tests |
+| 8 | PKT-06 Provider-Neutral Orchestration Contract | Add manual-first multi-provider role routing and adjudication records. | guarded | adapter/routing tests, contamination tests |
+| 9 | PKT-07 Skill Routing And Operator Ergonomics | Make required skills discoverable and evidence-linked. | standard | skill router tests, context budget tests |
+| 10 | PKT-08 Compound Feedback And Starter Promotion | Convert friction into improvement and starter-promotion candidates. | guarded | friction/proposal tests, promote-starter smoke |
 
 ## Verification Baseline
 Each implementation packet must define its own exact commands. The common baseline is:
@@ -508,10 +565,10 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-Review the rebased PKT-01 Project Operating Folder Contract and request explicit Human
-Owner `Ready For Code` approval. PKT-01 should not implement risk-adaptive gates,
-closeout reporting, PM rhythm, or orchestration except where needed to preserve the folder
-contract and starter validation boundary.
+- `PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT` is closed; latest closeout handoff is `planner -> planner`.
+- Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Source packet: `reference/packets/PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md`.
+- Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary
 Keep this file focused on implementation direction and packet sequencing.

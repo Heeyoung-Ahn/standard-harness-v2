@@ -38,7 +38,8 @@
     "product/docs/project/ui-design",
     "product/docs/packets",
     "product/docs/pmo",
-    "product/docs/pmo/daily-wrap-up"
+    "product/docs/pmo/day-wrap-up",
+    "product/docs/pmo/wbs"
   ],
   "zones": {
     "_harness": {
@@ -68,9 +69,16 @@
     },
     "product/docs": {
       "primaryReader": "human",
-      "purpose": "Human-facing project, packet, and PMO documents.",
+      "purpose": "Human-facing project, packet, and compact PMO documents.",
       "proseFormat": ".md",
-      "pmoTableFormat": ".tsv"
+      "pmoTableFormat": ".tsv",
+      "pmoSurfaceContract": {
+        "humanMarkdownFolders": ["day-wrap-up"],
+        "structuredFolders": ["wbs"],
+        "generatedViews": ["day-start"],
+        "structuredStateRecords": ["source-intake", "daily-reports", "status", "risks", "blockers"],
+        "forbiddenFolders": ["daily-wrap-up"]
+      }
     }
   },
   "sampleOnlyFiles": [

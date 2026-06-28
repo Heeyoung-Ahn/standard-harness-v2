@@ -81,6 +81,117 @@
       ]
     }
   },
+  "riskLevels": {
+    "low": {
+      "addGates": []
+    },
+    "standard": {
+      "addGates": []
+    },
+    "high": {
+      "addGates": [
+        "broader-regression-evidence",
+        "independent-review",
+        "residual-risk-tracking"
+      ]
+    },
+    "critical": {
+      "addGates": [
+        "broader-regression-evidence",
+        "independent-review",
+        "residual-risk-tracking",
+        "release-grade-validation",
+        "rollback-or-backout-evidence",
+        "review-final-adjudication",
+        "human-residual-risk-approval"
+      ]
+    }
+  },
+  "riskAliases": {
+    "normal": "standard",
+    "medium": "standard",
+    "release-sensitive": "critical"
+  },
+  "overlays": {
+    "release-sensitive": {
+      "addGates": [
+        "release-grade-validation",
+        "rollback-or-backout-evidence",
+        "review-final-adjudication",
+        "human-residual-risk-approval"
+      ]
+    },
+    "browser-facing": {
+      "addGates": [
+        "e2e-applicability",
+        "user-workflow-review"
+      ]
+    },
+    "security-sensitive": {
+      "addGates": [
+        "security-hard-gate",
+        "security-review",
+        "human-residual-risk-approval"
+      ]
+    },
+    "data-sensitive": {
+      "addGates": [
+        "data-integrity-review",
+        "security-review"
+      ]
+    },
+    "harness-system": {
+      "addGates": [
+        "harness-validation",
+        "boundary",
+        "starter-impact"
+      ]
+    },
+    "starter-promotion": {
+      "addGates": [
+        "starter-contamination",
+        "manual-smoke",
+        "harness-validation"
+      ]
+    }
+  },
+  "reviewLensTriggers": {
+    "requirements": [
+      "product-feature",
+      "product-bugfix",
+      "security-data",
+      "harness-system",
+      "starter-promotion"
+    ],
+    "challenge": [
+      "high",
+      "critical",
+      "security-sensitive",
+      "release-sensitive",
+      "harness-system",
+      "starter-promotion"
+    ],
+    "user-workflow-e2e": [
+      "browser-facing",
+      "product-feature"
+    ],
+    "security": [
+      "security-data",
+      "security-sensitive",
+      "data-sensitive"
+    ],
+    "refactor": [
+      "product-refactor",
+      "harness-system"
+    ],
+    "boundary-starter": [
+      "harness-system",
+      "starter-promotion"
+    ],
+    "closeout": [
+      "all"
+    ]
+  },
   "naRules": {
     "docs-only-no-runtime-change": {
       "packetTypes": [

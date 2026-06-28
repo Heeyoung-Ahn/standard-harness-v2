@@ -19,6 +19,7 @@ import { evaluateParallelBatchPlan } from "./parallel-batch.js";
 import { evaluateSecurityReviewEvidence } from "./security-evidence.js";
 import { evaluateTddEvidenceContract } from "./tdd-evidence.js";
 import { evaluateRiskAdaptiveGate } from "./risk-adaptive-gates.js";
+import { evaluatePacketGateProfile } from "./gate-profile-engine.js";
 import { selectActiveWorkItem } from "./workflow-routing.js";
 import { evaluateEvidenceManifestBinding } from "./evidence-manifest.js";
 import { evaluateBrowserEvidenceBinding } from "./browser-evidence.js";
@@ -161,6 +162,13 @@ function buildPacketPreflight({ store, repoRoot, options }) {
         gateProfile,
         deliveryRouteMode,
         routeClass: changeZoneClassification?.effectiveRouteClass ?? routeClass
+      })
+    : null;
+  const computedGateProfile = content
+    ? evaluatePacketGateProfile({
+        repoRoot,
+        content,
+        changedFiles
       })
     : null;
   const evidenceManifest = content
@@ -315,6 +323,19 @@ function buildPacketPreflight({ store, repoRoot, options }) {
     }
   }
 
+  if (computedGateProfile?.present) {
+    checks.push({
+      field: "Computed Gate Profile",
+      status: computedGateProfile.diagnostics?.some((item) => item.status === "block") ? "block" : "pass",
+      current: computedGateProfile.selectedGateProfile ?? "missing",
+      expected: "packet type, risk level, changed zone, and overlays compute required gates"
+    });
+    findings.push(...(computedGateProfile.diagnostics ?? []));
+    errors.push(...(computedGateProfile.diagnostics ?? [])
+      .filter((item) => item.status === "block")
+      .map((item) => item.message));
+  }
+
   if (evidenceManifest) {
     checks.push({
       field: "Evidence Manifest Contract",
@@ -403,6 +424,7 @@ function buildPacketPreflight({ store, repoRoot, options }) {
     securityReview,
     parallelBatch,
     riskAdaptive,
+    computedGateProfile,
     evidenceManifest,
     browserEvidence,
     authoringGuide,

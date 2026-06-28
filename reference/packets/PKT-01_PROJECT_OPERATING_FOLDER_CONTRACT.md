@@ -11,6 +11,12 @@ This packet protects all later v2 work from confusing the root development harne
 the product payload, from polluting the copied starter with root history, and from placing
 human documents, operating records, or harness-system files in the wrong zone.
 
+## Starter v2.0 Target And Philosophy Gate
+- Implementation target: This repository's implementation target is the clean Standard Harness v2 payload under `starter/standard-harness/`.
+- Root-change boundary: root 파일을 수정할 수는 있지만, 그 이유는 starter v2.0 구현/검증/운영을 위한 것이어야 합니다.
+- v2.0 philosophy parity gate: before Ready For Code and closeout, confirm the packet preserves the clean starter payload, provider-neutral product identity, evidence-backed completion, compact human review surfaces, structured LLM operating state, and root/starter boundary.
+- Gate status: satisfied for this closed packet. PKT-01 established the root/starter boundary and clean payload folder contract.
+
 ## Packet Decision Header
 | Item | Value | Status |
 |---|---|---|

@@ -183,9 +183,9 @@ const SECURITY_REVIEW_ARTIFACT_AUDIT_RULES = [
   {
     code: "release_artifact_security_approval_claim",
     severity: "warning",
-    pattern: /\bsecurity approval(?: granted| complete| completed| passed)?\b/i,
-    message: "A release-facing artifact appears to overstate local automation as security approval.",
-    recovery: "Reword the release-facing artifact so it does not imply that local automation equals final security approval."
+    pattern: new RegExp("\\bsecurity\\s+approval(?: granted| complete| completed| passed)?\\b", "i"),
+    message: "A release-facing artifact appears to overstate local automation as final security signoff.",
+    recovery: "Reword the release-facing artifact so it does not imply that local automation equals final security signoff."
   }
 ];
 
@@ -1202,10 +1202,10 @@ function buildSecurityReviewSummary({ store, repoRoot, findings = [] }) {
       operatorNextActions: buildSecurityReviewNextActions({ blockingErrors, warnings }),
       humanReviewStillRequired: [
         "Internal IT/security review is still required for the listed review-required capability categories.",
-        "Local automation prepares reusable evidence only. It does not grant formal security approval."
+        "Local automation prepares reusable evidence only. It does not grant formal security signoff."
       ],
       outOfScopeNote:
-        "This summary is for internal IT/security review preparation only. It does not replace hosted CI, organization-specific approval forms, project-specific runbooks, or formal security approval.",
+        "This summary is for internal IT/security review preparation only. It does not replace hosted CI, organization-specific approval forms, project-specific runbooks, or formal security signoff.",
       dependencyInventory: dependencyInventory.summary,
       localSecretScan: secretScan.summary,
       releaseArtifactAudit: releaseArtifactAudit.summary

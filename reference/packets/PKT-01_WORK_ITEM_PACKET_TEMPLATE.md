@@ -7,6 +7,9 @@
 
 ## Approval Rule
 - 이 packet은 구현 전에 작성한다.
+- This repository's implementation target is the clean Standard Harness v2 payload under `starter/standard-harness/`.
+- root 파일을 수정할 수는 있지만, 그 이유는 starter v2.0 구현/검증/운영을 위한 것이어야 합니다.
+- Every packet checklist must include a `v2.0 philosophy parity gate` before Ready For Code and closeout.
 - 이 packet은 먼저 `Core / Optional Profile / Project Packet` 중 어디에 속하는지 판정한다.
 - 이 packet은 `light / standard / contract / release` 중 하나의 Gate profile을 선언하고 profile별 required evidence를 닫는다.
 - one-or-more active optional profiles가 있으면 approved profile references와 required profile-specific evidence 없이는 `Ready For Code`로 올리지 않는다.
@@ -40,6 +43,7 @@
 | Work item | [작업 이름] | [왜 지금 하는지] | draft |
 | Ready For Code | approve / adjust / hold | [코드 착수 가능 여부 근거] | draft |
 | Human sync needed | yes / no | [왜 필요한지] | draft |
+| v2.0 philosophy parity gate | pass / pending / blocked | [clean starter payload, provider-neutral identity, evidence-backed completion, compact human review surface, structured state, root/starter boundary 충족 여부] | draft |
 | Gate profile | light / standard / contract / release | [필요한 검증 강도] | draft |
 | Risk class | low / normal / high / critical | [declared risk; validator-derived risk may raise effective risk] | draft |
 | Route class | fast-path / packet-path / strict-path | [작업 진입 방식; gate profile이 아님] | draft |

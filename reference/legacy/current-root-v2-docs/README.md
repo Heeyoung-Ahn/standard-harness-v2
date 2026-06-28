@@ -17,8 +17,10 @@ developing the clean Standard Harness payload under `starter/standard-harness/`.
 - `docs/architecture/`: provider-neutral architecture and repository topology
   contracts.
 - `docs/implementation/`, `docs/manual/`, `docs/release/`, `docs/decisions/`,
-  `docs/reviews/`, `docs/superpowers/`, `docs/reference/`: current implementation,
-  validation, review, release, and historical reference documents.
+  `docs/reviews/`, `docs/superpowers/`: current implementation, validation,
+  review, release, and historical planning documents.
+- Historical reference material previously under `docs/reference/` is now easier to
+  find under `reference/legacy/v1/` and `reference/legacy/v2-ideas/`.
 - `_harness/contracts/`: current root harness requirement and trace contracts.
 - `_harness/policies/`: current root harness policies that may be useful when aligning
   the replacement root harness with the starter payload goal.

@@ -76,6 +76,14 @@ class OperatingFolderContractTests(unittest.TestCase):
         self.assertIn('"product/docs/project/ui-design"', policy)
         self.assertIn('"product/docs/packets"', policy)
         self.assertIn('"product/docs/pmo"', policy)
+        self.assertIn('"product/docs/pmo/source-intake"', policy)
+        self.assertIn('"product/docs/pmo/wbs"', policy)
+        self.assertIn('"product/docs/pmo/daily-reports"', policy)
+        self.assertIn('"product/docs/pmo/day-start"', policy)
+        self.assertIn('"product/docs/pmo/day-wrap-up"', policy)
+        self.assertIn('"product/docs/pmo/status"', policy)
+        self.assertIn('"product/docs/pmo/risks"', policy)
+        self.assertIn('"product/docs/pmo/blockers"', policy)
 
     def test_cli_ops_reset_reports_reset_folders(self) -> None:
         root = copy_starter()

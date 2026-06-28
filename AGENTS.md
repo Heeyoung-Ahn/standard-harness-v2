@@ -1,6 +1,6 @@
 # Standard Harness Codex Entry Contract
 
-This file is the first-read operating contract for Codex in standard-harness V2.8. It is the complete Codex entry contract; there is no secondary `workspace.md` entry hop.
+This file is the first-read operating contract for Codex in the root development harness v1.0. It is the complete Codex entry contract; there is no secondary `workspace.md` entry hop.
 
 ## Repository Product Target
 

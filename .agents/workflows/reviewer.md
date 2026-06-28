@@ -24,6 +24,33 @@
 - Do not redefine requirements or architecture as part of review findings.
 - Do not close release readiness without the required evidence.
 
+## Review Lens Minimums
+Use these four minimum lenses when reviewing packet closeout. Keep findings evidence-backed and route remediation instead of absorbing another role's authority.
+
+### `challenge_review`
+- Check whether approved scope, user intent, Planner-approved SSOT, and packet acceptance were narrowed or omitted.
+- Check whether the implementation satisfies work/product intent, not only tests.
+- Check whether scope was reinterpreted without Planner approval.
+
+### `adversarial_security_review`
+- Check auth/authz bypass.
+- Check secret/session/token exposure.
+- Check injection, path traversal, and untrusted input handling.
+- Check fail-closed behavior for protected flows.
+- Record residual security risk and the owner decision needed to accept it.
+
+### `code_quality_review`
+- Check module boundary and dependency direction.
+- Check error handling and transaction/state consistency.
+- Check testability and meaningful negative cases.
+- Check temporary workaround or modeling bypass.
+- Check maintainability and regression risk.
+
+### `evidence_review`
+- Check whether packet acceptance maps to tests and evidence.
+- Check that schema-only, API-only, or render-only evidence is not overvalued.
+- Check browser evidence, DB restart persistence, and audit proof against the actual requirement level when applicable.
+
 ## Must Read SSOT
 - `.agents/artifacts/REQUIREMENTS.md`
 - `.agents/artifacts/ARCHITECTURE_GUIDE.md`
