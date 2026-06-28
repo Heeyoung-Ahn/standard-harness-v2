@@ -48,3 +48,35 @@ All commands were run from `C:\Newface\30 Github\standard-harness-v2`.
 ## Residual Risks
 - Full gate engine, documenter closeout generator, PM rhythm, long memory question answering, multi-provider orchestration, and skill routing remain deferred by packet scope.
 - This workspace is not currently a Git worktree, so commit/push evidence is not available in this closeout.
+
+---
+
+# PKT-04B Walkthrough Evidence
+
+## Packet
+- Packet: `PKT-04B Clean Starter Lifecycle Hardening`
+- Date: 2026-06-28
+- Route: Orchestrator -> Developer -> Tester -> Reviewer -> Planner closeout
+- Scope: separate copied-starter runtime validation from clean export proof; harden contamination checks, compact PMO tests, and bounded smoke temp cleanup.
+
+## Verification Commands
+| Command | Cwd | Result |
+|---|---|---|
+| `python -m unittest _harness.test.test_operating_folder_contract` | `starter/standard-harness` | pass, 10 tests |
+| `python -m unittest discover _harness\test` | `starter/standard-harness` | pass, 28 tests |
+| `python _harness\bin\harness_cli.py --json --harness-root . validate --starter --installed-runtime` | `starter/standard-harness` | pass, `validationMode=installed-runtime`, `cleanExportProof=false`, `runtimeGeneratedStateTolerated=true` |
+| `node .harness/runtime/state/dev05-cli.js packet-preflight --packet reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md --stage implementation-transition` | repo root | pass, `Disposition: implementation-ready` |
+
+## Acceptance Mapping
+| Acceptance | Evidence |
+|---|---|
+| Runtime and clean-export validation are distinguishable | CLI flags and JSON metadata distinguish `installed-runtime` from `clean-export` |
+| Clean export rejects cache contamination | `test_clean_export_validation_rejects_runtime_cache_files` |
+| Clean export rejects representative non-cache contamination | `test_clean_export_validation_rejects_representative_non_cache_contamination` |
+| Runtime validation is not reported as clean export proof | direct CLI smoke output reports `cleanExportProof=false` |
+| Compact PMO tests match PKT-04A | PMO folder contract test requires `day-wrap-up` and `wbs`, not legacy broad Markdown folders |
+| Smoke temp cleanup is bounded | smoke workspace cleanup tests cover success deletion and path-safety refusal |
+
+## Untested Or Out Of Scope
+- Release packaging, starter promotion, and PKT-05 long-memory work remain out of scope.
+- Global PLN-00/PLN-01 baseline hold remains a separate project-state blocker, not a PKT-04B behavior failure.

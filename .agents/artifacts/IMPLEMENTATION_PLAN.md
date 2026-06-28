@@ -565,8 +565,8 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING` active handoff is `developer -> tester`.
-- Verify the implementation against the packet acceptance criteria.
+- `PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING` active handoff is `reviewer -> planner`.
+- Plan the next approved lane or close remaining planning decisions.
 - Source packet: `reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 

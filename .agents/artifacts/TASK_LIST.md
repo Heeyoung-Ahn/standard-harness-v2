@@ -4,13 +4,13 @@
 
 ## Current Release Target
 - Define the first approved project baseline for Standard Harness v2 Starter Payload Development on top of the standard harness starter.
-- Generated At: 2026-06-28T10:43:33.709Z
-- Active work item count: 16
+- Generated At: 2026-06-28T11:51:56.926Z
+- Active work item count: 14
 
 ## Active Locks
 | Task ID | Scope | Owner | Status | Started At | Notes |
 |---|---|---|---|---|---|
-| PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING | Clean Starter Lifecycle Hardening | tester | active | 2026-06-28 | developer-to-tester; gate contract; Verify the implementation against the packet acceptance criteria. |
+| PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING | Clean Starter Lifecycle Hardening | planner | active | 2026-06-28 | reviewer-to-planner; gate contract; Plan the next approved lane or close remaining planning decisions. |
 | REV-01 | Release review gate | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
 | TST-02 | Operator comprehension check | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
 | SEC-01 | Security and operational risk review | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
@@ -23,14 +23,12 @@
 | DEV-01 | First approved implementation packet | - | active | - | generated; gate unknown; Wait for the upstream planning gate to close. |
 | PKT-01 | First work packet approval | - | active | - | generated; gate unknown; Open the first project packet only after PLN-01 is approved and the baseline sync is complete. |
 | DSG-01 | Rough UX direction | - | active | - | generated; gate unknown; Lock the rough direction and global behavior contract. |
-| PLN-01 | Requirements freeze | - | active | - | generated; gate unknown; Freeze the Standard Harness v2 Starter Payload Development requirements baseline after PROJECT_STARTER_DOC_PACK and PLN-00 are concrete. |
 | PLN-02 | Baseline sync | - | active | - | generated; gate unknown; Sync architecture, implementation, and UI after requirements approval. |
-| PLN-00 | Kickoff interview | - | active | - | generated; gate unknown; Fill PROJECT_STARTER_DOC_PACK, close PLN-00 kickoff interview, and approve PLN-01 requirements freeze for Standard Harness v2 Starter Payload Development. |
 
 ## Active Tasks
 | Task ID | Title | Scope | Owner | Status | Priority | Depends On | Verification |
 |---|---|---|---|---|---|---|---|
-| PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING | Clean Starter Lifecycle Hardening | Clean Starter Lifecycle Hardening | tester | review | P0 | - | gate contract; Verify the implementation against the packet acceptance criteria. |
+| PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING | Clean Starter Lifecycle Hardening | Clean Starter Lifecycle Hardening | planner | planning | P0 | - | gate contract; Plan the next approved lane or close remaining planning decisions. |
 | REV-01 | Release review gate | Release review gate | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
 | TST-02 | Operator comprehension check | Operator comprehension check | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
 | SEC-01 | Security and operational risk review | Security and operational risk review | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
@@ -43,23 +41,25 @@
 | DEV-01 | First approved implementation packet | First approved implementation packet | - | todo | P0 | - | gate unknown; Wait for the upstream planning gate to close. |
 | PKT-01 | First work packet approval | First work packet approval | - | todo | P0 | - | gate unknown; Open the first project packet only after PLN-01 is approved and the baseline sync is complete. |
 | DSG-01 | Rough UX direction | Rough UX direction | - | todo | P0 | - | gate unknown; Lock the rough direction and global behavior contract. |
-| PLN-01 | Requirements freeze | Requirements freeze | - | todo | P0 | - | gate unknown; Freeze the Standard Harness v2 Starter Payload Development requirements baseline after PROJECT_STARTER_DOC_PACK and PLN-00 are concrete. |
 | PLN-02 | Baseline sync | Baseline sync | - | todo | P0 | - | gate unknown; Sync architecture, implementation, and UI after requirements approval. |
-| PLN-00 | Kickoff interview | Kickoff interview | - | in_progress | P0 | - | gate unknown; Fill PROJECT_STARTER_DOC_PACK, close PLN-00 kickoff interview, and approve PLN-01 requirements freeze for Standard Harness v2 Starter Payload Development. |
-- Next first action: Verify the implementation against the packet acceptance criteria.
+- Next first action: Plan the next approved lane or close remaining planning decisions.
 - Generated compatibility fallback only; regenerate rather than editing this file manually.
 
 ## Blocked Tasks
 | Task ID | Blocker | Owner | Status | Unblock Condition | Verification |
 |---|---|---|---|---|---|
-| RISK-INIT-01 | Standard Harness v2 Starter Payload Development requirements baseline is not approved yet | planner | medium | Resolve the recorded blocker or risk. | .agents/artifacts/REQUIREMENTS.md |
+| - | None | - | clear | - | - |
 
 ## Completed Tasks
 | Task ID | Title | Completed At | Verification | Notes |
 |---|---|---|---|---|
-| - | None | - | - | - |
+| PLN-01 | Requirements freeze | - | transition unknown -> planner; gate unknown | Closed in canonical operational state. PLN-01 requirements freeze is closed; Planner may choose the next approved lane without granting Ready For Code. |
+| PLN-00 | Kickoff interview | - | transition unknown -> planner; gate unknown | Closed in canonical operational state. PLN-00 kickoff interview is closed; use PLN-01 requirements freeze and approved packets for next planning. |
 
 ## Handoff Log
+- 2026-06-28: [planner -> planner] [planner -> planner] PLN-00/PLN-01 baseline blockers and decisions are closed from approved requirements evidence; Planner should choose the next approved lane.
+- 2026-06-28: [reviewer -> planner] [reviewer -> planner] Packet exit approved; Planner should choose or refine the next lane.
+- 2026-06-28: [tester -> reviewer] [tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.
 - 2026-06-28: [developer -> tester] [developer -> tester] Developer implementation completed; Tester should verify the approved scope.
 - 2026-06-28: [orchestrator -> developer] [orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.
 - 2026-06-28: [planner -> orchestrator] [planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.

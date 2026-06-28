@@ -35,3 +35,38 @@ No blocking findings remain.
 ## Adjudication
 - Earlier root test failures exposed missing compatibility anchors in planning documents. They were corrected and the affected tests now pass.
 - The final state is acceptable for Planner closeout of PKT-01.
+
+---
+
+# PKT-04B Review Report
+
+## Review Scope
+- Packet: `PKT-04B Clean Starter Lifecycle Hardening`
+- Review date: 2026-06-28
+- Review lenses: source alignment, acceptance and evidence coverage, risk/regression pressure, authority-boundary preservation.
+
+## Findings
+No blocking findings after second pass.
+
+## Second-Pass Note
+- Source alignment: implementation matches the packet scope for clean-export/runtime mode separation, contamination classification, compact PMO test alignment, smoke cleanup safety, and docs wording.
+- Acceptance and evidence coverage: focused operating-folder tests, full starter unittest discovery, direct CLI runtime-mode smoke, and packet preflight cover the packet acceptance items.
+- Risk and regression pressure: clean export remains strict; installed/runtime mode is explicitly labeled as not clean export proof; release/starter promotion remains out of scope.
+- Authority boundaries: Ready For Code was explicit; Developer implemented approved scope; Tester evidence was reproduced; this review does not approve release, publish, starter promotion, PKT-05, or global PLN-00/PLN-01 baseline closeout.
+
+## Source Parity Review
+- Matches `REQUIREMENTS.md` clean starter intent by keeping reusable starter export proof strict.
+- Matches `IMPLEMENTATION_PLAN.md` Wave 1 corrective scope and preserves PKT-04A compact PMO interpretation.
+- Matches packet non-goals: no release/publish, no starter promotion, no PKT-05 long-memory work, and no broad CLI redesign beyond mode clarity.
+
+## Evidence Quality Review
+- Positive evidence: `python -m unittest _harness.test.test_operating_folder_contract`, `python -m unittest discover _harness\test`, direct `validate --starter --installed-runtime`, and packet preflight all passed.
+- Negative evidence: tests cover cache contamination, representative non-cache contamination, runtime-mode non-export labeling, compact PMO expectations, and path-bounded smoke cleanup.
+- Browser evidence is N/A because PKT-04B changed CLI/runtime/tests/docs only and no web UI behavior.
+
+## Residual Risks
+- Global harness status still reports a hold from PLN-00/PLN-01 baseline state. This blocks a clean global project closeout claim but does not invalidate PKT-04B packet-local review.
+- Actual starter promotion remains deferred to the approved promotion/release packet.
+
+## Adjudication
+- PKT-04B is acceptable for Planner closeout of the approved packet scope.
