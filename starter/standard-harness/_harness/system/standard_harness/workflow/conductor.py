@@ -7,6 +7,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+from standard_harness.policy.risk import RISK_ORDER
+from standard_harness.policy.risk import normalize_risk_level
+from standard_harness.policy.risk import risk_value
 from standard_harness.state.store import HarnessStore
 
 
@@ -16,7 +19,6 @@ PROVIDER_ENTRY_FILES = {
 }
 
 TRUSTED_APPROVAL_CHANNELS = {"trusted_harness_command", "trusted_harness_service"}
-RISK_ORDER = {"low": 0, "standard": 1, "medium": 1, "normal": 1, "high": 2, "critical": 3}
 
 
 @dataclass(frozen=True)
@@ -662,11 +664,8 @@ def _prerequisite_verified(value: Any) -> bool:
 
 
 def _normalize_risk(risk: str) -> str:
-    normalized = risk.strip().lower().replace("-", "_")
-    if normalized in {"medium", "normal"}:
-        return "standard"
-    return normalized
+    return normalize_risk_level(risk, default="standard", unknown="critical")
 
 
 def _risk_value(risk: str) -> int:
-    return RISK_ORDER.get(_normalize_risk(risk), RISK_ORDER["critical"])
+    return risk_value(risk, unknown="critical")

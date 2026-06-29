@@ -200,7 +200,7 @@ class SkillPackageRegistry:
                     {"requiresSuperpowersPlugin": False, "providerNeutral": True},
                 )
             ),
-            "permissionScope": skill.get("permissionScope", {"allowedWriteZones": []}),
+            "permissionScope": non_authorizing_permission_scope(skill.get("permissionScope", {})),
             "authorityBoundary": skill.get("authorityBoundary", "packet_workflow_human"),
             "requiredNextPackageIds": list(skill.get("requiredNextSkills", [])),
             "requiredEvidence": {
@@ -315,6 +315,20 @@ def validate_route_output_contract(route: dict[str, Any]) -> list[str]:
         if entry.get("evidencePath") != LEDGER_PATH:
             diagnostics.append(f"route_invalid_ledger_evidence_path:{entry.get('packageId')}")
     return sorted(set(diagnostics))
+
+
+def non_authorizing_permission_scope(permission_scope: dict[str, Any] | None) -> dict[str, Any]:
+    declared = list((permission_scope or {}).get("allowedWriteZones", []))
+    return {
+        "allowedWriteZones": [],
+        "declaredSkillWriteZones": declared,
+        "authorizationMode": "non_authorizing_hint",
+        "mustIntersectWith": [
+            "role-permissions",
+            "packet-zone-policy",
+            "human-approval-boundary",
+        ],
+    }
 
 
 def build_conductor_brief(

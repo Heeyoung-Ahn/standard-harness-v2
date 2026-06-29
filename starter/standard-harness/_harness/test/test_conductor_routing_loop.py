@@ -229,6 +229,7 @@ class ConductorRoutingLoopTests(unittest.TestCase):
         direct = policy.route(packet_id="PKT-07", risk_level="low", importance_level="low")
         single = policy.route(packet_id="PKT-07", risk_level="standard", importance_level="standard")
         dual = policy.route(packet_id="PKT-07", risk_level="high", importance_level="high")
+        unknown = policy.route(packet_id="PKT-07", risk_level="unclear", importance_level="low")
         packet_authoring = policy.route(
             packet_id="PKT-07",
             risk_level="high",
@@ -239,6 +240,8 @@ class ConductorRoutingLoopTests(unittest.TestCase):
         self.assertEqual(direct["selected_route"], "conductor_direct")
         self.assertEqual(single["selected_route"], "single_cli_agent")
         self.assertEqual(dual["selected_route"], "cross_llm_worker_verifier")
+        self.assertEqual(unknown["risk_level"], "critical")
+        self.assertEqual(unknown["selected_route"], "cross_llm_worker_verifier")
         self.assertEqual(packet_authoring["selected_route"], "dual_provider_packet_authoring")
         self.assertEqual(packet_authoring["selected_workers"][0]["assigned_role"], "Planner")
         self.assertEqual(packet_authoring["selected_workers"][1]["assigned_role"], "packet_doc_reviewer")

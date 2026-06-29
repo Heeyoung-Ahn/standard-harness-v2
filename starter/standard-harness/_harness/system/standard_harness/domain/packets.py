@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from uuid import uuid4
 
+from standard_harness.policy.risk import normalize_risk_level
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore
 
@@ -81,13 +82,15 @@ class PacketService:
             out_of_scope_summary or (out_of_scope_items[0] if out_of_scope_items else "")
         )
         now = utc_now_iso()
+        normalized_risk_class = normalize_risk_level(risk_class, default="standard", unknown="critical")
+        normalized_risk_level = normalize_risk_level(risk_level or risk_class, default="standard", unknown="critical")
         packet = {
             "packet_id": packet_id,
             "title": title,
             "objective": objective,
             "packet_type": packet_type,
-            "risk_class": risk_class,
-            "risk_level": risk_level or risk_class,
+            "risk_class": normalized_risk_class,
+            "risk_level": normalized_risk_level,
             "maturity_level": maturity_level,
             "lifecycle_state": "planned",
             "approval_state": "pending" if approval_required else "not_required",

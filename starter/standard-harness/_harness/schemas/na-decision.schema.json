@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "standard-harness-v2.1/na-decision.schema.json",
-  "title": "Standard Harness V2.1 Rule-Based N/A Decision",
+  "$id": "standard-harness-v2/na-decision.schema.json",
+  "title": "Standard Harness v2 Rule-Based N/A Decision",
   "type": "object",
   "additionalProperties": true,
   "required": [

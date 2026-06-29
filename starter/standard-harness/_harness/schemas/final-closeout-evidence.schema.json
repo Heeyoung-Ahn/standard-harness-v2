@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "standard-harness://schemas/final-closeout-evidence.schema.json",
-  "title": "V2.1 Final Closeout Evidence",
+  "title": "Standard Harness v2 Final Closeout Evidence",
   "type": "object",
   "required": [
     "evidenceId",

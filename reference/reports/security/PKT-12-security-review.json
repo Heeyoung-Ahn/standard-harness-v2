@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "standard-harness-security-review/v1",
+  "workItemId": "PKT-12_SCHEMA_PERMISSION_BOUNDARY_CLEANUP",
+  "packetPath": "reference/packets/PKT-12_SCHEMA_PERMISSION_BOUNDARY_CLEANUP.md",
+  "status": "pass",
+  "decision": "accept",
+  "scope": [
+    "starter schema identity",
+    "risk taxonomy compatibility",
+    "copied-starter agent permissions",
+    "copied-starter logical zones",
+    "copied-starter skill catalog permission scopes",
+    "skill-router non-authorizing permission output",
+    "starter contamination negative fixture",
+    "copied-starter source-clean cache boundary"
+  ],
+  "findings": [],
+  "residualRisk": [],
+  "evidence": [
+    "reference/reports/security/PKT-12-permission-boundary.md",
+    "reference/reports/validation/PKT-12-targeted-tests.md",
+    "reference/reports/starter/PKT-12-copied-starter-smoke.md",
+    "reference/reports/validation/PKT-12-validator-rejections.md"
+  ],
+  "notes": [
+    "Permission changes narrow copied-starter write scope.",
+    "Skill catalog write scopes no longer grant root development artifact, packet, report, manual, or planning paths.",
+    "Skill router output and provider worker briefs expose catalog write zones only as declared non-authorizing hints.",
+    "Starter source tree contains zero cache directories and zero .pyc files after remediation, clean-export diagnostics are zero, and validation commands use -B where Python test execution is required.",
+    "No secret, credential, network, package, or provider runtime dependency was introduced."
+  ]
+}

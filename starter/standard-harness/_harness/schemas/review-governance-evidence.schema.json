@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "V2.1 Review Governance Evidence",
+  "title": "Standard Harness v2 Review Governance Evidence",
   "type": "object",
   "required": ["evidenceId", "generatedBy", "sourceEventRange", "reviews"],
   "properties": {

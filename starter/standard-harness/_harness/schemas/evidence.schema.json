@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "standard-harness-v2.1/evidence.schema.json",
-  "title": "Standard Harness V2.1 Evidence",
+  "$id": "standard-harness-v2/evidence.schema.json",
+  "title": "Standard Harness v2 Evidence",
   "type": "object",
   "additionalProperties": true,
   "required": [

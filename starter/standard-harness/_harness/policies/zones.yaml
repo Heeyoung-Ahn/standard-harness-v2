@@ -14,9 +14,6 @@
       "packages/**",
       "services/**",
       "infra/**"
-    ],
-    "starter": [
-      "starter/standard-harness/**"
     ]
   },
   "packetTypeRules": {
@@ -59,30 +56,26 @@
     "harness-system": {
       "allowedLogicalWriteZones": [
         "harness",
-        "ops",
-        "starter"
+        "ops"
       ],
       "forbiddenWriteZones": []
     },
     "harness-policy": {
       "allowedLogicalWriteZones": [
         "harness",
-        "ops",
-        "starter"
+        "ops"
       ],
       "forbiddenWriteZones": []
     },
     "harness-validator": {
       "allowedLogicalWriteZones": [
         "harness",
-        "ops",
-        "starter"
+        "ops"
       ],
       "forbiddenWriteZones": []
     },
     "starter-promotion": {
       "allowedLogicalWriteZones": [
-        "starter",
         "ops",
         "harness"
       ],

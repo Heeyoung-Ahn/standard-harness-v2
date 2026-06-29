@@ -1,7 +1,7 @@
 # Validation Report
 
 ## Summary
-- Executed at: 2026-06-29T15:22:45.835Z
+- Executed at: 2026-06-29T16:31:27.906Z
 - Validator version: v1.3
 - Cutover ready: yes
 - Gate decision: pass
@@ -45,6 +45,8 @@
 - reference/packets/PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-11_STATE_AND_CLOSURE_BASELINE.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
+  - modeling impact: status required, required yes, diagnostics 0
+- reference/packets/PKT-12_SCHEMA_PERMISSION_BOUNDARY_CLEANUP.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 
 ## Findings

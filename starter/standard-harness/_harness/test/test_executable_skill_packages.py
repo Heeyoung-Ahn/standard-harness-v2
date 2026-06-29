@@ -73,6 +73,30 @@ class ExecutableSkillPackageTests(unittest.TestCase):
         self.assertIn("codex_cli", route["providerWorkerBrief"]["supportedWorkers"])
         self.assertIn("claude_code_cli", route["providerWorkerBrief"]["supportedWorkers"])
         self.assertEqual(route["providerWorkerBrief"]["selectedWorkerSurface"], "claude_code_cli")
+        self.assertEqual(route["allowedWriteZones"], [])
+        self.assertIn("_harness/test/**", route["declaredSkillWriteZones"])
+        self.assertEqual(route["permissionBoundary"]["authorizationMode"], "non_authorizing_hint")
+        for descriptor in route["providerWorkerBrief"]["packageDescriptors"]:
+            self.assertEqual(descriptor["permissionScope"]["allowedWriteZones"], [])
+            self.assertEqual(descriptor["permissionScope"]["authorizationMode"], "non_authorizing_hint")
+        self.assertEqual(validate_route_output_contract(route), [])
+
+    def test_skill_route_does_not_grant_catalog_write_zones_as_effective_permission(self) -> None:
+        route = SkillRouter.from_repo(STARTER_ROOT).route(
+            task_type="implementation",
+            role="developer",
+            intent_text="implement with tests",
+            planning_boundary_closed=True,
+        )
+
+        self.assertEqual(route["status"], "selected")
+        self.assertEqual(route["allowedWriteZones"], [])
+        self.assertTrue(any(zone.startswith("_harness/") for zone in route["declaredSkillWriteZones"]))
+        self.assertEqual(route["permissionBoundary"]["effectiveAllowedWriteZones"], [])
+        self.assertIn("packet-zone-policy", route["permissionBoundary"]["mustIntersectWith"])
+        for descriptor in route["packageDescriptors"]:
+            self.assertEqual(descriptor["permissionScope"]["allowedWriteZones"], [])
+            self.assertIn("declaredSkillWriteZones", descriptor["permissionScope"])
         self.assertEqual(validate_route_output_contract(route), [])
 
     def test_route_outputs_package_candidates_skips_chain_ledger_and_context_budget(self) -> None:

@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from standard_harness.policy.risk import normalize_risk_level
+
 
 class GateProfilePolicy:
     def __init__(self, policy: dict[str, Any]):
@@ -31,15 +33,11 @@ class GateProfilePolicy:
         return list(self._packet_profile(packet_type)["requiredGates"])
 
     def normalize_risk_level(self, risk_level: str | None) -> str:
-        normalized = _normalize_token(risk_level or "standard")
         aliases = {
             _normalize_token(key): _normalize_token(value)
             for key, value in self.policy.get("riskAliases", {}).items()
         }
-        normalized = aliases.get(normalized, normalized)
-        if normalized not in {"low", "standard", "high", "critical"}:
-            return "standard"
-        return normalized
+        return normalize_risk_level(risk_level, aliases=aliases, default="standard", unknown="critical")
 
     def resolve_required_gates(
         self,

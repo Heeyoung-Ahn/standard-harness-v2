@@ -21,6 +21,9 @@ class GateProfileEngineTests(unittest.TestCase):
         self.assertEqual(self.policy.normalize_risk_level("normal"), "standard")
         self.assertEqual(self.policy.normalize_risk_level("medium"), "standard")
 
+    def test_unknown_risk_fails_closed_to_critical(self) -> None:
+        self.assertEqual(self.policy.normalize_risk_level("unclear"), "critical")
+
     def test_low_docs_only_remains_lightweight(self) -> None:
         resolved = self.policy.resolve_required_gates(packet_type="docs-only", risk_level="low")
 

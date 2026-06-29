@@ -11,6 +11,7 @@ from standard_harness.skills.packages import SkillPackageRegistry
 from standard_harness.skills.packages import build_conductor_brief
 from standard_harness.skills.packages import build_provider_worker_brief
 from standard_harness.skills.packages import intent_digest
+from standard_harness.skills.packages import non_authorizing_permission_scope
 from standard_harness.skills.packages import sanitize_intent_text
 
 
@@ -134,6 +135,16 @@ class SkillRouter:
             for skill in ordered
             for zone in skill.get("permissionScope", {}).get("allowedWriteZones", [])
         })
+        permission_boundary = {
+            "authorizationMode": "non_authorizing_hint",
+            "declaredSkillWriteZones": allowed,
+            "effectiveAllowedWriteZones": [],
+            "mustIntersectWith": [
+                "role-permissions",
+                "packet-zone-policy",
+                "human-approval-boundary",
+            ],
+        }
         chain = self._chain_edges(ordered)
         bounded_package_chain = [
             {"fromPackageId": edge["from"], "toPackageId": edge["to"]}
@@ -212,7 +223,9 @@ class SkillRouter:
             "noSuperpowersRuntimeDependency": self.package_registry.no_superpowers_runtime_dependency(),
             "no-superpowers-runtime-dependency": self.package_registry.no_superpowers_runtime_dependency(),
             "evidenceRequired": any(bool(skill.get("evidenceContract", {}).get("required")) for skill in ordered),
-            "allowedWriteZones": allowed,
+            "allowedWriteZones": [],
+            "declaredSkillWriteZones": allowed,
+            "permissionBoundary": permission_boundary,
             "fallbackBehavior": first.get("fallbackBehavior"),
             "evidenceContract": first.get("evidenceContract", {}),
             "skillUseLedgerPath": LEDGER_PATH,

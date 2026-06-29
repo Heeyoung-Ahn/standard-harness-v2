@@ -60,6 +60,8 @@ class OperatingFolderContractTests(unittest.TestCase):
         (root / "_ops" / "packets" / "PKT-OLD.md").write_text("history", encoding="utf-8")
         (root / "_ops" / "evidence" / "result.json").write_text("{}", encoding="utf-8")
         (root / "_ops" / "active-context" / "ACTIVE_CONTEXT.json").write_text("{}", encoding="utf-8")
+        (root / "_ops" / "wiki" / "page.md").write_text("wiki state", encoding="utf-8")
+        (root / "_ops" / "wiki-proposals" / "proposal.md").write_text("wiki proposal state", encoding="utf-8")
 
         diagnostics = StarterContaminationChecker().check_root(root)
         codes = {diagnostic["error_code"] for diagnostic in diagnostics}
@@ -67,6 +69,7 @@ class OperatingFolderContractTests(unittest.TestCase):
         self.assertIn("real_packet_history", codes)
         self.assertIn("real_evidence_history", codes)
         self.assertIn("generated_active_context", codes)
+        self.assertIn("real_wiki_state", codes)
 
     def test_clean_export_validation_rejects_runtime_cache_files(self) -> None:
         root = self.copy_starter()

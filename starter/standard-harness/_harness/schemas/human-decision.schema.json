@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "standard-harness-v2.1/human-decision.schema.json",
-  "title": "Standard Harness V2.1 Human Decision",
+  "$id": "standard-harness-v2/human-decision.schema.json",
+  "title": "Standard Harness v2 Human Decision",
   "type": "object",
   "additionalProperties": true,
   "required": [

@@ -157,6 +157,8 @@ def _classify(path: str, *, content_path: Path | None = None) -> str | None:
     normalized_parts = tuple(part.lower() for part in parts)
     if lowered_parts.intersection({".git", ".agents", ".codex"}):
         return "development_artifact"
+    if _starts_with(normalized_parts, ("starter", "standard-harness")):
+        return "copied_starter_root_path_leak"
     if name in {"agents.md", "agent.md", "claude.md", "gemini.md"}:
         return "provider_specific_entry_contract"
     if name.endswith((".sqlite", ".sqlite3", ".db")):
@@ -195,6 +197,10 @@ def _classify(path: str, *, content_path: Path | None = None) -> str | None:
             return "real_evidence_history"
         if _contains_sequence(normalized_parts, ("_ops", "active-context")):
             return "generated_active_context"
+        if _contains_sequence(normalized_parts, ("_ops", "wiki")):
+            return "real_wiki_state"
+        if _contains_sequence(normalized_parts, ("_ops", "wiki-proposals")):
+            return "real_wiki_state"
     return None
 
 
@@ -253,6 +259,8 @@ def _is_real_ops_history(parts: tuple[str, ...], name: str) -> bool:
         _contains_sequence_with_child(parts, ("_ops", "packets"))
         or _contains_sequence_with_child(parts, ("_ops", "evidence"))
         or _contains_sequence_with_child(parts, ("_ops", "active-context"))
+        or _contains_sequence_with_child(parts, ("_ops", "wiki"))
+        or _contains_sequence_with_child(parts, ("_ops", "wiki-proposals"))
     )
 
 
@@ -309,6 +317,8 @@ def _is_runtime_generated_diagnostic(starter_root: Path, diagnostic: dict[str, o
     if error_code == "development_packet_state" and normalized.startswith(".harness/"):
         return True
     if error_code in {"real_packet_history", "real_evidence_history", "generated_active_context"}:
+        return True
+    if error_code == "real_wiki_state":
         return True
     return False
 

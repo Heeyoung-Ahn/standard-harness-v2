@@ -111,19 +111,17 @@
         "_ops/wiki/**"
       ]
     },
-    "harness-developer": {
+    "harness-maintainer": {
       "readZones": [
         "*"
       ],
       "allowedLogicalWriteZones": [
         "harness",
-        "ops",
-        "starter"
+        "ops"
       ],
       "allowedWriteZones": [
         "_harness/**",
-        "_ops/evidence/**",
-        "starter/standard-harness/**"
+        "_ops/evidence/**"
       ]
     }
   },
