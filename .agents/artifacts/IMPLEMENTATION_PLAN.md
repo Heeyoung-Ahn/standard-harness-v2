@@ -81,9 +81,9 @@ when the coverage matrix below is closed.
 - none
 
 ## Current Iteration
-- PKT-10 Compound Feedback And Starter Promotion is the active Orchestrator-routed
-  implementation packet after explicit Human Owner Ready For Code approval on
-  2026-06-29.
+- PKT-10 Compound Feedback And Starter Promotion is closed for its approved scope after
+  explicit Human Owner Ready For Code approval, Orchestrator-routed delivery, and
+  Planner closeout.
 - PKT-01 Project Operating Folder Contract is closed for its approved scope.
 - PKT-02A Naming And Status Reconciliation is closed for root-harness v1.0, starter-payload v2.0, and post-PKT-01 status truth cleanup.
 - PKT-02B Implementation Plan Requirement Alignment is closed for its approved scope after Orchestrator closeout routing and Planner closeout.
@@ -99,6 +99,9 @@ when the coverage matrix below is closed.
 - PKT-10 owns the Wave 9 SHV2-REQ-016 implementation lane for friction signals,
   recurring groups, improvement proposals, metrics, wiki/long-memory candidates, and
   starter-promotion candidates that stop at `approval-needed`.
+- The next planning direction is v2.0 hardening: convert the implemented pieces into a
+  stable copied-starter operating loop with queryable operating intelligence, real
+  Conductor/worker adjudication, automatic friction capture, and promotion rehearsal.
 
 ## Dependency Order And Blocking Conditions
 - Requirements freeze precedes architecture sync, implementation-plan sync, and packet
@@ -566,6 +569,134 @@ Verification:
 - starter promotion dry-run tests
 - copied-starter smoke tests
 
+## v2.0 Hardening Implementation Plan
+This section is the post-PKT-10 hardening direction. It is planning guidance only; it
+does not approve implementation or open Ready For Code for any packet.
+
+Hardening goal: turn the v2.0 starter from a set of implemented service slices into a
+complete operating loop that a Human Owner can use without reading code or raw logs.
+
+The hardening work should preserve the existing kernel and focus on the connections
+between state, evidence, PM records, closeout, wiki memory, LLM worker results,
+Conductor adjudication, friction signals, and starter promotion.
+
+### Hardening Packet Sequence
+| Order | Packet | Outcome | Changed Surface | Risk Mode | Required Verification |
+|---|---|---|---|---|---|
+| 14 | PKT-11 State And Closure Baseline | Reconcile PKT-07 through PKT-10 closeout with root operational state, artifact registration, Active Context parity, validation report parity, and the requirements-to-implementation closure matrix. | root state commands, artifact index, validation summaries, implementation-plan/requirements closure evidence | contract | `harness:validate`, context regeneration, packet registration diagnostics, closure matrix review |
+| 15 | PKT-12 Schema Permission Boundary Cleanup | Align risk taxonomy, schema version labels, copied-starter permission policy, and root/starter path boundaries so the payload has no development-repo leakage or ambiguous v2.0/v2.1 identity. | starter schemas, policies, validators, focused tests, boundary docs | high | schema validation tests, permission negative tests, starter validation, root validation |
+| 16 | PKT-13 Operating Intelligence And QA | Extend the existing long-memory/question-answering runtime into a queryable operating-intelligence source model and Human Owner QA CLI/status surface that answers what happened, why, evidence, risks, and next work. | `standard_harness.memory.question_answering`, CLI/status surface, evidence pointers, sensitivity/freshness checks, bounded context retrieval | high | QA source-index tests, token-budget/context tests, stale/sensitive evidence negative tests, named QA CLI smoke, copied-starter status query smoke |
+| 17 | PKT-14 Conductor Worker E2E | Prove the provider-neutral worker loop where Codex CLI and Claude Code CLI workers execute bounded tasks or deterministic fixtures, return evidence, and the selected Conductor adjudicates results without gaining implicit approval authority. | Conductor CLI/service surface, command descriptor validation, worker output envelopes, adjudication records, provider examples, approval/delegation checks | high | deterministic worker fixture E2E, real CLI smoke when tools are available or explicit N/A, delegated approval hard-stop tests, provider-neutral contamination tests, starter validation |
+| 18 | PKT-15 Compound Loop And Starter Promotion Rehearsal | Wire automatic `RuntimeFrictionCapture` call sites into validation, PM, review, closeout, and context-budget paths; promote repeated friction into improvement proposals and starter-promotion candidates; run dry-run and copied-starter smoke rehearsal. | friction call sites, improvement proposal lifecycle, starter-promotion candidate flow, promotion dry-run, copied-starter rehearsal evidence | starter-promotion overlay required | friction call-site integration tests, duplicate-suppression tests, proposal/promotion tests, promotion dry-run, copied-starter smoke validation |
+
+### Hardening Concern Coverage Matrix
+This matrix is a packet-opening checklist. Before any hardening packet requests Ready For
+Code, Planner must copy or reference the relevant rows in that packet's acceptance, and
+independent `packet_doc_review` must confirm the row is not dropped or weakened. Reviewer
+closeout must cite implementation and evidence for each row assigned to the packet, or
+record an explicit defer to a named later packet.
+
+| Concern | Requirement IDs | Owning Packet | Required Closure Evidence |
+|---|---|---|---|
+| `harness:validate` fails on `validation_report_context_parity_break`, `task_packet_registration_missing`, `structural_preflight_failed`, and `cutover_preflight_failed`. | SHV2-REQ-011, 021, 022, 031, 040, 044, 047 | PKT-11 | Root validation passes or remaining diagnostics are explicitly converted into approved follow-up scope with evidence; PKT-07 through PKT-10 are registered consistently in operational state and artifact index. |
+| Active Context, validation report, generated summaries, and packet closeout state disagree after PKT-10. | SHV2-REQ-035, 038, 039, 042, 044 | PKT-11 | Regenerated context and validation summaries agree with governance truth; generated summaries are not manually edited. |
+| `IMPLEMENTATION_PLAN.md` and `REQUIREMENTS.md` contain stale status or open-question drift after completed packets. | SHV2-REQ-001..048, especially 040, 044 | PKT-11 | Closure matrix maps completed packet outcomes to requirement IDs, implementation plan status, open-question dispositions, positive evidence, negative evidence, closeout evidence, residual risk, defer owner, and Reviewer disposition. |
+| Runtime risk taxonomy uses `low`, `standard`, `high`, `critical` while starter packet schema still exposes `medium` as enum and omits `standard`. | SHV2-REQ-023, 045, 046 | PKT-12 | Schema, policy, tests, and compatibility rules agree on canonical risk names and any alias behavior. |
+| Starter schema `$id` or title labels still expose ambiguous `v2.1` identity inside a v2.0 payload. | SHV2-REQ-001, 002, 003, 005, 006 | PKT-12 | Version namespace policy is explicit, and schema identifiers/titles either align or are documented as non-product schema versions with tests. |
+| Copied starter permission policy includes root-development concepts such as `harness-developer`, `starter` logical zone, or `starter/standard-harness/**`. | SHV2-REQ-002, 003, 005, 007, 008, 018, 022 | PKT-12 | Permission policy and validator tests reject root development path leakage in a copied starter. |
+| Clean starter contamination checks do not explicitly cover the full forbidden set. | SHV2-REQ-002, 003, 004, 005, 018, 022 | PKT-12, PKT-15 | Negative fixtures and copied-starter smoke cover `.agents`, `.harness`, `AGENTS.md`, root history, generated runtime state, packet evidence, wiki state, local DB files, caches, secrets, and provider-specific entry contracts. |
+| Conductor exists as service/test behavior but lacks a complete operator-facing E2E command path. | SHV2-REQ-006, 019, 020, 048 | PKT-14 | CLI/service flow proves Conductor selection, worker routing, result intake, adjudication, and next-route output. |
+| Real Codex CLI and Claude Code CLI worker execution is not proven as a provider-neutral operating loop. | SHV2-REQ-006, 019, 020, 048 | PKT-14 | Deterministic fixture E2E is mandatory; real local CLI smoke is required when tools and approvals are available, otherwise an explicit N/A records limitations. Fixture-only evidence must not claim real CLI execution. |
+| Conductor adjudication could be mistaken for implicit Ready For Code, closeout, release, or residual-risk approval. | SHV2-REQ-020, 022, 027, 034, 044, 048 | PKT-14 | Delegated approval hard-stop tests prove Conductor routing/adjudication never grants approval without scoped Human delegation through a trusted command/service. |
+| Long-memory QA remains service-centered rather than a reliable Human Owner query surface. | SHV2-REQ-036, 039, 042, 043 | PKT-13 | Named QA CLI/status surface answers what happened, why, evidence, risk, and next work from indexed sources. |
+| Closeout, PM, wiki, evidence, review, friction, and active context are not yet unified as queryable operating intelligence. | SHV2-REQ-015, 033, 038, 039, 041, 042, 047 | PKT-13 | Source model records source type, authority, trust, freshness, sensitivity, evidence pointer, and answer contract for every queryable source. |
+| QA and long-memory query behavior could regress into broad raw evidence loading or generated-summary authority. | SHV2-REQ-017, 035, 038, 039, 042 | PKT-13 | Tests prove bounded source loading, compact index-first retrieval, token-budget limits, stale-context pruning, and treating product docs, logs, browser pages, and LLM reports as data rather than instructions. |
+| Long-memory reset/retention behavior is not clearly aligned with `ops-reset` and evidence retention. | SHV2-REQ-009, 018, 022, 038, 042 | PKT-13 | Query/index reset policy matches implemented `ops-reset` behavior and preserves evidence-retention boundaries. |
+| Existing validation, PM, review, closeout, and context-budget paths do not automatically call `RuntimeFrictionCapture`. | SHV2-REQ-016, 034, 042 | PKT-15 | Call-site integration tests prove automatic friction capture from those paths without manual CLI-only entry. |
+| Repeated friction is not yet a closed loop into improvement proposal and starter-promotion candidate generation. | SHV2-REQ-016, 033, 042 | PKT-15 | Repeated friction produces evidence-linked improvement proposals and starter-promotion candidates that stop at approval-needed. |
+| Starter promotion dry-run and copied-starter smoke validation are not yet proven as a real usage loop. | SHV2-REQ-002, 003, 016, 022, 045, 046 | PKT-15 | Dry-run plus copied-starter smoke evidence proves promotion candidates can be rehearsed without contaminating the starter payload and with the starter-promotion gate overlay active. |
+
+### Hardening Packet Readiness Requirements
+Before any PKT-11 through PKT-15 packet asks for Ready For Code:
+- The packet acceptance must reference the applicable Hardening Concern Coverage Matrix
+  rows, including requirement IDs, not only packet names.
+- The packet must name exact command templates, expected evidence artifacts, negative
+  fixtures, and Reviewer closeout proof.
+- `packet_doc_review` must reject prose-only closure, fixture-only claims that imply real
+  execution, missing requirement IDs, missing negative tests, or missing defer owner.
+- Reviewer closeout must cite implementation evidence, positive tests, negative tests,
+  residual risk or defer disposition, and the requirement IDs for every assigned row.
+
+PKT-11 readiness:
+- Source-of-truth order: governance Markdown and packet closeout evidence first,
+  operational DB/artifact index second, generated Active Context and generated summaries
+  last. Generated summaries must be regenerated, not manually edited.
+- Required command sequence template:
+  `npm.cmd run harness:sync-state`, `npm.cmd run harness:validate`,
+  `npm.cmd run harness:validation-report`, `npm.cmd run harness:context`, and
+  `npm.cmd run harness:status`.
+- Required closure matrix schema: requirement ID, implementing packet, implemented
+  surface, positive evidence, negative evidence, closeout evidence, residual risk,
+  defer packet if any, and Reviewer disposition.
+
+PKT-12 readiness:
+- The packet must include a compatibility matrix for canonical risk enum, accepted
+  aliases, migration behavior, schema namespace rationale, affected schema/policy/
+  validator files, root-only role disposition, and copied-starter rejection tests for
+  root-development paths.
+
+PKT-13 readiness:
+- The packet must extend the existing `standard_harness.memory.question_answering`
+  surface, including `LongMemorySourceIndexBuilder` and
+  `LongMemoryQuestionAnsweringService`, unless it records an explicit architecture
+  decision for a different model.
+- The packet must name the QA CLI/status command and JSON answer contract fields for
+  question, answer, what happened, why, evidence refs, risk, next action, freshness,
+  sensitivity, and unsupported claims.
+
+PKT-14 readiness:
+- Deterministic fixture-backed E2E is mandatory for command descriptor validation,
+  output envelopes, adjudication records, timeout/nonzero-exit handling, stale evidence,
+  command injection rejection, and delegated approval bypass rejection.
+- Real Codex CLI and Claude Code CLI smoke evidence is required only when local tool
+  availability, authentication, sandbox, and Human approval boundaries are explicit.
+  Otherwise the packet must record real-execution N/A and must not claim real execution.
+
+PKT-15 readiness:
+- The packet must include a call-site matrix: source module/function, trigger condition,
+  `RuntimeFrictionCapture` method, recurrence key, evidence artifact, duplicate
+  suppression rule, and test fixture.
+- The packet must use the `starter-promotion` gate profile or an explicit
+  starter-promotion overlay, including contamination checks, copied-starter smoke,
+  harness validation, independent review evidence, and approval-needed stop tests.
+
+### Hardening Split Rules
+- Keep PKT-11 first because failed root validation or stale operational state makes later
+  evidence and status answers unreliable.
+- Keep PKT-12 before broad copied-starter rehearsals because schema, permission, and
+  version-boundary drift can invalidate the payload boundary.
+- Split PKT-13 only if the source model and Human Owner QA CLI cannot fit in one packet
+  with clear tests. The source model must come before query behavior.
+- Keep PKT-14 separate because real CLI worker execution and Conductor adjudication have
+  different security, provider-neutrality, and approval-boundary risks than QA.
+- Keep PKT-15 separate because automatic friction capture and starter promotion affect
+  recurring improvement loops and should not be hidden inside QA or Conductor work.
+
+### Hardening Acceptance Focus
+- Human Owner can ask what happened, why it happened, what evidence supports it, what
+  risks remain, and what the next action is.
+- Long-memory answers cite structured evidence and freshness/sensitivity status instead
+  of relying on generated-summary prose alone.
+- Conductor receives worker outputs, adjudicates them, and routes next action without
+  silently granting Ready For Code, closeout, release, or residual-risk approval.
+- Friction signals are captured automatically at existing validation, PM, review,
+  closeout, and context-budget call sites.
+- Improvement proposals and starter-promotion candidates remain approval-gated and
+  contamination-checked.
+- Copied-starter smoke validation proves the loop works outside the root development
+  harness without root history, generated state, evidence history, provider-specific
+  entry contracts, caches, or secrets.
+
 ## Requirement Coverage Matrix
 This matrix maps every confirmed requirement to at least one implementation wave. A wave
 does not close the requirement by name alone; it must produce the required implementation,
@@ -656,6 +787,11 @@ implementation starts.
 | 11 | PKT-09 Skill Routing And Operator Ergonomics | Make required skills discoverable, process-prioritized, and evidence-linked. | guarded | skill router tests, hard-gate tests, chaining tests, ledger tests, context budget tests |
 | 12 | PKT-09A Executable Skill Packages And Dual-Provider Skill Use | Turn skill-routing contracts into complete structured packages that Codex/Claude Conductors and workers can auto-select and use. | high | package inventory tests, package registry tests, selected-Conductor tests, dual-provider worker handoff tests, no-superpowers-runtime tests |
 | 13 | PKT-10 Compound Feedback And Starter Promotion | Convert friction into improvement and starter-promotion candidates. | guarded | friction/proposal tests, promote-starter smoke |
+| 14 | PKT-11 State And Closure Baseline | Reconcile completed v2.0 packets with operational state, artifact registration, validation parity, and closure matrix. | contract | root validation, context regeneration, artifact-index diagnostics, closure-matrix review |
+| 15 | PKT-12 Schema Permission Boundary Cleanup | Remove schema, risk taxonomy, permission, version-label, and root/starter boundary drift from the copied starter payload. | high | schema tests, permission tests, starter validation, root validation |
+| 16 | PKT-13 Operating Intelligence And QA | Extend existing long-memory/question-answering services into a queryable operating-intelligence layer and Human Owner QA CLI/status surface. | high | source-index tests, token-budget/context tests, named QA CLI smoke, stale/sensitive evidence negative tests, copied-starter query smoke |
+| 17 | PKT-14 Conductor Worker E2E | Run deterministic worker E2E fixtures and, when available with explicit boundaries, real Codex CLI and Claude Code CLI smoke through Conductor adjudication. | high | worker fixture E2E tests, real CLI smoke or explicit N/A, output envelope tests, adjudication tests, delegated approval hard-stop tests |
+| 18 | PKT-15 Compound Loop And Starter Promotion Rehearsal | Integrate automatic friction capture, improvement proposal promotion, starter-promotion candidates, promotion dry-run, and copied-starter smoke validation. | starter-promotion overlay required | call-site integration tests, duplicate-suppression tests, proposal/promotion tests, promotion dry-run, copied-starter smoke |
 
 ## Verification Baseline
 Each implementation packet must define its own exact commands. The common baseline is:
@@ -708,8 +844,10 @@ kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
 - `PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION` is closed; latest closeout handoff is `planner -> planner`.
-- Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Keep the reusable baseline on planning hold until a new approved hardening lane is selected.
+- Recommended first hardening packet: `PKT-11_STATE_AND_CLOSURE_BASELINE`.
 - Source packet: `reference/packets/PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION.md`.
+- Hardening source: Human Owner v2.0 implementation review on 2026-06-29.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary
