@@ -34,10 +34,16 @@
   supports PM Markdown summaries and explicitly defers structured PM/WBS hardening.
 
 ## Evidence Judgment
-The package proves behavior and negative diagnostics, not file existence only. Evidence
+The package proves behavior and negative diagnostics, not path-only artifact presence. Evidence
 covers raw evidence skipping, prompt-like omission, classifier fail-closed behavior,
 retained evidence-index trust validation, source-budget relevance ordering, approval
 refusal, no-source clean-starter behavior, and reset/regeneration boundaries.
+
+## Structured Behavior Verification
+- Verification type: test
+- Status: pass
+- Result: pass
+- Evidence basis: focused PKT-13 tests, long-memory tests, full starter regression, Node regression, CLI smoke, negative-source evidence, reset/retention evidence, and harness validation prove behavior and negative diagnostics rather than path-only artifact presence.
 
 Fresh counts are reconciled: 10 focused PKT-13 tests, 8 long-memory tests, 123 full
 starter tests with 1 skipped, 483 Node tests, and harness validation findings empty.

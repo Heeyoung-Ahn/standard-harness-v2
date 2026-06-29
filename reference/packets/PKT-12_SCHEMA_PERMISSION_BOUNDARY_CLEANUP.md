@@ -24,7 +24,7 @@ development repository concepts or ambiguous v2.0/v2.1 product identity.
 | Route class | packet-path | Not fast-path eligible because it changes starter schemas and permission policies. | selected |
 | Change zone | core | `_harness/schemas`, `_harness/policies`, validators, and tests are core starter contract. | selected |
 | Delivery route mode | orchestrated-closeout | After Ready For Code, route Developer -> Tester -> Reviewer -> bounded remediation -> Planner closeout. | proposed |
-| User-facing impact | copied-starter safety | Users receive clearer risk names and no root-development write zones inside copied starter policy. | selected |
+| User-facing impact | low | Operator-visible copied-starter safety changes only; no browser UI or visual flow is introduced. | selected |
 | Layer classification | core | Applies to reusable starter contract. | selected |
 | Active profile dependencies | none | No optional profile is required. | closed |
 | Profile evidence status | not-needed | No optional profile is active for this packet. | closed |
@@ -41,7 +41,8 @@ development repository concepts or ambiguous v2.0/v2.1 product identity.
 | Planner Packet Challenge Review | pass | Independent challenge review passed after packet corrections. | closed |
 | Packet doc review | pass | Independent packet_doc_review passed after packet corrections. | closed |
 | Packet doc review status | pass | Required document gate passed before Ready For Code request. | closed |
-| Packet exit gate status | planned | Exit requires schema/policy tests, copied-starter negative tests, root validation, and strict review. | selected |
+| UX/browser evidence | not-needed | No browser UI; PKT-12 affects schema, policy, permission, and copied-starter validation surfaces only. | closed |
+| Packet exit gate status | approved | Schema/policy tests, copied-starter negative tests, root validation, security review, and strict review evidence are recorded. | closed |
 
 ## Lane-Typed Minimum Contract
 - Lane-type declaration: planning
@@ -402,20 +403,54 @@ command in
 - Implementation may reveal duplicated risk normalization logic across schema, policy, conductor, and validators. Refactor only where necessary to keep canonical risk behavior single-purpose and testable.
 - Do not fold PKT-13/14/15 implementation into this cleanup.
 
+## CSO Security Review
+- Security review evidence status: pass
+- Security review report path: reference/reports/security/PKT-12-security-review.json
+- Security review decision: pass
+- Security review scope: starter schema identity, risk taxonomy compatibility, copied-starter permissions, logical zones, skill catalog permission scopes, non-authorizing skill-router output, starter contamination fixtures, and copied-starter source-clean cache boundary.
+
+## Independent Review Lens Evidence
+- challenge_review agent: 019f1431-0812-7b72-ad4f-37b362dcfc20
+- challenge_review independence basis: read-only independent closeout lens reviewer; not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- challenge_review evidence path: reference/reports/review/PKT-12-closeout-challenge-review.md
+- challenge_review status: pass
+- challenge_review finding count: 0
+- challenge_review reviewer disposition: accepted
+- adversarial_security_review agent: 019f1431-1ef1-7940-ba51-918abd91146d
+- adversarial_security_review independence basis: read-only independent closeout lens reviewer; not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- adversarial_security_review evidence path: reference/reports/review/PKT-12-closeout-adversarial-security-review.md
+- adversarial_security_review status: pass
+- adversarial_security_review finding count: 0
+- adversarial_security_review reviewer disposition: accepted
+- code_quality_review agent: 019f1431-2af2-7b53-a9ab-d785976b8219
+- code_quality_review independence basis: read-only independent closeout lens reviewer; not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- code_quality_review evidence path: reference/reports/review/PKT-12-closeout-code-quality-review.md
+- code_quality_review status: pass
+- code_quality_review finding count: 0
+- code_quality_review reviewer disposition: accepted
+- evidence_review agent: 019f1431-37a8-7760-9e61-6151d9b9932d
+- evidence_review independence basis: read-only independent closeout lens reviewer; not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- evidence_review evidence path: reference/reports/review/PKT-12-closeout-evidence-review.md
+- evidence_review status: pass
+- evidence_review finding count: 0
+- evidence_review reviewer disposition: accepted
+
 ## 15. Packet Exit Quality Gate
 - Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md
 - Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md
-- Exit recommendation: pass; ready for Planner closeout after Reviewer adjudication.
-- Packet exit metadata exit recommendation: pass.
-- Source parity result: pass; implementation matches the approved PKT-12 schema identity, risk taxonomy, permission boundary, contamination, and reviewability scope.
-- Packet exit metadata source parity result: pass.
-- Validation / security / cleanup evidence: pass; root validation, root regression, starter validation, targeted tests, clean-export smoke, security review, and four closeout lenses are recorded under `reference/reports/**`.
-- Packet exit metadata validation / security / cleanup evidence: pass.
+- Packet exit metadata identifier: packet-exit-metadata
+- Packet exit metadata version: standard-harness-packet-exit/v1
+- Exit recommendation: approved
+- Packet exit metadata exit recommendation: approved
+- Source parity result: pass
+- Packet exit metadata source parity result: pass
+- Validation / security / cleanup evidence: pass
+- Packet exit metadata validation / security / cleanup evidence: pass
 - Implementation delta summary: canonical risk normalization now uses shared fail-closed runtime policy; schema product identity labels were cleaned; copied-starter permissions, zones, and skill routing no longer grant root development paths as effective authority; contamination rejects nested starter payload, real wiki state, and cache artifacts.
 - Refactor / residual debt disposition: non-blocking residuals are tracked in `reference/reports/review/PKT-12_REVIEW_REPORT.md`; no Developer remediation is required before closeout.
 - Documentation impact / docs parity result: pass; PKT-12 packet, validation, schema, security, starter, tester, and review evidence are aligned.
 - Deferred follow-up item: PKT-13, PKT-14, PKT-15 remain out of scope.
-- Closeout notes: Reviewer adjudication passes. Planner closeout may proceed without using the stale generated PKT-01 review excerpt as PKT-12 evidence.
+- Closeout notes: Reviewer adjudication passes. Implementation matches the approved PKT-12 schema identity, risk taxonomy, permission boundary, contamination, and reviewability scope. Root validation, root regression, starter validation, targeted tests, clean-export smoke, security review, and four closeout lenses are recorded under `reference/reports/**`. Planner closeout may proceed without using the stale generated PKT-01 review excerpt as PKT-12 evidence.
 
 ## Reopen Trigger
 Reopen or return to Planner if:

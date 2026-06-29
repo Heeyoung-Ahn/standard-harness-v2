@@ -21,6 +21,12 @@ PKT-12 is ready for Reviewer adjudication from the challenge lens. The review fo
 - Contamination coverage includes nested `starter/standard-harness/**`, `_ops/wiki/**`, `_ops/wiki-proposals/**`, and cache artifacts.
 - PKT-13/14/15 remain excluded; copied-starter smoke does not claim PKT-15 rehearsal or promotion lifecycle closure.
 
+## Structured Behavior Verification
+- Verification type: diff
+- Status: pass
+- Result: pass
+- Evidence basis: packet scope, schema/risk evidence, permission-boundary evidence, copied-starter smoke evidence, and Tester/Reviewer reports prove PKT-12 behavior without absorbing PKT-13/14/15 scope.
+
 ## Residual Risk
 
 - The reviewer did not rerun the full test suite and relied on Tester-reported command evidence plus source/diff checks.

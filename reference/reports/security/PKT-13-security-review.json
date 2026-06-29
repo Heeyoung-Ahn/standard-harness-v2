@@ -18,14 +18,42 @@
     "evidence-reference trust"
   ],
   "decision": "pass",
+  "phases_run": [
+    0,
+    1,
+    12,
+    13,
+    14
+  ],
+  "phasesRun": [
+    0,
+    1,
+    12,
+    13,
+    14
+  ],
   "findings": [
     {
       "severity": "low",
+      "status": "closed",
+      "phase": 13,
       "id": "PKT13-SEC-004",
+      "file": "starter/standard-harness/_harness/system/standard_harness/memory/question_answering.py",
+      "line": 1,
       "title": "Direct hand-built sources can still cite non-index retained reference files by existence",
-      "requiredAction": "Non-blocking hardening follow-up: require retained reference claim-supporting evidence refs to be evidence-index records, or explicitly separate canonical source citations from evidence proof in the builder API."
+      "evidence_quote_redacted": "Lower-level builder callers can construct source records outside the operating-qa discovery path.",
+      "exploit_scenario": "A future direct builder caller could treat a retained reference path as stronger claim proof than the evidence index supports.",
+      "impact": "Low residual API-surface hardening item outside the operating-qa CLI path.",
+      "recommendation": "Require retained reference claim-supporting evidence refs to be evidence-index records, or explicitly separate canonical source citations from evidence proof in the builder API.",
+      "requiredAction": "Non-blocking hardening follow-up: require retained reference claim-supporting evidence refs to be evidence-index records, or explicitly separate canonical source citations from evidence proof in the builder API.",
+      "confidence": 8
     }
   ],
+  "filter_stats": {
+    "raw_findings": 1,
+    "suppressed_findings": 0,
+    "main_findings": 1
+  },
   "residualRisk": "No blocking or high security findings remain for the operating-qa CLI path. Low residual API-surface hardening remains for direct hand-built source callers with non-index retained reference refs.",
   "recommendedRoute": "Reviewer re-adjudication after code-quality and evidence lenses pass."
 }

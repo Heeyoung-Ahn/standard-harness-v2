@@ -25,6 +25,12 @@ The reviewer independently ran:
 
 - `py -3 -B -m unittest discover -s starter\standard-harness\_harness\test -p "test_pkt12_schema_permission_boundary.py"`; `5` tests passed.
 
+## Structured Behavior Verification
+- Command: py -3 -B -m unittest discover -s starter\standard-harness\_harness\test -p "test_pkt12_schema_permission_boundary.py"
+- Exit code: 0
+- Verification type: test
+- Result: pass
+
 ## Residual Risk
 
 - Older `V2.1` wording remains in non-schema historical/internal conformance metadata. This is outside the PKT-12 schema `$id`/title acceptance surface and should remain visible for a later identity cleanup packet.

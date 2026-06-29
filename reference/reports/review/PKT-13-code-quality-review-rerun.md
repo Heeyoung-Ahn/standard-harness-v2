@@ -30,5 +30,11 @@
   PM Markdown summaries; Reviewer/Planner must decide whether structured PM/WBS ingestion
   is required for PKT-13 or remains follow-up.
 
+## Structured Behavior Verification
+- Verification type: test
+- Status: pass
+- Result: pass
+- Evidence basis: focused PKT-13 source-ordering regression and long-memory QA tests prove question-relevant source ordering and bounded answer behavior.
+
 ## Disposition
 Pass for the code-quality lens. This does not approve packet closeout.

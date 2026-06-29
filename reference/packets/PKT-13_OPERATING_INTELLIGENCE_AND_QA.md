@@ -18,12 +18,13 @@ without turning generated summaries or answer text into authority.
 | Ready For Code | approved | Independent planning reviews passed and Human Owner approved Orchestrator delivery. | closed |
 | Packet type | `harness-system` | Changes reusable starter memory, source-index, CLI/status, and context behavior. | selected |
 | Risk level | high | Wrong answers can mislead Human Owner decisions, leak sensitive evidence, or over-trust generated summaries. | selected |
+| Risk if started now | high | Operating-intelligence answers touch authority, freshness, sensitivity, and Human Owner decision support. | selected |
 | Risk class | high / contract | Public answer contract and source model affect every copied starter. | selected |
 | Gate profile | contract | Requires starter tests, root validation, security/adversarial review, source-index evidence, and strict closeout lenses. | selected |
 | Route class | packet-path | Not fast-path eligible; changes runtime contracts and user-facing CLI/status behavior. | selected |
 | Change zone | core | Memory, QA, context, wiki, PM/evidence indexing, and CLI contracts are core operating surfaces. | selected |
 | Delivery route mode | orchestrated-closeout | After Ready For Code, route Developer -> Tester -> Reviewer -> bounded remediation -> Planner closeout. | selected |
-| User-facing impact | Human Owner QA | Adds `operating-qa` as the named status/QA command/result contract. | selected |
+| User-facing impact | low | Adds an operator-facing CLI/status JSON command; no browser UI or visual flow is introduced. | selected |
 | Layer classification | core | Reusable starter memory, CLI, source-index, and context behavior are core harness contract. | selected |
 | Existing dependency | internal | Builds on PKT-05 long-memory source index, PKT-03 closeout/evidence index, PKT-04 PM, PKT-10 friction, PKT-11 baseline, and PKT-12 clean boundary. | selected |
 | Existing system dependency | internal | Depends on existing starter memory, CLI, context, wiki, PMO, self-improvement, and reset surfaces. | selected |
@@ -341,11 +342,43 @@ Required verification:
 | Reset/retention disposition | yes | Human Owner/Planner | closed | Packet closes disposition against existing `ops-reset`: resettable QA/index `_ops` read models reset; retained evidence/product docs are preserved; post-reset QA fails closed until regeneration. |
 | Residual-risk/defer approval | yes if unresolved | Human Owner | not requested | Reviewer cannot accept unresolved sensitive evidence, stale authority, or answer-contract drift alone. |
 
-## Packet Exit Quality Gate
-- Packet exit quality gate reference: `reference/artifacts/PACKET_EXIT_QUALITY_GATE.md`.
-- Exit recommendation: approved.
-- Source parity result: pass.
-- Validation / security / cleanup evidence: pass.
+## CSO Security Review
+- Security review evidence status: pass
+- Security review report path: reference/reports/security/PKT-13-security-review.json
+- Security review decision: pass
+- Security review scope: operating-qa source discovery, answer-contract authority boundary, sensitive evidence handling, prompt-like source handling, reset/fail-closed behavior, evidence-reference trust, and retained evidence-index validation.
+
+## Independent Review Lens Evidence
+- challenge_review agent: 019f1471-aea2-7b63-a19a-3bde35c876a4
+- challenge_review independence basis: read-only independent closeout lens reviewer; not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- challenge_review evidence path: reference/reports/review/PKT-13-closeout-challenge-review-rerun.md
+- challenge_review status: pass
+- challenge_review finding count: 0
+- challenge_review reviewer disposition: accepted
+- adversarial_security_review agent: 019f1471-2cf1-7342-a957-bb5d0443d05f
+- adversarial_security_review independence basis: read-only independent closeout lens reviewer; not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- adversarial_security_review evidence path: reference/reports/review/PKT-13-adversarial-security-review-rerun.md
+- adversarial_security_review status: pass
+- adversarial_security_review finding count: 0
+- adversarial_security_review reviewer disposition: accepted
+- code_quality_review agent: 019f1471-c38e-7561-aaa2-3f92ebbd837a
+- code_quality_review independence basis: read-only independent closeout lens reviewer; not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- code_quality_review evidence path: reference/reports/review/PKT-13-code-quality-review-rerun.md
+- code_quality_review status: pass
+- code_quality_review finding count: 0
+- code_quality_review reviewer disposition: accepted
+- evidence_review agent: 019f1471-d19c-7443-9e43-e575a2c4ac58
+- evidence_review independence basis: read-only independent closeout lens reviewer; not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- evidence_review evidence path: reference/reports/review/PKT-13-evidence-review-rerun.md
+- evidence_review status: pass
+- evidence_review finding count: 0
+- evidence_review reviewer disposition: accepted
+
+## 15. Packet Exit Quality Gate
+- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md
+- Exit recommendation: approved
+- Source parity result: pass
+- Validation / security / cleanup evidence: pass
 - Planner closeout evidence: `reference/reports/closeout/PKT-13_PLANNER_CLOSEOUT.md`.
 - Implementation delta summary: `operating-qa` CLI and operating-intelligence source model were implemented with bounded retrieval, prompt-like source omission, classifier fail-closed behavior, reset/retention alignment, retained evidence-index trust validation, and question-relevant source ordering before budget truncation.
 - Refactor / residual debt disposition: no blocking implementation debt remains. Non-blocking follow-ups are structured PM/WBS source ingestion and lower-level non-index retained `reference/**` evidence-ref hardening for direct builder callers.

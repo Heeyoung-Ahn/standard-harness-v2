@@ -36,6 +36,12 @@
 - `python -B -m unittest discover -s starter\standard-harness\_harness\test -p "test_pkt13_operating_intelligence_qa.py"`: pass, 9 tests during security rerun.
 - `python -B -m unittest discover -s starter\standard-harness\_harness\test -p "test_long_memory_question_answering.py"`: pass, 8 tests.
 
+## Structured Behavior Verification
+- Verification type: test
+- Status: pass
+- Result: pass
+- Evidence basis: PKT-13 focused QA tests and long-memory QA tests passed during the security rerun, proving fail-closed, sensitive-source, prompt-like-source, and evidence-reference trust behavior.
+
 ## Disposition
 Pass for the adversarial security lens. The low residual API-surface hardening item should
 be tracked as non-blocking follow-up, not as PKT-13 closeout blocker.

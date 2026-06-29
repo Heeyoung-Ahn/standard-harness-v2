@@ -4,6 +4,20 @@
   "packetPath": "reference/packets/PKT-12_SCHEMA_PERMISSION_BOUNDARY_CLEANUP.md",
   "status": "pass",
   "decision": "accept",
+  "phases_run": [
+    0,
+    1,
+    12,
+    13,
+    14
+  ],
+  "phasesRun": [
+    0,
+    1,
+    12,
+    13,
+    14
+  ],
   "scope": [
     "starter schema identity",
     "risk taxonomy compatibility",
@@ -15,6 +29,11 @@
     "copied-starter source-clean cache boundary"
   ],
   "findings": [],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  },
   "residualRisk": [],
   "evidence": [
     "reference/reports/security/PKT-12-permission-boundary.md",

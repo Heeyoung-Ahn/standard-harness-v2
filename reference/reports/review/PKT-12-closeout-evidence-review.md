@@ -21,6 +21,12 @@ Root validation is correctly scoped as structural/state evidence only, not produ
 - Security/boundary evidence is sufficient for this lens: the security review passed with no findings or residual risk, and permission scans report no root development path matches in copied-starter policy/catalog surfaces.
 - Tester acceptance mapping is complete across PKT-12 acceptance themes and reports pass.
 
+## Structured Behavior Verification
+- Verification type: diff
+- Status: pass
+- Result: pass
+- Evidence basis: targeted tests, starter validation, copied-starter smoke, schema reports, security review, Tester report, and Reviewer adjudication prove PKT-12 behavior rather than file-existence-only closure.
+
 ## Missing Evidence
 
 No product-proof evidence is missing for this lens after the four closeout lens reports and Reviewer adjudication are persisted.
