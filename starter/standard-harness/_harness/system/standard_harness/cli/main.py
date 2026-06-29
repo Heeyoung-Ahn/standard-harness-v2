@@ -34,12 +34,14 @@ from standard_harness.starter.contamination import INSTALLED_RUNTIME_MODE
 from standard_harness.state.store import HarnessStore, resolve_harness_root
 from standard_harness.validation.aggregator import ValidationService
 from standard_harness.validation.readiness import ReadinessService
+from standard_harness.workflow.conductor_worker_e2e import ConductorWorkerE2ERunner
 
 
 COMMANDS = (
     "init",
     "ops-reset",
     "operating-qa",
+    "conductor-worker-e2e",
     "packet-create",
     "packet-approve",
     "packet-transition",
@@ -223,6 +225,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "closeout": _handle_closeout,
         "context": _handle_context,
         "operating-qa": _handle_operating_qa,
+        "conductor-worker-e2e": _handle_conductor_worker_e2e,
         "starter-check": _handle_starter_check,
         "skill-route": _handle_skill_route,
         "handoff-prompt": _handle_handoff_prompt,
@@ -618,6 +621,32 @@ def _handle_operating_qa(store: HarnessStore, argv: list[str]) -> dict[str, Any]
         max_sources=parsed.max_sources,
     )
     return {"operatingQa": answer}
+
+
+def _handle_conductor_worker_e2e(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("conductor-worker-e2e")
+    parser.add_argument("--packet", "--packet-id", dest="packet_id", required=True)
+    parser.add_argument("--mode", default="fixture")
+    parser.add_argument("--real-cli-approval", action="store_true")
+    parser.add_argument("--cli-available", action="store_true")
+    parser.add_argument("--command-descriptor-json", default=None)
+    parsed = parser.parse_args(argv)
+    command_descriptor = None
+    if parsed.command_descriptor_json:
+        try:
+            command_descriptor = json.loads(parsed.command_descriptor_json)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid --command-descriptor-json: {exc}") from exc
+        if not isinstance(command_descriptor, dict):
+            raise ValueError("--command-descriptor-json must decode to an object")
+    result = ConductorWorkerE2ERunner(store.harness_root).run(
+        packet_id=parsed.packet_id,
+        mode=parsed.mode,
+        real_cli_approval=parsed.real_cli_approval,
+        command_descriptor=command_descriptor,
+        cli_available=parsed.cli_available,
+    )
+    return {"conductorWorkerE2E": result}
 
 
 def _repo_root() -> Path:

@@ -86,20 +86,27 @@ class LongMemorySourceDiscovery:
                 source_refs = _extract_evidence_refs(content)
                 if source_type == "evidence":
                     source_refs = [relative_path]
-                sources.append(
-                    {
-                        "source_type": source_type,
-                        "category": category,
-                        "path": relative_path,
-                        "authority_tier": authority_tier,
-                        "freshness_status": _freshness_from_content(content),
-                        "summary": summary,
-                        "evidence_refs": source_refs,
-                        "classification": self._classification_for(content=content, relative_path=relative_path),
-                        "classification_policy_available": self.classifier is not None,
-                        "prompt_like": _contains_prompt_like_content(content),
-                    }
-                )
+                source = {
+                    "source_type": source_type,
+                    "category": category,
+                    "path": relative_path,
+                    "authority_tier": authority_tier,
+                    "freshness_status": _freshness_from_content(content),
+                    "summary": summary,
+                    "evidence_refs": source_refs,
+                    "classification": self._classification_for(content=content, relative_path=relative_path),
+                    "classification_policy_available": self.classifier is not None,
+                    "prompt_like": _contains_prompt_like_content(content),
+                }
+                sources.append(source)
+                if source_type == "evidence" and _is_index_like_evidence_path(relative_path):
+                    sources.extend(
+                        _memory_sources_from_evidence_index(
+                            relative_path=relative_path,
+                            content=content,
+                            default_classification=source["classification"],
+                        )
+                    )
         return sources
 
     def _classification_for(self, *, content: str, relative_path: str) -> str:
@@ -549,6 +556,50 @@ def _read_json(path: Path) -> dict[str, Any]:
     except (OSError, json.JSONDecodeError):
         return {}
     return value if isinstance(value, dict) else {}
+
+
+def _memory_sources_from_evidence_index(
+    *,
+    relative_path: str,
+    content: str,
+    default_classification: str,
+) -> list[dict[str, Any]]:
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError:
+        return []
+    if not isinstance(data, dict):
+        return []
+    memory_sources = data.get("memorySources")
+    if not isinstance(memory_sources, list):
+        return []
+    sources: list[dict[str, Any]] = []
+    for index, item in enumerate(memory_sources):
+        if not isinstance(item, dict):
+            continue
+        category = _text(item.get("category"))
+        source_type = _text(item.get("source_type") or item.get("sourceType")) or "evidence"
+        summary = _text(item.get("summary"))
+        if not category or not summary:
+            continue
+        source_path = _text(item.get("path")) or f"{relative_path}#memorySources/{index}"
+        refs = item.get("evidence_refs", item.get("evidenceRefs", [relative_path]))
+        evidence_refs = [_text(ref) for ref in refs if _text(ref)] if isinstance(refs, list) else [relative_path]
+        sources.append(
+            {
+                "source_type": source_type,
+                "category": category,
+                "path": source_path,
+                "authority_tier": _text(item.get("authority_tier") or item.get("authorityTier")) or "canonical",
+                "freshness_status": _text(item.get("freshness_status") or item.get("freshnessStatus")) or "fresh",
+                "summary": summary,
+                "evidence_refs": evidence_refs or [relative_path],
+                "classification": _text(item.get("classification")) or default_classification,
+                "classification_policy_available": True,
+                "prompt_like": _contains_prompt_like_content(summary),
+            }
+        )
+    return sources
 
 
 def _is_index_like_evidence_path(relative_path: str) -> bool:

@@ -1,11 +1,11 @@
 # Validation Report
 
 ## Summary
-- Executed at: 2026-06-29T17:53:11.691Z
+- Executed at: 2026-06-29T19:14:09.067Z
 - Validator version: v1.3
 - Cutover ready: yes
 - Gate decision: pass
-- Next action: Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Next action: Keep planning hold until PKT-15 or another approved lane is selected.
 - Scope: harness structural/state validation and workflow evidence consistency only; this is not product/feature verification approval.
 - Product evidence owner: Tester/Reviewer/product-specific acceptance evidence.
 - Surface role: persisted gate evidence only, not product acceptance; live re-entry should use `.agents/runtime/ACTIVE_CONTEXT.json` and CLI context/status.
@@ -49,6 +49,8 @@
 - reference/packets/PKT-12_SCHEMA_PERMISSION_BOUNDARY_CLEANUP.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-13_OPERATING_INTELLIGENCE_AND_QA.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
+  - modeling impact: status required, required yes, diagnostics 0
+- reference/packets/PKT-14_CONDUCTOR_WORKER_E2E.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 
 ## Findings

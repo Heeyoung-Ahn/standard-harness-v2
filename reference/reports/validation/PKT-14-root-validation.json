@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "standard-harness-validation-evidence/v1",
+  "workItemId": "PKT-14_CONDUCTOR_WORKER_E2E",
+  "command": "npm.cmd run harness:validate",
+  "exitCode": 0,
+  "ok": true,
+  "structuralReady": true,
+  "cutoverReady": true,
+  "findingCount": 0,
+  "blockingFindingCount": 0,
+  "notes": [
+    "Validation was run after PKT-14 implementation and before Developer forward handoff.",
+    "The command reported no findings."
+  ]
+}

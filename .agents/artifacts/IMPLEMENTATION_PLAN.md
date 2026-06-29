@@ -843,9 +843,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-13_OPERATING_INTELLIGENCE_AND_QA` is closed; latest closeout handoff is `planner -> planner`.
-- Keep the reusable baseline on planning hold until a new approved lane is selected.
-- Source packet: `reference/packets/PKT-13_OPERATING_INTELLIGENCE_AND_QA.md`.
+- `PKT-14_CONDUCTOR_WORKER_E2E` is closed; latest closeout handoff is `planner -> planner`.
+- Keep planning hold until PKT-15 or another approved lane is selected.
+- Source packet: `reference/packets/PKT-14_CONDUCTOR_WORKER_E2E.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

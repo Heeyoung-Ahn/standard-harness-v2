@@ -9,6 +9,7 @@ __pycache__/
 # Harness runtime/generated local state
 .agents/runtime/
 .harness/state/
+starter/standard-harness/_ops/
 *.sqlite
 *.sqlite3
 *.db

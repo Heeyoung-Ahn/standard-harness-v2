@@ -2,7 +2,7 @@
   "ok": true,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-06-29T17:53:11.691Z",
+  "executedAt": "2026-06-29T19:14:09.067Z",
   "cutoverReady": true,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
@@ -562,10 +562,42 @@
         ]
       },
       "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-14_CONDUCTOR_WORKER_E2E",
+      "packetPath": "reference/packets/PKT-14_CONDUCTOR_WORKER_E2E.md",
+      "declaredRiskClass": "high",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 3,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "api contract",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
     }
   ],
   "findings": [],
-  "nextAction": "Keep the reusable baseline on planning hold until a new approved lane is selected.",
+  "nextAction": "Keep planning hold until PKT-15 or another approved lane is selected.",
   "gateDecision": "pass",
   "traceSummary": null,
   "candidateGates": [

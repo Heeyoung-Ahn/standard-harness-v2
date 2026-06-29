@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "standard-harness-security-review/v1",
+  "packet_path": "reference/packets/PKT-14_CONDUCTOR_WORKER_E2E.md",
+  "work_item_id": "PKT-14_CONDUCTOR_WORKER_E2E",
+  "mode": "scoped",
+  "phases_run": [
+    0,
+    1,
+    12,
+    13,
+    14
+  ],
+  "workItemId": "PKT-14_CONDUCTOR_WORKER_E2E",
+  "status": "pass",
+  "decision": "pass",
+  "scope": [
+    "copied-starter conductor-worker-e2e CLI command",
+    "fixture worker/verifier output envelopes",
+    "provider orchestration run/adjudication ledger writes",
+    "real CLI smoke boundary",
+    "evidence-index memorySources queryability",
+    "starter runtime _ops evidence boundary"
+  ],
+  "reviewedSurfaces": {
+    "approvalBoundary": "pass",
+    "secretHandling": "pass",
+    "commandDescriptorSafety": "pass",
+    "packetIdPathBoundary": "pass",
+    "generatedStateBoundary": "pass",
+    "providerIdentityBoundary": "pass",
+    "artifactPathBoundary": "pass"
+  },
+  "findings": [],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  },
+  "evidence": [
+    "reference/reports/validation/PKT-14-command-safety.md",
+    "reference/reports/validation/PKT-14-envelope-boundary.md",
+    "reference/reports/validation/PKT-14-real-cli-boundary.md",
+    "reference/reports/validation/PKT-14-adjudication.md",
+    "reference/reports/validation/PKT-14-starter-validation.md",
+    "reference/reports/conductor/PKT-14-operating-qa.md"
+  ],
+  "remediationEvidence": [
+    {
+      "finding": "packet_id_path_traversal",
+      "status": "remediated",
+      "evidence": "packet ids are validated before _ops path construction; invalid traversal, separator, drive-syntax, and empty values return invalid_packet_id and create no evidence directory"
+    },
+    {
+      "finding": "redirect_tokens_missing_from_provider_policy",
+      "status": "remediated",
+      "evidence": "ProviderOrchestrationPolicy command descriptor diagnostics reject > and < alongside pipe, shell interpolation, newline, and shell:true"
+    },
+    {
+      "finding": "ad_hoc_operating_qa_sources",
+      "status": "remediated",
+      "evidence": "operating QA source discovery reads evidence-index memorySources; PKT-14 runner no longer creates _ops/wiki, _ops/friction, _ops/risks, or _ops/decisions prose files"
+    },
+    {
+      "finding": "trusted_capture_boolean_overclaim",
+      "status": "remediated",
+      "evidence": "real-smoke pass requires a hash-verified harness capture artifact under _ops/capture plus role/provider/adapter-specific captured output records with successful exit status, non-timeout status, artifact content, command argv, and evidence id; missing, failed, or timed-out capture records block execution"
+    },
+    {
+      "finding": "captured_sensitive_material_persistence",
+      "status": "remediated",
+      "evidence": "inline caller-supplied capture records are rejected; command descriptors and capture artifacts are recursively screened before persistence and sensitive keys/values such as api keys, tokens, cookies, sessions, provider cache paths, .codex, and .claude are blocked"
+    }
+  ],
+  "residualRisk": [
+    {
+      "id": "PKT-14-real-cli-smoke-not-run",
+      "severity": "accepted-boundary",
+      "status": "explicit-manual-required",
+      "description": "Authenticated real Codex CLI / Claude Code CLI smoke execution was not run. A local attempt to generate evidence with a codex exec descriptor was blocked as potential provider-tool use and was not bypassed. Trusted captured-output ingestion is verified by unit regression under explicit readiness preconditions, hash-verified _ops/capture artifact provenance, role/provider/adapter-specific capture records, and sensitive-material rejection; fixture evidence remains not_applicable for real CLI."
+    }
+  ],
+  "authorityBoundary": "This security review does not approve closeout, release, residual risk, or human gates. It records implementation security evidence for Tester/Reviewer/Planner routing."
+}

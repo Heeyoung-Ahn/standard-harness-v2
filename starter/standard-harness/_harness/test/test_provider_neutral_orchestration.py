@@ -396,31 +396,34 @@ class ProviderNeutralOrchestrationTests(unittest.TestCase):
             root = Path(tmp)
             policy = ProviderOrchestrationPolicy([self.codex_manifest(root)])
 
-            route = policy.prepare_execution(
-                role="Developer",
-                packet_id="PKT-07",
-                input_snapshot_hash="sha256:input",
-                cli_available=True,
-                execution_preconditions={
-                    "approved_packet_boundary": True,
-                    "explicit_local_configuration": True,
-                    "authenticated_outside_repo": True,
-                    "command_descriptor": {
-                        "argv": ["codex", "exec", "$(Get-Content secret.txt)"]
-                    },
-                    "timeout_seconds": 120,
-                    "cancel_supported": True,
-                    "non_interactive_capture": True,
-                    "input_snapshot_current": True,
-                },
-            )
+            cases = [
+                {"argv": ["codex", "exec", "$(Get-Content secret.txt)"]},
+                {"argv": ["codex", "exec", "review > out.txt"]},
+                {"argv": ["codex", "exec", "review < prompt.txt"]},
+                {"argv": ["codex", "exec", "review | tee out.txt"]},
+                {"argv": ["codex", "exec", "review"], "shell": True},
+            ]
+            for command_descriptor in cases:
+                with self.subTest(command_descriptor=command_descriptor):
+                    route = policy.prepare_execution(
+                        role="Developer",
+                        packet_id="PKT-07",
+                        input_snapshot_hash="sha256:input",
+                        cli_available=False,
+                        execution_preconditions={
+                            "approved_packet_boundary": True,
+                            "explicit_local_configuration": True,
+                            "authenticated_outside_repo": True,
+                            "command_descriptor": command_descriptor,
+                            "timeout_seconds": 120,
+                            "cancel_supported": True,
+                            "non_interactive_capture": True,
+                            "input_snapshot_current": True,
+                        },
+                    )
 
-            self.assertEqual(route["status"], "execution_blocked")
-            self.assertEqual(route["diagnostic_code"], "unsafe_command_descriptor")
-            self.assertIn(
-                "untrusted_shell_interpolation",
-                route["command_descriptor_diagnostics"],
-            )
+                    self.assertEqual(route["status"], "execution_blocked")
+                    self.assertEqual(route["diagnostic_code"], "unsafe_command_descriptor")
 
     def test_provider_orchestration_ledger_records_queryable_runs_and_adjudications(self):
         with tempfile.TemporaryDirectory() as tmp:

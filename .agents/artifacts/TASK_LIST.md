@@ -4,7 +4,7 @@
 
 ## Current Release Target
 - Define the first approved project baseline for Standard Harness v2 Starter Payload Development on top of the standard harness starter.
-- Generated At: 2026-06-29T17:53:01.196Z
+- Generated At: 2026-06-29T19:13:57.453Z
 - Active work item count: 0
 
 ## Active Locks
@@ -16,7 +16,7 @@
 | Task ID | Title | Scope | Owner | Status | Priority | Depends On | Verification |
 |---|---|---|---|---|---|---|---|
 | - | None | - | - | clear | - | - | - |
-- Next first action: Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Next first action: Keep planning hold until PKT-15 or another approved lane is selected.
 - Generated compatibility fallback only; regenerate rather than editing this file manually.
 
 ## Blocked Tasks
@@ -27,6 +27,7 @@
 ## Completed Tasks
 | Task ID | Title | Completed At | Verification | Notes |
 |---|---|---|---|---|
+| PKT-14_CONDUCTOR_WORKER_E2E | PKT-14 Conductor Worker E2E | 2026-06-29 | transition planner -> planner; gate contract | [planner closeout] PKT-14 is closed for approved Conductor Worker E2E scope; live provider CLI execution and PKT-15 compound-loop/promotion scope remain out of scope. Keep planning hold until PKT-15 or another approved lane is selected. |
 | PKT-13_OPERATING_INTELLIGENCE_AND_QA | PKT-13 Operating Intelligence And QA | 2026-06-29 | transition planner -> planner; gate contract | Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold. Keep the reusable baseline on planning hold until a new approved lane is selected. |
 | PKT-12_SCHEMA_PERMISSION_BOUNDARY_CLEANUP | PKT-12 Schema Permission Boundary Cleanup | 2026-06-29 | transition planner -> planner; gate contract | Closed in canonical operational state. Keep the reusable baseline on planning hold until a new approved lane is selected. |
 | PKT-11_STATE_AND_CLOSURE_BASELINE | PKT-11 State And Closure Baseline | 2026-06-29 | transition planner -> planner; gate contract | Closed in canonical operational state. Keep the reusable baseline on planning hold until a new approved lane is selected. |
@@ -50,23 +51,23 @@
 | PLN-00 | Kickoff interview | - | transition unknown -> planner; gate unknown | Closed in canonical operational state. PLN-00 kickoff interview is closed; use PLN-01 requirements freeze and approved packets for next planning. |
 
 ## Handoff Log
+- 2026-06-29: [planner -> planner] [planner -> planner] [planner closeout] PKT-14 is closed for approved Conductor Worker E2E scope; live provider CLI execution and PKT-15 compound-loop/promotion scope remain out of scope.
+- 2026-06-29: [orchestrator -> planner] [orchestrator -> planner] [orchestrator -> planner] PKT-14 has packet_doc_review, Tester pass, four independent review-lens reports, Reviewer pass, and harness validation pass; Planner should make the final packet closeout decision from original evidence.
+- 2026-06-29: [reviewer -> orchestrator] [reviewer -> orchestrator] Reviewer completed conformance evidence; Orchestrator should route closeout, remediation, or escalation.
+- 2026-06-29: [orchestrator -> reviewer] [orchestrator -> reviewer] Orchestrator routed verified work to Reviewer.
+- 2026-06-29: [tester -> orchestrator] [tester -> orchestrator] Tester completed verification evidence; Orchestrator should route pass, remediation, or escalation.
+- 2026-06-29: [developer -> tester] [developer -> tester] Developer implementation completed; Tester should verify the approved scope.
+- 2026-06-29: [orchestrator -> developer] [orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.
+- 2026-06-29: [reviewer -> orchestrator] [reviewer -> orchestrator] Reviewer completed conformance evidence; Orchestrator should route closeout, remediation, or escalation.
+- 2026-06-29: [orchestrator -> reviewer] [orchestrator -> reviewer] Orchestrator routed verified work to Reviewer.
+- 2026-06-29: [tester -> orchestrator] [tester -> orchestrator] Tester completed verification evidence; Orchestrator should route pass, remediation, or escalation.
+- 2026-06-29: [developer -> tester] [developer -> tester] Developer implementation completed; Tester should verify the approved scope.
+- 2026-06-29: [orchestrator -> developer] [orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.
+- 2026-06-29: [planner -> orchestrator] [planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.
+- 2026-06-29: [planner -> planner] [planner -> planner] Opened PKT-14_CONDUCTOR_WORKER_E2E as the first real packet.
 - 2026-06-29: [planner -> planner] [planner -> planner] Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold.
 - 2026-06-29: [orchestrator -> planner] [orchestrator -> planner] Orchestrator routed the packet to Planner for closeout, clarification, or escalation.
 - 2026-06-29: [reviewer -> orchestrator] [reviewer -> orchestrator] Reviewer completed conformance evidence; Orchestrator should route closeout, remediation, or escalation.
 - 2026-06-29: [tester -> reviewer] [tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.
 - 2026-06-29: [developer -> tester] [developer -> tester] Developer implementation completed; Tester should verify the approved scope.
 - 2026-06-29: [orchestrator -> developer] [orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.
-- 2026-06-29: [reviewer -> orchestrator] [reviewer -> orchestrator] Reviewer completed conformance evidence; Orchestrator should route closeout, remediation, or escalation.
-- 2026-06-29: [tester -> reviewer] [tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.
-- 2026-06-29: [developer -> tester] [developer -> tester] Developer implementation completed; Tester should verify the approved scope.
-- 2026-06-29: [orchestrator -> developer] [orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.
-- 2026-06-29: [reviewer -> orchestrator] [reviewer -> orchestrator] Reviewer completed conformance evidence; Orchestrator should route closeout, remediation, or escalation.
-- 2026-06-29: [tester -> reviewer] [tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.
-- 2026-06-29: [developer -> tester] [developer -> tester] Developer implementation completed; Tester should verify the approved scope.
-- 2026-06-29: [orchestrator -> developer] [orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.
-- 2026-06-29: [reviewer -> orchestrator] [reviewer -> orchestrator] Reviewer completed conformance evidence; Orchestrator should route closeout, remediation, or escalation.
-- 2026-06-29: [tester -> reviewer] [tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.
-- 2026-06-29: [developer -> tester] [developer -> tester] Developer implementation completed; Tester should verify the approved scope.
-- 2026-06-29: [orchestrator -> developer] [orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.
-- 2026-06-29: [planner -> orchestrator] [planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.
-- 2026-06-29: [planner -> planner] [planner -> planner] Opened PKT-13_OPERATING_INTELLIGENCE_AND_QA as the first real packet.

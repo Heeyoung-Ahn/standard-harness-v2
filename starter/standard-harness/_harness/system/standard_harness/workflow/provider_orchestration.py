@@ -69,6 +69,33 @@ class ProviderOrchestrationPolicy:
         route = self.select_adapter(role, preferred_provider)
         if route["status"] != "selected":
             return route
+        command_descriptor = (execution_preconditions or {}).get("command_descriptor")
+        command_descriptor_diagnostics = _command_descriptor_diagnostics(command_descriptor)
+        if (
+            "local_subscription_cli" in route["execution_modes"]
+            and command_descriptor_diagnostics
+            and command_descriptor
+        ):
+            return {
+                "status": "execution_blocked",
+                "diagnostic_code": "unsafe_command_descriptor",
+                "role": role,
+                "packet_id": packet_id,
+                "adapter_id": route["adapter_id"],
+                "provider": route["provider"],
+                "input_snapshot_hash": input_snapshot_hash,
+                "command_descriptor_diagnostics": command_descriptor_diagnostics,
+                "manual_run_bundle": {
+                    "packet_id": packet_id,
+                    "role": role,
+                    "adapter_id": route["adapter_id"],
+                    "provider": route["provider"],
+                    "input_snapshot_hash": input_snapshot_hash,
+                    "permission_roots": route["permission_roots"],
+                    "expected_output": "adapter output envelope with artifact manifest and evidence provenance",
+                },
+                "product_identity": False,
+            }
         if not cli_available and "local_subscription_cli" in route["execution_modes"]:
             return {
                 "status": "manual_required",
@@ -101,33 +128,6 @@ class ProviderOrchestrationPolicy:
                 "provider": route["provider"],
                 "input_snapshot_hash": input_snapshot_hash,
                 "missing_preconditions": missing_preconditions,
-                "manual_run_bundle": {
-                    "packet_id": packet_id,
-                    "role": role,
-                    "adapter_id": route["adapter_id"],
-                    "provider": route["provider"],
-                    "input_snapshot_hash": input_snapshot_hash,
-                    "permission_roots": route["permission_roots"],
-                    "expected_output": "adapter output envelope with artifact manifest and evidence provenance",
-                },
-                "product_identity": False,
-            }
-        command_descriptor_diagnostics = _command_descriptor_diagnostics(
-            (execution_preconditions or {}).get("command_descriptor")
-        )
-        if (
-            "local_subscription_cli" in route["execution_modes"]
-            and command_descriptor_diagnostics
-        ):
-            return {
-                "status": "execution_blocked",
-                "diagnostic_code": "unsafe_command_descriptor",
-                "role": role,
-                "packet_id": packet_id,
-                "adapter_id": route["adapter_id"],
-                "provider": route["provider"],
-                "input_snapshot_hash": input_snapshot_hash,
-                "command_descriptor_diagnostics": command_descriptor_diagnostics,
                 "manual_run_bundle": {
                     "packet_id": packet_id,
                     "role": role,
@@ -371,7 +371,7 @@ def _command_descriptor_diagnostics(command_descriptor: Any) -> list[str]:
         if not isinstance(value, str) or not value.strip():
             diagnostics.append("invalid_argv_token")
             continue
-        if any(pattern in value for pattern in ("$(", "`", "&&", "||", "|", ";", "\n", "\r")):
+        if any(pattern in value for pattern in ("$(", "`", "&&", "||", "|", ";", ">", "<", "\n", "\r")):
             diagnostics.append("untrusted_shell_interpolation")
     if command_descriptor.get("shell") is True:
         diagnostics.append("shell_execution_not_allowed")
