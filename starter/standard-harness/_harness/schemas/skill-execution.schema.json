@@ -1,22 +1,105 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "required": ["selectedBy", "evidenceRequired", "allowedWriteZones"],
+  "required": [
+    "selectedBy",
+    "status",
+    "taskType",
+    "role",
+    "selectedSkills",
+    "selectedPackageIds",
+    "candidatePackageIds",
+    "skippedPackageRationales",
+    "processPriorityOrder",
+    "boundedPackageChain",
+    "packageDescriptors",
+    "conductorBrief",
+    "providerWorkerBrief",
+    "requiredEvidence",
+    "hardGateDiagnostics",
+    "skillUseLedgerPath",
+    "skillUseLedger",
+    "authorityBoundary",
+    "requiresSuperpowersPlugin",
+    "noSuperpowersRuntimeDependency",
+    "no-superpowers-runtime-dependency",
+    "evidenceRequired",
+    "allowedWriteZones"
+  ],
   "properties": {
+    "status": {"enum": ["selected", "blocked"]},
     "taskType": {"type": "string"},
+    "role": {"type": "string"},
+    "intentText": {"type": "string"},
+    "intentDigest": {"type": "string", "pattern": "^sha256:"},
     "requiredSkill": {"type": "string"},
     "selectedSkills": {"type": "array", "items": {"type": "string"}},
+    "selectedPackageIds": {"type": "array", "items": {"type": "string"}},
     "candidateSkills": {"type": "array"},
+    "candidatePackageIds": {"type": "array", "items": {"type": "string"}},
     "skippedCandidateSkills": {"type": "array"},
+    "skippedPackageRationales": {"type": "array"},
     "processPriorityOrder": {"type": "array", "items": {"type": "string"}},
     "skillChain": {"type": "array"},
+    "boundedPackageChain": {"type": "array"},
+    "packageDescriptors": {"type": "array"},
+    "conductorBrief": {
+      "type": "object",
+      "required": ["autoSkillPackageSelection", "supportedConductorSurfaces", "selectedPackageIds", "authorityBoundary"],
+      "properties": {
+        "autoSkillPackageSelection": {"const": true},
+        "supportedConductorSurfaces": {"type": "array", "items": {"enum": ["codex_app", "claude_code_app"]}},
+        "selectedPackageIds": {"type": "array", "items": {"type": "string"}},
+        "authorityBoundary": {"const": "packet_workflow_human"}
+      }
+    },
+    "providerWorkerBrief": {
+      "type": "object",
+      "required": ["autoSkillPackageSelection", "supportedWorkers", "selectedPackageIds", "packageDescriptors", "ledgerPath", "authorityBoundary"],
+      "properties": {
+        "autoSkillPackageSelection": {"const": true},
+        "supportedWorkers": {"type": "array", "items": {"enum": ["codex_cli", "claude_code_cli"]}},
+        "selectedPackageIds": {"type": "array", "items": {"type": "string"}},
+        "packageDescriptors": {"type": "array"},
+        "ledgerPath": {"const": "_ops/evidence/skill-use-ledger.jsonl"},
+        "authorityBoundary": {"const": "packet_workflow_human"}
+      }
+    },
+    "requiredEvidence": {"type": "array"},
     "hardGateDiagnostics": {"type": "array", "items": {"type": "string"}},
-    "skillUseLedger": {"type": "object"},
-    "authorityBoundary": {"type": "string"},
-    "requiresSuperpowersPlugin": {"type": "boolean"},
+    "skillUseLedgerPath": {"const": "_ops/evidence/skill-use-ledger.jsonl"},
+    "skillUseLedger": {
+      "type": "object",
+      "required": ["ledgerPath", "entries"],
+      "properties": {
+        "ledgerPath": {"const": "_ops/evidence/skill-use-ledger.jsonl"},
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["packageId", "decision", "useState", "role", "taskType", "intentText", "intentDigest", "authorityBoundary", "evidencePath"],
+            "properties": {
+              "packageId": {"type": "string"},
+              "decision": {"enum": ["selected", "skipped"]},
+              "useState": {"enum": ["selected_not_executed", "not_applicable", "used"]},
+              "role": {"type": "string"},
+              "taskType": {"type": "string"},
+              "intentText": {"type": "string"},
+              "intentDigest": {"type": "string", "pattern": "^sha256:"},
+              "authorityBoundary": {"const": "packet_workflow_human"},
+              "evidencePath": {"const": "_ops/evidence/skill-use-ledger.jsonl"}
+            }
+          }
+        }
+      }
+    },
+    "authorityBoundary": {"const": "packet_workflow_human"},
+    "requiresSuperpowersPlugin": {"const": false},
+    "noSuperpowersRuntimeDependency": {"const": true},
+    "no-superpowers-runtime-dependency": {"const": true},
     "sourcePriority": {"type": "string"},
     "selectedBy": {"const": "skill-router"},
-    "evidenceRequired": {"const": true},
+    "evidenceRequired": {"type": "boolean"},
     "allowedWriteZones": {"type": "array", "items": {"type": "string"}}
   }
 }

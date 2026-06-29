@@ -1,0 +1,43 @@
+{
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE.md",
+  "work_item_id": "PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE",
+  "mode": "scoped",
+  "decision": "pass-after-remediation",
+  "scope": "PKT-09A starter executable skill package registry, route output, package schemas, Conductor and dual-provider worker package briefs, evidence ledger shape, and superpowers runtime dependency boundary.",
+  "phases_run": [0, 1, 3, 6, 12, 13, 14],
+  "surfaces_reviewed": [
+    "starter/standard-harness/_harness/system/standard_harness/skills/packages.py",
+    "starter/standard-harness/_harness/system/standard_harness/skills/router.py",
+    "starter/standard-harness/_harness/schemas/skill-package.schema.json",
+    "starter/standard-harness/_harness/schemas/skill-execution.schema.json",
+    "starter/standard-harness/_harness/test/test_executable_skill_packages.py"
+  ],
+  "checklist": {
+    "approval_boundary": "pass: package route fields preserve packet_workflow_human authority and do not grant Ready For Code, closeout, release, or superpowers removal authority.",
+    "provider_neutrality": "pass: supported surfaces include Codex App, Claude Code App, Codex CLI, and Claude Code CLI without making any provider the product identity.",
+    "external_plugin_dependency": "pass: package descriptors and route output report no superpowers runtime dependency.",
+    "skill_authority": "pass: descriptors reference the starter catalog, not human-readable SKILL.md files as package authority.",
+    "ledger_trust": "pass: route output records selected and skipped package decisions, and SkillPackageLedger.append records sanitized package-use state to JSONL.",
+    "context_budget": "pass: selected package descriptor slices are returned without loading full skill bodies.",
+    "secret_handling": "pass: route output and ledger entries redact secret-like intent text and keep a digest instead of raw token-bearing text.",
+    "destructive_command": "pass: no destructive command path was added or broadened.",
+    "dependency_supply_chain": "pass: no third-party dependency, lockfile, install script, GitHub Action, or mandatory external plugin was added."
+  },
+  "findings": [],
+  "remediated_findings": [
+    "Router now fail-closes on package registry diagnostics before Conductor/worker handoff.",
+    "Route and package schemas were strengthened around authority, ledger, package descriptor, conductor brief, worker brief, and no-superpowers fields.",
+    "Secret-like intent text is redacted before route output and ledger persistence."
+  ],
+  "deferred_risks": [
+    "Live provider CLI execution is outside PKT-09A scope and remains dependent on local user-managed provider authentication.",
+    "Superpowers plugin removal is explicitly Human-owned after reviewing PKT-09A evidence."
+  ],
+  "residual_risk": "Low after package descriptor validation, route regression tests, full starter unittest discovery, root harness tests, strict validation, and scoped dependency audit.",
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  }
+}

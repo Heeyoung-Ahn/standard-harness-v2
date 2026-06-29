@@ -6,11 +6,18 @@ from pathlib import Path
 from typing import Any
 
 from standard_harness.skills.catalog import SkillCatalog
+from standard_harness.skills.packages import LEDGER_PATH
+from standard_harness.skills.packages import SkillPackageRegistry
+from standard_harness.skills.packages import build_conductor_brief
+from standard_harness.skills.packages import build_provider_worker_brief
+from standard_harness.skills.packages import intent_digest
+from standard_harness.skills.packages import sanitize_intent_text
 
 
 class SkillRouter:
     def __init__(self, catalog: SkillCatalog):
         self.catalog = catalog
+        self.package_registry = SkillPackageRegistry.from_catalog(catalog)
 
     @classmethod
     def from_repo(cls, repo_root: str | Path) -> "SkillRouter":
@@ -30,6 +37,8 @@ class SkillRouter:
         root_cause_evidence_present: bool | None = None,
         review_disposition_present: bool | None = None,
     ) -> dict[str, Any]:
+        safe_intent_text = sanitize_intent_text(intent_text)
+        package_contract_diagnostics = self.package_registry.validate_contract()
         selected, candidates, skipped = self._select_skills(task_type=task_type, intent_text=intent_text)
         diagnostics = self._hard_gate_diagnostics(
             task_type=task_type,
@@ -39,13 +48,68 @@ class SkillRouter:
             root_cause_evidence_present=root_cause_evidence_present,
             review_disposition_present=review_disposition_present,
         )
+        diagnostics = [*diagnostics, *package_contract_diagnostics]
         if not selected and not diagnostics:
             return {
                 "status": "blocked",
-                "taskType": task_type,
+                "taskType": task_type or "",
                 "role": role,
+                "intentText": safe_intent_text,
+                "intentDigest": intent_digest(intent_text),
+                "riskLevel": risk_level,
+                "workflow": workflow,
+                "gateProfile": gate_profile,
+                "requiredSkill": "",
+                "selectedSkills": [],
+                "selectedPackageIds": [],
+                "candidateSkills": [],
+                "candidatePackageIds": [],
+                "skippedCandidateSkills": [],
+                "skippedPackageRationales": [],
+                "processPriorityOrder": [],
+                "skillChain": [],
+                "boundedPackageChain": [],
+                "chainDepth": 0,
+                "hardGateDiagnostics": ["unknown_required_skill", "required_skill_not_cataloged"],
+                "packageDescriptors": [],
+                "conductorBrief": build_conductor_brief(
+                    role=role,
+                    intent_text=safe_intent_text,
+                    selected_package_ids=[],
+                    descriptors=[],
+                ),
+                "providerWorkerBrief": build_provider_worker_brief(
+                    role=role,
+                    intent_text=safe_intent_text,
+                    selected_package_ids=[],
+                    descriptors=[],
+                ),
+                "requiredEvidence": [],
+                "contextBudget": {
+                    "mode": "compact-route-result",
+                    "skillBodyLoaded": False,
+                    "fullCatalogBodyLoaded": False,
+                    "candidateCount": 0,
+                    "selectedCount": 0,
+                    "skippedCandidateCount": 0,
+                    "maxSelectedSkills": 12,
+                    "packageDescriptorMode": "selected-package-slices-only",
+                },
                 "selectedBy": "skill-router",
+                "sourcePriority": "v1_skill_catalog",
+                "requiresSuperpowersPlugin": False,
+                "noSuperpowersRuntimeDependency": self.package_registry.no_superpowers_runtime_dependency(),
+                "no-superpowers-runtime-dependency": self.package_registry.no_superpowers_runtime_dependency(),
                 "evidenceRequired": True,
+                "allowedWriteZones": [],
+                "fallbackBehavior": "",
+                "evidenceContract": {},
+                "skillUseLedgerPath": LEDGER_PATH,
+                "skillUseLedger": {
+                    "ledgerPath": LEDGER_PATH,
+                    "entries": [],
+                },
+                "authorityBoundary": "packet_workflow_human",
                 "bypassesP0Gate": False,
                 "p0Boundary": "preserved",
                 "diagnostic_ids": ["unknown_required_skill", "required_skill_not_cataloged"],
@@ -54,23 +118,40 @@ class SkillRouter:
         diagnostics = [*diagnostics, *chain_diagnostics]
         ordered = self._order(selected)
         selected_ids = [skill["id"] for skill in ordered]
+        package_descriptors = self.package_registry.descriptors_for(selected_ids)
+        candidate_package_ids = [skill["id"] for skill in candidates]
+        skipped_package_rationales = [
+            {
+                "packageId": item["skill"]["id"],
+                "decision": "skipped",
+                "reason": item["reason"],
+                "rationale": item["rationale"],
+            }
+            for item in skipped
+        ]
         allowed = sorted({
             zone
             for skill in ordered
             for zone in skill.get("permissionScope", {}).get("allowedWriteZones", [])
         })
         chain = self._chain_edges(ordered)
+        bounded_package_chain = [
+            {"fromPackageId": edge["from"], "toPackageId": edge["to"]}
+            for edge in chain
+        ]
         first = ordered[0] if ordered else {}
         return {
             "status": "blocked" if diagnostics else "selected",
-            "taskType": task_type,
+            "taskType": task_type or "",
             "role": role,
-            "intentText": intent_text,
+            "intentText": safe_intent_text,
+            "intentDigest": intent_digest(intent_text),
             "riskLevel": risk_level,
             "workflow": workflow,
             "gateProfile": gate_profile,
-            "requiredSkill": first.get("id"),
+            "requiredSkill": first.get("id", ""),
             "selectedSkills": selected_ids,
+            "selectedPackageIds": selected_ids,
             "candidateSkills": [
                 {
                     "id": skill["id"],
@@ -79,6 +160,7 @@ class SkillRouter:
                 }
                 for skill in candidates
             ],
+            "candidatePackageIds": candidate_package_ids,
             "skippedCandidateSkills": [
                 {
                     "id": item["skill"]["id"],
@@ -87,30 +169,60 @@ class SkillRouter:
                 }
                 for item in skipped
             ],
+            "skippedPackageRationales": skipped_package_rationales,
             "processPriorityOrder": selected_ids,
             "skillChain": chain,
+            "boundedPackageChain": bounded_package_chain,
             "chainDepth": len(chain),
             "hardGateDiagnostics": diagnostics,
+            "packageDescriptors": package_descriptors,
+            "conductorBrief": build_conductor_brief(
+                role=role,
+                intent_text=safe_intent_text,
+                selected_package_ids=selected_ids,
+                descriptors=package_descriptors,
+            ),
+            "providerWorkerBrief": build_provider_worker_brief(
+                role=role,
+                intent_text=safe_intent_text,
+                selected_package_ids=selected_ids,
+                descriptors=package_descriptors,
+            ),
+            "requiredEvidence": [
+                {
+                    "packageId": descriptor["packageId"],
+                    "required": descriptor["requiredEvidence"]["required"],
+                    "kinds": descriptor["requiredEvidence"]["kinds"],
+                }
+                for descriptor in package_descriptors
+            ],
             "contextBudget": {
                 "mode": "compact-route-result",
                 "skillBodyLoaded": False,
+                "fullCatalogBodyLoaded": False,
                 "candidateCount": len(candidates),
                 "selectedCount": len(ordered),
                 "skippedCandidateCount": len(skipped),
                 "maxSelectedSkills": 12,
+                "packageDescriptorMode": "selected-package-slices-only",
             },
             "selectedBy": "skill-router",
             "sourcePriority": "v1_skill_catalog",
             "requiresSuperpowersPlugin": False,
+            "noSuperpowersRuntimeDependency": self.package_registry.no_superpowers_runtime_dependency(),
+            "no-superpowers-runtime-dependency": self.package_registry.no_superpowers_runtime_dependency(),
             "evidenceRequired": any(bool(skill.get("evidenceContract", {}).get("required")) for skill in ordered),
             "allowedWriteZones": allowed,
             "fallbackBehavior": first.get("fallbackBehavior"),
             "evidenceContract": first.get("evidenceContract", {}),
+            "skillUseLedgerPath": LEDGER_PATH,
             "skillUseLedger": self._ledger(
                 ordered,
+                skipped,
                 role=role,
                 task_type=task_type,
-                intent_text=intent_text,
+                intent_text=safe_intent_text,
+                raw_intent_text=intent_text,
                 diagnostics=diagnostics,
             ),
             "authorityBoundary": "packet_workflow_human",
@@ -208,26 +320,50 @@ class SkillRouter:
     def _ledger(
         self,
         selected: list[dict[str, Any]],
+        skipped: list[dict[str, Any]],
         *,
         role: str,
         task_type: str | None,
         intent_text: str,
+        raw_intent_text: str,
         diagnostics: list[str],
     ) -> dict[str, Any]:
+        digest = intent_digest(raw_intent_text)
         return {
-            "ledgerPath": "_ops/evidence/skill-use-ledger.jsonl",
+            "ledgerPath": LEDGER_PATH,
             "entries": [
                 {
                     "skillId": skill["id"],
+                    "packageId": skill["id"],
                     "decision": "selected",
+                    "useState": "selected_not_executed",
                     "role": role,
-                    "taskType": task_type,
+                    "taskType": task_type or "",
                     "intentText": intent_text,
+                    "intentDigest": digest,
                     "authorityBoundary": "packet_workflow_human",
-                    "evidencePath": "_ops/evidence/skill-use-ledger.jsonl",
+                    "evidencePath": LEDGER_PATH,
                     "diagnostics": diagnostics,
                 }
                 for skill in selected
+            ]
+            + [
+                {
+                    "skillId": item["skill"]["id"],
+                    "packageId": item["skill"]["id"],
+                    "decision": "skipped",
+                    "useState": "not_applicable",
+                    "reason": item["reason"],
+                    "rationale": item["rationale"],
+                    "role": role,
+                    "taskType": task_type or "",
+                    "intentText": intent_text,
+                    "intentDigest": digest,
+                    "authorityBoundary": "packet_workflow_human",
+                    "evidencePath": LEDGER_PATH,
+                    "diagnostics": diagnostics,
+                }
+                for item in skipped
             ],
         }
 

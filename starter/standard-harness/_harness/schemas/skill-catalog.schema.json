@@ -12,6 +12,19 @@
         "providerNeutral": {"type": "boolean"}
       }
     },
+    "packageInventory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["skillId", "disposition"],
+        "properties": {
+          "skillId": {"type": "string"},
+          "disposition": {
+            "enum": ["package-now", "merge-into-existing", "defer", "reject-with-rationale"]
+          }
+        }
+      }
+    },
     "skills": {
       "type": "array",
       "items": {

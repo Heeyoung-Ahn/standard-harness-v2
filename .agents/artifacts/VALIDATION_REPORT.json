@@ -2,7 +2,7 @@
   "ok": true,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-06-29T10:33:38.571Z",
+  "executedAt": "2026-06-29T12:22:19.479Z",
   "cutoverReady": true,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
@@ -364,6 +364,39 @@
           "api contract",
           "schema boundary",
           "auth/security boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE",
+      "packetPath": "reference/packets/PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE.md",
+      "declaredRiskClass": "high",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 4,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "api contract",
+          "schema boundary",
+          "shared dependency boundary"
         ]
       },
       "gateEffect": "hold_if_missing_approval_or_evidence"

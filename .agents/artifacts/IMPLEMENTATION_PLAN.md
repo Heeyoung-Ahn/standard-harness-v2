@@ -495,6 +495,47 @@ Verification:
 - skill-use ledger tests
 - context budget tests
 
+### Wave 8A: Executable Skill Packages And Dual-Provider Skill Use
+Goal: turn PKT-09 skill-routing contracts into complete structured skill packages that provider-neutral workers can actually use.
+
+Scope:
+- Build a definitive inventory from the 34 PKT-09 catalog skills, v1.0 root skills
+  that fit v2.0, and selected superpowers absorption candidates.
+- Create structured executable skill packages, not human-readable `SKILL.md` authority
+  files.
+- Ensure Codex App and Claude Code App Conductor routes receive the same provider-neutral
+  selected package contract and record Conductor package-use evidence.
+- Ensure Codex CLI and Claude Code CLI worker routes receive the same provider-neutral
+  selected package contract from Conductor handoff and record worker package-use evidence.
+- Keep superpowers plugin removal as a Human Owner action after LLM implementation and
+  equivalence evidence.
+
+Implementation tasks:
+- Define package descriptor schema, package inventory disposition, and package registry
+  behavior.
+- Add package descriptors for `package-now` skills and merge/defer/reject rationale for
+  all other candidates.
+- Wire package descriptors into routing, worker handoff, hard-gate validation, and
+  skill-use ledger output.
+- Add selected-Conductor and dual-provider worker fixtures for automatic package selection/use.
+- Add no-superpowers-runtime and removal-readiness evidence.
+
+Acceptance:
+- Every selected package is executable by structure: trigger, priority, authority,
+  provider-worker use, evidence, fallback, chain, permission, and validation hooks.
+- Catalog-only skills without package descriptors fail validation.
+- Conductor fixtures prove provider-neutral package use for Codex App and Claude Code App examples.
+- Worker fixtures prove provider-neutral package use for Codex CLI and Claude Code CLI examples.
+- No-superpowers-required tests pass and deletion remains Human-owned.
+
+Verification:
+- package inventory tests
+- package schema/registry tests
+- selected-Conductor package-use tests
+- dual-provider worker handoff tests
+- hard-gate package evidence tests
+- no-superpowers-runtime tests
+
 ### Wave 9: Compound Engineering And Starter Promotion Feedback
 Goal: make the harness improve as projects run longer.
 
@@ -610,7 +651,8 @@ implementation starts.
 | 9 | PKT-07 Conductor Surface And CLI Worker Routing Loop | Add app-facing Conductor selection, selected entry generation, CLI worker routing, packet-authoring review loop, Conductor adjudication, and delegated approval validation. | high | conductor selection tests, delegated approval tests, Planner rejection tests, worker routing tests, adjudication tests, entry/contamination tests, command/path safety tests, starter validation |
 | 10 | PKT-08 Risk-Adaptive Fast Path And Evidence Validation | Keep docs-only and low-risk packets lightweight while enforcing hard stops, at least one independent verification/review lens, and behavior-based evidence validation. | high | gate profile tests, review-lens selection tests, N/A diagnostic tests, behavior-evidence negative tests, starter validation |
 | 11 | PKT-09 Skill Routing And Operator Ergonomics | Make required skills discoverable, process-prioritized, and evidence-linked. | guarded | skill router tests, hard-gate tests, chaining tests, ledger tests, context budget tests |
-| 12 | PKT-10 Compound Feedback And Starter Promotion | Convert friction into improvement and starter-promotion candidates. | guarded | friction/proposal tests, promote-starter smoke |
+| 12 | PKT-09A Executable Skill Packages And Dual-Provider Skill Use | Turn skill-routing contracts into complete structured packages that Codex/Claude Conductors and workers can auto-select and use. | high | package inventory tests, package registry tests, selected-Conductor tests, dual-provider worker handoff tests, no-superpowers-runtime tests |
+| 13 | PKT-10 Compound Feedback And Starter Promotion | Convert friction into improvement and starter-promotion candidates. | guarded | friction/proposal tests, promote-starter smoke |
 
 ## Verification Baseline
 Each implementation packet must define its own exact commands. The common baseline is:
@@ -662,9 +704,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS` is closed; latest closeout handoff is `planner -> planner`.
+- `PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE` is closed; latest closeout handoff is `planner -> planner`.
 - Keep the reusable baseline on planning hold until a new approved lane is selected.
-- Source packet: `reference/packets/PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS.md`.
+- Source packet: `reference\packets\PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary
