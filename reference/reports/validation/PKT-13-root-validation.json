@@ -1,0 +1,9 @@
+{
+  "workItemId": "PKT-13_OPERATING_INTELLIGENCE_AND_QA",
+  "command": "npm.cmd run harness:validate",
+  "status": "pass",
+  "ok": true,
+  "structuralReady": true,
+  "cutoverReady": true,
+  "findings": []
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "standard-harness-security-review/v1",
+  "workItemId": "PKT-13_OPERATING_INTELLIGENCE_AND_QA",
+  "packetPath": "reference/packets/PKT-13_OPERATING_INTELLIGENCE_AND_QA.md",
+  "reviewType": "adversarial_security_review",
+  "status": "pass",
+  "reviewer": {
+    "agentNickname": "Huygens",
+    "agentId": "019f1471-2cf1-7342-a957-bb5d0443d05f",
+    "independence": "read-only independent review-lens agent; not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review"
+  },
+  "reviewedSurfaces": [
+    "operating-qa source discovery",
+    "answer contract authority boundary",
+    "sensitive evidence handling",
+    "prompt-like source handling",
+    "reset/fail-closed behavior",
+    "evidence-reference trust"
+  ],
+  "decision": "pass",
+  "findings": [
+    {
+      "severity": "low",
+      "id": "PKT13-SEC-004",
+      "title": "Direct hand-built sources can still cite non-index retained reference files by existence",
+      "requiredAction": "Non-blocking hardening follow-up: require retained reference claim-supporting evidence refs to be evidence-index records, or explicitly separate canonical source citations from evidence proof in the builder API."
+    }
+  ],
+  "residualRisk": "No blocking or high security findings remain for the operating-qa CLI path. Low residual API-surface hardening remains for direct hand-built source callers with non-index retained reference refs.",
+  "recommendedRoute": "Reviewer re-adjudication after code-quality and evidence lenses pass."
+}

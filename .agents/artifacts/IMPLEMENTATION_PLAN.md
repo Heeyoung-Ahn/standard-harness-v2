@@ -843,9 +843,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-12_SCHEMA_PERMISSION_BOUNDARY_CLEANUP` is closed; latest closeout handoff is `planner -> planner`.
+- `PKT-13_OPERATING_INTELLIGENCE_AND_QA` is closed; latest closeout handoff is `planner -> planner`.
 - Keep the reusable baseline on planning hold until a new approved lane is selected.
-- Source packet: `reference/packets/PKT-12_SCHEMA_PERMISSION_BOUNDARY_CLEANUP.md`.
+- Source packet: `reference/packets/PKT-13_OPERATING_INTELLIGENCE_AND_QA.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

@@ -17,6 +17,9 @@ from standard_harness.domain.gates import GateService
 from standard_harness.domain.packets import PacketService
 from standard_harness.domain.requirements import RequirementRegistry
 from standard_harness.handoff.prompts import HandoffPromptBuilder
+from standard_harness.memory.question_answering import LongMemoryQuestionAnsweringService
+from standard_harness.memory.question_answering import LongMemorySourceDiscovery
+from standard_harness.memory.question_answering import LongMemorySourceIndexBuilder
 from standard_harness.memory.operational import OperationalMemoryService
 from standard_harness.operating_folders import OperatingFolderInitializer
 from standard_harness.projection.current_context import CurrentContextProjection
@@ -36,6 +39,7 @@ from standard_harness.validation.readiness import ReadinessService
 COMMANDS = (
     "init",
     "ops-reset",
+    "operating-qa",
     "packet-create",
     "packet-approve",
     "packet-transition",
@@ -218,6 +222,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "gate-record": _handle_gate_record,
         "closeout": _handle_closeout,
         "context": _handle_context,
+        "operating-qa": _handle_operating_qa,
         "starter-check": _handle_starter_check,
         "skill-route": _handle_skill_route,
         "handoff-prompt": _handle_handoff_prompt,
@@ -595,6 +600,24 @@ def _handle_context(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
     projection = CurrentContextProjection(store).generate(packet_id=parsed.packet_id)
     memory_entries = OperationalMemoryService(store).preview_entries(packet_id=parsed.packet_id)
     return {"projection": projection, "memory_entries": memory_entries}
+
+
+def _handle_operating_qa(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("operating-qa")
+    parser.add_argument("--question", required=True)
+    parser.add_argument("--max-answer-chars", type=int, default=800)
+    parser.add_argument("--max-sources", type=int, default=16)
+    parsed = parser.parse_args(argv)
+    repo_root = store.harness_root
+    sources = LongMemorySourceDiscovery(repo_root).discover()
+    index = LongMemorySourceIndexBuilder.from_repo(repo_root).build(sources)
+    answer = LongMemoryQuestionAnsweringService().answer(
+        index,
+        parsed.question,
+        max_answer_chars=parsed.max_answer_chars,
+        max_sources=parsed.max_sources,
+    )
+    return {"operatingQa": answer}
 
 
 def _repo_root() -> Path:

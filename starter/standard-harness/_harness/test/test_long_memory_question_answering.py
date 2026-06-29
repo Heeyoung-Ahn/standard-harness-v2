@@ -90,6 +90,7 @@ class LongMemoryQuestionAnsweringTests(unittest.TestCase):
     def test_source_discovery_reads_real_ops_wiki_pmo_decision_and_context_files(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_root = Path(temp_dir)
+            self._seed_evidence_policy(repo_root)
             self._write(
                 repo_root / "_ops/packets/PKT-05.md",
                 "# PKT-05\nPacket history says source discovery was remediated.\nEvidence: _ops/evidence/PKT-05/evidence-index.json\n",
@@ -151,6 +152,7 @@ class LongMemoryQuestionAnsweringTests(unittest.TestCase):
     def test_discovery_does_not_fan_out_unrelated_evidence_refs(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_root = Path(temp_dir)
+            self._seed_evidence_policy(repo_root)
             self._write(
                 repo_root / "_ops/evidence/PKT-05/evidence-index.json",
                 """
@@ -227,16 +229,24 @@ class LongMemoryQuestionAnsweringTests(unittest.TestCase):
             sorted(
                 [
                     "answer",
+                    "authorityBoundary",
                     "diagnostic_ids",
                     "evidenceRefs",
+                    "freshnessStatus",
                     "nextBoundary",
+                    "nextAction",
                     "omittedSourceDiagnostics",
                     "promotionDiagnostics",
+                    "question",
                     "readModel",
                     "redactionDisposition",
+                    "risk",
+                    "schemaVersion",
                     "sourceRefs",
                     "status",
                     "tokenEstimate",
+                    "whatHappened",
+                    "why",
                 ]
             ),
         )
@@ -273,7 +283,7 @@ class LongMemoryQuestionAnsweringTests(unittest.TestCase):
         self.assertIn("omitted_sensitive_source", answer["diagnostic_ids"])
         self.assertEqual(answer["redactionDisposition"], "sensitive-sources-omitted")
         self.assertNotIn("password", answer["answer"])
-        self.assertEqual(index["resetPolicy"]["resetCommandImplemented"], False)
+        self.assertEqual(index["resetPolicy"]["resetCommandImplemented"], True)
         self.assertEqual(index["resetPolicy"]["evidenceRetentionBypassed"], False)
 
     def test_missing_evidence_links_fail_closed_for_status_risk_and_next_questions(self) -> None:
@@ -300,24 +310,26 @@ class LongMemoryQuestionAnsweringTests(unittest.TestCase):
     def test_sensitive_sources_are_omitted_from_answer_wiki_handoff_and_context_pack_targets(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             repo_root = Path(temp_dir)
+            self._seed_evidence_policy(repo_root)
             self._write(
-                repo_root / "_harness/policies/evidence-classification.yaml",
+                repo_root / "_ops/evidence/PKT-05/evidence-index.json",
                 """
                 {
-                  "classifications": ["PUBLIC", "INTERNAL", "SENSITIVE", "SECRET"],
-                  "defaults": {"classification": "INTERNAL"},
-                  "promotionRules": {
-                    "PUBLIC": {"wikiPromotionAllowed": true, "handoffAllowed": true},
-                    "INTERNAL": {"wikiPromotionAllowed": true, "handoffAllowed": true},
-                    "SENSITIVE": {"wikiPromotionAllowed": false, "handoffAllowed": false},
-                    "SECRET": {"wikiPromotionAllowed": false, "handoffAllowed": false}
-                  },
-                  "registrationRules": {
-                    "SECRET": {"blocked": true, "diagnostic": "secret_evidence_registered"}
-                  }
+                  "entries": [
+                    {
+                      "evidenceId": "EV-secret",
+                      "sourcePath": "_ops/evidence/PKT-05/secret.env",
+                      "status": "pass",
+                      "trustStatus": "trusted",
+                      "freshnessStatus": "fresh",
+                      "resolutionStatus": "resolved",
+                      "redactionStatus": "clean"
+                    }
+                  ]
                 }
                 """,
             )
+            self._write(repo_root / "_ops/packets/PKT-05.md", "# PKT-05\nEvidence: _ops/evidence/PKT-05/evidence-index.json\n")
             self._write(repo_root / "_ops/evidence/PKT-05/secret.env", "API_KEY=sk-test\npassword=hidden\n")
 
             sources = LongMemorySourceDiscovery(repo_root).discover()
@@ -338,6 +350,26 @@ class LongMemoryQuestionAnsweringTests(unittest.TestCase):
     def _write(path: Path, content: str) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content.strip() + "\n", encoding="utf-8")
+
+    def _seed_evidence_policy(self, repo_root: Path) -> None:
+        self._write(
+            repo_root / "_harness/policies/evidence-classification.yaml",
+            """
+            {
+              "classifications": ["PUBLIC", "INTERNAL", "SENSITIVE", "SECRET"],
+              "defaults": {"classification": "INTERNAL"},
+              "promotionRules": {
+                "PUBLIC": {"wikiPromotionAllowed": true, "handoffAllowed": true},
+                "INTERNAL": {"wikiPromotionAllowed": true, "handoffAllowed": true},
+                "SENSITIVE": {"wikiPromotionAllowed": false, "handoffAllowed": false},
+                "SECRET": {"wikiPromotionAllowed": false, "handoffAllowed": false}
+              },
+              "registrationRules": {
+                "SECRET": {"blocked": true, "diagnostic": "secret_evidence_registered"}
+              }
+            }
+            """,
+        )
 
 
 if __name__ == "__main__":
