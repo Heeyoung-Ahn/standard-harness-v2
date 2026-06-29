@@ -373,6 +373,9 @@ Goal: support Codex/GPT, Claude Code, and future providers above the LLM runtime
 Scope:
 - Provider assignments are policy-selected examples, not product identity.
 - Orchestration starts manual-first and adapter-backed, then can evolve into automated execution.
+- Project startup can select Codex app or Claude Code app as the app-facing Conductor;
+  the Conductor chooses direct handling, single CLI-agent delegation, or cross-LLM
+  worker/verifier loops according to task risk and importance.
 - LLM-to-LLM discussion becomes evidence only when converted into bounded review findings,
   adjudication records, or human-approved decisions.
 
@@ -381,12 +384,19 @@ Implementation tasks:
   and failure modes.
 - Add role routing policy for Planner, Developer, Tester, Reviewer, Documenter, PM, and
   Orchestrator.
+- Add Conductor surface selection and routing policy that keeps app-facing conversation,
+  CLI worker delegation, Conductor review, and next-Agent/User routing explicit.
 - Add cross-provider review/adjudication records.
 - Add handoff prompt generation that preserves authority boundaries.
 
 Acceptance:
 - The harness can express "Claude as Orchestrator, Codex as Developer" as a policy example
   without making either provider the product identity.
+- The harness can express "Codex app as Conductor, Claude Code CLI as worker, Codex CLI as
+  verifier" and the inverse pattern without making any provider the product identity.
+- Low-risk work may be handled by the Conductor, medium-risk work may be delegated to one
+  CLI Agent, and high-risk work may require cross-LLM worker/verifier routing, all with
+  packet and approval boundaries preserved.
 - Provider-specific files do not become starter entry contracts.
 - Cross-provider disagreement is captured as findings or adjudication, not final truth.
 
@@ -472,7 +482,7 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-016 | Wave 8 | none | Friction, improvement proposal, metrics, and starter-promotion candidate tests pass. |
 | SHV2-REQ-017 | Wave 5 | Wave 7 | Context pack, authority label, token budget, and skill-routing context tests pass. |
 | SHV2-REQ-018 | Wave 1 | Wave 5 | Secret/sensitive evidence tests block starter, wiki, handoff, and LLM-context leakage. |
-| SHV2-REQ-019 | Wave 6 | Wave 7 | Multi-provider role routing and adapter manifest tests pass. |
+| SHV2-REQ-019 | Wave 6 | Wave 7 | Multi-provider role routing, Conductor selection, CLI-agent delegation, and adapter manifest tests pass. |
 | SHV2-REQ-020 | Wave 6 | none | Cross-provider review/adjudication records prove LLM discussion is bounded evidence, not final truth. |
 | SHV2-REQ-021 | Wave 2 | Wave 3 | Evidence trust validator blocks untrusted closeout according to packet type and risk. |
 | SHV2-REQ-022 | Wave 1 | Waves 2, 3, 5 | Hard-stop negative tests block missing packet, invalid transition, forbidden `_harness` mutation, critical security blockers, and sensitive wiki promotion. |
@@ -501,6 +511,7 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-045 | Wave 2 | none | Baseline gate profiles exist and are validated for all required packet types. |
 | SHV2-REQ-046 | Wave 2 | none | Risk escalation/de-escalation tests prove hard stops cannot be waived. |
 | SHV2-REQ-047 | Wave 3 | Wave 4 | Evidence index links cover tests, regression, browser/E2E, reviews, gates, risk decisions, wiki/memory, and PM/WBS impact. |
+| SHV2-REQ-048 | Wave 6 | Wave 7 | Conductor routing policy records app-facing Conductor selection, risk/importance routing choice, CLI worker/verifier assignment, Conductor review, and next Agent/User route without granting approval or closeout authority. |
 
 ## Packet Decision Gates For Open Questions
 Open questions from `REQUIREMENTS.md` remain allowed planning questions, but they must not

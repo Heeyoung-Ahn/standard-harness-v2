@@ -1,11 +1,11 @@
 # Validation Report
 
 ## Summary
-- Executed at: 2026-06-28T14:33:07.398Z
+- Executed at: 2026-06-28T23:22:41.929Z
 - Validator version: v1.3
-- Cutover ready: yes
-- Gate decision: pass
-- Next action: Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Cutover ready: no
+- Gate decision: hold
+- Next action: Update or register the concrete task packet, then rerun validation.
 - Scope: harness structural/state validation and workflow evidence consistency only; this is not product/feature verification approval.
 - Product evidence owner: Tester/Reviewer/product-specific acceptance evidence.
 - Surface role: persisted gate evidence only, not product acceptance; live re-entry should use `.agents/runtime/ACTIVE_CONTEXT.json` and CLI context/status.
@@ -26,9 +26,9 @@
   - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md: declared not-declared, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
-- reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md: declared not-declared, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
-  - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-04_PM_DAILY_RHYTHM_AND_WBS_LOOP.md: declared not-declared, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
+  - modeling impact: status required, required yes, diagnostics 0
+- reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md: declared not-declared, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX.md: declared not-declared, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
@@ -36,7 +36,11 @@
   - modeling impact: status required, required yes, diagnostics 0
 
 ## Findings
-- none
+- [error] task_packet_registration_missing: reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet.
+- [error] task_packet_registration_missing: reference/packets/PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet.
+- [error] task_packet_registration_missing: reference/packets/PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet.
+- [error] structural_preflight_failed: Structural preflight failed because unresolved generated-doc or harness-state findings remain.
+- [error] cutover_preflight_failed: Compatibility alias: cutover preflight failed because unresolved structural findings remain.
 
 ## Context Budget
 - none
@@ -46,7 +50,7 @@
 - Lane: standard
 - Phase: day-start
 - Risk overlays: none
-- Read set: 3 files, estimated 904/2200 tokens
+- Read set: 3 files, estimated 836/3000 tokens
 - Context budget status: pass
 - Human manual auto-read: no
 - Blocking diagnostics: no

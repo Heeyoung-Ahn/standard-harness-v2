@@ -371,6 +371,8 @@ Allowed examples:
 - Claude handling planning, testing, and review while Codex/GPT handles coding.
 - Codex-generated and Claude-generated subagents reviewing the same result from different
   lenses.
+- Codex app or Claude Code app as the project Conductor, with Codex CLI or Claude Code
+  CLI workers used for bounded implementation, testing, review, or verification tasks.
 
 These examples must remain replaceable. Provider-specific entry files must not become
 starter product contracts. Cross-provider discussion becomes useful only when converted
@@ -378,9 +380,16 @@ into bounded evidence, review findings, adjudication records, or human-approved
 decisions.
 
 Architecture direction:
+- a project may select one app-facing Conductor at project start; the Conductor works
+  with the Human Owner, reads harness state and packet boundaries, and decides whether
+  a task is handled directly, delegated to one CLI Agent, or routed through a cross-LLM
+  worker/verifier loop according to risk and importance,
 - adapters declare capabilities, permissions, evidence modes, limitations, and failure
   modes,
 - role routing policy selects provider assignments,
+- CLI Agent outputs return to the Conductor as bounded output envelopes, artifacts,
+  diagnostics, and evidence references before the Conductor routes the next Agent,
+  Reviewer, Planner, or Human Owner step,
 - handoff prompts preserve authority boundaries,
 - adjudication records capture disagreement without treating LLM consensus as truth.
 

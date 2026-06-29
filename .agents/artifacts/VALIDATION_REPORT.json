@@ -1,9 +1,9 @@
 {
-  "ok": true,
+  "ok": false,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-06-28T14:33:07.398Z",
-  "cutoverReady": true,
+  "executedAt": "2026-06-28T23:22:41.929Z",
+  "cutoverReady": false,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
     "status": "empty",
@@ -171,38 +171,6 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     },
     {
-      "artifactId": "PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING",
-      "packetPath": "reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md",
-      "declaredRiskClass": null,
-      "derivedRiskClass": "high",
-      "effectiveRiskClass": "high",
-      "routeClass": "packet-path",
-      "requestedRouteClass": "packet-path",
-      "chosenRouteClass": "packet-path",
-      "routeEligibility": "not-applicable",
-      "routeRejectionReasons": [],
-      "fastPathNoteStatus": "not-applicable",
-      "changeZone": {
-        "declared": "core",
-        "changedFiles": [],
-        "effectiveRouteClass": "packet-path",
-        "diagnostics": []
-      },
-      "modelingImpact": {
-        "required": true,
-        "status": "required",
-        "triggerCount": 3,
-        "diagnosticCount": 0,
-        "blockingDiagnosticCount": 0,
-        "triggers": [
-          "Change zone core",
-          "api contract",
-          "schema boundary"
-        ]
-      },
-      "gateEffect": "hold_if_missing_approval_or_evidence"
-    },
-    {
       "artifactId": "PKT-04_PM_DAILY_RHYTHM_AND_WBS_LOOP",
       "packetPath": "reference/packets/PKT-04_PM_DAILY_RHYTHM_AND_WBS_LOOP.md",
       "declaredRiskClass": null,
@@ -235,7 +203,39 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     },
     {
-      "artifactId": "PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX",
+      "artifactId": "discovered:reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md",
+      "packetPath": "reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md",
+      "declaredRiskClass": null,
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 3,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "api contract",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "discovered:reference/packets/PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX.md",
       "packetPath": "reference/packets/PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX.md",
       "declaredRiskClass": null,
       "derivedRiskClass": "high",
@@ -268,7 +268,7 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     },
     {
-      "artifactId": "PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT",
+      "artifactId": "discovered:reference/packets/PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT.md",
       "packetPath": "reference/packets/PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT.md",
       "declaredRiskClass": null,
       "derivedRiskClass": "high",
@@ -302,9 +302,38 @@
       "gateEffect": "hold_if_missing_approval_or_evidence"
     }
   ],
-  "findings": [],
-  "nextAction": "Keep the reusable baseline on planning hold until a new approved lane is selected.",
-  "gateDecision": "pass",
+  "findings": [
+    {
+      "code": "task_packet_registration_missing",
+      "severity": "error",
+      "packetPath": "reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md",
+      "message": "reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet."
+    },
+    {
+      "code": "task_packet_registration_missing",
+      "severity": "error",
+      "packetPath": "reference/packets/PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX.md",
+      "message": "reference/packets/PKT-05_LONG_MEMORY_AND_QUESTION_ANSWERING_INDEX.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet."
+    },
+    {
+      "code": "task_packet_registration_missing",
+      "severity": "error",
+      "packetPath": "reference/packets/PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT.md",
+      "message": "reference/packets/PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT.md matches the current concrete task-packet contract under reference/packets but is not registered in artifact_index as category task_packet."
+    },
+    {
+      "code": "structural_preflight_failed",
+      "severity": "error",
+      "message": "Structural preflight failed because unresolved generated-doc or harness-state findings remain."
+    },
+    {
+      "code": "cutover_preflight_failed",
+      "severity": "error",
+      "message": "Compatibility alias: cutover preflight failed because unresolved structural findings remain."
+    }
+  ],
+  "nextAction": "Update or register the concrete task packet, then rerun validation.",
+  "gateDecision": "hold",
   "traceSummary": null,
   "candidateGates": [
     {
@@ -348,10 +377,10 @@
     "phase": "day-start",
     "riskOverlays": [],
     "readCount": 3,
-    "targetTokens": 2200,
+    "targetTokens": 3000,
     "maxDocuments": 3,
     "contextBudgetStatus": "pass",
-    "estimatedTokensRead": 904,
+    "estimatedTokensRead": 836,
     "humanManualAutoRead": false,
     "overlayEvidence": [],
     "diagnostics": [],

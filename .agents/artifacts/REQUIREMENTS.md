@@ -91,6 +91,7 @@ The good-harness standard from legacy v0.2 is binding for this project:
 The v2 product direction is:
 - coordinate human roles, LLM providers, tools, packets, evidence, tests, reviews, PM operations, and closeout through explicit operating contracts,
 - orchestrate multiple subscribed LLM runtimes such as Codex/GPT and Claude Code through provider-neutral adapters and policies, while keeping provider assignments as configurable policy or examples rather than product identity,
+- select Codex or Claude Code as a project Conductor at project start when the Human Owner wants an app-led operating surface; the Conductor talks with the Human Owner, assesses task risk and importance, and chooses direct handling, single CLI-agent delegation, or a cross-LLM verification loop,
 - treat LLM output as reviewable evidence rather than final truth,
 - keep harness system files, project operating records, and product artifacts separated by folder and authority boundary,
 - limit human-facing Markdown to documents humans actually need for planning, approval, risk review, closeout, and daily management,
@@ -330,6 +331,16 @@ PM Agent supports daily continuity:
 
 v2.0 must support practical multi-LLM orchestration without provider lock-in.
 
+At project start, the Human Owner may select Codex or Claude Code as the project
+Conductor. The Conductor is the app-facing LLM that works with the Human Owner,
+reads the harness state and packet boundary, and designs the operating procedure for
+the next task according to risk and importance. It may handle simple work directly,
+delegate bounded work to one CLI Agent, or route high-risk work through a cross-LLM
+worker/verifier loop. CLI Agent results return to the Conductor as reviewable output
+and bounded evidence; the Conductor then routes the next step to another Agent,
+Reviewer, Planner, or the Human Owner without taking over approval or closeout
+authority.
+
 Example operating patterns include:
 - Claude Code acting as Orchestrator while Codex/GPT handles implementation.
 - Claude handling planning, testing, and review while Codex/GPT handles coding.
@@ -409,7 +420,7 @@ decisions.
 | SHV2-REQ-016 | Friction signals and compound-engineering feedback must feed improvement and starter-promotion candidates. | P1 | HR-119R~HR-124R, HR-200 |
 | SHV2-REQ-017 | Context/token budget policy must prevent default full-repo context loading. | P1 | HR-160R~HR-163 |
 | SHV2-REQ-018 | Sensitive/secret evidence must not leak into starter, wiki, handoff context, or LLM context. | P0 | HR-185~HR-186 |
-| SHV2-REQ-019 | v2 must support multi-LLM orchestration where roles and subagents can be assigned to Codex/GPT, Claude Code, or future providers by provider-neutral policy. Provider-specific examples are samples, not core identity. | P0 | User direction, HR-020R~HR-023R |
+| SHV2-REQ-019 | v2 must support multi-LLM orchestration where roles, conductors, CLI agents, and subagents can be assigned to Codex/GPT, Claude Code, or future providers by provider-neutral policy. Provider-specific examples are samples, not core identity. | P0 | User direction, HR-020R~HR-023R |
 | SHV2-REQ-020 | Cross-provider or cross-subagent deliberation must produce bounded evidence, review findings, or adjudication records; LLM-to-LLM discussion cannot become final truth without evidence and approval. | P0 | User direction, HR-022R, HR-080R~HR-081R |
 | SHV2-REQ-021 | Evidence trust must separate evidence existence from evidence reliability; completion claims and closeout must require trusted or explicitly accepted evidence according to packet type and risk. | P0 | HR-041R, HR-043, HR-044 |
 | SHV2-REQ-022 | Non-overridable hard stops must block unsafe completion even when an LLM or human asks to proceed: missing packet, invalid state transition, product packet touching `_harness/**`, unresolved critical security blocker, or sensitive evidence written to Wiki. | P0 | HR-012R, HR-152, HR-185~HR-186 |
@@ -438,6 +449,7 @@ decisions.
 | SHV2-REQ-045 | The starter must define baseline gate profiles for `docs-only`, `product-feature`, `product-bugfix`, `product-refactor`, `security-data`, `harness-system`, and `starter-promotion` packet types, including required test, review, evidence, boundary, closeout, and N/A substitute checks. | P0 | legacy gate-profiles.yaml, review-governance.yaml |
 | SHV2-REQ-046 | Risk level must escalate or de-escalate gate strength without waiving hard stops: high, critical, security-sensitive, release-sensitive, browser-facing, harness-system, and starter-promotion packets require stricter evidence, review, adjudication, and human residual-risk handling. | P0 | HR-052, legacy gate-profiles.yaml |
 | SHV2-REQ-047 | Closeout evidence must use an evidence index link structure for test commands, regression evidence, browser/E2E evidence, review findings, gate results, security or residual-risk decisions, wiki or memory updates, and PM/WBS impact records instead of embedding raw evidence in the report body. | P0 | User direction, HR-100R~HR-111R |
+| SHV2-REQ-048 | At project start, the Human Owner may select Codex or Claude Code as the app-facing Conductor. The Conductor must converse with the Human Owner, assess task risk and importance, choose direct handling, single CLI-agent delegation, or cross-LLM worker/verifier loops, and route CLI results to the next Agent or Human Owner while preserving packet, evidence, Reviewer, Planner, and human approval authority. | P0 | User direction |
 
 ## Scope
 In scope for the next planning-to-implementation wave:
