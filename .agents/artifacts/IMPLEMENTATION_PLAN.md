@@ -843,11 +843,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION` is closed; latest closeout handoff is `planner -> planner`.
-- Keep the reusable baseline on planning hold until a new approved hardening lane is selected.
-- Recommended first hardening packet: `PKT-11_STATE_AND_CLOSURE_BASELINE`.
-- Source packet: `reference/packets/PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION.md`.
-- Hardening source: Human Owner v2.0 implementation review on 2026-06-29.
+- `PKT-11_STATE_AND_CLOSURE_BASELINE` is closed; latest closeout handoff is `planner -> planner`.
+- Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Source packet: `reference/packets/PKT-11_STATE_AND_CLOSURE_BASELINE.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

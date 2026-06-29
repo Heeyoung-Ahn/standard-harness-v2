@@ -517,8 +517,8 @@ Out of scope for the first packet:
 - Day-start and day-wrap-up outputs must identify current status, blockers, risks, next work, WBS impact, and decisions needed from the Human Owner.
 
 ## Open Questions
-- Should root-to-starter changes be made directly within approved packet scope, or should they always flow through `harness:promote-starter` once the promotion contract is ready?
-- What exact `_ops/` reset command and evidence-retention policy should the starter ship?
+- Deferred by PKT-11 to PKT-15: root-to-starter promotion execution must flow through the approved promotion/dry-run/copy-smoke rehearsal path once the promotion contract is ready. Direct root-to-starter mutation remains packet-scoped only for explicitly approved implementation work and is not a release/promotion approval.
+- Deferred by PKT-11 to PKT-13: exact `_ops/` reset command and evidence-retention policy must be aligned with the operating-intelligence/long-memory source model before it is treated as starter contract.
 - Which provider examples are useful without making any provider the product identity?
 - Which minimum PM artifacts should v2.2 require as starter contract versus leave as sample files?
 - Which review lenses are mandatory for the first copied-repo lifecycle and which remain risk-triggered?

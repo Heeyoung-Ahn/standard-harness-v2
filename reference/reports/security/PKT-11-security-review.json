@@ -1,0 +1,29 @@
+{
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-11_STATE_AND_CLOSURE_BASELINE.md",
+  "work_item_id": "PKT-11_STATE_AND_CLOSURE_BASELINE",
+  "mode": "scoped",
+  "decision": "pass",
+  "scope": "generated-state/manual-edit protection, artifact-index trust, local SQLite hot-state boundary, sensitive evidence non-promotion, root/starter boundary protection, and residual-risk approval authority",
+  "phases_run": [0, 1, 12, 13, 14],
+  "findings": [],
+  "deferred_risks": [
+    {
+      "id": "PKT-12_SCHEMA_PERMISSION_BOUNDARY_CLEANUP",
+      "summary": "Copied-starter permission and schema/risk taxonomy cleanup remains named follow-up scope, not a PKT-11 baseline blocker."
+    },
+    {
+      "id": "PKT-13_OPERATING_INTELLIGENCE_AND_QA",
+      "summary": "Operating-intelligence and _ops reset/retention policy remain named follow-up scope."
+    },
+    {
+      "id": "PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL",
+      "summary": "Automatic friction capture call-site wiring and promotion rehearsal remain named follow-up scope."
+    }
+  ],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  }
+}

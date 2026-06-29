@@ -1,0 +1,29 @@
+{
+  "packet": "PKT-11_STATE_AND_CLOSURE_BASELINE",
+  "capturedFrom": "pre-repair harness:validate output observed during PKT-11 implementation",
+  "status": "failed_before_repair",
+  "diagnostics": [
+    {
+      "code": "validation_report_context_parity_break",
+      "fields": ["ok", "cutoverReady", "findingCount", "blockingFindingCount", "gateDecision"]
+    },
+    {
+      "code": "task_packet_registration_missing",
+      "missingPackets": [
+        "PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP",
+        "PKT-08_RISK_ADAPTIVE_FAST_PATH_AND_EVIDENCE_VALIDATION",
+        "PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS",
+        "PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE",
+        "PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION",
+        "PKT-11_STATE_AND_CLOSURE_BASELINE"
+      ]
+    },
+    { "code": "structural_preflight_failed" },
+    { "code": "cutover_preflight_failed" }
+  ],
+  "ownedByPKT11": true,
+  "notes": [
+    "Failure was captured before artifact-index repair and supported generated-state regeneration.",
+    "Raw generated docs were not manually edited to remove the diagnostics."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "packet": "PKT-11_STATE_AND_CLOSURE_BASELINE",
+  "repairPath": "supported runtime state APIs and harness first-packet/transition commands",
+  "before": {
+    "diagnostic": "task_packet_registration_missing",
+    "missingTaskPackets": [
+      "PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP",
+      "PKT-08_RISK_ADAPTIVE_FAST_PATH_AND_EVIDENCE_VALIDATION",
+      "PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS",
+      "PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE",
+      "PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION",
+      "PKT-11_STATE_AND_CLOSURE_BASELINE"
+    ]
+  },
+  "after": {
+    "registeredTaskPackets": [
+      "reference/packets/PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP.md",
+      "reference/packets/PKT-08_RISK_ADAPTIVE_FAST_PATH_AND_EVIDENCE_VALIDATION.md",
+      "reference/packets/PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS.md",
+      "reference/packets/PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE.md",
+      "reference/packets/PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION.md",
+      "reference/packets/PKT-11_STATE_AND_CLOSURE_BASELINE.md"
+    ],
+    "validatorResult": "pass",
+    "remainingTaskPacketRegistrationDiagnostics": 0
+  },
+  "stateBoundary": {
+    "hotState": ".harness/operating_state.sqlite",
+    "gitTracking": "ignored by *.sqlite rule",
+    "governanceEvidence": [
+      "reference/packets/PKT-11_STATE_AND_CLOSURE_BASELINE.md",
+      "reference/reports/state/PKT-11-validation-after.json",
+      ".agents/artifacts/VALIDATION_REPORT.json",
+      ".agents/runtime/ACTIVE_CONTEXT.json"
+    ]
+  }
+}

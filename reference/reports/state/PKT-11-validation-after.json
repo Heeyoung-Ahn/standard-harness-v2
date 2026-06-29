@@ -1,0 +1,45 @@
+{
+  "packet": "PKT-11_STATE_AND_CLOSURE_BASELINE",
+  "capturedFrom": "npm.cmd run harness:sync-state after supported repair",
+  "status": "pass_after_repair",
+  "orderedSteps": ["validate", "validation-report", "context", "status"],
+  "failedStep": null,
+  "technicalValidation": {
+    "ok": true,
+    "structuralReady": true,
+    "cutoverReady": true,
+    "runtimeValidationReady": true,
+    "findingCount": 0,
+    "blockingFindingCount": 0
+  },
+  "validationReport": {
+    "gateDecision": "pass",
+    "jsonPath": ".agents/artifacts/VALIDATION_REPORT.json",
+    "markdownPath": ".agents/artifacts/VALIDATION_REPORT.md"
+  },
+  "activeContext": {
+    "jsonPath": ".agents/runtime/ACTIVE_CONTEXT.json",
+    "markdownPath": ".agents/runtime/ACTIVE_CONTEXT.md",
+    "validationFields": {
+      "ok": true,
+      "cutoverReady": true,
+      "findingCount": 0,
+      "blockingFindingCount": 0,
+      "gateDecision": "pass"
+    }
+  },
+  "workflowGate": {
+    "status": "open",
+    "detail": "approved delivery orchestration in progress"
+  },
+  "regressionEvidence": {
+    "command": "npm.cmd test",
+    "result": "pass",
+    "tests": 483,
+    "failures": 0
+  },
+  "notes": [
+    "SQLite hot state is local and ignored by git through the repository ignore policy.",
+    "Tracked evidence and generated read models record the PKT-11 baseline; hot state remains an operational source, not a committed governance artifact."
+  ]
+}
