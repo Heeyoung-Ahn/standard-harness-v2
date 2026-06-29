@@ -18,9 +18,18 @@
     "expectedBenefit": {"type": "string"},
     "risk": {"type": "string"},
     "requiresHarnessPacket": {"const": true},
-    "promotionStatus": {"type": "string", "enum": ["proposed", "approved", "rejected", "promoted"]},
+    "promotionStatus": {"type": "string", "enum": ["candidate", "dry-run", "validation", "approval-needed", "rejected"]},
     "sourceImprovementId": {"type": "string"},
     "evidenceIds": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "evidenceManifest": {
+      "type": "object",
+      "properties": {
+        "evidenceRefs": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      }
+    },
+    "dryRunReport": {"type": "object"},
+    "validationResult": {"type": "object"},
+    "approvalBoundary": {"const": "human-decision-required-before-promotion"},
     "promotionRationale": {"type": "string"}
   }
 }

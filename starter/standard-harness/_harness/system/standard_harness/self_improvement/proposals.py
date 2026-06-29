@@ -3,10 +3,106 @@
 from __future__ import annotations
 
 import json
+from hashlib import sha256
 from typing import Any
 
 from standard_harness.self_improvement.friction import FrictionService
 from standard_harness.state.store import HarnessStore
+
+
+PROPOSAL_STATUSES = {"proposed", "reviewed", "accepted", "deferred", "rejected"}
+
+
+class ImprovementProposalLifecycle:
+    """Provider-neutral improvement proposal lifecycle for PKT-10."""
+
+    def create_proposal(
+        self,
+        *,
+        proposal_id: str,
+        source_friction_ids: list[str],
+        source_group_ids: list[str],
+        problem_statement: str,
+        affected_surface: str,
+        expected_improvement: str,
+        risk_level: str,
+        verification_method: str,
+        evidence_refs: list[str],
+    ) -> dict[str, Any]:
+        diagnostics = []
+        if not source_friction_ids and not source_group_ids:
+            diagnostics.append("missing_source_friction_or_group")
+        if not evidence_refs:
+            diagnostics.append("missing_proposal_evidence")
+        if diagnostics:
+            return {
+                "status": "blocked",
+                "proposal_id": proposal_id,
+                "diagnostic_ids": diagnostics,
+                "starter_promotion_eligible": False,
+            }
+        return {
+            "event_type": "improvement.proposal",
+            "proposal_id": proposal_id,
+            "source_friction_ids": list(source_friction_ids),
+            "source_group_ids": list(source_group_ids),
+            "problem_statement": problem_statement,
+            "affected_surface": affected_surface,
+            "expected_improvement": expected_improvement,
+            "risk_level": risk_level,
+            "verification_method": verification_method,
+            "review_disposition": "pending",
+            "status": "proposed",
+            "evidence_refs": list(evidence_refs),
+            "starter_promotion_eligible": False,
+            "diagnostic_ids": [],
+        }
+
+    def review_proposal(
+        self, proposal: dict[str, Any], *, disposition: str, rationale: str
+    ) -> dict[str, Any]:
+        reviewed = dict(proposal)
+        if disposition not in {"accepted", "deferred", "rejected"}:
+            reviewed["status"] = "blocked"
+            reviewed["diagnostic_ids"] = sorted(
+                set(reviewed.get("diagnostic_ids", []) + ["invalid_proposal_disposition"])
+            )
+            reviewed["starter_promotion_eligible"] = False
+            return reviewed
+        reviewed["status"] = disposition
+        reviewed["review_disposition"] = disposition
+        reviewed["review_rationale"] = rationale
+        reviewed["starter_promotion_eligible"] = disposition == "accepted"
+        return reviewed
+
+    def create_wiki_memory_candidate(self, proposal: dict[str, Any]) -> dict[str, Any]:
+        diagnostics = []
+        if proposal.get("status") != "accepted":
+            diagnostics.append("proposal_not_accepted")
+        if not proposal.get("evidence_refs"):
+            diagnostics.append("missing_evidence_refs")
+        candidate_id = "wiki-candidate-" + sha256(
+            str(proposal.get("proposal_id", "")).encode("utf-8")
+        ).hexdigest()[:12]
+        return {
+            "candidate_id": candidate_id,
+            "status": "blocked" if diagnostics else "candidate",
+            "target": "wiki-or-long-memory-proposal",
+            "source_proposal_id": proposal.get("proposal_id"),
+            "authority_label": "proposal-candidate-not-applied",
+            "redaction_status": "references-only",
+            "evidence_refs": list(proposal.get("evidence_refs", [])),
+            "summary": proposal.get("expected_improvement", ""),
+            "diagnostic_ids": diagnostics,
+        }
+
+    def apply_wiki_memory(self, candidate: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "status": "blocked",
+            "candidate_id": candidate.get("candidate_id"),
+            "diagnostic_ids": ["direct_wiki_apply_blocked"],
+            "authority": "wiki-proposal-required",
+        }
 
 
 class ImprovementProposalService:
@@ -89,4 +185,3 @@ def _proposal_from_row(row: dict[str, Any]) -> dict[str, Any]:
     row["linked_evidence_ids"] = json.loads(row.pop("linked_evidence_ids_json"))
     row["target_packet_required"] = bool(row["target_packet_required"])
     return row
-

@@ -20,6 +20,10 @@ from standard_harness.handoff.prompts import HandoffPromptBuilder
 from standard_harness.memory.operational import OperationalMemoryService
 from standard_harness.operating_folders import OperatingFolderInitializer
 from standard_harness.projection.current_context import CurrentContextProjection
+from standard_harness.self_improvement.friction import FrictionCapturePolicy
+from standard_harness.self_improvement.friction import StoredFrictionSignalRegistry
+from standard_harness.self_improvement.recurring import RecurringFrictionDetector
+from standard_harness.self_improvement.starter_promotion import CompoundFeedbackMetrics
 from standard_harness.skills.router import SkillRouter
 from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.starter.contamination import CLEAN_EXPORT_MODE
@@ -50,6 +54,7 @@ COMMANDS = (
     "project-completion",
     "handoff-prompt",
     "skill-route",
+    "compound-feedback",
     "validate",
 )
 
@@ -216,6 +221,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "starter-check": _handle_starter_check,
         "skill-route": _handle_skill_route,
         "handoff-prompt": _handle_handoff_prompt,
+        "compound-feedback": _handle_compound_feedback,
     }
 
     if args.command in handlers:
@@ -655,6 +661,44 @@ def _handle_handoff_prompt(store: HarnessStore, argv: list[str]) -> dict[str, An
         }
     )
     return {"handoff": handoff}
+
+
+def _handle_compound_feedback(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("compound-feedback")
+    parser.add_argument("--configured-surfaces", default="")
+    parser.add_argument("--signals-json", default="[]")
+    parsed = parser.parse_args(argv)
+    configured_surfaces = _csv(parsed.configured_surfaces)
+    capture_policy = FrictionCapturePolicy().validate_capture_surfaces(configured_surfaces)
+    try:
+        signal_inputs = json.loads(parsed.signals_json)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid --signals-json: {exc}") from exc
+    if not isinstance(signal_inputs, list):
+        raise ValueError("--signals-json must be a JSON array")
+    registry = StoredFrictionSignalRegistry(store)
+    signal_results = [registry.record_signal(signal) for signal in signal_inputs]
+    recorded_signals = registry.list_signals()
+    recurring = RecurringFrictionDetector().detect(recorded_signals)
+    metrics = CompoundFeedbackMetrics().summarize(
+        signals=recorded_signals,
+        groups=recurring["groups"],
+        proposals=[],
+        candidates=[],
+    )
+    status = "blocked" if capture_policy["status"] == "blocked" or any(
+        result.get("status") == "blocked" for result in signal_results
+    ) else "ok"
+    return {
+        "compound_feedback": {
+            "status": status,
+            "capturePolicy": capture_policy,
+            "signals": signal_results,
+            "recurring": recurring,
+            "metrics": metrics,
+            "authority": "operational-evidence-only",
+        }
+    }
 
 
 def _handle_starter_check(store: HarnessStore, argv: list[str]) -> dict[str, Any]:

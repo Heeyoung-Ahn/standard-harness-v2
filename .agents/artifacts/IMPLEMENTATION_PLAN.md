@@ -81,21 +81,24 @@ when the coverage matrix below is closed.
 - none
 
 ## Current Iteration
-- No active implementation packet is currently open.
+- PKT-10 Compound Feedback And Starter Promotion is the active Orchestrator-routed
+  implementation packet after explicit Human Owner Ready For Code approval on
+  2026-06-29.
 - PKT-01 Project Operating Folder Contract is closed for its approved scope.
 - PKT-02A Naming And Status Reconciliation is closed for root-harness v1.0, starter-payload v2.0, and post-PKT-01 status truth cleanup.
 - PKT-02B Implementation Plan Requirement Alignment is closed for its approved scope after Orchestrator closeout routing and Planner closeout.
-- PKT-07 Conductor Surface And CLI Worker Routing Loop has completed implementation and
-  review evidence for its approved scope; final status synchronization may still be
-  regenerated from operating state.
-- PKT-08 Risk-Adaptive Fast Path And Evidence Validation is the next planning packet.
-  It is not Ready For Code until the Human Owner explicitly approves it after
-  independent packet-document review.
 - PKT-02 Risk-Adaptive Gate Profile Engine is closed after Orchestrator-routed implementation, testing, review, security evidence, and Planner closeout.
 - PKT-03 Documenter Closeout And Evidence Index is closed after Orchestrator-routed implementation, testing, review, security evidence, and Planner closeout for closeout report/evidence-index behavior.
-- PKT-07 Conductor Surface And CLI Worker Routing Loop is approved for Ready For Code
-  by explicit Human Owner decision on 2026-06-29 and is the next Orchestrator-routed
-  implementation packet.
+- PKT-04 PM Daily Rhythm And WBS Loop, PKT-04A PMO Surface And Reviewer Lens
+  Alignment, PKT-04B Clean Starter Lifecycle Hardening, PKT-05 Long Memory And
+  Question Answering Index, PKT-06 Provider-Neutral Orchestration Contract,
+  PKT-07 Conductor Surface And CLI Worker Routing Loop, PKT-08 Risk-Adaptive Fast
+  Path And Evidence Validation, PKT-09 Skill Routing And Operator Ergonomics, and
+  PKT-09A Executable Skill Packages And Dual-Provider Skill Use are closed for their
+  approved scopes.
+- PKT-10 owns the Wave 9 SHV2-REQ-016 implementation lane for friction signals,
+  recurring groups, improvement proposals, metrics, wiki/long-memory candidates, and
+  starter-promotion candidates that stop at `approval-needed`.
 
 ## Dependency Order And Blocking Conditions
 - Requirements freeze precedes architecture sync, implementation-plan sync, and packet
@@ -704,9 +707,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE` is closed; latest closeout handoff is `planner -> planner`.
+- `PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION` is closed; latest closeout handoff is `planner -> planner`.
 - Keep the reusable baseline on planning hold until a new approved lane is selected.
-- Source packet: `reference\packets\PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE.md`.
+- Source packet: `reference/packets/PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

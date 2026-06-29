@@ -198,6 +198,14 @@ Major component ownership is:
 | Skills / Roles | `_harness/system/standard_harness/skills/`, `_harness/system/standard_harness/roles/` | Skill catalog, automatic skill routing, and role cards. |
 | Self Improvement | `_harness/system/standard_harness/self_improvement/` | Friction, recurring issue detection, improvement proposals, and starter-promotion candidates. |
 
+PKT-10 hardens Self Improvement as a structured feedback lifecycle:
+friction signals are captured from bounded runtime/service surfaces, recurring groups
+can feed reviewed improvement proposals, accepted proposals can create wiki/long-memory
+candidates or starter-promotion candidates, and starter-promotion candidates must stop at
+`approval-needed` after dry-run and safety validation. Metrics and candidates are
+operational evidence only; they cannot approve promotion, release, closeout, or residual
+risk.
+
 ## Core Data Flow
 The v2 operating loop is packet-centered.
 

@@ -1,7 +1,7 @@
 # Validation Report
 
 ## Summary
-- Executed at: 2026-06-29T12:22:19.479Z
+- Executed at: 2026-06-29T13:36:09.184Z
 - Validator version: v1.3
 - Cutover ready: yes
 - Gate decision: pass
@@ -41,6 +41,8 @@
 - reference/packets/PKT-09A_EXECUTABLE_SKILL_PACKAGES_AND_DUAL_PROVIDER_SKILL_USE.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS.md: declared not-declared, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
+  - modeling impact: status required, required yes, diagnostics 0
+- reference/packets/PKT-10_COMPOUND_FEEDBACK_AND_STARTER_PROMOTION.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 
 ## Findings

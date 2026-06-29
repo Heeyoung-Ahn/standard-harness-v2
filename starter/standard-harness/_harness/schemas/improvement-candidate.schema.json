@@ -26,11 +26,11 @@
       "type": "object",
       "required": ["type", "description"],
       "properties": {
-        "type": {"type": "string", "enum": ["schema", "policy", "validator", "gate", "docs", "manual", "starter"]},
+        "type": {"type": "string", "enum": ["schema", "policy", "validator", "gate", "docs", "manual", "starter", "skill", "handoff", "context", "evidence", "test", "workflow", "starter-promotion"]},
         "description": {"type": "string"}
       }
     },
     "requiresHarnessPacket": {"type": "boolean"},
-    "status": {"type": "string", "enum": ["proposed", "accepted", "rejected", "superseded"]}
+    "status": {"type": "string", "enum": ["proposed", "reviewed", "accepted", "deferred", "rejected", "superseded"]}
   }
 }
