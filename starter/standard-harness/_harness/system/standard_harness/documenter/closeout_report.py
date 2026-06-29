@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from standard_harness.evidence.index import EvidenceIndexContract
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
 
 
 REQUIRED_SECTIONS = {
@@ -32,6 +33,9 @@ RAW_EVIDENCE_MARKERS = ("```", "BEGIN LOG", "Traceback (most recent call last)",
 
 
 class CloseoutReportDocumenter:
+    def __init__(self, friction_capture: RuntimeFrictionCapture | None = None):
+        self.friction_capture = friction_capture
+
     def build_report(self, data: dict[str, Any]) -> dict[str, Any]:
         packet_id = str(data.get("packet_id", "unknown-packet"))
         evidence_index = data.get("evidence_index")
@@ -120,6 +124,14 @@ class CloseoutReportDocumenter:
                     index=resolved_index,
                     required_gates=required_gates or [],
                 )["diagnostics"]
+            )
+        if diagnostics and self.friction_capture is not None:
+            code = str(diagnostics[0].get("code", "closeout_report_diagnostic"))
+            self.friction_capture.closeout_state_mismatch(
+                source_ref="documenter/closeout_report.py::CloseoutReportDocumenter.validate_report",
+                evidence_ref=f"_ops/evidence/runtime-friction/closeout-report-{_text(report.get('packetId')) or 'unknown'}.json",
+                recurrence_key=f"closeout-report:{code}",
+                idempotency_scope=f"closeout-report:{report_path or code}",
             )
         return {"ok": not diagnostics, "diagnostics": diagnostics}
 

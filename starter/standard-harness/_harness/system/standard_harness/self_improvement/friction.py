@@ -175,7 +175,14 @@ class RuntimeFrictionCapture:
     def __init__(self, registry: FrictionSignalRegistry | StoredFrictionSignalRegistry):
         self.registry = registry
 
-    def validation_failure(self, *, source_ref: str, evidence_ref: str) -> dict[str, Any]:
+    def validation_failure(
+        self,
+        *,
+        source_ref: str,
+        evidence_ref: str,
+        recurrence_key: str | None = None,
+        idempotency_scope: str | None = None,
+    ) -> dict[str, Any]:
         return self._capture(
             surface="validation_failure",
             friction_type="validator_failure",
@@ -183,9 +190,18 @@ class RuntimeFrictionCapture:
             evidence_ref=evidence_ref,
             severity="high",
             suggested_route="Developer",
+            recurrence_key=recurrence_key,
+            idempotency_scope=idempotency_scope,
         )
 
-    def validation_pass_with_warnings(self, *, source_ref: str, evidence_ref: str) -> dict[str, Any]:
+    def validation_pass_with_warnings(
+        self,
+        *,
+        source_ref: str,
+        evidence_ref: str,
+        recurrence_key: str | None = None,
+        idempotency_scope: str | None = None,
+    ) -> dict[str, Any]:
         return self._capture(
             surface="validation_pass_with_warnings",
             friction_type="validation_pass_with_warnings",
@@ -193,9 +209,18 @@ class RuntimeFrictionCapture:
             evidence_ref=evidence_ref,
             severity="medium",
             suggested_route="Developer",
+            recurrence_key=recurrence_key,
+            idempotency_scope=idempotency_scope,
         )
 
-    def review_finding_or_evidence_gap(self, *, source_ref: str, evidence_ref: str) -> dict[str, Any]:
+    def review_finding_or_evidence_gap(
+        self,
+        *,
+        source_ref: str,
+        evidence_ref: str,
+        recurrence_key: str | None = None,
+        idempotency_scope: str | None = None,
+    ) -> dict[str, Any]:
         return self._capture(
             surface="review_finding_or_evidence_gap",
             friction_type="missing_required_evidence",
@@ -203,9 +228,18 @@ class RuntimeFrictionCapture:
             evidence_ref=evidence_ref,
             severity="high",
             suggested_route="Reviewer",
+            recurrence_key=recurrence_key,
+            idempotency_scope=idempotency_scope,
         )
 
-    def pm_report_status_friction(self, *, source_ref: str, evidence_ref: str) -> dict[str, Any]:
+    def pm_report_status_friction(
+        self,
+        *,
+        source_ref: str,
+        evidence_ref: str,
+        recurrence_key: str | None = None,
+        idempotency_scope: str | None = None,
+    ) -> dict[str, Any]:
         return self._capture(
             surface="pm_report_status_friction",
             friction_type="manual_rework_repeated",
@@ -213,9 +247,18 @@ class RuntimeFrictionCapture:
             evidence_ref=evidence_ref,
             severity="medium",
             suggested_route="PM",
+            recurrence_key=recurrence_key,
+            idempotency_scope=idempotency_scope,
         )
 
-    def closeout_state_mismatch(self, *, source_ref: str, evidence_ref: str) -> dict[str, Any]:
+    def closeout_state_mismatch(
+        self,
+        *,
+        source_ref: str,
+        evidence_ref: str,
+        recurrence_key: str | None = None,
+        idempotency_scope: str | None = None,
+    ) -> dict[str, Any]:
         return self._capture(
             surface="closeout_state_mismatch",
             friction_type="closeout_state_mismatch",
@@ -223,9 +266,18 @@ class RuntimeFrictionCapture:
             evidence_ref=evidence_ref,
             severity="high",
             suggested_route="Orchestrator",
+            recurrence_key=recurrence_key,
+            idempotency_scope=idempotency_scope,
         )
 
-    def context_token_budget_overrun(self, *, source_ref: str, evidence_ref: str) -> dict[str, Any]:
+    def context_token_budget_overrun(
+        self,
+        *,
+        source_ref: str,
+        evidence_ref: str,
+        recurrence_key: str | None = None,
+        idempotency_scope: str | None = None,
+    ) -> dict[str, Any]:
         return self._capture(
             surface="context_token_budget_overrun",
             friction_type="token_overuse",
@@ -233,9 +285,18 @@ class RuntimeFrictionCapture:
             evidence_ref=evidence_ref,
             severity="medium",
             suggested_route="Planner",
+            recurrence_key=recurrence_key,
+            idempotency_scope=idempotency_scope,
         )
 
-    def authority_boundary_violation(self, *, source_ref: str, evidence_ref: str) -> dict[str, Any]:
+    def authority_boundary_violation(
+        self,
+        *,
+        source_ref: str,
+        evidence_ref: str,
+        recurrence_key: str | None = None,
+        idempotency_scope: str | None = None,
+    ) -> dict[str, Any]:
         return self._capture(
             surface="authority_boundary_violation",
             friction_type="boundary_violation",
@@ -243,6 +304,8 @@ class RuntimeFrictionCapture:
             evidence_ref=evidence_ref,
             severity="high",
             suggested_route="Reviewer",
+            recurrence_key=recurrence_key,
+            idempotency_scope=idempotency_scope,
         )
 
     def _capture(
@@ -254,21 +317,31 @@ class RuntimeFrictionCapture:
         evidence_ref: str,
         severity: str,
         suggested_route: str,
+        recurrence_key: str | None = None,
+        idempotency_scope: str | None = None,
     ) -> dict[str, Any]:
-        return self.registry.record_signal(
-            {
-                "signalType": friction_type,
-                "severity": severity,
-                "sourceSurface": surface,
-                "sourceRef": source_ref,
-                "recurrenceKey": f"{surface}:{friction_type}",
-                "evidenceRef": evidence_ref,
-                "suggestedRoute": suggested_route,
-                "authorityBoundary": "evidence-only",
-                "sensitiveEvidence": False,
-                "redactionStatus": "clean",
-            }
-        )
+        signal = {
+            "signalType": friction_type,
+            "severity": severity,
+            "sourceSurface": surface,
+            "sourceRef": source_ref,
+            "recurrenceKey": recurrence_key or f"{surface}:{friction_type}",
+            "evidenceRef": evidence_ref,
+            "suggestedRoute": suggested_route,
+            "authorityBoundary": "evidence-only",
+            "sensitiveEvidence": False,
+            "redactionStatus": "clean",
+        }
+        idempotency_key = None
+        if idempotency_scope:
+            idempotency_key = (
+                f"runtime-friction:{surface}:{friction_type}:"
+                f"{idempotency_scope}:{signal['recurrenceKey']}:{evidence_ref}"
+            )
+        try:
+            return self.registry.record_signal(signal, idempotency_key=idempotency_key)  # type: ignore[arg-type]
+        except TypeError:
+            return self.registry.record_signal(signal)  # type: ignore[call-arg]
 
 
 class FrictionService:

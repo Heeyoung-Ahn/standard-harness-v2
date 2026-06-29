@@ -27,27 +27,70 @@ TRUSTED_GATE_PROVENANCE = {
     "security-review",
 }
 FORBIDDEN_EVIDENCE_KEYS = {
+    "api_key",
+    "auth",
+    "auth_token",
     "body",
     "cache",
+    "cookie",
     "content",
+    "credential",
     "generated",
     "generated_state",
     "local_db",
     "log",
     "raw",
     "raw_secret",
+    "refresh_token",
     "root",
     "root_history",
     "secret",
+    "session",
+    "session_token",
     "token",
     "transcript",
 }
 FORBIDDEN_PATH_PARTS = {
     ".agents",
+    ".claude",
+    ".codex",
     ".git",
     ".harness",
     "__pycache__",
+    "AGENTS.md",
 }
+FORBIDDEN_PATH_FRAGMENTS = (
+    ".sqlite",
+    ".db",
+    ".pyc",
+    "api-key",
+    "apikey",
+    "auth-",
+    "auth_",
+    "auth-token",
+    "auth_token",
+    "bearer-token",
+    "bearer_token",
+    "cache",
+    "cookie",
+    "generated-state",
+    "local-db",
+    "packet-evidence",
+    "provider-cache",
+    "raw-log",
+    "raw-transcript",
+    "secret",
+    "session",
+    "session-token",
+    "session_token",
+    "-token",
+    "_token",
+    "token.",
+    "tokens.",
+    "transcript",
+    "validation_report",
+    "wiki-state",
+)
 
 
 class StarterPromotionCandidateRegistry:
@@ -343,12 +386,13 @@ def _validate_safe_ref(value: str, *, kind: str) -> list[str]:
     normalized = value.replace("\\", "/")
     path = PurePosixPath(normalized)
     parts = set(path.parts)
+    lowered_parts = {part.lower() for part in path.parts}
     if path.is_absolute() or ".." in path.parts:
         diagnostics.append(f"unsafe_{kind}_path")
-    if parts & FORBIDDEN_PATH_PARTS:
+    if parts & FORBIDDEN_PATH_PARTS or lowered_parts & {part.lower() for part in FORBIDDEN_PATH_PARTS}:
         diagnostics.append(f"unsafe_{kind}_path")
     lowered = normalized.lower()
-    if any(fragment in lowered for fragment in (".sqlite", ".db", ".pyc", "validation_report", "generated-state")):
+    if any(fragment in lowered for fragment in FORBIDDEN_PATH_FRAGMENTS):
         diagnostics.append(f"unsafe_{kind}_path")
     if kind == "path" and not normalized.startswith(("_harness/", "product/")):
         diagnostics.append("changed_surface_outside_starter_contract")
@@ -370,6 +414,19 @@ def _detect_forbidden_payload(value: Any) -> list[str]:
             diagnostics.extend(_detect_forbidden_payload(child))
     elif isinstance(value, str):
         lowered = value.lower()
-        if any(token in lowered for token in ("sk-", "secret=", "token=", "raw_secret")):
+        if any(
+            token in lowered
+            for token in (
+                "sk-",
+                "authorization:",
+                "bearer ",
+                "secret=",
+                "token=",
+                "api_key=",
+                "cookie:",
+                "session_token",
+                "raw_secret",
+            )
+        ):
             diagnostics.append("forbidden_raw_or_sensitive_evidence")
     return diagnostics

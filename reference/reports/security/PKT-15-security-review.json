@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL.md",
+  "work_item_id": "PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL",
+  "mode": "scoped",
+  "phases_run": [0, 1, 12, 13, 14],
+  "workItemId": "PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL",
+  "packetPath": "reference/packets/PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL.md",
+  "executedAtLocal": "2026-06-30",
+  "status": "pass",
+  "decision": "pass",
+  "phasesRun": [0, 1, 12, 13, 14],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  },
+  "findings": [],
+  "checks": [
+    {
+      "id": "starter-contamination-audit",
+      "result": "pass",
+      "evidence": "reference/reports/promotion/PKT-15-copied-starter-smoke.md"
+    },
+    {
+      "id": "forbidden-fixtures",
+      "result": "pass",
+      "evidence": "reference/reports/promotion/PKT-15-contamination-negative-fixtures.md"
+    },
+    {
+      "id": "authority-boundary",
+      "result": "pass",
+      "evidence": "promotion command authority flags all false"
+    },
+    {
+      "id": "permission-boundary-search",
+      "result": "pass",
+      "evidence": "No harness-developer, root repo identity, or secret/token markers found in starter agent-permissions policy"
+    }
+  ],
+  "authority": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false
+  }
+}

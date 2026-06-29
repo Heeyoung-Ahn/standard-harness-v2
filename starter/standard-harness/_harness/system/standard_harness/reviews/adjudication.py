@@ -5,12 +5,14 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
 from standard_harness.state.store import HarnessStore
 
 
 class ChallengeReviewService:
-    def __init__(self, store: HarnessStore):
+    def __init__(self, store: HarnessStore, friction_capture: RuntimeFrictionCapture | None = None):
         self.store = store
+        self.friction_capture = friction_capture
 
     def open_challenge(
         self,
@@ -36,6 +38,11 @@ class ChallengeReviewService:
             "rationale": rationale,
             "status": "open",
         }
+        self._capture_review_friction(
+            source_ref="reviews/adjudication.py::ChallengeReviewService.open_challenge",
+            evidence_ref=f"_ops/evidence/runtime-friction/challenge-{challenge_id}.json",
+            recurrence_key=f"review-challenge:{packet_id or challenged_item_id}",
+        )
         return self._record(
             table="challenges",
             key_column="challenge_id",
@@ -56,10 +63,25 @@ class ChallengeReviewService:
     ) -> dict[str, Any]:
         challenge = self._challenge(challenge_id)
         if challenge is None:
+            self._capture_review_friction(
+                source_ref="reviews/adjudication.py::ChallengeReviewService.record_independent_review",
+                evidence_ref=f"_ops/evidence/runtime-friction/challenge-review-{challenge_id}.json",
+                recurrence_key=f"review-gap:unknown-challenge:{challenge_id}",
+            )
             raise ValueError(f"Unknown challenge: {challenge_id}")
         if reviewer_role == challenge.get("challenged_actor_role"):
+            self._capture_review_friction(
+                source_ref="reviews/adjudication.py::ChallengeReviewService.record_independent_review",
+                evidence_ref=f"_ops/evidence/runtime-friction/challenge-review-{challenge_id}.json",
+                recurrence_key=f"review-gap:not-independent:{challenge_id}",
+            )
             raise ValueError("Independent review requires an independent reviewer")
         if reviewer_role != "Independent Reviewer":
+            self._capture_review_friction(
+                source_ref="reviews/adjudication.py::ChallengeReviewService.record_independent_review",
+                evidence_ref=f"_ops/evidence/runtime-friction/challenge-review-{challenge_id}.json",
+                recurrence_key=f"review-gap:wrong-role:{challenge_id}",
+            )
             raise ValueError("Independent review requires Independent Reviewer role")
         record = {
             "review_id": review_id,
@@ -86,11 +108,26 @@ class ChallengeReviewService:
         idempotency_key: str,
     ) -> dict[str, Any]:
         if self._challenge(challenge_id) is None:
+            self._capture_review_friction(
+                source_ref="reviews/adjudication.py::ChallengeReviewService.record_adjudication",
+                evidence_ref=f"_ops/evidence/runtime-friction/challenge-adjudication-{challenge_id}.json",
+                recurrence_key=f"review-gap:unknown-adjudication-challenge:{challenge_id}",
+            )
             raise ValueError(f"Unknown challenge: {challenge_id}")
         if not self._has_review(challenge_id):
+            self._capture_review_friction(
+                source_ref="reviews/adjudication.py::ChallengeReviewService.record_adjudication",
+                evidence_ref=f"_ops/evidence/runtime-friction/challenge-adjudication-{challenge_id}.json",
+                recurrence_key=f"review-gap:missing-independent-review:{challenge_id}",
+            )
             raise ValueError("Adjudication requires an independent review first")
         for event_id in follow_up_event_ids:
             if not self._event_exists(event_id):
+                self._capture_review_friction(
+                    source_ref="reviews/adjudication.py::ChallengeReviewService.record_adjudication",
+                    evidence_ref=f"_ops/evidence/runtime-friction/challenge-adjudication-{challenge_id}.json",
+                    recurrence_key=f"review-gap:unknown-follow-up:{event_id}",
+                )
                 raise ValueError(f"Unknown follow-up event: {event_id}")
         record = {
             "adjudication_id": adjudication_id,
@@ -160,3 +197,19 @@ class ChallengeReviewService:
                 (event_id,),
             ).fetchone()
         return row is not None
+
+    def _capture_review_friction(
+        self,
+        *,
+        source_ref: str,
+        evidence_ref: str,
+        recurrence_key: str,
+    ) -> None:
+        if self.friction_capture is None:
+            return
+        self.friction_capture.review_finding_or_evidence_gap(
+            source_ref=source_ref,
+            evidence_ref=evidence_ref,
+            recurrence_key=recurrence_key,
+            idempotency_scope=source_ref,
+        )

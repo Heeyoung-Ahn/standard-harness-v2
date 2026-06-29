@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from standard_harness.adapters.manifest import AdapterManifest
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
 from standard_harness.state.store import HarnessStore
 from standard_harness.workflow.conductor import ConductorLedger
 from standard_harness.workflow.conductor import ConductorRoutingPolicy
@@ -25,6 +26,7 @@ class ConductorWorkerE2ERunner:
     """Run a bounded provider-neutral worker/verifier E2E path."""
 
     harness_root: str | Path
+    friction_capture: RuntimeFrictionCapture | None = None
 
     def run(
         self,
@@ -328,6 +330,13 @@ class ConductorWorkerE2ERunner:
         real_cli_evidence_status: str,
         diagnostics: list[str],
     ) -> dict[str, Any]:
+        if self.friction_capture is not None and diagnostics:
+            self.friction_capture.authority_boundary_violation(
+                source_ref="workflow/conductor_worker_e2e.py::ConductorWorkerE2ERunner.run",
+                evidence_ref=f"_ops/evidence/runtime-friction/conductor-worker-{packet_id}.json",
+                recurrence_key=f"authority-boundary:{diagnostics[0]}",
+                idempotency_scope=f"conductor-worker:{packet_id}:{mode}",
+            )
         return {
             "schemaVersion": SCHEMA_VERSION,
             "packetId": packet_id,

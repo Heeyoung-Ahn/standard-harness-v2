@@ -7,6 +7,7 @@ from typing import Any
 
 from standard_harness.context.authority import ContextAuthorityPolicy
 from standard_harness.context.budget import TokenBudgetPolicy, estimate_tokens
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
 
 
 ROLE_SCOPES = {
@@ -23,13 +24,27 @@ SENSITIVE_CLASSIFICATIONS = {"SENSITIVE", "SECRET"}
 
 
 class ContextPackBuilder:
-    def __init__(self, authority: ContextAuthorityPolicy, budget: TokenBudgetPolicy):
+    def __init__(
+        self,
+        authority: ContextAuthorityPolicy,
+        budget: TokenBudgetPolicy,
+        friction_capture: RuntimeFrictionCapture | None = None,
+    ):
         self.authority = authority
         self.budget = budget
+        self.friction_capture = friction_capture
 
     @classmethod
-    def from_repo(cls, repo_root: str | Path) -> "ContextPackBuilder":
-        return cls(ContextAuthorityPolicy.from_repo(repo_root), TokenBudgetPolicy.from_repo(repo_root))
+    def from_repo(
+        cls,
+        repo_root: str | Path,
+        friction_capture: RuntimeFrictionCapture | None = None,
+    ) -> "ContextPackBuilder":
+        return cls(
+            ContextAuthorityPolicy.from_repo(repo_root),
+            TokenBudgetPolicy.from_repo(repo_root, friction_capture=friction_capture),
+            friction_capture=friction_capture,
+        )
 
     def build(self, *, role: str, packet: dict[str, Any], items: list[dict[str, Any]]) -> dict[str, Any]:
         labelled: list[dict[str, Any]] = []
@@ -48,7 +63,20 @@ class ContextPackBuilder:
                 continue
             labelled.append(self.authority.label_item(item))
         token_budget = self.budget.budget_for(role)
-        estimated = estimate_tokens(labelled)
+        estimated = estimate_tokens(
+            labelled,
+            friction_capture=self.friction_capture,
+            source_ref="context/packs.py::ContextPackBuilder.build",
+            evidence_ref=f"_ops/evidence/runtime-friction/context-pack-{role}.json",
+            max_tokens=int(token_budget.get("maxTokens", 0)),
+        )
+        if omitted and self.friction_capture is not None:
+            self.friction_capture.context_token_budget_overrun(
+                source_ref="context/packs.py::ContextPackBuilder.build",
+                evidence_ref=f"_ops/evidence/runtime-friction/context-pack-sensitive-{role}.json",
+                recurrence_key=f"context-budget:sensitive-omitted:{role}",
+                idempotency_scope=f"context-pack-sensitive:{role}",
+            )
         return {
             "role": role,
             "packetId": packet.get("packet_id"),

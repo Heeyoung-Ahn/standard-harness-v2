@@ -43,6 +43,7 @@ export function runPromoteStarterCommand({ repoRoot = process.cwd(), args = [] }
   for (const item of plan.items.filter((entry) => entry.decision === "include")) {
     copyFile(sourceRoot, targetRoot, item.path);
   }
+  writeStarterSeedArtifacts(targetRoot);
   writeMergedPackageJson({ sourceRoot, targetRoot });
   writePlaceholders(targetRoot);
   writeExportProvenance({ sourceRoot, targetRoot, plan });
@@ -361,6 +362,312 @@ function writePlaceholders(targetRoot) {
   }
 }
 
+function writeStarterSeedArtifacts(targetRoot) {
+  const seedFiles = {
+    ".agents/artifacts/CURRENT_STATE.md": starterCurrentState(),
+    ".agents/artifacts/TASK_LIST.md": starterTaskList(),
+    ".agents/artifacts/REQUIREMENTS.md": starterRequirements(),
+    ".agents/artifacts/ARCHITECTURE_GUIDE.md": starterArchitectureGuide(),
+    ".agents/artifacts/IMPLEMENTATION_PLAN.md": starterImplementationPlan(),
+    ".agents/artifacts/ACTIVE_PROFILES.md": starterActiveProfiles(),
+    ".agents/artifacts/PROJECT_PROGRESS.md": starterProjectProgress(),
+    ".agents/artifacts/PROJECT_HISTORY.md": starterProjectHistory(),
+    ".agents/artifacts/PREVENTIVE_MEMORY.md": starterPreventiveMemory()
+  };
+
+  for (const [relativePath, content] of Object.entries(seedFiles)) {
+    writeSeedFile(targetRoot, relativePath, content, { overwrite: true });
+  }
+
+  for (const [relativePath, content] of Object.entries(starterReferenceSeedFiles())) {
+    writeSeedFile(targetRoot, relativePath, content, { overwrite: false });
+  }
+}
+
+function writeSeedFile(targetRoot, relativePath, content, { overwrite }) {
+  const target = path.join(targetRoot, relativePath);
+  if (!overwrite && fs.existsSync(target)) return;
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, `${content.trim()}\n`, "utf8");
+}
+
+function starterReferenceSeedFiles() {
+  const profileIds = ["PRF-04", "PRF-05", "PRF-06", "PRF-07", "PRF-08", "PRF-09", "PRF-10"];
+  return {
+    "reference/planning/PLN-00_DEEP_INTERVIEW.md": starterReferenceDoc("PLN-00 Deep Interview"),
+    "reference/planning/PLN-01_REQUIREMENTS_FREEZE.md": starterReferenceDoc("PLN-01 Requirements Freeze"),
+    "reference/artifacts/PROJECT_STARTER_DOC_PACK.md": starterReferenceDoc("Project Starter Doc Pack"),
+    "reference/artifacts/UI_DESIGN.md": starterReferenceDoc("UI Design"),
+    "reference/artifacts/DEPLOYMENT_PLAN.md": starterReferenceDoc("Deployment Plan"),
+    "reference/artifacts/PACKET_EXIT_QUALITY_GATE.md": starterReferenceDoc("Packet Exit Quality Gate"),
+    "reference/artifacts/REPOSITORY_LAYOUT_OWNERSHIP.md": starterReferenceDoc("Repository Layout Ownership"),
+    "reference/artifacts/LEGACY_SYSTEM_INTAKE.md": starterReferenceDoc("Legacy System Intake"),
+    "reference/artifacts/MIGRATION_RECONCILIATION_PLAN.md": starterReferenceDoc("Migration Reconciliation Plan"),
+    "reference/artifacts/DJANGO_BACKOFFICE_CONVENTIONS.md": starterReferenceDoc("Django Backoffice Conventions"),
+    "reference/artifacts/WORKFLOW_STATE_MACHINE.md": starterReferenceDoc("Workflow State Machine"),
+    "reference/artifacts/APPROVAL_RULE_MATRIX.md": starterReferenceDoc("Approval Rule Matrix"),
+    "reference/artifacts/ROLE_PERMISSION_MATRIX.md": starterReferenceDoc("Role Permission Matrix"),
+    "reference/artifacts/AUDIT_EVENT_SPEC.md": starterReferenceDoc("Audit Event Spec"),
+    "reference/artifacts/EXCEPTION_REOPEN_ROLLBACK_RULES.md": starterReferenceDoc("Exception Reopen Rollback Rules"),
+    "reference/artifacts/LIGHTWEIGHT_APP_BASELINE.md": starterReferenceDoc("Lightweight App Baseline"),
+    "reference/artifacts/ANDROID_APP_BASELINE.md": starterReferenceDoc("Android App Baseline"),
+    "reference/artifacts/NODE_FRONTEND_APP_BASELINE.md": starterReferenceDoc("Node Frontend App Baseline"),
+    "reference/artifacts/BI_DATA_SOURCE_INVENTORY.md": starterReferenceDoc("BI Data Source Inventory"),
+    "reference/artifacts/BI_METRIC_CATALOG.md": starterReferenceDoc("BI Metric Catalog"),
+    "reference/artifacts/BI_SEMANTIC_MODEL.md": starterReferenceDoc("BI Semantic Model"),
+    "reference/artifacts/BI_REFRESH_AND_LINEAGE_PLAN.md": starterReferenceDoc("BI Refresh And Lineage Plan"),
+    "reference/artifacts/BI_DASHBOARD_GOVERNANCE.md": starterReferenceDoc("BI Dashboard Governance"),
+    "reference/profiles/README.md": starterReferenceDoc("Profile Index"),
+    ...Object.fromEntries(
+      profileIds.map((profileId) => [
+        `reference/profiles/${profileId}_${profileSeedName(profileId)}.md`,
+        starterReferenceDoc(`${profileId} Optional Profile`)
+      ])
+    )
+  };
+}
+
+function profileSeedName(profileId) {
+  return {
+    "PRF-04": "LEGACY_EXCEL_VBA_MARIADB_REPLACEMENT_PROFILE",
+    "PRF-05": "PYTHON_DJANGO_BACKOFFICE_PROFILE",
+    "PRF-06": "WORKFLOW_APPROVAL_APPLICATION_PROFILE",
+    "PRF-07": "LIGHTWEIGHT_WEB_APP_PROFILE",
+    "PRF-08": "ANDROID_NATIVE_APP_PROFILE",
+    "PRF-09": "NODE_FRONTEND_WEB_APP_PROFILE",
+    "PRF-10": "BI_ANALYTICS_PLATFORM_PROFILE"
+  }[profileId];
+}
+
+function starterReferenceDoc(title) {
+  return `# ${title}
+
+## Purpose
+- Starter placeholder. Replace or expand this artifact when the active project or optional profile requires it.
+
+## Status
+- seed`;
+}
+
+function starterCurrentState() {
+  return `# Current State
+
+## Snapshot
+- Current Stage: not started
+- Current Focus: run starter initialization and close the kickoff baseline before any implementation packet opens
+- Current Release Goal: define the first approved project baseline on top of the copied standard harness starter
+
+## Next Recommended Agent
+- Planner
+
+## Must Read Next
+- \`START_HERE.md\`
+- \`.agents/artifacts/REQUIREMENTS.md\`
+- \`reference/planning/PLN-00_DEEP_INTERVIEW.md\`
+- \`reference/planning/PLN-01_REQUIREMENTS_FREEZE.md\`
+
+## Open Decisions / Blockers
+- Run \`INIT_STANDARD_HARNESS.cmd\` or \`npm run harness:init\` before real work begins.
+- This project was bootstrapped from the current standard harness starter.
+- Replace starter placeholders with project-specific kickoff content before claiming a live lane is active.
+
+## Latest Handoff Summary
+- No handoff has been recorded yet.`;
+}
+
+function starterTaskList() {
+  return `# Task List
+
+## Current Release Target
+- Close the kickoff baseline so the first approved project packet can open safely
+
+## Active Locks
+| Task ID | Scope | Owner | Status | Started At | Notes |
+|---|---|---|---|---|---|
+| - | None | - | clear | - | Starter is waiting for initialization. |
+
+## Active Tasks
+| Task ID | Title | Scope | Owner | Status | Priority | Depends On | Verification |
+|---|---|---|---|---|---|---|---|
+| BOOT-00 | Initialize copied starter | starter bootstrap | project operator | starter_pending | P0 | \`INIT_STANDARD_HARNESS.cmd\` or \`npm run harness:init\` | generated docs and validation guidance |
+- Run \`INIT_STANDARD_HARNESS.cmd\` or \`npm run harness:init\` before real work begins.
+
+## Blocked Tasks
+| Task ID | Blocker | Owner | Status | Unblock Condition | Verification |
+|---|---|---|---|---|---|
+| - | None | - | clear | - | - |
+
+## Completed Tasks
+| Task ID | Title | Completed At | Verification | Notes |
+|---|---|---|---|---|
+| - | None | - | - | - |
+
+## Handoff Log
+- No handoff has been recorded yet.`;
+}
+
+function starterRequirements() {
+  return `# Requirements
+
+## Summary
+이 문서는 새 프로젝트가 표준 하네스 starter 위에서 시작할 때 프로젝트별 요구, 승인 경계, active profile, 핵심 acceptance를 닫는 기준 문서로 사용한다.
+
+### 사용자 목표
+- Replace this placeholder during \`npm run harness:init\`.
+
+### 운영 목표
+- Replace this placeholder during \`npm run harness:init\`.
+
+### 승인 목표
+- Replace this placeholder during \`npm run harness:init\`.
+
+## Active Profile Selection
+- none
+
+## Open Questions
+- Replace starter placeholders using PROJECT_STARTER_DOC_PACK and close implementation-critical discovery questions before PLN-01 approval.
+
+## Deferred Items
+- none yet
+
+## Starter Health Customization Boundary
+- Preserve this section when customizing project requirements.
+- Safe to customize: product-only requirements, product acceptance notes, approval boundary details, and project-specific open questions.
+- Keep reusable starter-health guidance intact unless an approved packet decision changes the starter contract.`;
+}
+
+function starterArchitectureGuide() {
+  return `# Architecture Guide
+
+## Purpose
+- Preserve the starter architecture baseline until project requirements justify changes.
+
+## Summary
+- This starter architecture guide is a placeholder until PLN-01 requirements freeze is approved.
+
+## Authoring Flow
+- Fill PROJECT_STARTER_DOC_PACK.
+- Close PLN-00 kickoff discovery.
+- Approve PLN-01 requirements freeze.
+- Then synchronize architecture, implementation plan, UI, and packet scope.
+
+## Architecture Memory Boundary
+- Architecture memory is project-local after initialization.
+- Do not copy root maintainer decisions or historical packet evidence into this starter seed.
+- Product-specific component names, module boundaries, data flow, integrations, and architecture decisions are safe to customize after approval.
+
+${starterHealthBoundary()}`;
+}
+
+function starterImplementationPlan() {
+  return `# Implementation Plan
+
+## Current Plan Summary
+- This is the clean starter implementation-plan seed.
+- Replace it with project-specific plan rows only after PLN-01 requirements freeze and packet approval.
+
+## Optional Profile Activation
+- Selected profiles at bootstrap: none.
+- Activate optional profiles only when project evidence requires them.
+
+## Current Iteration
+- Run starter initialization and close the kickoff baseline before opening implementation packets.
+
+## Dependency Order And Blocking Conditions
+- Do not open implementation packets before PLN-00 kickoff discovery and PLN-01 requirements freeze are complete.
+- Keep architecture, requirements, implementation plan, profile selection, and approval boundaries aligned before Ready For Code.
+- Preserve generated-doc immutability, packet-before-code, Active Context derived authority, and role-owned approval boundaries.
+
+## Root / Standard-Template Sync Requirements
+- This copied starter seed does not carry root repository sync obligations.
+- Reusable starter-health changes require an approved packet decision in the source harness before they are promoted into a starter payload.
+
+## Operator Next Action
+- Start PLN-00 deep interview.
+- Fill \`reference/artifacts/PROJECT_STARTER_DOC_PACK.md\` before treating the kickoff baseline as concrete.
+- Approve PLN-01 requirements freeze before syncing architecture, implementation, and UI baselines.
+- Open the first project packet only after requirements freeze, architecture baseline, and profile selection are aligned.
+
+## Long-Memory Boundary
+- Implementation-plan memory is project-local after initialization.
+- This is not a root long history log.
+- Do not copy root maintainer history, review evidence, packet evidence, or root-specific operating memory into this starter seed.
+- Architecture Memory Boundary details belong in \`.agents/artifacts/ARCHITECTURE_GUIDE.md\`; keep this plan focused on approved sequencing and implementation scope.
+
+${starterHealthBoundary()}`;
+}
+
+function starterActiveProfiles() {
+  return `# Active Profiles
+
+## Purpose
+This artifact declares optional profiles that are active for the current project or packet set. Profiles are explicit-only.
+
+## Active Profile Table
+| Profile ID | Activation reason | Required evidence artifacts | Evidence status | Activated by | Activated at | Applies to packets |
+|---|---|---|---|---|---|---|
+| - | None currently active | - | not-needed | - | - | - |
+
+## Activation Rule
+- Declare a profile here before packets cite it as active.`;
+}
+
+function starterProjectProgress() {
+  return `# Project Progress
+
+## Summary
+Track the whole project kickoff-to-release board here after starter initialization.
+
+## Progress Board
+| Phase | Task ID | Task | Status | Notes | Source |
+| --- | --- | --- | --- | --- | --- |
+| Planning | PLN-00 | Kickoff interview | in_progress | Close implementation-critical discovery first. | reference/planning/PLN-00_DEEP_INTERVIEW.md |
+| Planning | PLN-01 | Requirements freeze | todo | Freeze the project-specific requirements baseline after user confirmation. | .agents/artifacts/REQUIREMENTS.md |`;
+}
+
+function starterProjectHistory() {
+  return `# Project History
+
+## Purpose
+- Keep durable project milestones and decisions here after initialization.
+- Do not copy root maintainer packet history, review evidence, or project-specific operating memory into a clean starter.
+
+## Long-Memory Boundary
+- Project history is project-local long memory.
+- This is not a root long history log.
+- Reusable starter-health guidance belongs in starter docs and policies, not root-specific history.
+- Promote durable lessons only through packet closeout, review evidence, or an approved retrospective.
+
+${starterHealthBoundary()}
+
+## Entries
+- none yet`;
+}
+
+function starterPreventiveMemory() {
+  return `# Preventive Memory
+
+## Purpose
+- Capture durable lessons only after packet closeout or approved retrospective evidence.
+
+## Long-Memory Boundary
+- Preventive memory is project-local after initialization.
+- This is not a root long history log.
+- Do not copy root maintainer friction, packet history, or project-specific evidence into this starter seed.
+
+${starterHealthBoundary()}
+
+## Entries
+- none yet`;
+}
+
+function starterHealthBoundary() {
+  return `## Starter Health Customization Boundary
+- Preserve this section when customizing project artifacts.
+- Safe to customize: product-only requirements, implementation notes, approval boundary details, project-specific history, and local acceptance details.
+- Keep reusable starter-health guidance intact unless an approved packet decision changes the starter contract.`;
+}
+
 function writeExportProvenance({ sourceRoot, targetRoot, plan }) {
   const provenancePath = path.join(targetRoot, ".harness/promotion/EXPORT_PROVENANCE.json");
   fs.mkdirSync(path.dirname(provenancePath), { recursive: true });
@@ -417,10 +724,7 @@ function auditLaneForPath(filePath) {
     return "evidence_report";
   }
   if (
-    lower.includes("secret") ||
-    lower.includes("credential") ||
-    lower.includes("session") ||
-    lower.includes("transcript") ||
+    matchesSensitivePathName(lower) ||
     lower === ".env" ||
     lower.startsWith(".env.")
   ) {
@@ -430,6 +734,39 @@ function auditLaneForPath(filePath) {
     return "project_specific_docs";
   }
   return "generated_or_excluded";
+}
+
+function matchesSensitivePathName(filePath) {
+  const base = path.posix.basename(filePath);
+  return [
+    "api-key",
+    "api_key",
+    "apikey",
+    ".pyc",
+    "auth-",
+    "auth_",
+    "auth-token",
+    "auth_token",
+    "bearer",
+    "bearer-token",
+    "bearer_token",
+    "cookie",
+    "secret",
+    "credential",
+    "provider-cache",
+    "raw-log",
+    "raw_secret",
+    "refresh-token",
+    "refresh_token",
+    "session",
+    "session-token",
+    "session_token",
+    "-token",
+    "_token",
+    "token.",
+    "tokens.",
+    "transcript"
+  ].some((fragment) => base.includes(fragment));
 }
 
 function summarizeFindings(findings) {

@@ -192,7 +192,15 @@ test("promotion export writes only reusable starter files and placeholders to sa
       assert.equal(fs.existsSync(path.join(target, ".harness/runtime/state/harness-cli.js")), true);
       assert.equal(fs.existsSync(path.join(target, ".harness/test/example.test.js")), true);
       assert.equal(fs.existsSync(path.join(target, ".codex-plugin/plugin.json")), true);
-      assert.equal(fs.existsSync(path.join(target, ".agents/artifacts/REQUIREMENTS.md")), false);
+      assert.equal(fs.existsSync(path.join(target, ".agents/artifacts/REQUIREMENTS.md")), true);
+      assert.notEqual(
+        fs.readFileSync(path.join(target, ".agents/artifacts/REQUIREMENTS.md"), "utf8"),
+        "fixture\n"
+      );
+      assert.match(
+        fs.readFileSync(path.join(target, ".agents/artifacts/CURRENT_STATE.md"), "utf8"),
+        /Current Stage: not started/
+      );
       assert.equal(fs.existsSync(path.join(target, ".agents/rules/entry.md")), true);
       assert.equal(fs.existsSync(path.join(target, ".agents/scripts/init-project.js")), true);
       assert.equal(fs.existsSync(path.join(target, ".agents/ssot/AI_OPERATING_CONTRACT.md")), true);

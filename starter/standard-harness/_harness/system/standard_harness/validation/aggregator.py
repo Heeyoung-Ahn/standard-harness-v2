@@ -12,6 +12,7 @@ from standard_harness.domain.packets import PacketService
 from standard_harness.completion.v21_conformance import V21ConformanceGate
 from standard_harness.evidence.trust import EvidenceTrustPolicy
 from standard_harness.policy.gate_profiles import GateProfilePolicy
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
 from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.starter.contamination import CLEAN_EXPORT_MODE
 from standard_harness.starter.contamination import INSTALLED_RUNTIME_MODE
@@ -35,9 +36,11 @@ class ValidationService:
         *,
         starter_root: Path | None = None,
         repo_root: Path | None = None,
+        friction_capture: RuntimeFrictionCapture | None = None,
     ):
         self.store = store
         self.repo_root = repo_root or Path.cwd()
+        self.friction_capture = friction_capture
         default_starter = _default_starter_root(Path.cwd())
         self.starter_root = starter_root or default_starter["path"]
         self.installed_starter_mode = bool(default_starter["installed"]) or (
@@ -57,6 +60,13 @@ class ValidationService:
         if packet_id is not None:
             diagnostics.extend(self.validate_packet(packet_id))
             diagnostics.extend(self.validate_projection(packet_id))
+        _capture_validation_diagnostics(
+            self.friction_capture,
+            source_ref="validation/aggregator.py::ValidationService.validate_all",
+            evidence_ref=f"_ops/evidence/runtime-friction/validation-all-{packet_id or 'all'}.json",
+            idempotency_scope=f"validate_all:{packet_id or 'all'}",
+            diagnostics=diagnostics,
+        )
         return diagnostics
 
     def validate_requirements_metadata(self) -> list[dict[str, Any]]:
@@ -101,6 +111,15 @@ class ValidationService:
 
     def validate_packet(self, packet_id: str) -> list[dict[str, Any]]:
         diagnostics = self._packet_schema_diagnostics(packet_id)
+        if diagnostics and any(item.get("error_code") == "invalid_packet_schema" for item in diagnostics):
+            _capture_validation_diagnostics(
+                self.friction_capture,
+                source_ref="validation/aggregator.py::ValidationService.validate_packet",
+                evidence_ref=f"_ops/evidence/runtime-friction/validation-packet-{packet_id}.json",
+                idempotency_scope=f"validate_packet:{packet_id}",
+                diagnostics=diagnostics,
+            )
+            return diagnostics
         diagnostics.extend(self._test_plan_diagnostics(packet_id))
         diagnostics.extend(self._boundary_diagnostics(packet_id))
         diagnostics.extend(self._wiki_proposal_diagnostics(packet_id))
@@ -110,6 +129,13 @@ class ValidationService:
         diagnostics.extend(self._gate_activation_diagnostics(packet_id))
         diagnostics.extend(self._approval_diagnostics(packet_id))
         diagnostics.extend(self._challenge_gate_diagnostics(packet_id))
+        _capture_validation_diagnostics(
+            self.friction_capture,
+            source_ref="validation/aggregator.py::ValidationService.validate_packet",
+            evidence_ref=f"_ops/evidence/runtime-friction/validation-packet-{packet_id}.json",
+            idempotency_scope=f"validate_packet:{packet_id}",
+            diagnostics=diagnostics,
+        )
         return diagnostics
 
     def validate_projection(self, packet_id: str) -> list[dict[str, Any]]:
@@ -660,3 +686,31 @@ def _default_starter_root(cwd: Path) -> dict[str, object]:
     if repository_starter.exists():
         return {"path": repository_starter, "installed": False}
     return {"path": cwd, "installed": True}
+
+
+def _capture_validation_diagnostics(
+    capture: RuntimeFrictionCapture | None,
+    *,
+    source_ref: str,
+    evidence_ref: str,
+    idempotency_scope: str,
+    diagnostics: list[dict[str, Any]],
+) -> None:
+    if capture is None or not diagnostics:
+        return
+    codes = sorted({str(item.get("error_code") or item.get("code") or "diagnostic") for item in diagnostics})
+    recurrence_key = f"validation:{codes[0]}"
+    if any(str(item.get("severity", "")).lower() in {"high", "error", "critical", "blocker"} for item in diagnostics):
+        capture.validation_failure(
+            source_ref=source_ref,
+            evidence_ref=evidence_ref,
+            recurrence_key=recurrence_key,
+            idempotency_scope=idempotency_scope,
+        )
+    else:
+        capture.validation_pass_with_warnings(
+            source_ref=source_ref,
+            evidence_ref=evidence_ref,
+            recurrence_key=f"validation-warning:{codes[0]}",
+            idempotency_scope=idempotency_scope,
+        )

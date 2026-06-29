@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "standard-harness-pkt15-promotion-dry-run/v1",
+  "workItemId": "PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL",
+  "executedAtLocal": "2026-06-30",
+  "command": "npm.cmd run harness:promote-starter -- --dry-run --to C:\\tmp\\standard-harness-pkt15-dry-run-final",
+  "ok": true,
+  "dryRun": true,
+  "summary": {
+    "include": 948,
+    "exclude": 160,
+    "review": 44
+  },
+  "authority": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false
+  },
+  "disposition": "pass"
+}

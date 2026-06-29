@@ -6,21 +6,31 @@ import json
 from pathlib import Path
 from typing import Any
 
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
 from standard_harness.state.store import HarnessStore
 
 
 class ChallengeGateValidator:
-    def __init__(self, policy: dict[str, Any]):
+    def __init__(
+        self,
+        policy: dict[str, Any],
+        friction_capture: RuntimeFrictionCapture | None = None,
+    ):
         self.policy = policy
+        self.friction_capture = friction_capture
 
     @classmethod
-    def load(cls, repo_root: Path | str | None = None) -> "ChallengeGateValidator":
+    def load(
+        cls,
+        repo_root: Path | str | None = None,
+        friction_capture: RuntimeFrictionCapture | None = None,
+    ) -> "ChallengeGateValidator":
         root = Path(repo_root) if repo_root is not None else Path.cwd()
         path = root / "_harness" / "policies" / "challenge-gate.yaml"
         if not path.exists() and root != Path.cwd():
             path = Path.cwd() / "_harness" / "policies" / "challenge-gate.yaml"
         with path.open(encoding="utf-8") as handle:
-            return cls(json.load(handle))
+            return cls(json.load(handle), friction_capture=friction_capture)
 
     def evaluate(
         self,
@@ -48,6 +58,13 @@ class ChallengeGateValidator:
                     _add(diagnostics, "missing_challenge_review_check")
                     break
         status = "blocked" if diagnostics else "pass"
+        if diagnostics and self.friction_capture is not None:
+            self.friction_capture.authority_boundary_violation(
+                source_ref="validation/challenge_gate.py::ChallengeGateValidator.evaluate",
+                evidence_ref=f"_ops/evidence/runtime-friction/challenge-gate-{packet_id}.json",
+                recurrence_key=f"authority-boundary:{diagnostics[0]}",
+                idempotency_scope=f"challenge-gate:{packet_id}:{decision_id}",
+            )
         return {
             "status": status,
             "diagnostic_ids": diagnostics,

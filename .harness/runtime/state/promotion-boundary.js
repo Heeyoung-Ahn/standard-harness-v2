@@ -28,7 +28,8 @@ export const PROMOTION_BOUNDARY_CONTRACT = Object.freeze({
     ".agents/ssot/",
     ".agents/workflows/",
     ".agents/skills/",
-    "reference/"
+    "reference/",
+    "starter/standard-harness/_harness/"
   ],
   includeFiles: ["START_HERE.md", "AGENTS.md", "README.md"],
   reviewFiles: ["package.json"],
@@ -77,11 +78,34 @@ export const PROMOTION_BOUNDARY_CONTRACT = Object.freeze({
   ],
   excludeReferencePacketNamePatterns: [/^(?!PKT-01_WORK_ITEM_PACKET_TEMPLATE\.md$).+\.md$/i],
   excludeNameFragments: [
+    "api-key",
+    "api_key",
+    "apikey",
+    ".pyc",
+    "auth-",
+    "auth_",
+    "auth-token",
+    "auth_token",
+    "bearer",
+    "bearer-token",
+    "bearer_token",
+    "cookie",
     "credential",
     "credentials",
+    "provider-cache",
+    "raw-log",
+    "raw_secret",
+    "refresh-token",
+    "refresh_token",
     "secret",
     "secrets",
     "session",
+    "session-token",
+    "session_token",
+    "-token",
+    "_token",
+    "token.",
+    "tokens.",
     "transcript"
   ]
 });
@@ -200,6 +224,7 @@ function isProjectSpecificReferencePlanningPath(normalizedPath) {
 function isProjectSpecificReferencePacketPath(normalizedPath) {
   const lower = normalizePromotionPath(normalizedPath).toLowerCase();
   if (!lower.startsWith("reference/packets/")) return false;
+  if (lower.startsWith("reference/packets/templates/")) return false;
   if (isStarterTemplateReferenceFile(lower)) return false;
   const base = path.posix.basename(lower);
   return PROMOTION_BOUNDARY_CONTRACT.excludeReferencePacketNamePatterns.some((pattern) => pattern.test(base));

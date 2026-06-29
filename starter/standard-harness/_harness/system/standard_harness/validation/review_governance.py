@@ -9,6 +9,8 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
+
 
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 REQUIRED_REVIEW_GATES_BY_PACKET_TYPE = {
@@ -58,8 +60,9 @@ class ReviewGovernanceValidator:
     gate_id = "review-governance-gate"
     evidence_path = Path("_ops/evidence/release/v21-review-governance.json")
 
-    def __init__(self, repo_root: str | Path):
+    def __init__(self, repo_root: str | Path, friction_capture: RuntimeFrictionCapture | None = None):
         self.repo_root = Path(repo_root)
+        self.friction_capture = friction_capture
 
     def validate_release(self) -> dict[str, Any]:
         path = self.repo_root / self.evidence_path
@@ -83,10 +86,22 @@ class ReviewGovernanceValidator:
     def implementation_transition_diagnostics(self, packet: dict[str, Any]) -> list[str]:
         review_plan = packet.get("review_plan") or packet.get("reviewPlan")
         if not isinstance(review_plan, dict):
-            return ["missing_packet_doc_review"]
+            diagnostics = ["missing_packet_doc_review"]
+            self._capture_review_diagnostics(
+                diagnostics,
+                source_ref="validation/review_governance.py::ReviewGovernanceValidator.implementation_transition_diagnostics",
+                evidence_ref="_ops/evidence/runtime-friction/review-governance-transition.json",
+            )
+            return diagnostics
         review = review_plan.get("packetDocReview") or review_plan.get("packet_doc_review")
         if not isinstance(review, dict):
-            return ["missing_packet_doc_review"]
+            diagnostics = ["missing_packet_doc_review"]
+            self._capture_review_diagnostics(
+                diagnostics,
+                source_ref="validation/review_governance.py::ReviewGovernanceValidator.implementation_transition_diagnostics",
+                evidence_ref="_ops/evidence/runtime-friction/review-governance-transition.json",
+            )
+            return diagnostics
 
         diagnostics: list[str] = []
         status = str(review.get("status", "")).lower()
@@ -101,16 +116,33 @@ class ReviewGovernanceValidator:
         coverage = _string_set(review.get("coverage"))
         if not MANDATORY_PACKET_DOC_REVIEW_COVERAGE.issubset(coverage):
             _add(diagnostics, "missing_packet_doc_review_coverage")
+        self._capture_review_diagnostics(
+            diagnostics,
+            source_ref="validation/review_governance.py::ReviewGovernanceValidator.implementation_transition_diagnostics",
+            evidence_ref="_ops/evidence/runtime-friction/review-governance-transition.json",
+        )
         return diagnostics
 
     def closeout_diagnostics(self, packet: dict[str, Any]) -> list[str]:
         diagnostics: list[str] = []
         closeout_plan = packet.get("closeout_plan") or packet.get("closeoutPlan")
         if not isinstance(closeout_plan, dict):
-            return ["missing_required_review_governance", "missing_independent_closeout_review_lens"]
+            diagnostics = ["missing_required_review_governance", "missing_independent_closeout_review_lens"]
+            self._capture_review_diagnostics(
+                diagnostics,
+                source_ref="validation/review_governance.py::ReviewGovernanceValidator.closeout_diagnostics",
+                evidence_ref="_ops/evidence/runtime-friction/review-governance-closeout.json",
+            )
+            return diagnostics
         review_gates = closeout_plan.get("reviewGates") or closeout_plan.get("review_gates")
         if not isinstance(review_gates, dict) or not review_gates:
-            return ["missing_required_review_governance", "missing_independent_closeout_review_lens"]
+            diagnostics = ["missing_required_review_governance", "missing_independent_closeout_review_lens"]
+            self._capture_review_diagnostics(
+                diagnostics,
+                source_ref="validation/review_governance.py::ReviewGovernanceValidator.closeout_diagnostics",
+                evidence_ref="_ops/evidence/runtime-friction/review-governance-closeout.json",
+            )
+            return diagnostics
 
         self._validate_independent_closeout_lenses(packet, review_gates, diagnostics)
 
@@ -118,6 +150,11 @@ class ReviewGovernanceValidator:
         required = REQUIRED_REVIEW_GATES_BY_PACKET_TYPE.get(packet_type, set())
         if required and not required.issubset(review_gates):
             _add(diagnostics, "missing_required_review_governance")
+        self._capture_review_diagnostics(
+            diagnostics,
+            source_ref="validation/review_governance.py::ReviewGovernanceValidator.closeout_diagnostics",
+            evidence_ref="_ops/evidence/runtime-friction/review-governance-closeout.json",
+        )
         return diagnostics
 
     def _validate_independent_closeout_lenses(
@@ -221,6 +258,11 @@ class ReviewGovernanceValidator:
 
     def _result(self, diagnostics: list[str]) -> dict[str, Any]:
         unique = sorted(set(diagnostics))
+        self._capture_review_diagnostics(
+            unique,
+            source_ref="validation/review_governance.py::ReviewGovernanceValidator.validate_release",
+            evidence_ref="_ops/evidence/runtime-friction/review-governance-release.json",
+        )
         return {
             "status": "blocked" if unique else "pass",
             "diagnostic_ids": unique,
@@ -234,6 +276,22 @@ class ReviewGovernanceValidator:
             "frictionSignalBehavior": "emit missed_review or missing_evidence when review governance blocks release",
             "metricSignalBehavior": "emit review_governance_validation_count by status and finding severity",
         }
+
+    def _capture_review_diagnostics(
+        self,
+        diagnostics: list[str],
+        *,
+        source_ref: str,
+        evidence_ref: str,
+    ) -> None:
+        if self.friction_capture is None or not diagnostics:
+            return
+        self.friction_capture.review_finding_or_evidence_gap(
+            source_ref=source_ref,
+            evidence_ref=evidence_ref,
+            recurrence_key=f"review:{sorted(set(diagnostics))[0]}",
+            idempotency_scope=source_ref,
+        )
 
 
 def _valid_reviewed_commit(value: str, repo_root: Path) -> bool:

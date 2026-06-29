@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "standard-harness-pkt15-root-validation/v1",
+  "workItemId": "PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL",
+  "executedAt": "2026-06-29T21:01:00.946Z",
+  "commands": [
+    "npm.cmd run harness:validate",
+    "npm.cmd run harness:validation-report"
+  ],
+  "ok": true,
+  "structuralReady": true,
+  "cutoverReady": true,
+  "gateDecision": "pass",
+  "findings": []
+}

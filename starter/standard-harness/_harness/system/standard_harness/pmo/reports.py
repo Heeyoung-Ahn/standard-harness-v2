@@ -4,11 +4,16 @@ from __future__ import annotations
 
 from typing import Any
 
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
+
 
 REPORT_LINE_LIMIT = 60
 
 
 class PmoDailyReportService:
+    def __init__(self, friction_capture: RuntimeFrictionCapture | None = None):
+        self.friction_capture = friction_capture
+
     def build_day_start_report(
         self, sources: dict[str, Any], *, report_date: str
     ) -> dict[str, Any]:
@@ -24,7 +29,7 @@ class PmoDailyReportService:
                 ("Sources", _source_lines(sources)),
             ],
         )
-        return _report(
+        report = _report(
             report_type="day-start",
             persistence="generated-view",
             report_path_prefix="_ops/views/pmo",
@@ -34,6 +39,8 @@ class PmoDailyReportService:
             evidence_index_path=sources.get("evidence_index_path"),
             markdown=markdown,
         )
+        self._capture_status_friction(sources, packet_id=packet_id, report_type="day-start")
+        return report
 
     def build_day_wrap_up_report(
         self, sources: dict[str, Any], *, report_date: str
@@ -52,7 +59,7 @@ class PmoDailyReportService:
                 ("Sources", _source_lines(sources)),
             ],
         )
-        return _report(
+        report = _report(
             report_type="day-wrap-up",
             persistence="durable-markdown",
             report_path_prefix="product/docs/pmo",
@@ -61,6 +68,32 @@ class PmoDailyReportService:
             source_watermark=sources.get("source_watermark"),
             evidence_index_path=sources.get("evidence_index_path"),
             markdown=markdown,
+        )
+        self._capture_status_friction(sources, packet_id=packet_id, report_type="day-wrap-up")
+        return report
+
+    def _capture_status_friction(
+        self,
+        sources: dict[str, Any],
+        *,
+        packet_id: str,
+        report_type: str,
+    ) -> None:
+        if self.friction_capture is None:
+            return
+        status_keys = [
+            *_list(sources.get("blockers")),
+            *_list(sources.get("risks")),
+            *_list(sources.get("incomplete_work")),
+        ]
+        if not status_keys:
+            return
+        key = status_keys[0].lower().replace(" ", "-")[:80]
+        self.friction_capture.pm_report_status_friction(
+            source_ref=f"pmo/reports.py::PmoDailyReportService.build_{report_type.replace('-', '_')}_report",
+            evidence_ref=f"_ops/evidence/runtime-friction/pmo-{packet_id}-{report_type}.json",
+            recurrence_key=f"pm-status:{packet_id}:{key}",
+            idempotency_scope=f"{packet_id}:{report_type}:{key}",
         )
 
 

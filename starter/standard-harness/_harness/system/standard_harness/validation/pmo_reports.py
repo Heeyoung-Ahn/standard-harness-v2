@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
+
 
 REQUIRED_PMO_FOLDERS = [
     "day-wrap-up",
@@ -44,7 +46,10 @@ APPROVAL_AUTHORITY_TERMS = [
 
 
 def validate_pmo_report(
-    report: dict[str, Any], *, canonical_source_watermark: int | None = None
+    report: dict[str, Any],
+    *,
+    canonical_source_watermark: int | None = None,
+    friction_capture: RuntimeFrictionCapture | None = None,
 ) -> dict[str, Any]:
     diagnostics: list[dict[str, Any]] = []
     markdown = _text(report.get("markdown"))
@@ -66,6 +71,15 @@ def validate_pmo_report(
     lower_markdown = markdown.lower()
     if any(term in lower_markdown for term in APPROVAL_AUTHORITY_TERMS):
         diagnostics.append({"code": "pmo_report_claims_approval_authority", "field": "markdown"})
+
+    if diagnostics and friction_capture is not None:
+        code = str(diagnostics[0].get("code", "pmo_report_diagnostic"))
+        friction_capture.pm_report_status_friction(
+            source_ref="validation/pmo_reports.py::validate_pmo_report",
+            evidence_ref=f"_ops/evidence/runtime-friction/pmo-report-{_text(report.get('packet_id')) or 'unknown'}.json",
+            recurrence_key=f"pm-report-validation:{code}",
+            idempotency_scope=f"validate_pmo_report:{_text(report.get('report_path')) or code}",
+        )
 
     return {"ok": not diagnostics, "diagnostics": diagnostics}
 

@@ -7,6 +7,8 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
+
 
 REQUIRED_VERIFICATIONS = {
     "releaseGate": "missing_release_gate_verification",
@@ -40,8 +42,9 @@ class FinalCloseoutValidator:
     gate_id = "v21-final-closeout-gate"
     evidence_path = Path("_ops/evidence/release/v21-final-closeout.json")
 
-    def __init__(self, repo_root: str | Path):
+    def __init__(self, repo_root: str | Path, friction_capture: RuntimeFrictionCapture | None = None):
         self.repo_root = Path(repo_root)
+        self.friction_capture = friction_capture
 
     def validate_release(self) -> dict[str, Any]:
         diagnostics: list[str] = []
@@ -168,6 +171,13 @@ class FinalCloseoutValidator:
 
     def _result(self, diagnostics: list[str]) -> dict[str, Any]:
         unique = sorted(set(diagnostics))
+        if unique and self.friction_capture is not None:
+            self.friction_capture.closeout_state_mismatch(
+                source_ref="validation/final_closeout.py::FinalCloseoutValidator.validate_release",
+                evidence_ref="_ops/evidence/runtime-friction/final-closeout.json",
+                recurrence_key=f"closeout:{unique[0]}",
+                idempotency_scope="final-closeout",
+            )
         coverage = _coverage(unique)
         return {
             "status": "blocked" if unique else "pass",

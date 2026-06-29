@@ -6,20 +6,31 @@ import json
 from pathlib import Path
 from typing import Any
 
+from standard_harness.self_improvement.friction import RuntimeFrictionCapture
+
 
 class HumanDecisionValidator:
-    def __init__(self, non_overridable_items: set[str]):
+    def __init__(
+        self,
+        non_overridable_items: set[str],
+        friction_capture: RuntimeFrictionCapture | None = None,
+    ):
         self.non_overridable_items = non_overridable_items
+        self.friction_capture = friction_capture
 
     @classmethod
-    def load(cls, repo_root: Path | str | None = None) -> "HumanDecisionValidator":
+    def load(
+        cls,
+        repo_root: Path | str | None = None,
+        friction_capture: RuntimeFrictionCapture | None = None,
+    ) -> "HumanDecisionValidator":
         root = Path(repo_root) if repo_root is not None else Path.cwd()
         path = root / "_harness" / "policies" / "p0-policy.yaml"
         if not path.exists() and root != Path.cwd():
             path = Path.cwd() / "_harness" / "policies" / "p0-policy.yaml"
         with path.open(encoding="utf-8") as handle:
             policy = json.load(handle)
-        return cls(set(policy.get("nonOverridable", [])))
+        return cls(set(policy.get("nonOverridable", [])), friction_capture=friction_capture)
 
     def validate(self, decision: dict[str, Any]) -> dict[str, Any]:
         diagnostics: list[str] = []
@@ -44,6 +55,13 @@ class HumanDecisionValidator:
             _add(diagnostics, "non_overridable_override")
         if decision.get("followUpPacketRequired") is True and not decision.get("followUpPacketId"):
             _add(diagnostics, "missing_follow_up_packet")
+        if diagnostics and self.friction_capture is not None:
+            self.friction_capture.authority_boundary_violation(
+                source_ref="validation/human_decision.py::HumanDecisionValidator.validate",
+                evidence_ref=f"_ops/evidence/runtime-friction/human-decision-{decision.get('decisionId') or 'unknown'}.json",
+                recurrence_key=f"authority-boundary:{diagnostics[0]}",
+                idempotency_scope=f"human-decision:{decision.get('decisionId') or diagnostics[0]}",
+            )
         return {
             "status": "blocked" if diagnostics else "pass",
             "diagnostic_ids": diagnostics,
