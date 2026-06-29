@@ -1,10 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "required": ["taskType", "requiredSkill", "selectedBy", "evidenceRequired", "allowedWriteZones"],
+  "required": ["selectedBy", "evidenceRequired", "allowedWriteZones"],
   "properties": {
     "taskType": {"type": "string"},
     "requiredSkill": {"type": "string"},
+    "selectedSkills": {"type": "array", "items": {"type": "string"}},
+    "candidateSkills": {"type": "array"},
+    "skippedCandidateSkills": {"type": "array"},
+    "processPriorityOrder": {"type": "array", "items": {"type": "string"}},
+    "skillChain": {"type": "array"},
+    "hardGateDiagnostics": {"type": "array", "items": {"type": "string"}},
+    "skillUseLedger": {"type": "object"},
+    "authorityBoundary": {"type": "string"},
+    "requiresSuperpowersPlugin": {"type": "boolean"},
+    "sourcePriority": {"type": "string"},
     "selectedBy": {"const": "skill-router"},
     "evidenceRequired": {"const": true},
     "allowedWriteZones": {"type": "array", "items": {"type": "string"}}

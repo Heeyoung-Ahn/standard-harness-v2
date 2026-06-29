@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from pathlib import PurePosixPath
 
+from standard_harness.security.redaction import EvidenceRedactor
+
 
 REQUIRED_STARTER_FILES = {
     "README.md": "missing_starter_readme",
@@ -18,6 +20,31 @@ REQUIRED_STARTER_FILES = {
 CLEAN_EXPORT_MODE = "clean-export"
 INSTALLED_RUNTIME_MODE = "installed-runtime"
 STARTER_VALIDATION_MODES = {CLEAN_EXPORT_MODE, INSTALLED_RUNTIME_MODE}
+MAX_CONTENT_SCAN_BYTES = 2 * 1024 * 1024
+CONTENT_SCAN_SUFFIXES = {
+    ".cfg",
+    ".conf",
+    ".csv",
+    ".env",
+    ".html",
+    ".ini",
+    ".json",
+    ".md",
+    ".text",
+    ".toml",
+    ".tsv",
+    ".txt",
+    ".xml",
+    ".yaml",
+    ".yml",
+}
+MANAGED_SENSITIVE_EVIDENCE_SOURCE = (
+    "_harness",
+    "system",
+    "standard_harness",
+    "validation",
+    "sensitive_evidence.py",
+)
 
 
 REQUIRED_STARTER_DIRECTORIES = {
@@ -98,8 +125,12 @@ class StarterContaminationChecker:
             diagnostics.append(_path_diagnostic("missing_starter_root", str(starter_root)))
             return diagnostics
         diagnostics.extend(_missing_required_paths(starter_root))
-        paths = [str(path) for path in starter_root.rglob("*")]
-        diagnostics.extend(self.check_paths(paths))
+        for path in starter_root.rglob("*"):
+            relative = path.relative_to(starter_root).as_posix()
+            error_code = _classify(relative, content_path=path)
+            if error_code is None:
+                continue
+            diagnostics.append(_path_diagnostic(error_code, str(path)))
         if mode == INSTALLED_RUNTIME_MODE:
             diagnostics = [
                 diagnostic
@@ -118,7 +149,7 @@ def _validation_mode(mode: str | None, *, allow_runtime_generated: bool) -> str:
     return normalized
 
 
-def _classify(path: str) -> str | None:
+def _classify(path: str, *, content_path: Path | None = None) -> str | None:
     parts = PurePosixPath(path).parts
     lower = path.lower()
     name = PurePosixPath(path).name.lower()
@@ -134,9 +165,11 @@ def _classify(path: str) -> str | None:
         return "development_packet_state"
     if ".harness" in lowered_parts and "evidence" in lowered_parts:
         return "local_evidence"
-    if "/logs/" in lower or name.endswith(".log"):
+    if parts and parts[0].lower() == ".harness":
+        return "development_artifact"
+    if "logs" in lowered_parts or name.endswith(".log"):
         return "local_logs"
-    if name in {".env", ".env.local"} or "secret" in lower or "api_key" in lower:
+    if _is_secret_path(normalized_parts, name) or _contains_secret_content(content_path, normalized_parts):
         return "secrets"
     if (
         "__pycache__" in lowered_parts
@@ -145,9 +178,13 @@ def _classify(path: str) -> str | None:
         or name.endswith(".pyc")
     ):
         return "cache_files"
+    if ("sensitive-evidence" in lower or "sensitive_evidence" in lower) and not _is_managed_sensitive_evidence_source(
+        normalized_parts
+    ):
+        return "sensitive_evidence"
     if "external-review-attachments" in lower or "pasted-text" in lower:
         return "external_review_attachments"
-    if "validation-report" in lower or "generated-validation" in lower:
+    if "validation-report" in lower or "validation_report" in lower or "generated-validation" in lower:
         return "generated_validation_report"
     if "_ops/evidence/release" in lower or "docs/release/evidence" in lower:
         return "release_evidence"
@@ -159,6 +196,54 @@ def _classify(path: str) -> str | None:
         if _contains_sequence(normalized_parts, ("_ops", "active-context")):
             return "generated_active_context"
     return None
+
+
+def _is_secret_path(parts: tuple[str, ...], name: str) -> bool:
+    if name in {".env", ".env.local", ".npmrc", ".pypirc", "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519"}:
+        return True
+    if name.startswith(".env."):
+        return True
+    if name.endswith((".pem", ".key")):
+        return True
+    secret_name_tokens = ("secret", "api_key", "api-key", "credential", "credentials", "password", "passwd")
+    if any(token in name for token in secret_name_tokens):
+        return True
+    if name in {"token", "tokens", "token.txt", "tokens.txt"} or name.startswith(("token.", "tokens.")):
+        return True
+    if name.startswith(("private-key", "private_key")):
+        return True
+    return any(part in {"credentials", "secrets"} for part in parts)
+
+
+def _contains_secret_content(path: Path | None, parts: tuple[str, ...]) -> bool:
+    if path is None or not path.is_file():
+        return False
+    if not _should_scan_secret_content(parts):
+        return False
+    try:
+        if path.stat().st_size > MAX_CONTENT_SCAN_BYTES:
+            return True
+        text = path.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return False
+    return bool(EvidenceRedactor().redact(text)["redaction_count"])
+
+
+def _should_scan_secret_content(parts: tuple[str, ...]) -> bool:
+    if not parts:
+        return False
+    normalized = "/".join(parts).lower()
+    if normalized in {
+        "_harness/system/standard_harness/security/redaction.py",
+        "_harness/system/standard_harness/starter/contamination.py",
+    }:
+        return False
+    suffix = Path(parts[-1]).suffix.lower()
+    return suffix in CONTENT_SCAN_SUFFIXES or parts[-1].lower().startswith(".env")
+
+
+def _is_managed_sensitive_evidence_source(parts: tuple[str, ...]) -> bool:
+    return parts == MANAGED_SENSITIVE_EVIDENCE_SOURCE
 
 
 def _is_real_ops_history(parts: tuple[str, ...], name: str) -> bool:
@@ -217,7 +302,13 @@ def _is_runtime_generated_diagnostic(starter_root: Path, diagnostic: dict[str, o
     normalized = relative.as_posix().lower()
     if error_code == "cache_files":
         return True
+    if error_code == "development_artifact" and normalized == ".harness":
+        return True
+    if error_code == "development_artifact" and normalized.startswith(".harness/state"):
+        return True
     if error_code == "development_packet_state" and normalized.startswith(".harness/"):
+        return True
+    if error_code in {"real_packet_history", "real_evidence_history", "generated_active_context"}:
         return True
     return False
 

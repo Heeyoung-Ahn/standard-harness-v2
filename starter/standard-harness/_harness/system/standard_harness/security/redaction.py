@@ -6,12 +6,14 @@ import re
 
 
 SECRET_PATTERNS = [
-    re.compile(r"sk-(?:proj-)?[A-Za-z0-9_-]{16,}"),
+    re.compile(r"sk-(?:proj-)?(?=[A-Za-z0-9_-]{20,})(?=[A-Za-z0-9_-]*[0-9])[A-Za-z0-9_-]{20,}"),
     re.compile(r"ghp_[A-Za-z0-9_]{12,}"),
+    re.compile(r"github_pat_[A-Za-z0-9_]{20,}"),
     re.compile(r"AKIA[0-9A-Z]{16}"),
+    re.compile(r"(?i)[\"']?authorization[\"']?\s*:\s*[\"']?bearer\s+([A-Za-z0-9_./+=-]{8,})[\"']?"),
     re.compile(r"(?i)-----BEGIN [A-Z ]*PRIVATE KEY-----"),
-    re.compile(r"(?i)(api[_-]?key|token|secret)=([A-Za-z0-9_./+=-]{8,})"),
-    re.compile(r"(?i)(password|passwd|credential|private[_ -]?key)=([^\s]+)"),
+    re.compile(r"(?i)[\"']?(api[_-]?key|token|secret)[\"']?\s*[:=]\s*[\"']?([A-Za-z0-9_./+=-]{8,})[\"']?"),
+    re.compile(r"(?i)[\"']?(password|passwd|credential|private[_ -]?key)[\"']?\s*[:=]\s*[\"']?([^\s\"']+)[\"']?"),
 ]
 
 

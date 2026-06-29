@@ -2,7 +2,7 @@
   "ok": true,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-06-29T02:38:38.814Z",
+  "executedAt": "2026-06-29T10:33:38.571Z",
   "cutoverReady": true,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
@@ -191,13 +191,14 @@
       "modelingImpact": {
         "required": true,
         "status": "required",
-        "triggerCount": 3,
+        "triggerCount": 4,
         "diagnosticCount": 0,
         "blockingDiagnosticCount": 0,
         "triggers": [
           "Change zone core",
           "api contract",
-          "schema boundary"
+          "schema boundary",
+          "auth/security boundary"
         ]
       },
       "gateEffect": "hold_if_missing_approval_or_evidence"
@@ -304,6 +305,72 @@
     {
       "artifactId": "PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP",
       "packetPath": "reference/packets/PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP.md",
+      "declaredRiskClass": null,
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 4,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "api contract",
+          "schema boundary",
+          "auth/security boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-08_RISK_ADAPTIVE_FAST_PATH_AND_EVIDENCE_VALIDATION",
+      "packetPath": "reference/packets/PKT-08_RISK_ADAPTIVE_FAST_PATH_AND_EVIDENCE_VALIDATION.md",
+      "declaredRiskClass": null,
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 4,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "api contract",
+          "schema boundary",
+          "auth/security boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS",
+      "packetPath": "reference/packets/PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS.md",
       "declaredRiskClass": null,
       "derivedRiskClass": "high",
       "effectiveRiskClass": "high",

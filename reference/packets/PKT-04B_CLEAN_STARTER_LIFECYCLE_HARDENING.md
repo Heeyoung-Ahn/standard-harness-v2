@@ -6,8 +6,8 @@ can continue without pretending the working tree must stay perfectly clean durin
 local test run.
 
 Implementation is approved only for the PKT-04B scope by explicit Human Owner Ready For
-Code approval on 2026-06-28. This does not approve release, publish, starter promotion,
-or PKT-05 work.
+Code approval on 2026-06-29 after independent packet_doc_review reconciliation. This does
+not approve release, publish, starter promotion, or PKT-05 work.
 
 ## Starter v2.0 Target And Philosophy Gate
 - Implementation target: the clean Standard Harness v2 payload under `starter/standard-harness/`.
@@ -19,15 +19,19 @@ or PKT-05 work.
 | Field | Decision | Rationale | Status |
 | --- | --- | --- | --- |
 | Work item | PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING | Separate dev/runtime/export modes and harden clean starter proof. | selected |
-| Ready For Code | approved | Human Owner explicitly approved Ready For Code for PKT-04B on 2026-06-28 and requested Orchestrator routing. | approved |
+| Ready For Code | approved | Human Owner explicitly approved Ready For Code for the reviewed PKT-04B packet on 2026-06-29 and requested Orchestrator routing. | approved |
 | Human sync needed | no | Human Owner approved this corrective packet to run before PKT-05. | closed |
 | Packet type | harness-system | The packet changes starter validation, export proof, and starter test expectations. | selected |
 | Risk level | high | Incorrect validation can falsely certify a contaminated starter or overburden development with impractical cleanliness rules. | selected |
 | Gate profile | contract | The packet changes reusable starter lifecycle contracts and validation semantics. | selected |
+| Gate profile version | harness-system@1 | The selected packet type uses the starter `harness-system` gate profile policy. | selected |
+| Required gates | harness-validation; boundary; manual-command-if-docs-changed; starter-impact; closeout; broader-regression-evidence; independent-review; residual-risk-tracking | Baseline `harness-system@1` gates plus high-risk adjustments. | selected |
+| Implementation-transition packet doc review | pass | Independent `packet_doc_review` was recorded and reconciled before the 2026-06-29 Ready For Code approval was re-issued. | completed |
+| Closeout review lenses | challenge_review; adversarial_security_review; code_quality_review; evidence_review | High/core/contract/harness-system closeout requires the strict four-lens set with separate packet-bound evidence. | selected |
 | Route class | packet-path | Requires implementation, tests, review, and Planner closeout before claims. | selected |
 | Change zone | core | Starter clean/export validation is a core Standard Harness v2 boundary. | selected |
 | Delivery route mode | orchestrated-closeout | If approved, route Developer, Tester, Reviewer, remediation, and Planner closeout through Orchestrator. | selected |
-| User-facing impact | medium | A copied-starter user sees clearer validation behavior and fewer unmanaged temp artifacts. | selected |
+| User-facing impact | low | A copied-starter user sees command/validation behavior only; no browser UI, visual workflow, or DOM route is added. | selected |
 | Layer classification | core | This packet protects the reusable starter operating layer. | selected |
 | Active profile dependencies | none | No optional product profile is required. | closed |
 | Profile evidence status | approved | No profile-specific evidence is required. | closed |
@@ -37,7 +41,8 @@ or PKT-05 work.
 | Domain foundation status | approved | No copied-project product domain model is changed; this is harness lifecycle validation behavior. | closed |
 | Authoritative source intake status | approved | Sources are user clarification, PKT-04A closeout, v1-to-v2 review, Requirements, and Implementation Plan. | selected |
 | Shared-source wave status | not-needed | This packet targets the clean starter payload directly; no sibling-project rollout is in scope. | closed |
-| Packet exit gate status | pending | Exit gate remains pending until implementation, tests, review, and Planner closeout evidence exist. | pending |
+| Approved N/A gates | browser evidence; deployment topology; release/publish; starter promotion | No browser UI, environment topology, release packaging, publish, or starter promotion is in scope. | closed |
+| Packet exit gate status | approved | Human Owner approved PKT-04B closeout on 2026-06-29 after implementation, tests, independent review lenses, Reviewer closeout report, and closeout preflight passed. | approved |
 | Existing system dependency | internal | Depends on starter contamination checks, validation aggregator mode selection, operating folder policy, starter tests, and root/starter verification commands. | selected |
 | New authoritative source impact | analyzed | User clarified that development residue may be acceptable if release/export proof remains clean and temp cleanup is controlled. | selected |
 | Risk if started now | high | Starting without packet approval could weaken clean-starter gates or delete useful developer/runtime artifacts. | selected |
@@ -45,7 +50,7 @@ or PKT-05 work.
 ## Packet Scope
 - Lane-type declaration: narrow-runtime
 - Lane-type universal minimum sections: goal; non-goal; in scope; out of scope; data / source impact; verification plan; refactor / residual debt disposition; packet exit quality gate; reopen trigger.
-- Lane-type required sections: Quick Decision Header; Packet Scope; Problem Statement; Acceptance Criteria; Verification Manifest; Planner Packet Challenge Review.
+- Lane-type required sections: Quick Decision Header; Packet Scope; Problem Statement; Gate Profile Declaration; Acceptance Criteria; Verification Manifest; Planner Packet Challenge Review.
 - Lane-type conditional sections: Development Documentation Impact; Feature Artifact Sync Matrix; Modeling Impact; Security Review Request.
 - Lane-type not-needed sections: UI implementation; environment topology; release packaging; browser evidence; copied-project product domain data changes.
 - Planner packet challenge required: yes
@@ -72,7 +77,7 @@ or PKT-05 work.
 - Authoritative source disposition: accepted for packet planning; Developer must separate clean export proof from development/runtime validation and preserve PKT-04A compact PMO behavior.
 - Current implementation impact: approved for Orchestrator-routed implementation inside this corrective boundary.
 - Existing plan conflict: prior validation behavior can tolerate runtime cache in installed starter mode, and starter-native PMO tests still encode pre-PKT-04A broad folder expectations.
-- Impacted packet set scope: PKT-04B only. PKT-05 long memory, PKT-06 provider orchestration, and PKT-08 starter promotion remain deferred.
+- Impacted packet set scope: PKT-04B only. PKT-05 long memory, PKT-06 provider orchestration, and PKT-10 compound feedback / starter promotion remain deferred.
 - Authoritative source wave ledger reference: not-needed
 - Source wave packet disposition: not-needed
 
@@ -99,7 +104,7 @@ times. The correct fix is to separate:
 
 ## In Scope
 - Define validation modes or equivalent flags so clean export proof is separate from installed/runtime validation.
-- Ensure clean export validation hard-fails on `__pycache__`, `.pyc`, `.pytest_cache`, local sqlite DBs, logs, generated validation reports, root state, evidence history, and provider-specific entry contracts.
+- Ensure clean export validation hard-fails on `__pycache__`, `.pyc`, `.pytest_cache`, local sqlite DBs, logs, generated validation reports, root state, evidence history, secrets, sensitive evidence, and provider-specific entry contracts.
 - Allow development/runtime residue only in explicitly named development or installed modes, and never treat that mode as clean export proof.
 - Add or update tests proving a deliberately contaminated starter fails clean export validation.
 - Update stale starter-native PMO folder tests to match the PKT-04A compact PMO contract.
@@ -128,6 +133,19 @@ times. The correct fix is to separate:
 - No requirement that developers manually keep the working tree free of every runtime cache during normal local work.
 - No `starter/standard-harness/AGENTS.md`.
 - No Ready For Code approval by implication.
+
+## Gate Profile Declaration
+- Packet type: harness-system
+- Risk level: high
+- Selected gate profile: contract
+- Gate profile version: harness-system@1
+- Required baseline gates: harness-validation; boundary; manual-command-if-docs-changed; starter-impact; closeout
+- Required high-risk adjustments: broader-regression-evidence; independent-review; residual-risk-tracking
+- Required implementation-transition gate: independent `packet_doc_review` pass, with evidence tied to this packet and coverage of requirements direction, implementation-plan sequencing, architecture/source SSOT, acceptance strength, verification scope, root-harness v1.0 constraints, and starter-payload v2.0 philosophy.
+- Required closeout lenses: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`.
+- Closeout lens N/A decisions: none. This is high/core/contract/harness-system work, so the strict four-lens closeout applies.
+- Browser/E2E N/A decision: approved for this packet because no browser UI or web workflow changes are in scope; substitute evidence is command-level starter validation and focused unit/negative tests.
+- Release/publish N/A decision: approved for this packet because release, publish, package metadata changes, and starter promotion are explicitly out of scope; substitute evidence is clean export validation semantics and contamination negative tests.
 
 ## Lifecycle Mode Decision
 | Mode | Purpose | Residue Policy | May Prove Clean Starter? |
@@ -164,12 +182,13 @@ times. The correct fix is to separate:
 | Temp smoke copy cleanup | smoke helper or test harness, docs, negative path-safety test | planned | Developer, Tester |
 | PKT-04A PMO stale test sync | starter operating folder tests | planned | Developer, Tester |
 | Export proof versus installed runtime proof | README/START_HERE/_harness README or command help if affected | planned | Developer, Reviewer |
+| Current operating contract requires independent packet_doc_review before implementation transition | packet handoff and transition preflight evidence | pending before Developer work | Orchestrator, independent packet_doc_review |
 | Broad SHV2-REQ-026 PMO wording could be read as mandatory Markdown folders | this packet interpretation; later Requirements parity edit if Planner rebaselines requirements | disposition added: PKT-04A/PKT-04B compact PMO explanation is authoritative for this packet; source intake, daily records, status, risks, blockers, and day-start remain structured/indexed support, not required Markdown folders | Planner, Reviewer |
 
 ## Acceptance Criteria
 - Development/runtime validation and clean export validation are explicitly distinguishable in command behavior, code path, or documented mode semantics.
 - Clean export validation rejects `__pycache__` and `.pyc` files with a blocking diagnostic.
-- Clean export negative fixtures cover representative non-cache contamination too: local sqlite or db files, logs, generated validation reports, evidence/history state, and provider-specific entry contracts.
+- Clean export negative fixtures cover representative non-cache contamination too: local sqlite or db files, logs, generated validation reports, evidence/history state, secrets, sensitive evidence, and provider-specific entry contracts.
 - Installed/runtime validation may tolerate approved runtime-generated state only when the command mode clearly says it is not clean export proof.
 - Starter-native tests align with PKT-04A compact PMO contract and no longer require `source-intake`, `daily-reports`, `status`, `risks`, `blockers`, or `day-start` as required human Markdown folders.
 - A negative test creates or simulates cache contamination and proves clean export validation fails.
@@ -179,7 +198,10 @@ times. The correct fix is to separate:
 - PKT-04B does not claim PKT-05 long-memory, provider orchestration, starter promotion, release, or publish scope.
 
 ## Verification Manifest
-- Ready For Code: approved by explicit Human Owner approval on 2026-06-28.
+- Ready For Code: approved by explicit Human Owner approval on 2026-06-29 after independent packet_doc_review reconciliation.
+- Required implementation-transition preflight: independent `packet_doc_review` pass must be recorded before Developer work starts under the current operating contract.
+- TDD mode: required
+- TDD evidence expectation: Developer must produce RED/GREEN or equivalent expected-failure evidence for validation-mode separation, contamination rejection, PMO regression, and temp cleanup behavior before closeout.
 - Required root regression: `node --test .harness\test\*.test.js` or `npm test` once local Node PATH is valid.
 - Required root validation: `npm run harness:validate` or direct bundled-node equivalent.
 - Required standard-template/starter validation: clean candidate validation for `starter/standard-harness/`; no separate `standard-template` target is in scope.
@@ -187,7 +209,7 @@ times. The correct fix is to separate:
   - development/runtime mode check, if implemented,
   - clean export mode check against a clean candidate,
   - clean export negative check with cache contamination,
-  - clean export negative check with representative non-cache contamination: local sqlite or db files, logs, generated validation reports, evidence/history state, and provider-specific entry contracts.
+  - clean export negative check with representative non-cache contamination: local sqlite or db files, logs, generated validation reports, evidence/history state, secrets, sensitive evidence, and provider-specific entry contracts.
 - Required starter tests: `python -m unittest discover _harness\test` from `starter/standard-harness/`.
 - Required focused tests:
   - contamination checker rejects cache in clean export mode,
@@ -200,18 +222,55 @@ times. The correct fix is to separate:
 - Required active context refresh: regenerate Active Context and validation report after implementation evidence is recorded.
 - Security: secret/provider-entry contamination rejection remains covered.
 - Browser: not-needed; no browser UI implementation is in scope.
-- Review closeout: Reviewer must check challenge, adversarial/security, code-quality, and evidence lenses.
+- Browser evidence required: no
+- Browser evidence status: not_required
+- Browser evidence N/A rationale: PKT-04B changes starter validation, contamination classification, smoke temp cleanup, and README wording only; it adds no browser UI, DOM flow, route, or visual behavior.
+- Review closeout: Reviewer must check separate `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review` lens evidence; Orchestrator or Planner summary prose cannot replace these lenses.
 
 ## Verification Scenarios
 | Scenario | Expected Result | Evidence |
 | --- | --- | --- |
-| Normal clean export | Clean candidate without generated residue passes clean export validation. | clean export validation output |
+| Normal clean export | Filtered clean candidate without generated residue passes clean export validation. | clean export validation output |
 | Error: cache contamination | Candidate containing `__pycache__` or `.pyc` fails clean export validation. | negative test and diagnostic |
-| Error: non-cache contamination | Candidate containing local sqlite or db files, logs, generated validation reports, evidence/history state, or provider entry contracts fails clean export validation. | negative test and diagnostic |
+| Error: non-cache contamination | Candidate containing local sqlite or db files, logs, generated validation reports, evidence/history state, secrets, sensitive evidence, or provider entry contracts fails clean export validation. | negative test and diagnostic |
 | Runtime project | Initialized copied project may have approved runtime state but is not labeled clean export proof. | validation mode output |
 | PMO regression | Compact PMO required folders remain `day-wrap-up` and `wbs`; structured PMO categories are not required Markdown folders. | starter unittest and PMO validator tests |
 | Temp cleanup | Successful smoke temp copy is deleted; failed/debug copy is bounded and reported. | temp cleanup test |
 | Path safety | Cleanup refuses paths outside the configured smoke temp root. | negative path-safety test |
+
+## Security Review Request
+- Security review required: yes.
+- Security review focus: preventing clean-export false positives/false negatives for secrets and sensitive evidence, installed-runtime evidence leakage, and unsafe smoke temp cleanup deletion.
+- Declared security-sensitive paths: starter contamination checker, smoke workspace cleanup helper, starter validation CLI path, and starter operating-folder tests.
+- Security evidence requirement: required. PKT-04B acceptance depends on secret/provider-entry/sensitive-evidence rejection and cleanup path safety.
+- Dependency/CLI review required: no new third-party dependency or provider CLI execution is planned.
+- Security review status: pass
+- Security review evidence status: pass
+- Security review report path: reference/reports/security/PKT-04B-security-review.json
+- Security review decision: pass
+- Security review evidence scope: scoped review of clean-export contamination classification, installed-runtime tolerance, bounded smoke cleanup, provider entry rejection, secret rejection, and sensitive-evidence rejection.
+
+## TDD Evidence Contract
+- TDD mode: required
+- Red test file: starter/standard-harness/_harness/test/test_operating_folder_contract.py
+- Red command: `C:\Users\user\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe _harness\test\test_operating_folder_contract.py`
+- Red exit code: 1
+- Red failure kind: expected-contract-failure
+- Red ran at: 2026-06-29T14:10:00+09:00
+- Red output excerpt: sensitive_evidence contamination fixture failed before implementation; remediation fixtures later failed for secret detection, starter-relative path classification, generic .harness residue, and managed smoke cleanup before fixes.
+- Red output artifact: reference/reports/tdd/PKT-04B-red.md
+- Green command: `C:\Users\user\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe _harness\test\test_operating_folder_contract.py`
+- Green exit code: 0
+- Green ran at: 2026-06-29T14:45:00+09:00
+- Green output excerpt: focused starter lifecycle suite passed 16 tests, 0 failed; full starter discovery passed 79 tests, 0 failed, 1 skipped.
+- Green output artifact: reference/reports/tdd/PKT-04B-green.md
+- Refactor verified: pass
+- Behavior-level test: yes
+- Test-only production hook: no
+- Production code written first: no
+- Production-first remediation: not-needed
+- TDD exception reason: not-needed
+- TDD approved by: not-needed
 
 ## Planner Packet Challenge Review
 - Challenge reviewer: adversarial planning reviewer.
@@ -219,7 +278,7 @@ times. The correct fix is to separate:
 - Source refs reviewed: user clarification in current thread; `.agents/artifacts/REQUIREMENTS.md`; `.agents/artifacts/IMPLEMENTATION_PLAN.md`; `reference/packets/PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md`; `reference/reports/v2-current-analysis-for-v2-2.md`; current validation/test observations from this session.
 - Challenge status: pass
 - Parent objective coverage: the packet protects P0 clean/copyable starter requirements and preserves PKT-04A PMO compactness before PKT-05.
-- Deferred scope with named follow-up: PKT-05 owns long-memory/question answering; PKT-06 owns provider orchestration; PKT-07 owns broader operator ergonomics; PKT-08 owns starter promotion mechanics.
+- Deferred scope with named follow-up: PKT-05 owns long-memory/question answering; PKT-06 owns provider orchestration; PKT-07 owns Conductor / CLI worker routing; PKT-09 owns skill routing and operator ergonomics; PKT-10 owns compound feedback and starter promotion mechanics.
 - Acceptance proves behavior change: acceptance requires negative cache-contamination tests, representative non-cache contamination tests, mode-distinction evidence, starter unittest repair, and bounded temp cleanup checks.
 - Failure fixture or failure condition: fail if clean export validation passes with `.pyc`, `__pycache__`, local sqlite or db files, logs, generated validation reports, evidence/history state, or provider entry contracts; fail if runtime mode is reported as export proof; fail if starter PMO tests require removed human Markdown folders; fail if smoke cleanup can delete outside its configured root.
 - Reviewer closeout hold basis: Reviewer may hold closeout for missing negative tests, unclear mode names, cleanup path-safety gaps, stale PMO test expectations, or any claim that this packet closes PKT-05, release, or starter promotion.
@@ -230,23 +289,81 @@ times. The correct fix is to separate:
 - Required corrections applied: applied; implementation-transition blockers identified in packet review were incorporated as mode distinction, representative negative fixtures, PMO interpretation disposition, temp cleanup policy, Quick Decision Header readiness fields, and Modeling Impact.
 - No self-approval claim: independent reviewer, not packet author; this challenge review does not approve implementation, close Human Ready For Code, replace Tester evidence, replace Reviewer closeout, approve release, or approve starter promotion.
 
-## Packet Exit Quality Gate
+## Packet Document Review
+- Packet doc review status: pass
+- Packet doc review completed before Ready For Code: yes
+- Packet doc review approval note: the current Ready For Code approval was re-issued on 2026-06-29 after independent packet_doc_review reconciliation.
+- Packet doc reviewer: independent packet_doc_review agent 019f125e-caaf-7953-8f5f-9d93c2ca6d4a
+- Packet doc reviewer independence basis: separate independent review agent; not the packet author, Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- Packet doc review evidence path: reference/reports/review/PKT-04B-packet-doc-review.md
+- Requirements direction alignment: pass after minor corrections applied
+- Implementation-plan sequencing alignment: pass after minor corrections applied
+- Architecture/source SSOT alignment: pass after minor corrections applied
+- Human/Planner intent preservation: pass after minor corrections applied
+- v1.0 root-harness operating constraint coverage: pass after minor corrections applied
+- v2.0 product philosophy coverage: pass after minor corrections applied
+- Acceptance strength: pass after minor corrections applied
+- Verification scope strength: pass after minor corrections applied
+- Deferred/out-of-scope ownership: pass after minor corrections applied
+- Required corrections: add secrets/sensitive evidence to clean-export hard-fail and negative-fixture lists; replace stale PKT-08 starter-promotion reopen reference with PKT-10 ownership.
+- Findings disposition: applied in this packet; no blocking packet-document findings remain.
+- No self-approval claim: independent packet_doc_review does not approve implementation directly, close Human approval, replace Developer evidence, replace Tester evidence, replace Reviewer closeout, approve release, or approve starter promotion.
+
+## Independent Review Lens Evidence
+- Independent review lens policy: strict-four-lens-closeout
+- Parallel review execution: parallel with remediation reruns
+- challenge_review agent: 019f128f-ad44-7da0-a055-f882850cb89a
+- challenge_review independence basis: independent subagent, not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- challenge_review evidence path: reference/reports/review/PKT-04B-closeout-challenge-review.md
+- challenge_review status: pass_with_findings
+- challenge_review finding count: 0 blocking / 0 open
+- challenge_review limitations: does not approve packet closeout by itself.
+- challenge_review reviewer disposition: accepted
+- challenge_review not applicable rationale: not-needed
+- adversarial_security_review agent: 019f128f-dfd1-7562-bed2-cbe9278aa4b3
+- adversarial_security_review independence basis: independent subagent, not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- adversarial_security_review evidence path: reference/reports/review/PKT-04B-closeout-adversarial-security-review.md
+- adversarial_security_review status: pass_with_findings
+- adversarial_security_review finding count: 0 blocking / 0 open
+- adversarial_security_review limitations: oversized scan-eligible files fail closed as secrets.
+- adversarial_security_review reviewer disposition: accepted
+- adversarial_security_review not applicable rationale: not-needed
+- code_quality_review agent: 019f1290-113d-7b31-8eee-2ef163a3c320
+- code_quality_review independence basis: independent subagent, not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- code_quality_review evidence path: reference/reports/review/PKT-04B-closeout-code-quality-review.md
+- code_quality_review status: pass
+- code_quality_review finding count: 0
+- code_quality_review limitations: none blocking.
+- code_quality_review reviewer disposition: accepted
+- code_quality_review not applicable rationale: not-needed
+- evidence_review agent: 019f1290-4c2f-7850-8f17-720be691146b
+- evidence_review independence basis: independent subagent, not Developer, Tester, Orchestrator, Planner, generated summary, or main-session self-review.
+- evidence_review evidence path: reference/reports/review/PKT-04B-closeout-evidence-review.md
+- evidence_review status: pass_with_findings
+- evidence_review finding count: 0 blocking / 0 open
+- evidence_review limitations: artifact-sync is planning evidence only; final parity relies on Developer, Tester, security, lens, and packet evidence.
+- evidence_review reviewer disposition: accepted
+- evidence_review not applicable rationale: not-needed
+
+## 15. Packet Exit Quality Gate
 - Packet exit metadata identifier: packet-exit-metadata
 - Packet exit metadata version: standard-harness-packet-exit/v1
+- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md
 - Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md
-- Packet exit metadata exit recommendation: pending
-- Packet exit metadata source parity result: pending
-- Packet exit metadata validation / security / cleanup evidence: pending
-- Refactor / residual debt disposition: pending implementation and review.
-- Deferred follow-up item: CLI help polish, starter permission-policy cleanup, non-shipped test reference disposition, PKT-05 long memory, PKT-08 starter promotion.
+- Packet exit metadata exit recommendation: approved
+- Packet exit metadata source parity result: pass
+- Packet exit metadata validation / security / cleanup evidence: pass
+- Packet exit metadata closeout approval: Human Owner approved PKT-04B closeout on 2026-06-29.
+- Refactor / residual debt disposition: no blocking residual debt; oversized scan-eligible files intentionally fail closed as clean-export protection.
+- Deferred follow-up item: CLI help polish, starter permission-policy cleanup, non-shipped test reference disposition, PKT-05 long memory, PKT-09 skill routing, PKT-10 starter promotion.
 
 ## Reopen Trigger
-- Reopen this packet if clean export validation still tolerates cache files, if development/runtime mode is used as release proof, if smoke temp copies accumulate without bounded cleanup, if PKT-04A PMO compactness regresses, if implementation expands into PKT-05/PKT-08, or if release/promotion claims are made without separate approval.
+- Reopen this packet if clean export validation still tolerates cache files, if development/runtime mode is used as release proof, if smoke temp copies accumulate without bounded cleanup, if PKT-04A PMO compactness regresses, if implementation expands into PKT-05, PKT-06, or PKT-10, or if release/promotion claims are made without separate approval.
 
 ## Planner Handoff
-- Current owner: Planner.
-- Current status: Ready For Code approved; Orchestrator routing requested.
-- Next recommended workflow: Orchestrator.
-- Next first action: Orchestrator routes Developer to implement validation mode separation, cache-contamination negative tests, PMO test sync, and bounded smoke temp cleanup.
+- Current owner: Orchestrator.
+- Current status: Closeout approved by Human Owner after Orchestrator implementation, Tester validation, independent review lenses, Reviewer closeout report, and closeout preflight.
+- Next recommended workflow: None for PKT-04B.
+- Next first action: Select the next packet; release, publish, starter promotion, generated-state mutation, and PKT-05 work remain out of scope without separate approval.
 - Required SSOT: `.agents/artifacts/REQUIREMENTS.md`; `.agents/artifacts/IMPLEMENTATION_PLAN.md`; this packet; PKT-04A.
-- Approval boundary: no implementation, testing closeout, release, publish, starter promotion, generated-state mutation, or PKT-05 work until explicit Ready For Code approval.
+- Approval boundary: Ready For Code is approved for PKT-04B implementation only; release, publish, starter promotion, generated-state mutation, and PKT-05 work remain out of scope without separate approval.

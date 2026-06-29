@@ -27,7 +27,41 @@ class SkillCatalog:
         return self.by_id[skill_id]
 
     def find_for_task(self, task_type: str) -> dict[str, Any] | None:
+        matches = self.find_all_for_task(task_type)
+        return matches[0] if matches else None
+
+    def find_all_for_task(self, task_type: str | None) -> list[dict[str, Any]]:
+        if not task_type:
+            return []
+        matches: list[dict[str, Any]] = []
         for skill in self.by_id.values():
             if task_type in skill.get("taskTypes", []):
-                return skill
-        return None
+                matches.append(skill)
+        return matches
+
+    def match_intent(self, intent_text: str) -> list[dict[str, Any]]:
+        normalized = f" {intent_text.lower()} "
+        matches: list[dict[str, Any]] = []
+        for skill in self.by_id.values():
+            keywords = [str(item).lower() for item in skill.get("triggerKeywords", [])]
+            if any(keyword and keyword in normalized for keyword in keywords):
+                matches.append(skill)
+        return matches
+
+    def validate_contract(self) -> list[str]:
+        diagnostics: list[str] = []
+        seen_keywords: dict[str, str] = {}
+        for skill in self.by_id.values():
+            skill_id = str(skill.get("id", ""))
+            trigger = str(skill.get("triggerDescription", ""))
+            if trigger and not trigger.lower().startswith("use when"):
+                diagnostics.append(f"non_trigger_description:{skill_id}")
+            for raw_keyword in skill.get("triggerKeywords", []):
+                keyword = str(raw_keyword).strip().lower()
+                if not keyword:
+                    continue
+                if keyword in seen_keywords and seen_keywords[keyword] != skill_id:
+                    diagnostics.append(f"duplicate_trigger_keyword:{keyword}")
+                else:
+                    seen_keywords[keyword] = skill_id
+        return sorted(set(diagnostics))

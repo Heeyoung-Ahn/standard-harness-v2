@@ -70,7 +70,10 @@ when the coverage matrix below is closed.
 - Build the clean Standard Harness v2 starter payload through packetized waves.
 - Preserve generated-doc immutability, packet-before-code, Active Context derived authority, clean starter boundaries, and provider-neutral product identity.
 - Require independent `packet_doc_review` before `Ready For Code` for every root-harness v1.0 and starter-payload v2.0 packet.
-- Require four independent closeout review lens agents for every packet: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`.
+- Select closeout review lenses by gate profile: high-risk and sensitive packets normally
+  require `challenge_review`, `adversarial_security_review`, `code_quality_review`, and
+  `evidence_review`, while docs-only and low-risk packets keep a lightweight path with
+  at least one independent verification/review lens plus evidence-backed N/A diagnostics.
 - Use this implementation plan as the long-range sequencing map; individual packets own
   implementation approval.
 
@@ -82,6 +85,12 @@ when the coverage matrix below is closed.
 - PKT-01 Project Operating Folder Contract is closed for its approved scope.
 - PKT-02A Naming And Status Reconciliation is closed for root-harness v1.0, starter-payload v2.0, and post-PKT-01 status truth cleanup.
 - PKT-02B Implementation Plan Requirement Alignment is closed for its approved scope after Orchestrator closeout routing and Planner closeout.
+- PKT-07 Conductor Surface And CLI Worker Routing Loop has completed implementation and
+  review evidence for its approved scope; final status synchronization may still be
+  regenerated from operating state.
+- PKT-08 Risk-Adaptive Fast Path And Evidence Validation is the next planning packet.
+  It is not Ready For Code until the Human Owner explicitly approves it after
+  independent packet-document review.
 - PKT-02 Risk-Adaptive Gate Profile Engine is closed after Orchestrator-routed implementation, testing, review, security evidence, and Planner closeout.
 - PKT-03 Documenter Closeout And Evidence Index is closed after Orchestrator-routed implementation, testing, review, security evidence, and Planner closeout for closeout report/evidence-index behavior.
 - PKT-07 Conductor Surface And CLI Worker Routing Loop is approved for Ready For Code
@@ -243,9 +252,11 @@ Acceptance:
   requirements direction, implementation-plan sequencing, architecture/source SSOT,
   acceptance strength, verification scope, and v1.0/v2.0 operating philosophy are not
   weakened before implementation.
-- Every packet closeout must produce four independent review-lens evidence artifacts or
-  lens-specific independent N/A evidence for challenge, adversarial security, code quality,
-  and evidence quality.
+- Every packet closeout must produce the gate-profile-selected independent
+  review/verification evidence. High-risk and sensitive packets normally require the full
+  challenge, adversarial security, code quality, and evidence quality lens set; docs-only
+  and low-risk packets may use a smaller set only when N/A decisions are evidence-linked
+  and at least one independent verification/review lens remains.
 - Security-data packets require security hard gate and human residual-risk decision when
   residual risk exists.
 - Harness-system and starter-promotion packets require boundary/starter validation.
@@ -418,31 +429,73 @@ Verification:
 - Conductor selection, delegated approval, Planner delegated-approval rejection, entry
   generation, manual-run fallback, command/path safety, and packet-authoring loop tests
 
-### Wave 7: Skill Routing And Operator Ergonomics
+### Wave 7: Risk-Adaptive Fast Path And Evidence Validation
+Goal: make gate profiles increase or decrease ceremony according to real risk without
+weakening hard stops, packet review, or behavior evidence.
+
+Scope:
+- Preserve independent `packet_doc_review` before Ready For Code for every packet.
+- Keep docs-only and low-risk packets lightweight with the smallest valid closeout set.
+- Require at least one independent verification/review lens for every packet closeout.
+- Require evidence-linked N/A decisions for omitted closeout lenses.
+- Reject fast-path claims when changed files, packet type, approval/security/runtime/data,
+  browser, release, harness-system, or starter-promotion impact contradicts the fast-path
+  rationale.
+- Strengthen validators so behavior claims are proven by trusted command, runtime,
+  browser/API observation, review disposition, or state-transition evidence, not by file
+  existence alone.
+
+Acceptance:
+- valid docs-only and low-risk fixtures use the lightweight path successfully
+- unsafe fast-path downgrade fixtures are rejected
+- missing independent review/verification lens blocks closeout
+- file-existence-only evidence cannot satisfy behavior verification
+- high-risk and sensitive packets still enforce strict closeout behavior
+- root and starter validation pass
+
+Verification:
+- gate profile selection tests
+- review-lens selection and N/A diagnostic tests
+- behavior-evidence validator negative tests
+- root harness validation
+- starter installed-runtime validation
+
+### Wave 8: Skill Routing And Operator Ergonomics
 Goal: make the harness usable in real projects without asking the Human Owner to know every skill.
 
 Scope:
-- Skills are selected automatically by task type, risk surface, role, and packet route.
+- Skills are selected automatically by task type, intent text, risk surface, role, and packet route.
 - Skill execution records include permission scope, evidence contract, fallback behavior,
   and source authority.
+- v1/current `.agents/skills` behavior is the priority source for starter skill
+  contracts; superpowers patterns are absorbed only as optional external comparison
+  source, not as a runtime dependency.
 
 Implementation tasks:
 - Harden skill catalog and router validation.
 - Add task-to-skill coverage for planning, TDD, review, security, browser evidence,
   dependency audit, day start, day wrap-up, documenter, memory, and retrospective flows.
+- Add process-priority ordering, bounded skill chaining, hard-gate diagnostics, and
+  skill-use ledger output.
+- Add CLI skill-route support for intent text without requiring the operator to know
+  every skill name.
 - Add handoff prompts that include only needed context.
 
 Acceptance:
 - Unknown required skills block with actionable diagnostics.
 - Selected skills do not override packet, Planner, Tester, Reviewer, or human authority.
+- Router tests prove Wave 8 intent coverage, hard-gate blocking, bounded chaining,
+  no-superpowers runtime dependency, and ledger evidence.
 - Skill routing avoids default full-context loading.
 
 Verification:
 - skill catalog tests
 - routing negative tests
+- hard-gate and chaining tests
+- skill-use ledger tests
 - context budget tests
 
-### Wave 8: Compound Engineering And Starter Promotion Feedback
+### Wave 9: Compound Engineering And Starter Promotion Feedback
 Goal: make the harness improve as projects run longer.
 
 Scope:
@@ -491,7 +544,7 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-013 | Wave 2 | Wave 3 | Browser/E2E applicability gate accepts valid evidence or valid N/A and rejects invalid N/A. |
 | SHV2-REQ-014 | Wave 2 | Wave 6 | Trigger-based requirements, challenge, security, refactor, boundary, and review governance gates pass. |
 | SHV2-REQ-015 | Wave 3 | Wave 5 | Documenter closeout, wiki proposal, evidence index, and long-memory validation pass. |
-| SHV2-REQ-016 | Wave 8 | none | Friction, improvement proposal, metrics, and starter-promotion candidate tests pass. |
+| SHV2-REQ-016 | Wave 9 | none | Friction, improvement proposal, metrics, and starter-promotion candidate tests pass under PKT-10 Compound Feedback And Starter Promotion; PKT-09 covers only skill routing that may trigger retrospective/learning routes. |
 | SHV2-REQ-017 | Wave 5 | Wave 7 | Context pack, authority label, token budget, and skill-routing context tests pass. |
 | SHV2-REQ-018 | Wave 1 | Wave 5 | Secret/sensitive evidence tests block starter, wiki, handoff, and LLM-context leakage. |
 | SHV2-REQ-019 | Wave 6 | Wave 7 | Multi-provider role routing, Conductor selection, CLI-agent delegation, and adapter manifest tests pass. |
@@ -504,26 +557,26 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-026 | Wave 4 | none | PKT-04 PMO placement, source-intake, WBS TSV, daily reports, day-start, day-wrap-up, status, risk, and blocker tests pass. |
 | SHV2-REQ-027 | Wave 4 | Wave 6 | PKT-04 PM outputs are generated as coordination summaries and fail if treated as approval authority; Wave 6 owns provider-neutral orchestration boundaries. |
 | SHV2-REQ-028 | Wave 2 | Wave 3 | TDD/test-plan evidence distinguishes RED/GREEN or rationale, regression evidence, and closeout support. |
-| SHV2-REQ-029 | Wave 2 | Wave 7 | Domain/refactor gates and long-running refactor proposal checks pass. |
+| SHV2-REQ-029 | Wave 2 | Wave 8 | Domain/refactor gates and long-running refactor proposal checks pass. |
 | SHV2-REQ-030 | Wave 2 | Wave 3 | Product functional-test validators reject marker-only or file-existence-only evidence. |
-| SHV2-REQ-031 | Wave 2 | Wave 6 | Independent `packet_doc_review` blocks implementation transition when missing or non-pass; four independent closeout-review lens agents block closeout when missing, duplicated, self-reviewed, or unbound. |
-| SHV2-REQ-032 | Wave 7 | none | Skill router selects required skills by task/risk/role and records permission, evidence, manifest, fallback, and source authority. |
+| SHV2-REQ-031 | Wave 2 | Wave 7 | Independent `packet_doc_review` blocks implementation transition when missing or non-pass; gate-profile-selected closeout lenses block closeout when required evidence is missing, duplicated, self-reviewed, unbound, or every independent verification/review lens is omitted. |
+| SHV2-REQ-032 | Wave 8 | none | Skill router selects required skills by task/risk/role and records permission, evidence, manifest, fallback, and source authority. |
 | SHV2-REQ-033 | Wave 3 | Wave 5 | Maintenance docs and wiki proposal/apply governance are generated from evidence-backed closeout. |
-| SHV2-REQ-034 | Wave 2 | Waves 6, 7 | Review/adjudication and skill-routing tests record uncertainty and block unsupported or unsafe instructions. |
-| SHV2-REQ-035 | Wave 5 | Wave 7 | Context authority, freshness, pruning, token budget, and untrusted-content tests pass. |
+| SHV2-REQ-034 | Wave 2 | Waves 6, 8 | Review/adjudication and skill-routing tests record uncertainty and block unsupported or unsafe instructions. |
+| SHV2-REQ-035 | Wave 5 | Wave 8 | Context authority, freshness, pruning, token budget, and untrusted-content tests pass. |
 | SHV2-REQ-036 | Wave 3 | Waves 4, 5 | Human-facing closeout, PM report, and question-answering surfaces work without code inspection. |
 | SHV2-REQ-037 | Wave 3 | Wave 4 | Closeout max two-page validator and PM max one-page validators pass. |
 | SHV2-REQ-038 | Wave 1 | Waves 3, 4, 5 | High-volume operating state uses structured records, indexes, manifests, TSV/CSV, SQLite, and compact context packs. |
 | SHV2-REQ-039 | Wave 5 | Wave 4 | Question-answering source index cites packet state, evidence, closeout, wiki, PM summaries, and active context. |
 | SHV2-REQ-040 | Wave 0 | Wave 2 | Planning intent remains human-reviewable Markdown and implementation packets cannot proceed without reviewed planning baseline. |
 | SHV2-REQ-041 | Wave 3 | none | Each packet can produce one max two-page closeout report plus evidence index links. |
-| SHV2-REQ-042 | Wave 5 | Wave 8 | Long memory preserves compact evidence-backed project intent, decisions, conventions, packet history, frictions, risks, and deprecated context. |
+| SHV2-REQ-042 | Wave 5 | Wave 9 | Long memory preserves compact evidence-backed project intent, decisions, conventions, packet history, frictions, risks, and deprecated context. |
 | SHV2-REQ-043 | Wave 4 | none | PKT-04 day-start/day-wrap-up reports provide daily continuity, WBS updates, blockers, risks, next work, and human decision prompts within one page. |
-| SHV2-REQ-044 | Wave 2 | Waves 3, 4, 6 | Wave 2 supplies packet/gate/role evidence enforcement including independent pre-implementation packet review and closeout review-lens gates, but cannot close the requirement alone; full closure requires Human/Planner, Developer, Tester, Reviewer, Documenter, PM, and Orchestrator evidence across Waves 2, 3, 4, and 6. |
-| SHV2-REQ-045 | Wave 2 | none | Baseline gate profiles exist and are validated for all required packet types. |
-| SHV2-REQ-046 | Wave 2 | none | Risk escalation/de-escalation tests prove hard stops cannot be waived. |
+| SHV2-REQ-044 | Wave 2 | Waves 3, 4, 6, 7 | Wave 2 supplies packet/gate/role evidence enforcement including independent pre-implementation packet review and closeout review-lens gates, but cannot close the requirement alone; full closure requires Human/Planner, Developer, Tester, Reviewer, Documenter, PM, Orchestrator, and risk-adaptive closeout evidence across Waves 2, 3, 4, 6, and 7. |
+| SHV2-REQ-045 | Wave 2 | Wave 7 | Baseline gate profiles exist and are validated for all required packet types, including fast-path rules, N/A substitute checks, and minimum independent verification/review requirements. |
+| SHV2-REQ-046 | Wave 2 | Wave 7 | Risk escalation/de-escalation tests prove hard stops cannot be waived and unsafe fast-path downgrade is rejected. |
 | SHV2-REQ-047 | Wave 3 | Wave 4 | Evidence index links cover tests, regression, browser/E2E, reviews, gates, risk decisions, wiki/memory, and PM/WBS impact. |
-| SHV2-REQ-048 | Wave 6 | Wave 7 | Conductor routing policy records app-facing Conductor selection, risk/importance routing choice, CLI worker/verifier assignment, Conductor review, and next Agent/User route without granting approval authority by selection alone. Delegated Ready For Code and Closeout approval execution requires scoped Human delegation to the selected Conductor through a trusted harness approval command/service, and Planner delegated-approval execution is rejected. |
+| SHV2-REQ-048 | Wave 6 | Wave 8 | Conductor routing policy records app-facing Conductor selection, risk/importance routing choice, CLI worker/verifier assignment, Conductor review, and next Agent/User route without granting approval authority by selection alone. Delegated Ready For Code and Closeout approval execution requires scoped Human delegation to the selected Conductor through a trusted harness approval command/service, and Planner delegated-approval execution is rejected. |
 
 ## Packet Decision Gates For Open Questions
 Open questions from `REQUIREMENTS.md` remain allowed planning questions, but they must not
@@ -533,11 +586,11 @@ implementation starts.
 
 | Open Question | Decision Gate | Affected Packet(s) | Required Disposition Before Ready For Code |
 |---|---|---|---|
-| Root-to-starter changes directly in packet scope vs later `harness:promote-starter` flow | Starter sync and promotion boundary gate | PKT-02, PKT-08 | PKT-02 must not imply promotion; PKT-08 owns reusable starter-promotion mechanics unless a future packet explicitly changes that boundary. |
+| Root-to-starter changes directly in packet scope vs later `harness:promote-starter` flow | Starter sync and promotion boundary gate | PKT-02, PKT-10 | PKT-02 must not imply promotion; PKT-10 owns reusable starter-promotion mechanics unless a future packet explicitly changes that boundary. |
 | Exact `_ops/` reset command and evidence-retention policy | Operating-state reset and evidence-retention gate | PKT-03, PKT-04, PKT-05 | Packet must state whether `_ops` reset/retention behavior is in scope, N/A, or deferred to a named follow-up before implementation. |
 | Provider examples that remain provider-neutral | Provider-neutral example gate | PKT-06 | Packet must classify provider examples as policy examples only and prove no provider-specific file becomes starter identity. |
 | Minimum PM artifacts required as starter contract vs sample files | PMO artifact minimum-contract gate | PKT-04 | closed by PKT-04 with required PMO folders, WBS TSV columns, one-page report limit, stale-summary checks, evidence-index links, and coordination-only authority validation. |
-| Mandatory packet-document and closeout review lenses vs risk-triggered supplemental lenses | Review-lens trigger gate | PKT-02, PKT-07 | Packet must preserve independent `packet_doc_review` as a baseline pre-implementation gate, preserve four independent closeout-review lens agents as baseline closeout gates, define only supplemental risk-triggered lenses separately, and state which N/A substitute checks are valid. |
+| Mandatory packet-document review and risk-adaptive closeout lenses | Review-lens trigger gate | PKT-02, PKT-08 | Packet must preserve independent `packet_doc_review` as a baseline pre-implementation gate, require at least one independent verification/review lens for every closeout, preserve strict full-lens behavior for high-risk and sensitive packets, and define valid N/A substitute checks for omitted lenses. |
 | Two-page closeout report template and evidence index schema | Closeout report and evidence-index schema gate | PKT-03 | closed by PKT-03 with report length validation, evidence-index links, required-gate evidence checks, N/A records, raw-dump guard, and wiki-proposal boundaries. |
 | Canonical risk level names | Risk taxonomy gate | PKT-02 | Packet must decide or explicitly defer canonical risk names before implementing gate resolver behavior. |
 | Mandatory starter long-memory pages vs on-demand memory | Long-memory seed gate | PKT-05 | Packet must define required seed pages or on-demand creation rules before memory snapshot/query behavior is implemented. |
@@ -555,8 +608,9 @@ implementation starts.
 | 7 | PKT-05 Long Memory And Question Answering Index | Connect closeout, wiki, PM, evidence, and active context for compact answers. | guarded | memory/context tests, sensitive evidence tests |
 | 8 | PKT-06 Provider-Neutral Orchestration Contract | Add manual-first multi-provider role routing and adjudication records. | guarded | adapter/routing tests, contamination tests |
 | 9 | PKT-07 Conductor Surface And CLI Worker Routing Loop | Add app-facing Conductor selection, selected entry generation, CLI worker routing, packet-authoring review loop, Conductor adjudication, and delegated approval validation. | high | conductor selection tests, delegated approval tests, Planner rejection tests, worker routing tests, adjudication tests, entry/contamination tests, command/path safety tests, starter validation |
-| 10 | PKT-08 Skill Routing And Operator Ergonomics | Make required skills discoverable and evidence-linked. | standard | skill router tests, context budget tests |
-| 11 | PKT-09 Compound Feedback And Starter Promotion | Convert friction into improvement and starter-promotion candidates. | guarded | friction/proposal tests, promote-starter smoke |
+| 10 | PKT-08 Risk-Adaptive Fast Path And Evidence Validation | Keep docs-only and low-risk packets lightweight while enforcing hard stops, at least one independent verification/review lens, and behavior-based evidence validation. | high | gate profile tests, review-lens selection tests, N/A diagnostic tests, behavior-evidence negative tests, starter validation |
+| 11 | PKT-09 Skill Routing And Operator Ergonomics | Make required skills discoverable, process-prioritized, and evidence-linked. | guarded | skill router tests, hard-gate tests, chaining tests, ledger tests, context budget tests |
+| 12 | PKT-10 Compound Feedback And Starter Promotion | Convert friction into improvement and starter-promotion candidates. | guarded | friction/proposal tests, promote-starter smoke |
 
 ## Verification Baseline
 Each implementation packet must define its own exact commands. The common baseline is:
@@ -587,10 +641,11 @@ Stop before implementation when:
   authority.
 
 Stop before closeout when:
-- any of the four independent closeout review lens artifacts is missing, duplicated-agent,
-  self-reviewed, unbound to packet evidence, pending, failed, or replaced by Orchestrator
-  summary prose,
-- Reviewer adjudication does not explicitly disposition the four lens outputs,
+- any gate-profile-selected independent closeout review/verification artifact is missing,
+  duplicated-agent, self-reviewed, unbound to packet evidence, pending, failed, or replaced
+  by Orchestrator summary prose,
+- Reviewer adjudication does not explicitly disposition the required lens outputs and any
+  N/A substitute checks,
 - Planner closeout would rely on tests, vocabulary alignment, or fluent explanation without
   source parity and evidence quality review.
 
@@ -607,10 +662,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP` is approved for Ready For Code by explicit Human Owner decision on 2026-06-29.
-- Route PKT-07 through Orchestrator for Developer, Tester, Reviewer, bounded remediation,
-  independent closeout lenses, and Planner closeout.
-- Source packet: `reference/packets/PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP.md`.
+- `PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS` is closed; latest closeout handoff is `planner -> planner`.
+- Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Source packet: `reference/packets/PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

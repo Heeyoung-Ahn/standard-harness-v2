@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 
 import {
   normalizePacketHeaderValue,
@@ -129,7 +130,9 @@ function buildPacketPreflight({ store, repoRoot, options }) {
   const deliveryRouteMode = normalizePacketHeaderValue(packet.header["Delivery route mode"] ?? workItem?.metadata?.deliveryRouteMode ?? "");
   const gateProfile = normalizePacketHeaderValue(packet.header["Gate profile"] ?? packet.fields["Gate profile"] ?? workItem?.metadata?.gateProfile ?? "");
   const changeZone = normalizePacketHeaderValue(packet.header["Change zone"] ?? packet.fields["Change zone"] ?? "");
-  const changedFiles = parseChangedFilesOption(options.changedFiles ?? options.changedFile ?? "");
+  const suppliedChangedFiles = parseChangedFilesOption(options.changedFiles ?? options.changedFile ?? "");
+  const trustedChangedFiles = readTrustedGitChangedFiles(repoRoot);
+  const changedFiles = suppliedChangedFiles.length > 0 ? suppliedChangedFiles : trustedChangedFiles.files;
   const changeZoneClassification = content
     ? evaluateChangeZoneClassification({
         repoRoot,
@@ -241,7 +244,16 @@ function buildPacketPreflight({ store, repoRoot, options }) {
     ? evaluateIndependentReviewLenses({
         repoRoot,
         content,
-        stage
+        stage,
+        effectiveRisk: risk.effective,
+        gateProfile,
+        changeZone,
+        routeClass: changeZoneClassification?.effectiveRouteClass ?? routeClass,
+        requestedRouteClass: routeClass,
+        deliveryRouteMode,
+        changedFiles,
+        trustedChangedFiles,
+        suppliedChangedFiles
       })
     : null;
 
@@ -492,6 +504,7 @@ function buildPacketPreflight({ store, repoRoot, options }) {
     requestedRouteClass: routeClass || "missing",
     changeZone: changeZone || "missing",
     changedFiles,
+    trustedChangedFiles,
     changeZoneClassification,
     modelingImpact,
     plannerPacketChallenge,
@@ -735,7 +748,7 @@ function buildAuthoringGuide({ semanticDiagnostics, enumDiagnostics }) {
     },
     independentReviewLenses: {
       heading: INDEPENDENT_REVIEW_LENS_HEADING,
-      requiredWhen: "every packet closeout",
+      requiredWhen: "every packet closeout; low-risk fast-path closeout may use one or more independent behavior-verification lenses with explicit N/A evidence for omitted lenses",
       lenses: INDEPENDENT_REVIEW_LENSES
     },
     closeoutMetadataExample: {
@@ -852,12 +865,40 @@ function evaluatePacketDocumentReview({ repoRoot, content, stage }) {
   };
 }
 
-function evaluateIndependentReviewLenses({ repoRoot, content, stage }) {
+function evaluateIndependentReviewLenses({
+  repoRoot,
+  content,
+  stage,
+  effectiveRisk = "normal",
+  gateProfile = "",
+  changeZone = "",
+  routeClass = "",
+  requestedRouteClass = "",
+  deliveryRouteMode = "",
+  changedFiles = [],
+  trustedChangedFiles = { source: "none", files: [] },
+  suppliedChangedFiles = []
+}) {
   const required = stage === "closeout";
+  const fastPathDecision = isLowRiskCloseoutFastPath({
+    content,
+    effectiveRisk,
+    gateProfile,
+    changeZone,
+    routeClass,
+    requestedRouteClass,
+    deliveryRouteMode,
+    changedFiles: trustedChangedFiles.files,
+    trustedChangedFiles,
+    suppliedChangedFiles
+  });
+  const fastPath = required && fastPathDecision.ok;
+  const minimumPassingLenses = fastPath ? 1 : INDEPENDENT_REVIEW_LENSES.length;
   const section = sliceSection(content, INDEPENDENT_REVIEW_LENS_HEADING) ?? "";
   const diagnostics = [];
   const agents = new Map();
   const lenses = [];
+  let passingLensCount = 0;
 
   if (!required) {
     return {
@@ -866,7 +907,9 @@ function evaluateIndependentReviewLenses({ repoRoot, content, stage }) {
       ok: true,
       blocking: false,
       current: "not required before closeout",
-      expected: "four independent review lens agents at closeout",
+      expected: "risk-adaptive independent review lens evidence at closeout",
+      policy: "not-required-before-closeout",
+      minimumPassingLenses: 0,
       lenses,
       diagnostics
     };
@@ -879,6 +922,12 @@ function evaluateIndependentReviewLenses({ repoRoot, content, stage }) {
       expected: INDEPENDENT_REVIEW_LENS_HEADING,
       message: "Independent Review Lens Evidence is required for every packet closeout."
     }));
+  }
+
+  if (required && fastPathDecision.requested && !fastPathDecision.ok) {
+    for (const diagnostic of fastPathDecision.diagnostics) {
+      diagnostics.push(diagnostic);
+    }
   }
 
   for (const lens of INDEPENDENT_REVIEW_LENSES) {
@@ -897,6 +946,46 @@ function evaluateIndependentReviewLenses({ repoRoot, content, stage }) {
       evidencePath: evidencePath || null,
       status: status || "missing"
     });
+
+    const notApplicable = status === "not-applicable";
+    const passing = status === "pass" || status === "pass_with_findings" || status === "passwithfindings";
+    if (passing) {
+      passingLensCount += 1;
+    }
+
+    if (fastPath && notApplicable) {
+      if (!isClosedChallengeField(notApplicableRationale)) {
+        diagnostics.push(buildLensDiagnostic({
+          field: `${lens} not applicable rationale`,
+          current: notApplicableRationale || "missing",
+          expected: "closed N/A rationale for the omitted low-risk fast-path lens",
+          message: `${lens} not-applicable status requires explicit N/A rationale evidence.`
+        }));
+      }
+      for (const [field, value] of [
+        [`${lens} finding count`, findingCount],
+        [`${lens} reviewer disposition`, disposition]
+      ]) {
+        if (!isClosedChallengeField(value)) {
+          diagnostics.push(buildLensDiagnostic({
+            field,
+            current: value || "missing",
+            expected: "closed N/A lens-review evidence",
+            message: `${field} must be closed before packet closeout.`
+          }));
+        }
+      }
+      const evidence = inspectEvidencePath({ repoRoot, evidencePath });
+      if (!evidence.ok) {
+        diagnostics.push(buildLensDiagnostic({
+          field: `${lens} evidence path`,
+          current: evidencePath || "missing",
+          expected: "existing relative evidence path or packet-local N/A evidence",
+          message: evidence.message
+        }));
+      }
+      continue;
+    }
 
     if (!isIndependentAgentValue(agent)) {
       diagnostics.push(buildLensDiagnostic({
@@ -957,15 +1046,24 @@ function evaluateIndependentReviewLenses({ repoRoot, content, stage }) {
       }
     }
 
-    const evidence = inspectEvidencePath({ repoRoot, evidencePath });
+    const evidence = inspectLensEvidencePath({ repoRoot, evidencePath });
     if (!evidence.ok) {
       diagnostics.push(buildLensDiagnostic({
         field: `${lens} evidence path`,
         current: evidencePath || "missing",
-        expected: "existing relative evidence path or packet-local evidence",
+        expected: "existing relative evidence path with behavior verification or packet-local evidence",
         message: evidence.message
       }));
     }
+  }
+
+  if (passingLensCount < minimumPassingLenses) {
+    diagnostics.push(buildLensDiagnostic({
+      field: "Independent Review Lens Evidence",
+      current: `${passingLensCount} passing lens(es)`,
+      expected: `at least ${minimumPassingLenses} passing independent review lens(es)`,
+      message: `At least one independent review lens must pass for low-risk fast-path closeout; strict closeout requires all four.`
+    }));
   }
 
   return {
@@ -973,11 +1071,184 @@ function evaluateIndependentReviewLenses({ repoRoot, content, stage }) {
     required,
     ok: diagnostics.length === 0,
     blocking: diagnostics.length > 0,
-    current: `required; lenses=${INDEPENDENT_REVIEW_LENSES.length}; diagnostics=${diagnostics.length}`,
-    expected: "four unique independent review lens agents with packet-bound evidence",
+    current: `${fastPath ? "risk-adaptive-fast-path" : "strict"}; passing=${passingLensCount}; minimum=${minimumPassingLenses}; diagnostics=${diagnostics.length}`,
+    expected: fastPath
+      ? "at least one independent review lens with behavior verification plus explicit N/A evidence for omitted lenses"
+      : "four unique independent review lens agents with packet-bound behavior-verification evidence",
+    policy: fastPath ? "risk-adaptive-fast-path" : "strict-four-lens",
+    minimumPassingLenses,
     lenses,
     diagnostics
   };
+}
+
+function isLowRiskCloseoutFastPath({
+  content,
+  effectiveRisk,
+  gateProfile,
+  changeZone,
+  routeClass,
+  requestedRouteClass,
+  deliveryRouteMode,
+  changedFiles = [],
+  trustedChangedFiles = { source: "none", files: [] },
+  suppliedChangedFiles = []
+}) {
+  const packetType = normalizePacketHeaderValue(
+    readPacketHeaderValueFromContent(content, "Packet type") ??
+    readPacketBulletFieldValueFromContent(content, "Packet type") ??
+    ""
+  );
+  const normalizedGateProfile = normalizePacketHeaderValue(gateProfile);
+  const normalizedChangeZone = normalizePacketHeaderValue(changeZone);
+  const normalizedRouteClass = normalizePacketHeaderValue(routeClass);
+  const normalizedDeliveryRouteMode = normalizePacketHeaderValue(deliveryRouteMode);
+  const lowBurdenGate = ["", "light", "standard", "docs-only"].includes(normalizedGateProfile);
+  const fastRoute =
+    normalizedRouteClass === "fast-path" ||
+    normalizedDeliveryRouteMode.includes("fast-path");
+  const paddedOrDocs = ["", "padded", "docs", "docs-only"].includes(normalizedChangeZone);
+  const docsOnlyPacket = packetType === "docs-only";
+  const requested = effectiveRisk === "low" && lowBurdenGate && fastRoute && paddedOrDocs && docsOnlyPacket;
+  const diagnostics = [];
+
+  if (!requested) {
+    return { ok: false, requested, diagnostics };
+  }
+
+  if (trustedChangedFiles.source !== "git") {
+    diagnostics.push(buildLensDiagnostic({
+      field: "Low-risk fast path actual changed-file evidence",
+      current: trustedChangedFiles.source,
+      expected: "trusted git worktree changed-file evidence before fast-path closeout",
+      message: "Low-risk fast-path closeout requires trusted actual changed-file evidence from git; absent trusted evidence fails closed to strict review."
+    }));
+  }
+
+  if (trustedChangedFiles.source === "git" && changedFiles.length === 0) {
+    diagnostics.push(buildLensDiagnostic({
+      field: "Low-risk fast path actual changed-file evidence",
+      current: "empty git diff",
+      expected: "at least one trusted actual changed file before fast-path closeout",
+      message: "Low-risk fast-path closeout requires actual changed-file evidence with at least one trusted actual changed file; empty git diff fails closed to strict review."
+    }));
+  }
+
+  const unsafeChangedFile = changedFiles.find(isUnsafeFastPathChangedFile);
+  if (unsafeChangedFile) {
+    diagnostics.push(buildLensDiagnostic({
+      field: "Low-risk fast path changed files",
+      current: unsafeChangedFile,
+      expected: "docs-only/padded file changes only",
+      message: `Low-risk fast-path closeout cannot apply because an unsafe actual changed file is present: ${unsafeChangedFile}.`
+    }));
+  }
+
+  const unsafeStructuredClaim = findUnsafeStructuredFastPathClaim(content);
+  if (unsafeStructuredClaim) {
+    diagnostics.push(buildLensDiagnostic({
+      field: "Low-risk fast path structured claims",
+      current: unsafeStructuredClaim,
+      expected: "no security, release, data, browser, approval, harness-system, or starter-promotion claims",
+      message: `Low-risk fast-path closeout cannot apply because packet structured claims require stricter review: ${unsafeStructuredClaim}.`
+    }));
+  }
+
+  return { ok: diagnostics.length === 0, requested, diagnostics };
+}
+
+function readTrustedGitChangedFiles(repoRoot) {
+  if (!fs.existsSync(path.resolve(repoRoot, ".git"))) {
+    return { source: "missing-git", files: [] };
+  }
+  try {
+    const tracked = execFileSync("git", ["-C", repoRoot, "diff", "--name-only", "HEAD", "--"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    });
+    const untracked = execFileSync("git", ["-C", repoRoot, "ls-files", "--others", "--exclude-standard"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    });
+    return {
+      source: "git",
+      files: uniquePaths([...parseGitPathLines(tracked), ...parseGitPathLines(untracked)].filter(isReviewRelevantChangedFile))
+    };
+  } catch {
+    return { source: "git-error", files: [] };
+  }
+}
+
+function parseGitPathLines(output) {
+  return String(output ?? "")
+    .split(/\r?\n/)
+    .map(normalizeRelativePath)
+    .filter(Boolean);
+}
+
+function uniquePaths(paths) {
+  return [...new Set(paths.map(normalizeRelativePath).filter(Boolean))];
+}
+
+function isReviewRelevantChangedFile(filePath) {
+  const normalized = normalizeRelativePath(filePath)?.toLowerCase() ?? "";
+  if (!normalized) return false;
+  if (normalized === ".harness/operating_state.sqlite" || normalized.startsWith(".harness/operating_state.sqlite-")) return false;
+  if (normalized.startsWith(".agents/runtime/")) return false;
+  if (normalized.startsWith(".agents/artifacts/validation_report")) return false;
+  if (normalized === ".agents/artifacts/current_state.md" || normalized === ".agents/artifacts/task_list.md") return false;
+  if (normalized.startsWith("reference/packets/")) return false;
+  if (normalized.startsWith("reference/reports/")) return false;
+  return true;
+}
+
+function isUnsafeFastPathChangedFile(filePath) {
+  const normalized = String(filePath ?? "").replace(/\\/g, "/").replace(/^\.\//, "").toLowerCase();
+  if (!normalized) return true;
+  return (
+    normalized.startsWith(".harness/runtime/") ||
+    normalized.startsWith("_harness/") ||
+    normalized.startsWith("starter/standard-harness/_harness/system/") ||
+    normalized.startsWith("starter/standard-harness/_harness/bin/") ||
+    normalized.startsWith("starter/standard-harness/_harness/policies/") ||
+    normalized.startsWith(".agents/rules/") ||
+    normalized.startsWith(".agents/workflows/") ||
+    normalized.includes("security") ||
+    normalized.includes("permission") ||
+    normalized.includes("secret") ||
+    normalized.includes("approval") ||
+    normalized.includes("release") ||
+    normalized.includes("deploy") ||
+    normalized.includes("database") ||
+    normalized.includes("schema") ||
+    normalized.endsWith("packet_exit_quality_gate.md")
+  );
+}
+
+function findUnsafeStructuredFastPathClaim(content) {
+  const fields = [
+    "Security/data sensitivity",
+    "Security sensitivity",
+    "Data sensitivity",
+    "Release sensitivity",
+    "Browser/UI claims",
+    "Approval boundary impact",
+    "Changed zones",
+    "Claims",
+    "Declared claims",
+    "Packet type"
+  ];
+  for (const field of fields) {
+    const value = readPacketHeaderValueFromContent(content, field) ?? readPacketBulletFieldValueFromContent(content, field) ?? "";
+    const normalized = normalizePacketHeaderValue(value);
+    if (!normalized || ["no", "none", "false", "not-needed", "not-applicable", "docs-only"].includes(normalized)) {
+      continue;
+    }
+    if (/(security|release|data|browser|approval|harness-system|starter-promotion|runtime|core|load-bearing|contract)/i.test(normalized)) {
+      return `${field}: ${value}`;
+    }
+  }
+  return null;
 }
 
 function buildPacketDocDiagnostic({ field, status, current, expected, message }) {
@@ -1016,13 +1287,51 @@ function inspectEvidencePath({ repoRoot, evidencePath }) {
   }
   const root = path.resolve(repoRoot);
   const target = path.resolve(repoRoot, normalized);
-  if (!target.startsWith(root)) {
+  if (!isPathInside(root, target)) {
     return { ok: false, message: `Evidence path escapes the repository: ${raw}.` };
   }
   if (!fs.existsSync(target)) {
     return { ok: false, message: `Evidence path does not exist: ${normalized}.` };
   }
   return { ok: true, message: null };
+}
+
+function inspectLensEvidencePath({ repoRoot, evidencePath }) {
+  const basic = inspectEvidencePath({ repoRoot, evidencePath });
+  if (!basic.ok) {
+    return basic;
+  }
+  const raw = String(evidencePath ?? "").trim();
+  if (/^packet-local\b|^inline\b/i.test(raw)) {
+    return { ok: false, message: "Passing independent review lens evidence must be a repository-bound evidence artifact." };
+  }
+  const normalized = normalizeRelativePath(stripInlineFormatting(raw));
+  const target = path.resolve(repoRoot, normalized);
+  let evidenceText = "";
+  try {
+    evidenceText = fs.readFileSync(target, "utf8");
+  } catch {
+    return { ok: false, message: `Evidence path is not readable: ${normalized}.` };
+  }
+  if (/\b(file-exists-only|file existence only|path exists only|exists-only|marker-only)\b/i.test(evidenceText)) {
+    return { ok: false, message: `Evidence path must prove behavior verification, not file existence only: ${normalized}.` };
+  }
+  if (/(?:status|trust status|validation status|result|disposition)\s*:\s*(stale|untrusted|unresolved|fail|failed|pending|unknown)\b/i.test(evidenceText)) {
+    return { ok: false, message: `Evidence path is stale, untrusted, unresolved, failed, or pending: ${normalized}.` };
+  }
+  if (!hasStructuredBehaviorVerification(evidenceText)) {
+    return { ok: false, message: `Evidence path must include structured behavior verification evidence: ${normalized}.` };
+  }
+  return basic;
+}
+
+function hasStructuredBehaviorVerification(evidenceText) {
+  const text = String(evidenceText ?? "");
+  const hasCommand = /(?:^|\n)\s*-\s*(?:Command|Test command|Verification command)\s*:/i.test(text);
+  const hasSuccessfulExit = /(?:^|\n)\s*-\s*(?:Exit code|Result exit code)\s*:\s*0\b/i.test(text);
+  const hasVerificationType = /(?:^|\n)\s*-\s*Verification type\s*:\s*(command|test|runtime|browser|api|state-transition|diff)\b/i.test(text);
+  const hasPassingResult = /(?:^|\n)\s*-\s*(?:Result|Status|Decision)\s*:\s*(pass|passed|approved)\b/i.test(text);
+  return (hasCommand && hasSuccessfulExit) || (hasVerificationType && hasPassingResult);
 }
 
 function isIndependentAgentValue(value) {
@@ -1334,10 +1643,15 @@ function readRelativeFile(repoRoot, relativePath) {
   }
   const target = path.resolve(repoRoot, relativePath);
   const root = path.resolve(repoRoot);
-  if (!target.startsWith(root) || !fs.existsSync(target)) {
+  if (!isPathInside(root, target) || !fs.existsSync(target)) {
     return null;
   }
   return fs.readFileSync(target, "utf8");
+}
+
+function isPathInside(rootPath, targetPath) {
+  const relative = path.relative(path.resolve(rootPath), path.resolve(targetPath));
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
 }
 
 function normalizeRelativePath(value) {

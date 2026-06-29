@@ -207,7 +207,7 @@ Human Owner planning intent
   -> Independent packet_doc_review before Ready For Code
   -> Developer LLM implementation inside approved packet boundary
   -> Tester LLM deterministic and workflow verification
-  -> Reviewer LLM four independent closeout lenses
+  -> Reviewer LLM risk-adaptive independent closeout lenses
   -> Gate resolver and validation
   -> Documenter closeout report plus evidence index
   -> Wiki proposal validation and application
@@ -281,9 +281,15 @@ Architecture direction:
 - validate N/A decisions against changed zones and claims,
 - block closeout when required gates are missing, stale, untrusted, or unresolved,
 - require independent `packet_doc_review` before Ready For Code for every packet,
-- require four independent closeout review lens agents for every packet:
+- require risk-adaptive independent closeout review lens evidence:
+  docs-only / low-risk fast path must still include at least one independent
+  behavior-verification lens, while high, critical, security-sensitive,
+  release-sensitive, browser-facing, harness-system, starter-promotion, core,
+  load-bearing, contract, or release closeout requires all four lenses:
   `challenge_review`, `adversarial_security_review`, `code_quality_review`, and
   `evidence_review`,
+- require explicit N/A rationale and evidence for omitted lenses, and reject
+  file-existence-only evidence as closeout proof,
 - keep any additional user-workflow/E2E or architecture/boundary lenses as supplemental
   risk-triggered reviews, not substitutes for the mandatory baseline reviews.
 
@@ -412,11 +418,19 @@ Skills are routed by task type, role, risk surface, packet route, and evidence n
 Human Owner should not have to know which skill is required.
 
 Architecture direction:
-- skill catalog remains under `_harness/catalog/`,
-- skill execution records include manifest, permission scope, fallback behavior, and
-  evidence output,
+- skill catalog remains under `_harness/catalog/` and records v1 skill source authority,
+  `Use when...` trigger descriptions, trigger keywords, process priority, required next
+  skills, permission scope, fallback behavior, and evidence contracts,
+- skill route output exposes selected skills, candidate skills, skipped candidates,
+  process-priority order, bounded skill chains, hard-gate diagnostics, authority
+  boundary, no-superpowers runtime dependency status, and skill-use ledger entries,
 - selected skills cannot override packet scope, Planner authority, Tester evidence,
   Reviewer findings, or human decisions,
+- process skills for planning, debugging, review, verification, security, dependency,
+  destructive action, and closeout run before implementation when triggered,
+- hard-gate diagnostics block implementation before planning, completion before
+  verification, fixes before root cause, and review-finding acceptance before technical
+  disposition,
 - skill routing must avoid default full-context loading.
 
 ## Security And Context Boundaries
@@ -474,7 +488,8 @@ The architecture follows the implementation waves.
 | Wave 5 | Long memory and question-answering index | Connect packet, evidence, closeout, wiki, PM, and active context for compact answers. |
 | Wave 6 | Provider-neutral orchestration and Conductor routing | Add app-facing Conductor selection, CLI worker routing, adjudication, selected entry generation, and delegated approval validation. |
 | Wave 7 | Skill routing and operator ergonomics | Select required skills automatically and evidence-link their use. |
-| Wave 8 | Compound feedback and starter promotion | Convert friction into improvement and starter-promotion candidates. |
+| Wave 8 | Skill routing and operator ergonomics | Make required skills discoverable, process-prioritized, evidence-linked, and provider-neutral. |
+| Wave 9 | Compound feedback and starter promotion | Convert friction into improvement and starter-promotion candidates. |
 
 ## First Packet Architecture
 The first implementation packet should be `PKT-01 Project Operating Folder Contract`.
@@ -523,7 +538,7 @@ named implementation waves before the related capability is claimed complete.
 | Which query index is authoritative for Human Owner project-status answers? | Wave 5 |
 | What is the minimum useful provider adapter contract without automating provider control too early? | Wave 6 |
 | Which skill-routing failures should block packets versus warn? | Wave 7 |
-| What promotion evidence is sufficient to move repeated friction into starter changes? | Wave 8 |
+| What promotion evidence is sufficient to move repeated friction into starter changes? | Wave 9 |
 
 ## Architecture Stop Rules
 Stop before implementation when:

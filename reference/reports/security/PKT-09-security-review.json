@@ -1,0 +1,44 @@
+{
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS.md",
+  "work_item_id": "PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS",
+  "mode": "scoped",
+  "decision": "pass",
+  "scope": "PKT-09 starter skill catalog, router, route-result schema, CLI intent routing, hard-gate diagnostics, skill chaining, skill-use ledger, and provider/plugin dependency boundary.",
+  "phases_run": [0, 1, 3, 6, 12, 13, 14],
+  "surfaces_reviewed": [
+    "starter/standard-harness/_harness/catalog/skill-catalog.yaml",
+    "starter/standard-harness/_harness/schemas/skill-catalog.schema.json",
+    "starter/standard-harness/_harness/schemas/skill-execution.schema.json",
+    "starter/standard-harness/_harness/system/standard_harness/skills/catalog.py",
+    "starter/standard-harness/_harness/system/standard_harness/skills/router.py",
+    "starter/standard-harness/_harness/system/standard_harness/cli/main.py",
+    "starter/standard-harness/_harness/test/test_skill_routing_operator_ergonomics.py",
+    ".agents/artifacts/ARCHITECTURE_GUIDE.md",
+    ".agents/artifacts/IMPLEMENTATION_PLAN.md"
+  ],
+  "checklist": {
+    "approval_boundary": "pass: router diagnostics can block unsafe states but do not approve Ready For Code, closeout, release, starter promotion, or superpowers removal.",
+    "process_gate_bypass": "pass: implementation-before-planning, completion-before-verification, fix-before-root-cause, and unresolved-review-finding paths produce hard-gate diagnostics even when evidence flags are omitted.",
+    "security_dependency_destructive_triggers": "pass: security review, dependency audit, and destructive-command guard skills are cataloged with process priority and broadened trigger routing for common operator phrases.",
+    "external_plugin_dependency": "pass: superpowers is recorded as optional external comparison source only; route output reports requiresSuperpowersPlugin false.",
+    "provider_specific_identity": "pass: no starter AGENTS.md, CLAUDE.md, provider CLI dependency, or provider-specific starter identity file was added.",
+    "skill_chaining": "pass: required/next skill chaining is bounded and reports recursion or conflicts.",
+    "ledger_trust": "pass: route output records selected skills, skipped candidates, exclusion rationale, route-result evidence path, source priority, and authority boundary as structured data; persistence is caller-owned and not overclaimed.",
+    "secret_handling": "pass: no secrets, credentials, tokens, or environment values were added.",
+    "destructive_command": "pass: no destructive command path was added or broadened.",
+    "dependency_supply_chain": "pass: no third-party dependency was added, removed, upgraded, vendored, installed, or made mandatory; AI skill/plugin supply-chain scope is recorded in reference/reports/dependency-audit/PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS.md.",
+    "generated_state": "pass: generated runtime summaries were not manually edited."
+  },
+  "findings": [],
+  "deferred_risks": [
+    "Superpowers removal is explicitly out of PKT-09 scope and still requires later equivalence evidence plus separate Human approval.",
+    "Real provider CLI execution is out of PKT-09 scope; this packet validates provider-neutral starter routing contracts."
+  ],
+  "residual_risk": "Low residual risk after fail-closed hard-gate remediation, broadened security/dependency/destructive trigger coverage, focused route tests, full starter unittest discovery, root regression, schema parse checks, dependency/AI skill-supply-chain audit, and root validation; remaining closeout requires independent four-lens review evidence.",
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  }
+}

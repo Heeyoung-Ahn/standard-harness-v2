@@ -6,7 +6,7 @@
 - Current Stage: unknown
 - Current Focus: unknown
 - Current Release Goal: unknown
-- Generated At: 2026-06-29T02:37:56.985Z
+- Generated At: 2026-06-29T10:32:22.693Z
 - View Mode: generated compatibility fallback
 - Sync Status: fresh at generation time; if this view is missing or drifted, regenerate with `node .harness/runtime/state/harness-cli.js context --repair`.
 
@@ -21,34 +21,34 @@
 - ``.agents/artifacts/REQUIREMENTS.md``
 - `.agents/artifacts/REQUIREMENTS.md`
 - `.agents/artifacts/IMPLEMENTATION_PLAN.md`
-- `reference/packets/PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md`
+- `reference/packets/PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS.md`
 - `.agents/artifacts/TASK_LIST.md`
 
 ## Open Decisions / Blockers
-- `PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT` is closed; latest handoff is `planner -> planner`. Keep the reusable baseline on planning hold until a new approved lane is selected.
+- `PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS` is closed; latest handoff is `planner -> planner`. Keep the reusable baseline on planning hold until a new approved lane is selected.
 
 ## Current Truth Notes
-- `PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT` is closed. Latest handoff is `planner -> planner`; stage is `planning`; gate profile is `contract`.
-- `PKT-04A_PMO_SURFACE_AND_REVIEWER_LENS_ALIGNMENT.md` is closed with the latest handoff `planner -> planner`.
+- `PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS` is closed. Latest handoff is `planner -> planner`; stage is `planning`; gate profile is `contract`.
+- `PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS.md` is closed with the latest handoff `planner -> planner`.
 
 ## Latest Handoff Summary
-- 2026-06-28: `[planner -> planner] Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold.`
-- 2026-06-28: `[orchestrator -> planner] Orchestrator routed the packet to Planner for closeout, clarification, or escalation.`
-- 2026-06-28: `[reviewer -> orchestrator] Reviewer completed conformance evidence; Orchestrator should route closeout, remediation, or escalation.`
-- 2026-06-28: `[orchestrator -> reviewer] Orchestrator routed verified work to Reviewer.`
-- 2026-06-28: `[tester -> orchestrator] Tester completed verification evidence; Orchestrator should route pass, remediation, or escalation.`
-- 2026-06-28: `[developer -> tester] Developer implementation completed; Tester should verify the approved scope.`
-- 2026-06-28: `[orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.`
-- 2026-06-28: `[planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.`
-- 2026-06-28: `[planner -> planner] Opened PKT-04A as a Planner draft to reduce PMO human-facing folder pressure and add four minimum Reviewer lens checklists after PKT-04.`
-- 2026-06-28: `[planner -> planner] Planner recorded PKT-04 closeout for approved PM daily rhythm and WBS loop scope after Orchestrator delivery, Reviewer pass, security review, closeout preflight, starter validation, harness validation, and root full regression.`
-- 2026-06-28: `[orchestrator -> planner] PKT-04 Orchestrator delivery package is complete: Developer, Tester, Reviewer, security, starter validation, harness validation, closeout preflight, root full regression, and Planner closeout report are recorded.`
-- 2026-06-28: `[reviewer -> orchestrator] PKT-04 Reviewer closeout passed with no blocking findings; security review, testing, starter validation, harness validation, closeout preflight, and full root regression passed.`
-- 2026-06-28: `[orchestrator -> reviewer] Orchestrator routed verified PKT-04 evidence to Reviewer.`
-- 2026-06-28: `[tester -> orchestrator] PKT-04 Tester verification passed for PM reports, WBS, folder placement, stale-source, authority-boundary, and root/starter parity checks.`
-- 2026-06-28: `[developer -> tester] PKT-04 implementation completed with focused PM report and WBS evidence.`
-- 2026-06-28: `[orchestrator -> developer] Orchestrator routed PKT-04 to Developer for approved implementation.`
-- 2026-06-28: `[planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.`
-- 2026-06-28: `[planner -> planner] Opened PKT-04 as the selected Planner packet for PM daily rhythm and WBS loop.`
-- 2026-06-28: `[planner -> planner] Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold.`
-- 2026-06-28: `[reviewer -> planner] Packet exit approved; Planner should choose or refine the next lane.`
+- 2026-06-29: `[planner -> planner] Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold.`
+- 2026-06-29: `[orchestrator -> planner] Orchestrator routed the packet to Planner for closeout, clarification, or escalation.`
+- 2026-06-29: `[planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.`
+- 2026-06-29: `[planner -> planner] Opened PKT-09_SKILL_ROUTING_AND_OPERATOR_ERGONOMICS as the selected Planner packet for review before implementation opens.`
+- 2026-06-29: `[planner -> planner] Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold.`
+- 2026-06-29: `[orchestrator -> planner] Orchestrator routed the packet to Planner for closeout, clarification, or escalation.`
+- 2026-06-29: `[reviewer -> orchestrator] Reviewer completed conformance evidence; Orchestrator should route closeout, remediation, or escalation.`
+- 2026-06-29: `[tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.`
+- 2026-06-29: `[developer -> tester] Developer implementation completed; Tester should verify the approved scope.`
+- 2026-06-29: `[reviewer -> developer] Reviewer found remediation work; Developer should address the finding.`
+- 2026-06-29: `[tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.`
+- 2026-06-29: `[developer -> tester] Developer implementation completed; Tester should verify the approved scope.`
+- 2026-06-29: `[reviewer -> developer] Reviewer found remediation work; Developer should address the finding.`
+- 2026-06-29: `[tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.`
+- 2026-06-29: `[developer -> tester] Developer implementation completed; Tester should verify the approved scope.`
+- 2026-06-29: `[reviewer -> developer] Reviewer found remediation work; Developer should address the finding.`
+- 2026-06-29: `[tester -> reviewer] Tester verification completed; Reviewer should assess packet exit readiness.`
+- 2026-06-29: `[developer -> tester] Developer implementation completed; Tester should verify the approved scope.`
+- 2026-06-29: `[orchestrator -> developer] Orchestrator routed implementation or remediation to Developer.`
+- 2026-06-29: `[planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.`

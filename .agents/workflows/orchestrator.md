@@ -17,7 +17,7 @@
 - Route an approved packet from Planner to Developer, Tester, Reviewer, remediation, blocked-human, or Planner closeout using the approved handoff/transition runtime.
 - Require each downstream workflow to read the original evidence path instead of relying on Orchestrator summaries when a finding, test report, or review report drives the route.
 - Track bounded fix-loop history and escalate when the same blocking finding repeats twice or the full delivery loop runs three times.
-- Assemble a closeout package for Planner decision when independent `packet_doc_review`, implementation, test, four independent review-lens artifacts, Reviewer adjudication, and SSOT conformance evidence are present.
+- Assemble a closeout package for Planner decision when independent `packet_doc_review`, implementation, test, risk-adaptive independent review-lens artifacts, Reviewer adjudication, and SSOT conformance evidence are present.
 
 ## Non-Authority
 - Do not implement code, run Tester verification as a substitute for Tester, or perform Reviewer conformance judgment as a substitute for Reviewer.
@@ -56,12 +56,12 @@
 - Select the next workflow owner from approved routing state and record the transition through the harness runtime.
 - Issue a fix request to Developer when Tester, Reviewer, or validator evidence contains blocking remediation requirements.
 - Return to Tester after Developer remediation unless Planner or user approval changes the route.
-- Route to Reviewer only after Tester evidence and validator evidence are present, and instruct Reviewer to run the four mandatory independent review lens agents in parallel when practical.
-- Route to Planner closeout only after independent `packet_doc_review` pass evidence, Tester pass, all four independent review-lens artifacts are present or lens-specific N/A is independently recorded, Reviewer pass, SSOT conformance pass, and closeout package fields are available.
+- Route to Reviewer only after Tester evidence and validator evidence are present, and instruct Reviewer to apply the risk-adaptive independent review-lens burden. High, critical, sensitive, core, contract, and release closeout still use all four lenses in parallel when practical.
+- Route to Planner closeout only after independent `packet_doc_review` pass evidence, Tester pass, the required risk-adaptive independent review-lens artifacts are present, omitted lenses have explicit N/A evidence when allowed, Reviewer pass, SSOT conformance pass, and closeout package fields are available.
 - When an orchestration request explicitly asks for end-to-end completion, keep routing within the same turn until Tester verification, Reviewer closeout, and Planner closeout are either completed or blocked by explicit evidence.
 
 ## Single-Session Evidence Route
-- If the user explicitly requests implementation, testing, review, and closeout in one turn, Orchestrator may assemble the closeout route from real independent `packet_doc_review`, Developer, Tester, four independent review-lens agents, Reviewer adjudication, validator, security, and packet-preflight evidence produced in the same session.
+- If the user explicitly requests implementation, testing, review, and closeout in one turn, Orchestrator may assemble the closeout route from real independent `packet_doc_review`, Developer, Tester, risk-adaptive independent review-lens agents, Reviewer adjudication, validator, security, and packet-preflight evidence produced in the same session.
 - Do not create mock `harness:orchestrate` agent sessions merely to satisfy closeout evidence. Mock route artifacts are evidence of the route runner only, not a substitute for implementation, test, review, or Planner closeout evidence.
 - The closeout package must cite original evidence paths directly, such as `packet_doc_review`, Developer report, WALKTHROUGH/Test report, each independent review-lens artifact, REVIEW_REPORT, security review JSON, parallel/serial batch plan, validation report, and packet-preflight output.
 - When a packet is implemented serially in a single workspace, record that fact as serial evidence instead of inventing parallel subagent artifacts.

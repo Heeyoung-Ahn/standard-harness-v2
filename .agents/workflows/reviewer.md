@@ -25,9 +25,13 @@
 - Do not close release readiness without the required evidence.
 
 ## Mandatory Independent Review Lens Agents
-Every packet closeout requires four independent review lens agents. Run them in parallel
-when practical and record each lens output as packet-bound evidence before Reviewer
-closeout can pass.
+Every packet closeout requires independent review-lens evidence. The number of required
+lenses is risk-adaptive. Docs-only / low-risk fast-path closeout requires at least one
+independent review or verification lens with behavior-focused evidence. High, critical,
+security-sensitive, release-sensitive, browser-facing, harness-system,
+starter-promotion, core, load-bearing, contract, or release closeout requires all four
+independent review lens agents. Run multiple required lenses in parallel when practical
+and record each lens output as packet-bound evidence before Reviewer closeout can pass.
 
 Required lenses:
 - `challenge_review`
@@ -36,10 +40,10 @@ Required lenses:
 - `evidence_review`
 
 Independence requirements:
-- The same agent must not satisfy more than one lens for the same packet.
-- Developer, Tester, Orchestrator, Planner, generated summaries, and main-session self-review do not count as any of the four independent lens agents.
-- A lens-specific N/A requires that lens's independent agent to record the no-surface rationale and evidence path.
-- Missing, duplicated-agent, self-reviewed, or unbound lens evidence is a blocking closeout finding.
+- When more than one lens is required, the same agent must not satisfy more than one lens for the same packet.
+- Developer, Tester, Orchestrator, Planner, generated summaries, and main-session self-review do not count as independent lens evidence.
+- A lens-specific N/A requires a no-surface rationale and evidence path.
+- Missing, duplicated-agent, self-reviewed, unbound, stale, untrusted, failed, unresolved, or file-existence-only lens evidence is a blocking closeout finding.
 
 ## Pre-Implementation Packet Document Review Check
 Every packet closeout must verify that independent `packet_doc_review` evidence was
@@ -53,7 +57,7 @@ architecture/source SSOT, acceptance strength, verification scope, and v1.0/v2.0
 operating philosophy.
 
 ## Review Lens Minimums
-Use these four mandatory lenses when reviewing packet closeout. Keep findings evidence-backed and route remediation instead of absorbing another role's authority.
+Use these lenses according to the risk-adaptive closeout burden. Keep findings evidence-backed and route remediation instead of absorbing another role's authority.
 
 ### `challenge_review`
 - Check whether approved scope, user intent, Planner-approved SSOT, and packet acceptance were narrowed or omitted.
@@ -121,7 +125,7 @@ Use these four mandatory lenses when reviewing packet closeout. Keep findings ev
 - Map requirement intent to changed behavior and evidence. Word-only conformance is not enough when the behavior, acceptance evidence, or authority boundary is unclear.
 - Treat missing source refs, missing Tester evidence, missing packet evidence, or missing challenge evidence as findings until concrete evidence closes them.
 - Treat missing independent `packet_doc_review` evidence as a blocking finding before accepting implementation conformance or closeout.
-- Treat missing independent review-lens evidence for `challenge_review`, `adversarial_security_review`, `code_quality_review`, or `evidence_review` as a blocking closeout finding for every packet.
+- Treat missing independent review-lens evidence as a blocking closeout finding according to the active gate profile: all four named lenses for strict/high/core/contract/release closeout, or at least one passing independent behavior-verification lens plus explicit N/A evidence for omitted lenses on docs-only / low-risk fast-path closeout.
 - For high-risk, core, load-bearing, contract, release, or zero-finding closeout, record an adversarial second-pass note that names source alignment, acceptance/evidence coverage, risk/regression pressure, and authority-boundary checks.
 - Separate reviewed-scope approval from release-ready approval.
 
@@ -148,7 +152,7 @@ Use these four mandatory lenses when reviewing packet closeout. Keep findings ev
 - Modeling-error handling status: none found, stopped-and-remodeled, not-needed, or blocking patched-around-modeling-error.
 - Planner Packet Challenge Review status when required, including reviewer independence, source refs reviewed, findings disposition, required corrections applied, and no-self-approval evidence.
 - Adversarial second-pass status for high-risk, core, load-bearing, contract, release, or zero-finding closeout.
-- Independent review-lens status for all four mandatory lenses, including any lens-specific N/A rationale and evidence path.
+- Independent review-lens status for the required risk-adaptive lens set, including any lens-specific N/A rationale and evidence path.
 
 ## Turn Close Reporting
 - At the end of every turn, report in two blocks: `Current Work` and `Next Work`.

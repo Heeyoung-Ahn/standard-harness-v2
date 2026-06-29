@@ -112,21 +112,28 @@ Do not use baton text to redefine architecture, reopen approval, or override wor
 No role may silently absorb another role's approval authority.
 
 ## Mandatory Independent Review Lenses
-Every packet closeout must include four independent review lens agents:
+Every packet closeout must include independent review-lens evidence. The minimum
+review burden is risk-adaptive:
+- docs-only / low-risk fast-path closeout requires at least one independent
+  review or verification lens with behavior-focused evidence.
+- high, critical, security-sensitive, release-sensitive, browser-facing,
+  harness-system, starter-promotion, core, load-bearing, or contract/release
+  closeout requires all four independent review lens agents:
 - `challenge_review`
 - `adversarial_security_review`
 - `code_quality_review`
 - `evidence_review`
 
-These agents run in parallel when practical and produce separate packet-bound evidence. The
-same agent must not satisfy more than one lens for the same packet, and Developer, Tester,
-Orchestrator, and Planner output must not be reused as any of the four independent lens
-results. Reviewer closeout may summarize and adjudicate the lens outputs, but it cannot
-replace them.
+These agents run in parallel when practical and produce separate packet-bound evidence.
+When more than one lens is required, the same agent must not satisfy more than one lens
+for the same packet, and Developer, Tester, Orchestrator, and Planner output must not
+be reused as any independent lens result. Reviewer closeout may summarize and
+adjudicate the lens outputs, but it cannot replace them.
 
-Lens-specific N/A is allowed only when the independent lens agent records a concrete
-no-surface rationale and evidence path. Missing, self-reviewed, duplicated-agent, or
-unbound lens evidence blocks Reviewer closeout and Planner closeout for every packet.
+Lens-specific N/A is allowed only when the packet records a concrete no-surface
+rationale and evidence path. Missing, self-reviewed, duplicated-agent, unbound,
+stale, untrusted, failed, unresolved, or file-existence-only lens evidence blocks
+Reviewer closeout and Planner closeout for every packet.
 The `challenge_review` lens must explicitly check for LLM convenience closeout: scope
 narrowing, acceptance reinterpretation, fixture-only behavior, vocabulary-only
 conformance, or premature completion claims against the Human/Planner-approved intent.
@@ -145,7 +152,7 @@ Use the decision type to choose authority. Do not use a single global priority l
 | Implementation inside approved scope | Developer | packet, task brief, source files | PM, Orchestrator |
 | Test execution and defect evidence | Tester | test plan, test output, validation report | PM, Orchestrator, Developer for pass/fail claims |
 | Packet-document readiness before implementation | Independent packet document reviewer | `packet_doc_review` evidence, requirements, implementation plan, active packet, SSOT | Planner |
-| Conformance, source parity, evidence quality, closeout readiness | Reviewer | reviewer report, four independent review-lens evidence artifacts, evidence package, SSOT | PM, Orchestrator |
+| Conformance, source parity, evidence quality, closeout readiness | Reviewer | reviewer report, risk-adaptive independent review-lens evidence artifacts, evidence package, SSOT | PM, Orchestrator |
 | Generated context freshness | Runtime/context command | generated docs, DB, artifacts | all workflows until regenerated |
 | Baton text | No independent authority | latest valid handoff only | all workflows if baton conflicts with higher authority |
 

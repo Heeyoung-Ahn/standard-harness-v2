@@ -20,7 +20,7 @@ Human-facing documents belong under `product/docs/`.
 ```text
 product/docs/project/   project-wide planning, architecture, implementation, API, database, and UI design
 product/docs/packets/   packet-level human summaries
-product/docs/pmo/       WBS, daily wrap-up, status, risk, and PMO tables
+product/docs/pmo/       PMO documents; required starter folders are day-wrap-up and wbs
 ```
 
 ## Harness Operations

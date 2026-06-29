@@ -2,5 +2,53 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "required": ["skills"],
-  "properties": {"skills": {"type": "array"}}
+  "properties": {
+    "sourcePriority": {"type": "string"},
+    "superpowersDisposition": {"type": "string"},
+    "runtimeDependencyPolicy": {
+      "type": "object",
+      "properties": {
+        "requiresSuperpowersPlugin": {"type": "boolean"},
+        "providerNeutral": {"type": "boolean"}
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "taskTypes",
+          "triggerDescription",
+          "triggerKeywords",
+          "sourceAuthority",
+          "permissionScope",
+          "evidenceContract",
+          "fallbackBehavior",
+          "authorityBoundary"
+        ],
+        "properties": {
+          "id": {"type": "string"},
+          "v1SkillName": {"type": "string"},
+          "taskTypes": {"type": "array", "items": {"type": "string"}},
+          "triggerDescription": {"type": "string", "pattern": "^Use when"},
+          "triggerKeywords": {"type": "array", "items": {"type": "string"}},
+          "processPriority": {"type": "integer"},
+          "sourceAuthority": {"type": "string"},
+          "permissionScope": {
+            "type": "object",
+            "required": ["allowedWriteZones"],
+            "properties": {
+              "allowedWriteZones": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "evidenceContract": {"type": "object"},
+          "fallbackBehavior": {"type": "string"},
+          "authorityBoundary": {"type": "string"},
+          "requiredNextSkills": {"type": "array", "items": {"type": "string"}},
+          "superpowersPatternDisposition": {"type": "string"}
+        }
+      }
+    }
+  }
 }

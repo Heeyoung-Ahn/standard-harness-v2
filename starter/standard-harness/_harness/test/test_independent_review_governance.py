@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -86,20 +87,161 @@ class IndependentReviewGovernanceTests(unittest.TestCase):
         self.assertIn("packet_doc_review_not_pass", diagnostics)
         self.assertIn("missing_packet_doc_review_evidence", diagnostics)
 
-    def test_four_independent_closeout_lenses_are_required_for_every_packet(self) -> None:
-        packet = {
-            "packet_type": "docs-only",
-            "closeout_plan": {
-                "reviewGates": {
-                    "challenge_review": {"status": "pass", "agentId": "challenge-agent", "evidencePath": "_ops/evidence/reviews/challenge.json"},
-                    "evidence_review": {"status": "pass", "agentId": "evidence-agent", "evidencePath": "_ops/evidence/reviews/evidence.json"},
-                }
-            },
-        }
+    def test_low_risk_docs_only_closeout_allows_one_independent_lens_with_actual_docs_changed_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(temp_dir)
+            self._write(
+                repo_root / "_ops/evidence/reviews/evidence.json",
+                '{"verificationType":"command","command":"harness validate","exitCode":0,"result":"pass"}',
+            )
+            packet = {
+                "packet_type": "docs-only",
+                "risk_level": "low",
+                "route_class": "fast-path",
+                "gate_profile": "light",
+                "change_zone": "padded",
+                "actual_changed_files": ["docs/ops-guide.md"],
+                "closeout_plan": {
+                    "reviewGates": {
+                        "evidence_review": {
+                            "status": "pass",
+                            "agentId": "evidence-agent",
+                            "evidencePath": "_ops/evidence/reviews/evidence.json",
+                        },
+                        "challenge_review": {
+                            "status": "not-applicable",
+                            "rationale": "No challenge surface remains for docs-only low-risk closeout.",
+                            "evidencePath": "_ops/evidence/reviews/evidence.json",
+                        },
+                    }
+                },
+            }
 
-        diagnostics = ReviewGovernanceValidator(STARTER_ROOT).closeout_diagnostics(packet)
+            diagnostics = ReviewGovernanceValidator(repo_root).closeout_diagnostics(packet)
 
-        self.assertIn("missing_independent_closeout_review_lens", diagnostics)
+        self.assertEqual(diagnostics, [])
+
+    def test_low_risk_fast_path_requires_actual_changed_file_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(temp_dir)
+            self._write(
+                repo_root / "_ops/evidence/reviews/evidence.json",
+                '{"verificationType":"command","command":"harness validate","exitCode":0,"result":"pass"}',
+            )
+            packet = {
+                "packet_type": "docs-only",
+                "risk_level": "low",
+                "route_class": "fast-path",
+                "gate_profile": "light",
+                "change_zone": "padded",
+                "closeout_plan": {
+                    "reviewGates": {
+                        "evidence_review": {
+                            "status": "pass",
+                            "agentId": "evidence-agent",
+                            "evidencePath": "_ops/evidence/reviews/evidence.json",
+                        }
+                    }
+                },
+            }
+
+            diagnostics = ReviewGovernanceValidator(repo_root).closeout_diagnostics(packet)
+
+        self.assertIn("missing_actual_changed_file_evidence", diagnostics)
+
+    def test_low_risk_fast_path_blocks_actual_runtime_or_approval_changes(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(temp_dir)
+            self._write(
+                repo_root / "_ops/evidence/reviews/evidence.json",
+                '{"verificationType":"command","command":"harness validate","exitCode":0,"result":"pass"}',
+            )
+            packet = {
+                "packet_type": "docs-only",
+                "risk_level": "low",
+                "route_class": "fast-path",
+                "gate_profile": "light",
+                "change_zone": "padded",
+                "actual_changed_files": ["_harness/system/standard_harness/validation/review_governance.py"],
+                "closeout_plan": {
+                    "reviewGates": {
+                        "evidence_review": {
+                            "status": "pass",
+                            "agentId": "evidence-agent",
+                            "evidencePath": "_ops/evidence/reviews/evidence.json",
+                        }
+                    }
+                },
+            }
+
+            diagnostics = ReviewGovernanceValidator(repo_root).closeout_diagnostics(packet)
+
+        self.assertIn("unsafe_actual_changed_file_for_fast_path", diagnostics)
+
+    def test_low_risk_fast_path_prefers_trusted_git_diff_over_supplied_changed_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(temp_dir)
+            self._write(
+                repo_root / "_ops/evidence/reviews/evidence.json",
+                '{"verificationType":"command","command":"harness validate","exitCode":0,"result":"pass"}',
+            )
+            self._write(repo_root / "_harness/system/standard_harness/validation/review_governance.py", "# baseline\n")
+            self._git(repo_root, "init")
+            self._git(repo_root, "add", ".")
+            self._git(repo_root, "-c", "user.email=test@example.com", "-c", "user.name=Test User", "commit", "-m", "baseline")
+            self._write(repo_root / "_harness/system/standard_harness/validation/review_governance.py", "# changed\n")
+            packet = {
+                "packet_type": "docs-only",
+                "risk_level": "low",
+                "route_class": "fast-path",
+                "gate_profile": "light",
+                "change_zone": "padded",
+                "actual_changed_files": ["docs/ops-guide.md"],
+                "closeout_plan": {
+                    "reviewGates": {
+                        "evidence_review": {
+                            "status": "pass",
+                            "agentId": "evidence-agent",
+                            "evidencePath": "_ops/evidence/reviews/evidence.json",
+                        }
+                    }
+                },
+            }
+
+            diagnostics = ReviewGovernanceValidator(repo_root).closeout_diagnostics(packet)
+
+        self.assertIn("unsafe_actual_changed_file_for_fast_path", diagnostics)
+
+    def test_low_risk_fast_path_fails_closed_when_git_changed_file_source_errors(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(temp_dir)
+            self._write(
+                repo_root / "_ops/evidence/reviews/evidence.json",
+                '{"verificationType":"command","command":"harness validate","exitCode":0,"result":"pass"}',
+            )
+            (repo_root / ".git").mkdir()
+            packet = {
+                "packet_type": "docs-only",
+                "risk_level": "low",
+                "route_class": "fast-path",
+                "gate_profile": "light",
+                "change_zone": "padded",
+                "actual_changed_files": ["docs/ops-guide.md"],
+                "closeout_plan": {
+                    "reviewGates": {
+                        "evidence_review": {
+                            "status": "pass",
+                            "agentId": "evidence-agent",
+                            "evidencePath": "_ops/evidence/reviews/evidence.json",
+                        }
+                    }
+                },
+            }
+
+            diagnostics = ReviewGovernanceValidator(repo_root).closeout_diagnostics(packet)
+
+        self.assertIn("untrusted_actual_changed_file_source", diagnostics)
+        self.assertIn("missing_actual_changed_file_evidence", diagnostics)
 
     def test_four_independent_closeout_lenses_reject_duplicate_agents(self) -> None:
         packet = {
@@ -140,6 +282,10 @@ class IndependentReviewGovernanceTests(unittest.TestCase):
     def _write(path: Path, content: str) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content.strip() + "\n", encoding="utf-8")
+
+    @staticmethod
+    def _git(repo_root: Path, *args: str) -> None:
+        subprocess.run(["git", "-C", str(repo_root), *args], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 if __name__ == "__main__":

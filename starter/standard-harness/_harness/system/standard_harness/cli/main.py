@@ -595,12 +595,31 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
+def _starter_repo_root() -> Path:
+    return Path(__file__).resolve().parents[4]
+
+
 def _handle_skill_route(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
     parser = _command_parser("skill-route")
-    parser.add_argument("--task-type", required=True)
+    parser.add_argument("--task-type", default=None)
+    parser.add_argument("--intent-text", default="")
     parser.add_argument("--role", required=True)
+    parser.add_argument("--planning-boundary-closed", action="store_true")
+    parser.add_argument("--verification-evidence-present", action="store_true")
+    parser.add_argument("--root-cause-evidence-present", action="store_true")
+    parser.add_argument("--review-disposition-present", action="store_true")
     parsed = parser.parse_args(argv)
-    route = SkillRouter.from_repo(_repo_root()).route(task_type=parsed.task_type, role=parsed.role)
+    if not parsed.task_type and not parsed.intent_text:
+        raise ValueError("skill-route requires --task-type or --intent-text")
+    route = SkillRouter.from_repo(_starter_repo_root()).route(
+        task_type=parsed.task_type,
+        intent_text=parsed.intent_text,
+        role=parsed.role,
+        planning_boundary_closed=True if parsed.planning_boundary_closed else None,
+        verification_evidence_present=True if parsed.verification_evidence_present else None,
+        root_cause_evidence_present=True if parsed.root_cause_evidence_present else None,
+        review_disposition_present=True if parsed.review_disposition_present else None,
+    )
     if route["status"] == "blocked":
         raise ValueError(",".join(route["diagnostic_ids"]))
     return {"route": route}
@@ -612,7 +631,7 @@ def _handle_handoff_prompt(store: HarnessStore, argv: list[str]) -> dict[str, An
     parser.add_argument("--role", required=True)
     parser.add_argument("--packet-id", required=True)
     parsed = parser.parse_args(argv)
-    repo_root = _repo_root()
+    repo_root = _starter_repo_root()
     route = SkillRouter.from_repo(repo_root).route(task_type=parsed.task_type, role=parsed.role)
     if route["status"] == "blocked":
         raise ValueError(",".join(route["diagnostic_ids"]))

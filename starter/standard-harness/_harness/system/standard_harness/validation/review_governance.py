@@ -112,7 +112,7 @@ class ReviewGovernanceValidator:
         if not isinstance(review_gates, dict) or not review_gates:
             return ["missing_required_review_governance", "missing_independent_closeout_review_lens"]
 
-        self._validate_independent_closeout_lenses(review_gates, diagnostics)
+        self._validate_independent_closeout_lenses(packet, review_gates, diagnostics)
 
         packet_type = str(packet.get("packet_type", "docs-only"))
         required = REQUIRED_REVIEW_GATES_BY_PACKET_TYPE.get(packet_type, set())
@@ -122,14 +122,22 @@ class ReviewGovernanceValidator:
 
     def _validate_independent_closeout_lenses(
         self,
+        packet: dict[str, Any],
         review_gates: dict[str, Any],
         diagnostics: list[str],
     ) -> None:
-        if not MANDATORY_CLOSEOUT_REVIEW_LENSES.issubset(review_gates):
+        fast_path = _low_risk_fast_path_decision(packet, self.repo_root)
+        if fast_path["requested"] and not fast_path["ok"]:
+            diagnostics.extend(fast_path["diagnostics"])
+
+        strict = not fast_path["ok"]
+        if strict and not MANDATORY_CLOSEOUT_REVIEW_LENSES.issubset(review_gates):
             _add(diagnostics, "missing_independent_closeout_review_lens")
 
         seen_agents: set[str] = set()
-        for lens in sorted(MANDATORY_CLOSEOUT_REVIEW_LENSES):
+        passing_lenses = 0
+        lenses_to_validate = sorted(MANDATORY_CLOSEOUT_REVIEW_LENSES if strict else set(review_gates))
+        for lens in lenses_to_validate:
             review = review_gates.get(lens)
             if not isinstance(review, dict):
                 continue
@@ -141,6 +149,12 @@ class ReviewGovernanceValidator:
             evidence_path = _text(review.get("evidencePath") or review.get("evidence_path"))
             if not evidence_path or not _evidence_path_exists(self.repo_root, evidence_path):
                 _add(diagnostics, "missing_independent_closeout_review_evidence")
+            elif status not in NOT_APPLICABLE_STATUSES and not _has_structured_behavior_evidence(self.repo_root, evidence_path):
+                _add(diagnostics, "missing_structured_behavior_evidence")
+            if status in NOT_APPLICABLE_STATUSES:
+                continue
+            if status in {"pass", "passed", "pass_with_findings"}:
+                passing_lenses += 1
             agent_id = _agent_id(review)
             if _not_independent_agent_id(agent_id):
                 _add(diagnostics, "independent_closeout_review_not_independent")
@@ -148,6 +162,9 @@ class ReviewGovernanceValidator:
                 _add(diagnostics, "duplicate_independent_review_agent")
             else:
                 seen_agents.add(agent_id)
+        minimum = 4 if strict else 1
+        if passing_lenses < minimum:
+            _add(diagnostics, "missing_independent_closeout_review_lens")
 
     def _validate_review(self, review: dict[str, Any], diagnostics: list[str]) -> None:
         if not review.get("reviewId") or not review.get("packetId"):
@@ -280,10 +297,163 @@ def _evidence_path_exists(repo_root: Path, relative_path: str) -> bool:
     return path.is_file()
 
 
+def _low_risk_fast_path_decision(packet: dict[str, Any], repo_root: Path) -> dict[str, Any]:
+    packet_type = str(packet.get("packet_type", packet.get("packetType", "docs-only"))).lower()
+    risk_level = str(packet.get("risk_level", packet.get("riskLevel", "standard"))).lower()
+    route_class = str(packet.get("route_class", packet.get("routeClass", ""))).lower()
+    gate_profile = str(packet.get("gate_profile", packet.get("gateProfile", ""))).lower()
+    change_zone = str(packet.get("change_zone", packet.get("changeZone", ""))).lower()
+    requested = (
+        packet_type == "docs-only"
+        and risk_level == "low"
+        and route_class == "fast-path"
+        and gate_profile in {"", "light", "standard", "docs-only"}
+        and change_zone in {"", "padded", "docs", "docs-only"}
+    )
+    diagnostics: list[str] = []
+    if not requested:
+        return {"requested": False, "ok": False, "diagnostics": diagnostics}
+
+    supplied_changed_files = _string_list(
+        packet.get("actual_changed_files")
+        or packet.get("actualChangedFiles")
+        or packet.get("changed_files")
+        or packet.get("changedFiles")
+    )
+    trusted_changed_files = _trusted_git_changed_files(repo_root)
+    if trusted_changed_files["source"] == "git":
+        changed_files = trusted_changed_files["files"]
+    elif trusted_changed_files["source"] == "missing-git":
+        changed_files = supplied_changed_files
+    else:
+        diagnostics.append("untrusted_actual_changed_file_source")
+        changed_files = []
+    if not changed_files:
+        diagnostics.append("missing_actual_changed_file_evidence")
+    if any(_unsafe_fast_path_changed_file(item) for item in changed_files):
+        diagnostics.append("unsafe_actual_changed_file_for_fast_path")
+    return {"requested": True, "ok": not diagnostics, "diagnostics": diagnostics}
+
+
+def _trusted_git_changed_files(repo_root: Path) -> dict[str, Any]:
+    if not (repo_root / ".git").exists():
+        return {"source": "missing-git", "files": []}
+    try:
+        tracked = subprocess.run(
+            ["git", "-C", str(repo_root), "diff", "--name-only", "HEAD", "--"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            check=False,
+        )
+        untracked = subprocess.run(
+            ["git", "-C", str(repo_root), "ls-files", "--others", "--exclude-standard"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            check=False,
+        )
+    except OSError:
+        return {"source": "git-error", "files": []}
+    if tracked.returncode != 0 or untracked.returncode != 0:
+        return {"source": "git-error", "files": []}
+    return {
+        "source": "git",
+        "files": _unique_paths(
+            item
+            for item in [*_split_git_paths(tracked.stdout), *_split_git_paths(untracked.stdout)]
+            if _review_relevant_changed_file(item)
+        ),
+    }
+
+
+def _split_git_paths(output: str) -> list[str]:
+    return [item.strip().replace("\\", "/").lstrip("./") for item in str(output or "").splitlines() if item.strip()]
+
+
+def _unique_paths(paths: Any) -> list[str]:
+    seen: set[str] = set()
+    unique: list[str] = []
+    for item in paths:
+        normalized = str(item or "").replace("\\", "/").lstrip("./")
+        if normalized and normalized not in seen:
+            seen.add(normalized)
+            unique.append(normalized)
+    return unique
+
+
+def _review_relevant_changed_file(file_path: str) -> bool:
+    normalized = str(file_path or "").replace("\\", "/").lstrip("./").lower()
+    if not normalized:
+        return False
+    if normalized == ".harness/operating_state.sqlite" or normalized.startswith(".harness/operating_state.sqlite-"):
+        return False
+    if normalized.startswith(".agents/runtime/"):
+        return False
+    if normalized.startswith(".agents/artifacts/validation_report"):
+        return False
+    if normalized in {".agents/artifacts/current_state.md", ".agents/artifacts/task_list.md"}:
+        return False
+    if normalized.startswith("reference/packets/") or normalized.startswith("reference/reports/"):
+        return False
+    return True
+
+
+def _unsafe_fast_path_changed_file(file_path: str) -> bool:
+    normalized = str(file_path or "").replace("\\", "/").lstrip("./").lower()
+    if not normalized:
+        return True
+    return (
+        normalized.startswith(".harness/runtime/")
+        or normalized.startswith("_harness/")
+        or normalized.startswith("starter/standard-harness/_harness/system/")
+        or normalized.startswith("starter/standard-harness/_harness/bin/")
+        or normalized.startswith("starter/standard-harness/_harness/policies/")
+        or normalized.startswith(".agents/rules/")
+        or normalized.startswith(".agents/workflows/")
+        or "security" in normalized
+        or "permission" in normalized
+        or "secret" in normalized
+        or "approval" in normalized
+        or "release" in normalized
+        or "deploy" in normalized
+        or "database" in normalized
+        or "schema" in normalized
+        or normalized.endswith("packet_exit_quality_gate.md")
+    )
+
+
+def _has_structured_behavior_evidence(repo_root: Path, relative_path: str) -> bool:
+    path = (repo_root / relative_path).resolve()
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    if re.search(r"\b(file-exists-only|file existence only|path exists only|exists-only|marker-only)\b", text, re.I):
+        return False
+    if re.search(r"(status|trust status|validation status|result|disposition)\s*:\s*(stale|untrusted|unresolved|fail|failed|pending|unknown)\b", text, re.I):
+        return False
+    if re.search(r'"(verificationType|verification_type)"\s*:\s*"(command|test|runtime|browser|api|state-transition|diff)"', text, re.I) and re.search(r'"(result|status|decision)"\s*:\s*"(pass|passed|approved)"', text, re.I):
+        return True
+    has_command = re.search(r"(^|\n)\s*-\s*(Command|Test command|Verification command)\s*:", text, re.I)
+    has_exit = re.search(r"(^|\n)\s*-\s*(Exit code|Result exit code)\s*:\s*0\b", text, re.I)
+    has_type = re.search(r"(^|\n)\s*-\s*Verification type\s*:\s*(command|test|runtime|browser|api|state-transition|diff)\b", text, re.I)
+    has_result = re.search(r"(^|\n)\s*-\s*(Result|Status|Decision)\s*:\s*(pass|passed|approved)\b", text, re.I)
+    return bool((has_command and has_exit) or (has_type and has_result))
+
+
 def _string_set(value: Any) -> set[str]:
     if not isinstance(value, list):
         return set()
     return {str(item).strip() for item in value if str(item).strip()}
+
+
+def _string_list(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    if isinstance(value, str):
+        return [item.strip() for item in value.split(",") if item.strip()]
+    return []
 
 
 def _text(value: Any) -> str:

@@ -1,0 +1,38 @@
+{
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md",
+  "work_item_id": "PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING",
+  "mode": "scoped",
+  "decision": "pass",
+  "scope": "Starter clean-export contamination classification, installed-runtime tolerance, bounded starter smoke-copy cleanup, provider-specific entry contract rejection, secret rejection, and sensitive-evidence contamination behavior.",
+  "phases_run": [0, 1, 12, 13, 14],
+  "surfaces_reviewed": [
+    "starter/standard-harness/_harness/system/standard_harness/starter/contamination.py",
+    "starter/standard-harness/_harness/system/standard_harness/starter/smoke_workspace.py",
+    "starter/standard-harness/_harness/system/standard_harness/validation/aggregator.py",
+    "starter/standard-harness/_harness/bin/harness_cli.py",
+    "starter/standard-harness/_harness/test/test_operating_folder_contract.py",
+    "reference/packets/PKT-04B_CLEAN_STARTER_LIFECYCLE_HARDENING.md"
+  ],
+  "checklist": {
+    "clean_export_rejects_sensitive_evidence": "pass: representative sensitive-evidence artifacts are rejected with a blocking sensitive_evidence diagnostic, including non-source .py artifacts.",
+    "secret_rejection": "pass: common secret filenames and bounded text/config/doc content scans reject equals, quoted JSON/YAML colon, quoted Authorization Bearer, and fine-grained GitHub token forms without flagging normal policy identifiers that merely begin with a secret-like prefix.",
+    "oversized_secret_content": "pass: oversized scan-eligible text/config/doc files fail closed as secrets rather than bypassing content scanning.",
+    "generated_report_and_log_rejection": "pass: generated validation reports named with hyphens or underscores and root logs directory contents are rejected in clean-export mode.",
+    "root_harness_residue": "pass: generic root .harness residue is rejected as a development artifact in clean-export mode, while installed-runtime tolerates approved .harness/state runtime residue only outside clean-export proof.",
+    "relative_path_classification": "pass: clean-export classification uses starter-relative paths, preventing false positives from parent directory names such as secret-project or logs.",
+    "installed_runtime_boundary": "pass: installed-runtime validation remains explicitly labeled not clean-export proof and tolerates approved generated runtime state only in installed-runtime mode.",
+    "smoke_copy_cleanup": "pass: successful clean-export smoke copy was deleted, unmanaged directories are not deleted, preserved managed workspaces are pruned to one retained copy, and the current preserved workspace is never deleted by pruning.",
+    "path_safety": "pass: cleanup refuses paths outside the configured smoke temp root and refuses unmanaged directories inside the root.",
+    "dependency_supply_chain": "pass: no third-party dependency was added, removed, upgraded, or vendored.",
+    "generated_state": "pass: generated runtime summaries were not manually edited as part of PKT-04B implementation."
+  },
+  "findings": [],
+  "deferred_risks": [],
+  "residual_risk": "Low residual risk after RED/GREEN fixture, independent-review remediation, expanded secret-content and generated/log artifact coverage, oversized scan-eligible fail-closed behavior, full starter regression, filtered clean-candidate smoke validation, root regression, and root validation.",
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  }
+}

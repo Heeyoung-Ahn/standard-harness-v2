@@ -1,0 +1,39 @@
+{
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-08_RISK_ADAPTIVE_FAST_PATH_AND_EVIDENCE_VALIDATION.md",
+  "work_item_id": "PKT-08_RISK_ADAPTIVE_FAST_PATH_AND_EVIDENCE_VALIDATION",
+  "mode": "scoped",
+  "decision": "pass",
+  "scope": "PKT-08 risk-adaptive closeout review policy, packet-preflight validation, behavior-evidence quality checks, root workflow contracts, and starter gate-profile policy.",
+  "phases_run": [0, 1, 12, 13, 14],
+  "surfaces_reviewed": [
+    ".harness/runtime/state/packet-preflight.js",
+    ".harness/test/packet-preflight.test.js",
+    ".agents/rules/HARNESS_OPERATING_CONTRACT.md",
+    ".agents/workflows/reviewer.md",
+    ".agents/workflows/orchestrator.md",
+    ".agents/artifacts/ARCHITECTURE_GUIDE.md",
+    "reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+    "starter/standard-harness/_harness/policies/gate-profiles.yaml",
+    "starter/standard-harness/_harness/system/standard_harness/validation/review_governance.py",
+    "starter/standard-harness/_harness/test/test_independent_review_governance.py"
+  ],
+  "checklist": {
+    "approval_boundary": "pass: fast path cannot approve Ready For Code or Closeout; strict high/core path remains selected for PKT-08.",
+    "unsafe_downgrade": "pass: high, critical, security, release, browser, harness-system, starter-promotion, core, load-bearing, contract, and release closeout remain strict four-lens routes.",
+    "actual_changed_file_gate": "pass: low-risk fast path derives actual changed-file evidence from trusted git worktree diff when available, rejects runtime, approval, security, release, data, schema, harness-system, and starter policy paths, and does not allow requested fast-path metadata to override effective packet-path promotion.",
+    "evidence_trust": "pass: stale, untrusted, failed, unresolved, file-existence-only, prose-only, packet-local passing-lens evidence, and sibling path-prefix escapes are rejected.",
+    "secret_handling": "pass: no secrets, credentials, tokens, or environment values were added.",
+    "destructive_command": "pass: no destructive command path was added or broadened.",
+    "dependency_supply_chain": "pass: no third-party dependency was added, removed, upgraded, or vendored.",
+    "generated_state": "pass: generated runtime summaries were not manually edited."
+  },
+  "findings": [],
+  "deferred_risks": [],
+  "residual_risk": "Low residual risk after deterministic tests and packet-preflight diagnostics; remaining closeout requires independent review-lens evidence.",
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  }
+}

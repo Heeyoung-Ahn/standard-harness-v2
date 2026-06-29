@@ -156,6 +156,9 @@
     }
   },
   "reviewLensTriggers": {
+    "closeout_minimum": [
+      "all"
+    ],
     "requirements": [
       "product-feature",
       "product-bugfix",
@@ -189,8 +192,64 @@
       "starter-promotion"
     ],
     "closeout": [
-      "all"
+      "high",
+      "critical",
+      "security-sensitive",
+      "release-sensitive",
+      "browser-facing",
+      "harness-system",
+      "starter-promotion",
+      "core",
+      "load-bearing",
+      "contract",
+      "release"
     ]
+  },
+  "reviewLensPolicy": {
+    "schemaVersion": "standard-harness-review-lens-policy/v1",
+    "minimumIndependentLensCount": 1,
+    "lowRiskFastPath": {
+      "eligiblePacketTypes": [
+        "docs-only"
+      ],
+      "eligibleRiskLevels": [
+        "low"
+      ],
+      "eligibleRouteClasses": [
+        "fast-path"
+      ],
+      "eligibleChangeZones": [
+        "padded",
+        "docs",
+        "docs-only"
+      ],
+      "minimumPassingIndependentLensCount": 1,
+      "omittedLensRequirement": "explicit N/A rationale and evidence path"
+    },
+    "strictFourLensTriggers": [
+      "high",
+      "critical",
+      "security-sensitive",
+      "release-sensitive",
+      "browser-facing",
+      "harness-system",
+      "starter-promotion",
+      "core",
+      "load-bearing",
+      "contract",
+      "release"
+    ],
+    "evidenceTrust": {
+      "reject": [
+        "missing",
+        "stale",
+        "untrusted",
+        "failed",
+        "unresolved",
+        "file-existence-only"
+      ],
+      "proofStandard": "behavior verification"
+    }
   },
   "naRules": {
     "docs-only-no-runtime-change": {

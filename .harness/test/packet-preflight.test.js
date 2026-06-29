@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -13,6 +14,7 @@ function createRepo() {
   const repoRoot = fs.mkdtempSync(path.join(os.tmpdir(), "packet-preflight-"));
   seedStandardRepo(repoRoot);
   writeOwnershipMap(repoRoot);
+  writeGateProfilePolicy(repoRoot);
   const dbPath = path.join(repoRoot, ".harness", "operating_state.sqlite");
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   const store = createOperatingStateStore({ dbPath });
@@ -26,6 +28,35 @@ function createRepo() {
   });
   store.close();
   return { repoRoot, dbPath };
+}
+
+function writeGateProfilePolicy(repoRoot) {
+  const policyPath = path.join(repoRoot, "starter", "standard-harness", "_harness", "policies");
+  fs.mkdirSync(policyPath, { recursive: true });
+  fs.writeFileSync(
+    path.join(policyPath, "gate-profiles.yaml"),
+    JSON.stringify({
+      packetTypes: {
+        "docs-only": {
+          version: "docs-only@1",
+          requiredGates: ["schema", "boundary", "closeout"]
+        },
+        "harness-system": {
+          version: "harness-system@1",
+          requiredGates: ["harness-validation", "boundary", "starter-impact", "closeout"]
+        }
+      },
+      riskLevels: {
+        low: { addGates: [] },
+        standard: { addGates: [] },
+        high: { addGates: ["independent-review"] },
+        critical: { addGates: ["independent-review", "human-residual-risk-approval"] }
+      },
+      overlays: {},
+      naRules: {}
+    }, null, 2),
+    "utf8"
+  );
 }
 
 function writeOwnershipMap(repoRoot) {
@@ -51,6 +82,14 @@ function writeOwnershipMap(repoRoot) {
           routeImplication: "fast-path-eligible",
           productionEligibility: "allowed",
           exceptionRationale: "product source is padded"
+        },
+        {
+          pathPattern: "docs/strict/**",
+          ownerLayer: "strict-docs-contract",
+          defaultChangeZone: "core",
+          routeImplication: "packet-path",
+          productionEligibility: "allowed",
+          exceptionRationale: "strict docs affect reusable contract behavior"
         }
       ]
     }, null, 2),
@@ -206,10 +245,34 @@ function writeIndependentReviewArtifacts(repoRoot) {
   for (const lens of ["challenge", "security", "quality", "evidence"]) {
     fs.writeFileSync(
       path.join(repoRoot, "reference", "reviews", `OPS-E2E-03-${lens}.md`),
-      `# ${lens} review\n\nIndependent review fixture.\n`,
+      [
+        `# ${lens} review`,
+        "",
+        "Independent review fixture.",
+        "",
+        "- Verification type: command",
+        "- Command: node --test .harness/test/packet-preflight.test.js",
+        "- Exit code: 0",
+        "- Verified behavior: packet closeout evidence and changed surface were inspected.",
+        "- Result: pass"
+      ].join("\n") + "\n",
       "utf8"
     );
   }
+}
+
+function initializeGitBaseline(repoRoot) {
+  execFileSync("git", ["init", "-b", "main"], { cwd: repoRoot, stdio: "ignore" });
+  execFileSync("git", ["config", "user.email", "test@example.com"], { cwd: repoRoot, stdio: "ignore" });
+  execFileSync("git", ["config", "user.name", "Harness Test"], { cwd: repoRoot, stdio: "ignore" });
+  execFileSync("git", ["add", "."], { cwd: repoRoot, stdio: "ignore" });
+  execFileSync("git", ["commit", "-m", "baseline"], { cwd: repoRoot, stdio: "ignore" });
+}
+
+function writeChangedFile(repoRoot, relativePath, content = "changed\n") {
+  const target = path.join(repoRoot, relativePath);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, content, "utf8");
 }
 
 function independentReviewLensSection() {
@@ -244,6 +307,37 @@ function independentReviewLensSection() {
     "- evidence_review agent: evidence-review-agent",
     "- evidence_review independence basis: independent agent, not developer, not tester, not orchestrator, not planner, not self.",
     "- evidence_review evidence path: reference/reviews/OPS-E2E-03-evidence.md",
+    "- evidence_review status: pass",
+    "- evidence_review finding count: 0",
+    "- evidence_review limitations: none",
+    "- evidence_review reviewer disposition: accepted",
+    "- evidence_review not applicable rationale: not-needed"
+  ].join("\n");
+}
+
+function lowRiskFastPathReviewLensSection({ evidencePath = "reference/reviews/OPS-E2E-03-evidence.md" } = {}) {
+  return [
+    "## Independent Review Lens Evidence",
+    "- Independent review lens policy: risk-adaptive-closeout-review",
+    "- Parallel review execution: not-needed for low-risk fast path",
+    "- challenge_review status: not-applicable",
+    "- challenge_review evidence path: packet-local low-risk no behavior surface review",
+    "- challenge_review finding count: 0",
+    "- challenge_review reviewer disposition: accepted",
+    "- challenge_review not applicable rationale: no adversarial planning surface remains after Packet Document Review.",
+    "- adversarial_security_review status: not-applicable",
+    "- adversarial_security_review evidence path: packet-local low-risk no security surface review",
+    "- adversarial_security_review finding count: 0",
+    "- adversarial_security_review reviewer disposition: accepted",
+    "- adversarial_security_review not applicable rationale: no security, secret, data, release, or approval surface changed.",
+    "- code_quality_review status: not-applicable",
+    "- code_quality_review evidence path: packet-local low-risk no runtime surface review",
+    "- code_quality_review finding count: 0",
+    "- code_quality_review reviewer disposition: accepted",
+    "- code_quality_review not applicable rationale: docs-only low-risk packet has no implementation diff.",
+    "- evidence_review agent: evidence-review-agent",
+    "- evidence_review independence basis: independent agent, not developer, not tester, not orchestrator, not planner, not self.",
+    `- evidence_review evidence path: ${evidencePath}`,
     "- evidence_review status: pass",
     "- evidence_review finding count: 0",
     "- evidence_review limitations: none",
@@ -1135,6 +1229,691 @@ test("packet-preflight accepts complete independent review lens evidence", () =>
     result.findings.some((finding) => finding.field === "Independent Review Lens Evidence" && finding.status === "block"),
     false
   );
+});
+
+test("packet-preflight allows low-risk fast path closeout with one independent behavior lens and N/A evidence", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection(),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit metadata validation / security / cleanup evidence: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Exit recommendation: approved",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  writeChangedFile(repoRoot, "src/ops-guide.md");
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+
+  assert.equal(result.independentReviewLenses.required, true);
+  assert.equal(result.risk.effective, "low");
+  assert.equal(result.routeClass, "fast-path");
+  assert.equal(result.changeZone, "padded");
+  assert.equal(result.independentReviewLenses.policy, "risk-adaptive-fast-path");
+  assert.equal(result.independentReviewLenses.minimumPassingLenses, 1);
+  assert.equal(result.independentReviewLenses.ok, true);
+  assert.equal(result.independentReviewLenses.blocking, false);
+});
+
+test("packet-preflight blocks low-risk fast path closeout without actual changed-file evidence", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection(),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit metadata validation / security / cleanup evidence: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Exit recommendation: approved",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+
+  assert.equal(result.independentReviewLenses.policy, "strict-four-lens");
+  assert.equal(result.independentReviewLenses.blocking, true);
+  assert.match(result.errors.join("\n"), /actual changed-file evidence/i);
+});
+
+test("packet-preflight blocks docs-only fast path when actual runtime files changed", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection(),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  writeChangedFile(repoRoot, ".harness/runtime/state/packet-preflight.js");
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout", "--changed-files", "src/ops-guide.md"]
+  });
+
+  assert.equal(result.independentReviewLenses.policy, "strict-four-lens");
+  assert.equal(result.independentReviewLenses.blocking, true);
+  assert.match(result.errors.join("\n"), /unsafe actual changed file/i);
+});
+
+test("packet-preflight blocks low-risk fast path when actual approval or security policy files changed", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection(),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  writeChangedFile(repoRoot, ".agents/rules/HARNESS_OPERATING_CONTRACT.md");
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout", "--changed-files", "src/ops-guide.md"]
+  });
+
+  assert.equal(result.independentReviewLenses.policy, "strict-four-lens");
+  assert.equal(result.independentReviewLenses.blocking, true);
+  assert.match(result.errors.join("\n"), /unsafe actual changed file/i);
+});
+
+test("packet-preflight blocks low-risk fast path when actual starter policy files changed", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection(),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  fs.writeFileSync(
+    path.join(repoRoot, "starter", "standard-harness", "_harness", "policies", "gate-profiles.yaml"),
+    JSON.stringify({ packetTypes: { "docs-only": { version: "changed" } }, riskLevels: {}, overlays: {}, naRules: {} }, null, 2),
+    "utf8"
+  );
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout", "--changed-files", "src/ops-guide.md"]
+  });
+
+  assert.equal(result.independentReviewLenses.policy, "strict-four-lens");
+  assert.equal(result.independentReviewLenses.blocking, true);
+  assert.match(result.errors.join("\n"), /unsafe actual changed file/i);
+});
+
+test("packet-preflight blocks requested fast path when effective route is promoted to packet-path", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection(),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  writeChangedFile(repoRoot, "docs/strict/ops-guide.md");
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+
+  assert.equal(result.changeZone, "padded");
+  assert.equal(result.routeClass, "packet-path");
+  assert.equal(result.independentReviewLenses.policy, "strict-four-lens");
+  assert.equal(result.independentReviewLenses.minimumPassingLenses, 4);
+});
+
+test("packet-preflight blocks evidence paths that escape to sibling repo-prefix directories", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  const siblingName = `${path.basename(repoRoot)}-outside`;
+  const siblingEvidence = path.join(path.dirname(repoRoot), siblingName, "evidence.md");
+  fs.mkdirSync(path.dirname(siblingEvidence), { recursive: true });
+  fs.writeFileSync(
+    siblingEvidence,
+    [
+      "# outside evidence",
+      "",
+      "- Verification type: command",
+      "- Command: node --test .harness/test/packet-preflight.test.js",
+      "- Exit code: 0",
+      "- Result: pass"
+    ].join("\n") + "\n",
+    "utf8"
+  );
+  writeIndependentReviewArtifacts(repoRoot);
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection({ evidencePath: `../${siblingName}/evidence.md` }),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  writeChangedFile(repoRoot, "src/ops-guide.md");
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+
+  assert.equal(result.independentReviewLenses.blocking, true);
+  assert.match(result.errors.join("\n"), /escapes the repository/i);
+});
+
+test("packet-preflight does not read packets from sibling repo-prefix directories", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const siblingName = `${path.basename(repoRoot)}-outside`;
+  const outsidePacket = path.join(path.dirname(repoRoot), siblingName, "PKT.md");
+  fs.mkdirSync(path.dirname(outsidePacket), { recursive: true });
+  fs.writeFileSync(outsidePacket, "# outside packet\n", "utf8");
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--packet", `../${siblingName}/PKT.md`, "--stage", "planning-open"]
+  });
+
+  assert.equal(result.ok, false);
+  assert.match(result.errors.join("\n"), /Packet file not found or unreadable/i);
+});
+
+test("packet-preflight blocks passing lens packet-local evidence and prose-only behavior claims", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  fs.writeFileSync(
+    path.join(repoRoot, "reference", "reviews", "OPS-E2E-03-evidence.md"),
+    "# evidence review\n\n- Reviewed behavior: packet closeout evidence was inspected.\n- Result: pass\n",
+    "utf8"
+  );
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection(),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  writeChangedFile(repoRoot, "src/ops-guide.md");
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const proseOnly = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+  assert.equal(proseOnly.independentReviewLenses.blocking, true);
+  assert.match(proseOnly.errors.join("\n"), /structured behavior verification/i);
+
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection({ evidencePath: "packet-local reviewed behavior and command evidence" }),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+
+  const packetLocal = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+  assert.equal(packetLocal.independentReviewLenses.blocking, true);
+  assert.match(packetLocal.errors.join("\n"), /repository-bound evidence artifact/i);
+});
+
+test("packet-preflight blocks low-risk fast path closeout when all review lenses are N/A", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection().replace(
+        [
+          "- evidence_review agent: evidence-review-agent",
+          "- evidence_review independence basis: independent agent, not developer, not tester, not orchestrator, not planner, not self.",
+          "- evidence_review evidence path: reference/reviews/OPS-E2E-03-evidence.md",
+          "- evidence_review status: pass"
+        ].join("\n"),
+        [
+          "- evidence_review status: not-applicable",
+          "- evidence_review evidence path: packet-local low-risk evidence-only N/A review",
+          "- evidence_review not applicable rationale: no evidence surface remains."
+        ].join("\n")
+      ),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit metadata validation / security / cleanup evidence: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Exit recommendation: approved",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  writeChangedFile(repoRoot, "src/ops-guide.md");
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+
+  assert.equal(result.independentReviewLenses.required, true);
+  assert.equal(result.independentReviewLenses.blocking, true);
+  assert.match(result.errors.join("\n"), /At least one independent review lens must pass/);
+});
+
+test("packet-preflight blocks closeout lens evidence that only proves file existence", () => {
+  const { repoRoot, dbPath } = createRepo();
+  const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+  writeIndependentReviewArtifacts(repoRoot);
+  fs.writeFileSync(
+    path.join(repoRoot, "reference", "reviews", "OPS-E2E-03-evidence.md"),
+    "# evidence review\n\n- Evidence status: file-exists-only\n- Result: pass\n",
+    "utf8"
+  );
+  writePacket(repoRoot, packetPath, {
+    readyForCode: "approved",
+    riskIfStarted: "low",
+    riskClass: "low",
+    gateProfile: "light",
+    changeZone: "padded",
+    routeClass: "fast-path",
+    extraScope: [
+      "- Packet type: docs-only",
+      "- Risk level: low",
+      "- Schema impact classification: none",
+      "- Existing system dependency: none",
+      "- Domain context: none",
+      "- System boundary impact: none",
+      "- Shared module / hotspot impact: none",
+      "- System context: none",
+      "- Architecture: none",
+      "- Documentation impact: docs-only",
+      "- Docs parity status: pass"
+    ].join("\n"),
+    closeout: [
+      lowRiskFastPathReviewLensSection(),
+      "",
+      "## 15. Packet Exit Quality Gate",
+      "- Packet exit metadata version: v1",
+      "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Packet exit metadata exit recommendation: approved",
+      "- Packet exit metadata source parity result: pass",
+      "- Packet exit metadata validation / security / cleanup evidence: pass",
+      "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+      "- Exit recommendation: approved",
+      "- Source parity result: pass",
+      "- Validation / security / cleanup evidence: pass"
+    ].join("\n")
+  });
+  initializeGitBaseline(repoRoot);
+  writeChangedFile(repoRoot, "src/ops-guide.md");
+  registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+  const result = runPacketPreflightCommand({
+    repoRoot,
+    dbPath,
+    args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+  });
+
+  assert.equal(result.independentReviewLenses.blocking, true);
+  assert.match(result.errors.join("\n"), /behavior verification/i);
+});
+
+test("packet-preflight blocks stale untrusted failed or unresolved closeout lens evidence", () => {
+  for (const evidenceLine of [
+    "- Trust status: untrusted",
+    "- Validation status: stale",
+    "- Result: failed",
+    "- Disposition: unresolved"
+  ]) {
+    const { repoRoot, dbPath } = createRepo();
+    const packetPath = "reference/packets/PKT-01_OPS-E2E-03_TEST.md";
+    writeIndependentReviewArtifacts(repoRoot);
+    fs.writeFileSync(
+      path.join(repoRoot, "reference", "reviews", "OPS-E2E-03-evidence.md"),
+      [
+        "# evidence review",
+        "",
+        "- Verification type: command",
+        "- Command: node --test .harness/test/packet-preflight.test.js",
+        "- Exit code: 0",
+        evidenceLine
+      ].join("\n") + "\n",
+      "utf8"
+    );
+    writePacket(repoRoot, packetPath, {
+      readyForCode: "approved",
+      riskIfStarted: "low",
+      riskClass: "low",
+      gateProfile: "light",
+      changeZone: "padded",
+      routeClass: "fast-path",
+      extraScope: [
+        "- Packet type: docs-only",
+        "- Risk level: low",
+        "- Schema impact classification: none",
+        "- Existing system dependency: none",
+        "- Domain context: none",
+        "- System boundary impact: none",
+        "- Shared module / hotspot impact: none",
+        "- System context: none",
+        "- Architecture: none",
+        "- Documentation impact: docs-only",
+        "- Docs parity status: pass"
+      ].join("\n"),
+      closeout: [
+        lowRiskFastPathReviewLensSection(),
+        "",
+        "## 15. Packet Exit Quality Gate",
+        "- Packet exit metadata version: v1",
+        "- Packet exit metadata gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+        "- Packet exit metadata exit recommendation: approved",
+        "- Packet exit metadata source parity result: pass",
+        "- Packet exit quality gate reference: reference/artifacts/PACKET_EXIT_QUALITY_GATE.md",
+        "- Source parity result: pass",
+        "- Validation / security / cleanup evidence: pass"
+      ].join("\n")
+    });
+    initializeGitBaseline(repoRoot);
+    writeChangedFile(repoRoot, "src/ops-guide.md");
+    registerWorkItem(dbPath, packetPath, { readyForCode: "approved" });
+
+    const result = runPacketPreflightCommand({
+      repoRoot,
+      dbPath,
+      args: ["--work-item", "OPS-E2E-03", "--stage", "closeout"]
+    });
+
+    assert.equal(result.independentReviewLenses.blocking, true, evidenceLine);
+    assert.match(result.errors.join("\n"), /stale, untrusted, unresolved, failed, or pending/i);
+  }
 });
 
 test("packet-preflight allows consistent none context and docs impact", () => {

@@ -11,6 +11,7 @@ from pathlib import Path
 
 DEFAULT_SMOKE_ROOT_NAME = "standard-harness-smoke"
 DEFAULT_TTL_SECONDS = 24 * 60 * 60
+SMOKE_WORKSPACE_PREFIX = "shv2-starter-"
 
 
 def default_smoke_root() -> Path:
@@ -23,7 +24,7 @@ def default_smoke_root() -> Path:
 def create_starter_smoke_copy(source_root: str | Path, *, smoke_root: str | Path | None = None) -> Path:
     root = _resolve_smoke_root(smoke_root)
     root.mkdir(parents=True, exist_ok=True)
-    workspace = Path(tempfile.mkdtemp(prefix="shv2-starter-", dir=root))
+    workspace = Path(tempfile.mkdtemp(prefix=SMOKE_WORKSPACE_PREFIX, dir=root))
     target = workspace / "standard-harness"
     ignore = shutil.ignore_patterns("__pycache__", ".pytest_cache", ".mypy_cache", ".harness", ".tmp")
     shutil.copytree(Path(source_root), target, ignore=ignore)
@@ -41,8 +42,7 @@ def cleanup_starter_smoke_copy(
     root = _resolve_smoke_root(smoke_root)
     workspace = _workspace_for_target(Path(target), root)
     if preserve_success or failed:
-        if failed:
-            _prune_diagnostics(root, keep=max_failed_diagnostics)
+        _prune_diagnostics(root, keep=max_failed_diagnostics, preserve=workspace)
         return {"status": "preserved", "path": str(workspace)}
     if workspace.exists():
         shutil.rmtree(workspace)
@@ -63,6 +63,8 @@ def cleanup_stale_smoke_workspaces(
         if not child.is_dir():
             continue
         _assert_within_smoke_root(child, root)
+        if not _is_managed_workspace(child):
+            continue
         if child.stat().st_mtime <= cutoff:
             shutil.rmtree(child)
             deleted.append(str(child))
@@ -77,9 +79,13 @@ def _workspace_for_target(target: Path, root: Path) -> Path:
     resolved = target.resolve()
     _assert_within_smoke_root(resolved, root)
     if resolved.parent == root:
-        return resolved
-    _assert_within_smoke_root(resolved.parent, root)
-    return resolved.parent
+        workspace = resolved
+    else:
+        _assert_within_smoke_root(resolved.parent, root)
+        workspace = resolved.parent
+    if not _is_managed_workspace(workspace):
+        raise ValueError(f"Smoke workspace is not a managed starter workspace: {workspace}")
+    return workspace
 
 
 def _assert_within_smoke_root(path: Path, root: Path) -> None:
@@ -89,11 +95,21 @@ def _assert_within_smoke_root(path: Path, root: Path) -> None:
         raise ValueError(f"Smoke workspace path is outside the configured root: {path}") from exc
 
 
-def _prune_diagnostics(root: Path, *, keep: int) -> None:
+def _prune_diagnostics(root: Path, *, keep: int, preserve: Path | None = None) -> None:
     if not root.exists():
         return
-    workspaces = [child for child in root.iterdir() if child.is_dir()]
+    preserve_resolved = preserve.resolve() if preserve is not None else None
+    workspaces = [
+        child
+        for child in root.iterdir()
+        if child.is_dir() and _is_managed_workspace(child) and child.resolve() != preserve_resolved
+    ]
     workspaces.sort(key=lambda path: path.stat().st_mtime, reverse=True)
-    for child in workspaces[max(keep, 0) :]:
+    additional_keep = max(keep - 1, 0) if preserve_resolved is not None else max(keep, 0)
+    for child in workspaces[additional_keep:]:
         _assert_within_smoke_root(child, root)
         shutil.rmtree(child)
+
+
+def _is_managed_workspace(path: Path) -> bool:
+    return path.name.startswith(SMOKE_WORKSPACE_PREFIX)
