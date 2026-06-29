@@ -4,19 +4,19 @@
 
 ## Current Release Target
 - Define the first approved project baseline for Standard Harness v2 Starter Payload Development on top of the standard harness starter.
-- Generated At: 2026-06-29T21:08:32.224Z
-- Active work item count: 0
+- Generated At: 2026-06-29T22:24:29.863Z
+- Active work item count: 1
 
 ## Active Locks
 | Task ID | Scope | Owner | Status | Started At | Notes |
 |---|---|---|---|---|---|
-| - | None | - | clear | - | - |
+| PKT-16_RELEASE_BASELINE_RECONCILIATION | Release Baseline Reconciliation | planner | active | 2026-06-29 | planner-to-planner; gate release; Review the PKT-16_RELEASE_BASELINE_RECONCILIATION detailed agreement proposal and decide whether to approve, adjust, or hold Ready For Code before implementation opens. |
 
 ## Active Tasks
 | Task ID | Title | Scope | Owner | Status | Priority | Depends On | Verification |
 |---|---|---|---|---|---|---|---|
-| - | None | - | - | clear | - | - | - |
-- Next first action: Keep the reusable baseline on planning hold until a new approved lane is selected.
+| PKT-16_RELEASE_BASELINE_RECONCILIATION | Release Baseline Reconciliation | Release Baseline Reconciliation | planner | planning | P0 | - | gate release; Review the PKT-16_RELEASE_BASELINE_RECONCILIATION detailed agreement proposal and decide whether to approve, adjust, or hold Ready For Code before implementation opens. |
+- Next first action: Review the PKT-16_RELEASE_BASELINE_RECONCILIATION detailed agreement proposal and decide whether to approve, adjust, or hold Ready For Code before implementation opens.
 - Generated compatibility fallback only; regenerate rather than editing this file manually.
 
 ## Blocked Tasks
@@ -52,6 +52,7 @@
 | PLN-00 | Kickoff interview | - | transition unknown -> planner; gate unknown | Closed in canonical operational state. PLN-00 kickoff interview is closed; use PLN-01 requirements freeze and approved packets for next planning. |
 
 ## Handoff Log
+- 2026-06-29: [planner -> planner] [planner -> planner] Opened PKT-16_RELEASE_BASELINE_RECONCILIATION as the selected Planner packet for review before implementation opens.
 - 2026-06-29: [planner -> planner] [planner -> planner] Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold.
 - 2026-06-29: [orchestrator -> planner] [orchestrator -> planner] Orchestrator routed the packet to Planner for closeout, clarification, or escalation.
 - 2026-06-29: [planner -> orchestrator] [planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.
@@ -71,4 +72,3 @@
 - 2026-06-29: [planner -> orchestrator] [planner -> orchestrator] Planning approved; Orchestrator should route the delivery workflow.
 - 2026-06-29: [planner -> planner] [planner -> planner] Opened PKT-14_CONDUCTOR_WORKER_E2E as the first real packet.
 - 2026-06-29: [planner -> planner] [planner -> planner] Planner recorded packet closeout and placed the reusable baseline on no-active-lane hold.
-- 2026-06-29: [orchestrator -> planner] [orchestrator -> planner] Orchestrator routed the packet to Planner for closeout, clarification, or escalation.

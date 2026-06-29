@@ -588,6 +588,7 @@ Conductor adjudication, friction signals, and starter promotion.
 | 16 | PKT-13 Operating Intelligence And QA | Extend the existing long-memory/question-answering runtime into a queryable operating-intelligence source model and Human Owner QA CLI/status surface that answers what happened, why, evidence, risks, and next work. | `standard_harness.memory.question_answering`, CLI/status surface, evidence pointers, sensitivity/freshness checks, bounded context retrieval | high | QA source-index tests, token-budget/context tests, stale/sensitive evidence negative tests, named QA CLI smoke, copied-starter status query smoke |
 | 17 | PKT-14 Conductor Worker E2E | Prove the provider-neutral worker loop where Codex CLI and Claude Code CLI workers execute bounded tasks or deterministic fixtures, return evidence, and the selected Conductor adjudicates results without gaining implicit approval authority. | Conductor CLI/service surface, command descriptor validation, worker output envelopes, adjudication records, provider examples, approval/delegation checks | high | deterministic worker fixture E2E, real CLI smoke when tools are available or explicit N/A, delegated approval hard-stop tests, provider-neutral contamination tests, starter validation |
 | 18 | PKT-15 Compound Loop And Starter Promotion Rehearsal | Wire automatic `RuntimeFrictionCapture` call sites into validation, PM, review, closeout, and context-budget paths; promote repeated friction into improvement proposals and starter-promotion candidates; run dry-run and copied-starter smoke rehearsal. | friction call sites, improvement proposal lifecycle, starter-promotion candidate flow, promotion dry-run, copied-starter rehearsal evidence | starter-promotion overlay required | friction call-site integration tests, duplicate-suppression tests, proposal/promotion tests, promotion dry-run, copied-starter smoke validation |
+| 19 | PKT-16 Release Baseline Reconciliation | Rebaseline v2.0 productization blockers and follow-up work from actual copy, init, first packet, QA, closeout, reset, and promotion dry-run evidence before any release-ready claim. | release-baseline evidence report, starter clean export/copy path, QA fresh-start boundary, reset safety, promotion dry-run review lanes, implementation-plan operator next action | release | clean export validation, installed-runtime validation, first-packet smoke, QA before/after reset, closeout guard smoke, ops-reset preservation check, promotion dry-run, root validation, starter regression |
 
 ### Hardening Closeout Status
 PKT-11 through PKT-15 are closed for the approved hardening scope. This status does not
@@ -601,6 +602,14 @@ new implementation work.
 | PKT-13 | Operating-intelligence source index and Human Owner QA can answer what happened, why, evidence, risk, and next work from bounded sources. | Structured PM TSV/CSV/WBS ingestion and lower-level non-index reference evidence-ref hardening remain follow-up work. |
 | PKT-14 | Deterministic worker E2E, output envelope intake, Conductor adjudication, and delegated-approval hard stops were proven. | Real authenticated Codex CLI/Claude Code CLI execution remains unapproved and unrun unless explicitly authorized later. |
 | PKT-15 | Runtime friction call-site integration, improvement proposals, starter-promotion candidates, promotion dry-run, and copied-starter smoke were rehearsed. | Actual starter promotion, publish, release, or distribution remains unapproved. |
+
+### Productization Rebaseline Addendum
+PKT-16 is the next release-baseline packet. Initial E2E evidence shows the installed
+copied starter can initialize, validate, create a first packet, block unsupported closeout,
+reset `_ops`, and pass installed-runtime validation. It also shows release blockers:
+the raw `starter/standard-harness/` working directory is not clean-export ready, raw QA can
+answer from inherited PKT-14 operating memory before reset, and promotion dry-run still has
+review lanes that must be adjudicated before any actual export or release claim.
 
 ### Hardening Concern Coverage Matrix
 This matrix is a packet-opening checklist. Before any hardening packet requests Ready For
@@ -805,6 +814,7 @@ implementation starts.
 | 16 | PKT-13 Operating Intelligence And QA | Extend existing long-memory/question-answering services into a queryable operating-intelligence layer and Human Owner QA CLI/status surface. | high | source-index tests, token-budget/context tests, named QA CLI smoke, stale/sensitive evidence negative tests, copied-starter query smoke |
 | 17 | PKT-14 Conductor Worker E2E | Run deterministic worker E2E fixtures and, when available with explicit boundaries, real Codex CLI and Claude Code CLI smoke through Conductor adjudication. | high | worker fixture E2E tests, real CLI smoke or explicit N/A, output envelope tests, adjudication tests, delegated approval hard-stop tests |
 | 18 | PKT-15 Compound Loop And Starter Promotion Rehearsal | Integrate automatic friction capture, improvement proposal promotion, starter-promotion candidates, promotion dry-run, and copied-starter smoke validation. | starter-promotion overlay required | call-site integration tests, duplicate-suppression tests, proposal/promotion tests, promotion dry-run, copied-starter smoke |
+| 19 | PKT-16 Release Baseline Reconciliation | Rebaseline v2.0 productization blockers and follow-up work from actual E2E evidence before any release-ready claim. | release | clean export validation, installed-runtime validation, first packet smoke, QA before/after reset, closeout guard, reset preservation, promotion dry-run, root/starter regression |
 
 ## Verification Baseline
 Each implementation packet must define its own exact commands. The common baseline is:
@@ -856,12 +866,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL` is closed; latest closeout handoff is `planner -> planner`.
-- PM day wrap-up records the SSOT/closeout drift cleanup as a narrow no-new-packet coordination action.
-- Keep the reusable baseline on planning hold until a new approved lane is selected.
-- Next recommended workflow: Planner.
-- Next first action: decide the productization route for safe starter export, onboarding, release-readiness, live provider execution, or structured PM ingestion; do not start implementation or release without explicit approval.
-- Source packet: `reference/packets/PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL.md`.
+- `PKT-16_RELEASE_BASELINE_RECONCILIATION` active handoff is `planner -> planner`.
+- Review the PKT-16_RELEASE_BASELINE_RECONCILIATION detailed agreement proposal and decide whether to approve, adjust, or hold Ready For Code before implementation opens.
+- Source packet: `reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary
