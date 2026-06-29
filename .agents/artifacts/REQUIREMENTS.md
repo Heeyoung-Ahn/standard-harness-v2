@@ -517,15 +517,17 @@ Out of scope for the first packet:
 - Day-start and day-wrap-up outputs must identify current status, blockers, risks, next work, WBS impact, and decisions needed from the Human Owner.
 
 ## Open Questions
-- Deferred by PKT-11 to PKT-15: root-to-starter promotion execution must flow through the approved promotion/dry-run/copy-smoke rehearsal path once the promotion contract is ready. Direct root-to-starter mutation remains packet-scoped only for explicitly approved implementation work and is not a release/promotion approval.
-- Deferred by PKT-11 to PKT-13: exact `_ops/` reset command and evidence-retention policy must be aligned with the operating-intelligence/long-memory source model before it is treated as starter contract.
-- Which provider examples are useful without making any provider the product identity?
-- Which minimum PM artifacts should v2.2 require as starter contract versus leave as sample files?
-- Which review lenses are mandatory for the first copied-repo lifecycle and which remain risk-triggered?
+- No PKT-11 through PKT-15 implementation question remains open for the approved hardening scope.
+- Actual starter promotion, publish, release, or distribution remains unapproved. PKT-15 closed only the promotion dry-run, candidate lifecycle, and copied-starter smoke rehearsal boundary.
+- Live authenticated Codex CLI or Claude Code CLI worker execution remains unapproved and unrun. PKT-14 closed deterministic fixture/captured-output worker E2E and preserves real-CLI smoke as an explicit approval-boundary follow-up.
+- Structured PM TSV/CSV/WBS ingestion into operating-intelligence remains a productization follow-up; current PM artifacts are generated and indexed, but bulk structured PM source intake is not closed.
+- Lower-level non-index `reference/**` evidence-reference hardening remains a non-blocking follow-up for broader operating-intelligence coverage.
+- Safe starter export, onboarding, and release-readiness packaging remain productization work and require explicit approval before implementation or release action.
 - Closed by PKT-03: the starter minimum contract uses one `product/docs/packets/<packet-id>/closeout.md` report linked to `_ops/evidence/<packet-id>/evidence-index.json`, with required-gate evidence, N/A record, raw-dump, length, and wiki proposal boundary validation.
-- Which risk level names should become canonical in the starter schema: low, standard, high, critical, release-sensitive, or a smaller set?
-- Which long-memory pages are mandatory in the starter seed versus created on demand during project operation?
-- Which structured store should be authoritative for hot operating state in the first v2.0 starter cut?
+- Closed by PKT-12 for v2.0: canonical risk names are `low`, `standard`, `high`, and `critical`; `medium` and `normal` are compatibility aliases to `standard`, and release-sensitive handling is an overlay/escalation boundary rather than a standalone canonical risk enum.
+- Closed by PKT-13 for v2.0: hot operating state is authoritative in the local harness store/SQLite and governance Markdown remains authority for planning truth; generated summaries and Active Context are read models.
+- Closed by PKT-13 for v2.0: long-memory starter pages are created on demand from evidence-backed source indexes unless a future packet explicitly adds mandatory seed pages.
+- Provider examples remain useful only as sample/local adapter fixtures and must not become product identity.
 
 ## Deferred Items
 - First packet selection, PKT-01 `Ready For Code`, implementation, testing, review, and Planner closeout are closed for PKT-01 Project Operating Folder Contract.
@@ -534,6 +536,11 @@ Out of scope for the first packet:
 - PKT-02 Risk-Adaptive Gate Profile Engine is closed for the approved gate resolver scope.
 - PKT-03 Documenter Closeout And Evidence Index is closed for the approved Documenter closeout report, evidence-index contract, PKT-02 required-gate consumption, N/A evidence, raw-dump/length guard, and wiki proposal boundary scope.
 - PKT-04 PM Daily Rhythm And WBS Loop is closed for approved PM day-start/day-wrap-up reports, WBS TSV, PMO placement, stale-summary blocking, authority-boundary diagnostics, and evidence-index link scope.
+- PKT-11 State And Closure Baseline is closed for operational state, artifact registration, Active Context parity, validation parity, and hardening matrix readiness cleanup.
+- PKT-12 Schema Permission Boundary Cleanup is closed for risk taxonomy alignment, schema identity cleanup, copied-starter permission boundary cleanup, and root/starter leakage tests.
+- PKT-13 Operating Intelligence And QA is closed for indexed source models, Human Owner QA answers, context/freshness/sensitivity controls, and copied-starter query smoke. Structured PM TSV/CSV/WBS ingestion and lower-level non-index reference evidence hardening remain follow-up work.
+- PKT-14 Conductor Worker E2E is closed for deterministic worker fixtures, output envelopes, Conductor adjudication, and delegated-approval hard stops. Real authenticated provider CLI execution remains approval-boundary follow-up.
+- PKT-15 Compound Loop And Starter Promotion Rehearsal is closed for runtime friction call-site integration, improvement proposal and starter-promotion candidate lifecycle, promotion dry-run, and copied-starter smoke validation. Actual starter promotion or release remains unapproved.
 - Full XP-00 through XP-10 implementation sequence remains a roadmap and must be packetized.
 - v1 zip artifacts remain reference-only unless separately promoted by approved plan.
 - Full skill catalog/router implementation follows the folder and starter boundary baseline.

@@ -137,13 +137,13 @@ these reusable guardrails.
 | Clean starter payload | `starter/standard-harness/` has `_harness/`, `_ops/`, `product/` and passes starter validation when runtime caches are absent. | Good baseline, but copy/use smoke needs to remain part of every starter change. | Preserve and harden. |
 | Folder contract | `_harness/policies/project-operating-folders.yaml` defines folders and contamination rules. | Needs stronger reset/init behavior and explicit report/document placement validation. | Harden as first implementation wave. |
 | Packet kernel | `PacketService` supports packet type, risk level, gate profile version, approval, lifecycle, test plan, review plans, and closeout plan. | Packet creation CLI defaults are still thin; packet type/risk are not ergonomic enough for real operators. | Keep kernel, add packet authoring/preflight. |
-| Gate profile model | `gate-profiles.yaml` defines packet-type profiles, risk levels, overlays, review-lens triggers, and N/A rules. | PM and memory consumers still need to use the evidence index in later waves. | Keep PKT-02 resolver/validator behavior and PKT-03 closeout consumption; route PM consumption to PKT-04 and memory consumption to PKT-05. |
-| Evidence and closeout | Closeout reports now target `product/docs/packets/` and validate linked `_ops/evidence/<packet-id>/` evidence indexes. PKT-04 PM reports and WBS output now cite evidence-index links. | Long-memory question answering does not yet consume the index. | Build long-memory source index next. |
-| PM rhythm | PMO projection table/service exists, and PKT-04 adds one-page day-start/day-wrap-up report generation, PMO placement validation, stale-summary checks, authority-boundary diagnostics, and WBS TSV support. | Long-memory question answering still needs to cite PM summaries without treating them as truth authority. | Route PM-summary consumption to PKT-05. |
-| Long memory | Wiki proposal validator/applier and operational memory snapshots exist. | Wiki pages are not yet fully connected to closeout/report/evidence index flow. | Build Documenter -> Wiki proposal -> validated apply path. |
-| Multi-LLM routing | Adapter manifest and workflow run records exist. | No practical provider-neutral orchestration workflow for assigning roles across Codex/GPT, Claude Code, and future providers. | Add manual-first routing contract, then adapter execution. |
+| Gate profile model | `gate-profiles.yaml` defines packet-type profiles, risk levels, overlays, review-lens triggers, and N/A rules. PM, closeout, and memory consumers now have indexed evidence paths through the closed PKT-03, PKT-04, and PKT-13 scope. | Future gate-profile changes must preserve evidence-index consumption and generated-summary authority boundaries. | Keep PKT-02 resolver/validator behavior and protect the PKT-03/PKT-04/PKT-13 evidence-consumption contracts. |
+| Evidence and closeout | Closeout reports now target `product/docs/packets/` and validate linked `_ops/evidence/<packet-id>/` evidence indexes. PKT-04 PM reports and WBS output cite evidence-index links, and PKT-13 consumes indexed sources for operating-intelligence QA. | Lower-level non-index `reference/**` evidence references are not yet uniformly hardened. | Treat broad reference evidence-ref hardening as productization follow-up, not as PKT-13 closeout drift. |
+| PM rhythm | PMO projection table/service exists, and PKT-04 adds one-page day-start/day-wrap-up report generation, PMO placement validation, stale-summary checks, authority-boundary diagnostics, and WBS TSV support. PKT-13 can cite PM summaries as non-authoritative indexed sources. | Structured PM TSV/CSV/WBS bulk ingestion into operating intelligence remains follow-up work. | Keep generated PM reports/WBS support as v2.0 baseline; route structured PM source-intake expansion to future productization work. |
+| Long memory | Wiki proposal validator/applier, operational memory snapshots, source indexing, and Human Owner QA are implemented for the approved PKT-13 scope. | Mandatory starter seed pages beyond on-demand evidence-backed memory are not required for v2.0 and remain future scope if needed. | Preserve index-first, bounded, evidence-backed memory and avoid turning generated summaries into authority. |
+| Multi-LLM routing | Adapter manifest, workflow run records, Conductor worker fixtures, output envelopes, and adjudication records exist for deterministic/captured-output E2E. | Live authenticated provider CLI smoke is not approved or run. | Keep real Codex CLI/Claude Code CLI execution as explicit approval-boundary follow-up. |
 | Skill routing | Skill catalog/router exists. | Current starter does not yet expose a complete skill auto-use workflow for copied projects. | Add catalog validation and handoff prompts after core packet loop. |
-| Human question answering | Current context and operational memory projections exist. | No query-ready source index that reliably answers "what happened, why, evidence, risk, next". | Add compact status index after closeout and PM loop. |
+| Human question answering | Active Context, operational memory projections, PKT-13 source indexes, and Human Owner QA answers exist for the approved v2.0 hardening scope. | Export/onboarding release readiness and broader structured PM source ingestion are still productization follow-up work. | Preserve the compact evidence-backed answer contract and route future expansion through explicit Planner approval. |
 
 ## v1.0 Carry-Forward Policy
 The v1.0 clean starter zip is a reference-only source. It must not be copied wholesale
@@ -589,6 +589,19 @@ Conductor adjudication, friction signals, and starter promotion.
 | 17 | PKT-14 Conductor Worker E2E | Prove the provider-neutral worker loop where Codex CLI and Claude Code CLI workers execute bounded tasks or deterministic fixtures, return evidence, and the selected Conductor adjudicates results without gaining implicit approval authority. | Conductor CLI/service surface, command descriptor validation, worker output envelopes, adjudication records, provider examples, approval/delegation checks | high | deterministic worker fixture E2E, real CLI smoke when tools are available or explicit N/A, delegated approval hard-stop tests, provider-neutral contamination tests, starter validation |
 | 18 | PKT-15 Compound Loop And Starter Promotion Rehearsal | Wire automatic `RuntimeFrictionCapture` call sites into validation, PM, review, closeout, and context-budget paths; promote repeated friction into improvement proposals and starter-promotion candidates; run dry-run and copied-starter smoke rehearsal. | friction call sites, improvement proposal lifecycle, starter-promotion candidate flow, promotion dry-run, copied-starter rehearsal evidence | starter-promotion overlay required | friction call-site integration tests, duplicate-suppression tests, proposal/promotion tests, promotion dry-run, copied-starter smoke validation |
 
+### Hardening Closeout Status
+PKT-11 through PKT-15 are closed for the approved hardening scope. This status does not
+approve starter promotion, release, live provider execution, residual-risk acceptance, or
+new implementation work.
+
+| Packet | Closed Scope | Remaining Boundary |
+|---|---|---|
+| PKT-11 | Operational state, artifact registration, validation parity, Active Context parity, and hardening matrix readiness were reconciled. | Future generated-state drift must be regenerated through harness commands, not manually edited. |
+| PKT-12 | Risk taxonomy, schema identity, copied-starter permissions, and root/starter leakage controls were aligned. | Preserve `low`, `standard`, `high`, `critical` as canonical risk names and keep aliases compatibility-only. |
+| PKT-13 | Operating-intelligence source index and Human Owner QA can answer what happened, why, evidence, risk, and next work from bounded sources. | Structured PM TSV/CSV/WBS ingestion and lower-level non-index reference evidence-ref hardening remain follow-up work. |
+| PKT-14 | Deterministic worker E2E, output envelope intake, Conductor adjudication, and delegated-approval hard stops were proven. | Real authenticated Codex CLI/Claude Code CLI execution remains unapproved and unrun unless explicitly authorized later. |
+| PKT-15 | Runtime friction call-site integration, improvement proposals, starter-promotion candidates, promotion dry-run, and copied-starter smoke were rehearsed. | Actual starter promotion, publish, release, or distribution remains unapproved. |
+
 ### Hardening Concern Coverage Matrix
 This matrix is a packet-opening checklist. Before any hardening packet requests Ready For
 Code, Planner must copy or reference the relevant rows in that packet's acceptance, and
@@ -844,7 +857,10 @@ kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
 - `PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL` is closed; latest closeout handoff is `planner -> planner`.
+- PM day wrap-up records the SSOT/closeout drift cleanup as a narrow no-new-packet coordination action.
 - Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Next recommended workflow: Planner.
+- Next first action: decide the productization route for safe starter export, onboarding, release-readiness, live provider execution, or structured PM ingestion; do not start implementation or release without explicit approval.
 - Source packet: `reference/packets/PKT-15_COMPOUND_LOOP_AND_STARTER_PROMOTION_REHEARSAL.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
