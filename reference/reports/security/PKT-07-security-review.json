@@ -1,0 +1,67 @@
+{
+  "schema_version": "standard-harness-cso-security-review/v2.2",
+  "packet": "PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP",
+  "packet_path": "reference/packets/PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP.md",
+  "work_item_id": "PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP",
+  "mode": "scoped",
+  "phases_run": [0, 1, 2, 5, 8, 12, 13, 14],
+  "filter_stats": {
+    "raw_candidates": 5,
+    "suppressed_false_positives": 0,
+    "main_findings": 0
+  },
+  "decision": "pass",
+  "review_type": "security",
+  "status": "pass",
+  "reviewed_on": "2026-06-29",
+  "scope": [
+    "starter/standard-harness/_harness/system/standard_harness/workflow/conductor.py",
+    "starter/standard-harness/_harness/system/standard_harness/workflow/provider_orchestration.py",
+    "starter/standard-harness/_harness/system/standard_harness/adapters/contract_matrix.py",
+    "starter/standard-harness/_harness/system/standard_harness/state/replay.py",
+    "starter/standard-harness/_harness/test/test_conductor_routing_loop.py",
+    "starter/standard-harness/_harness/test/test_provider_neutral_orchestration.py"
+  ],
+  "findings": [],
+  "security_controls": [
+    {
+      "control": "delegated_approval_authority_boundary",
+      "result": "pass",
+      "evidence": "Conductor approval decisions require trusted harness grant records, packet/risk/type matching, active lifecycle state, hard-stop checks, and verified_by_harness evidence prerequisites. Planner delegated approval execution is rejected."
+    },
+    {
+      "control": "human_approval_hard_stop_boundary",
+      "result": "pass",
+      "evidence": "Human direct approval requires trusted_human_decision and the same hard-stop evidence checks; worker output cannot create approval authority."
+    },
+    {
+      "control": "provider_neutral_identity",
+      "result": "pass",
+      "evidence": "Codex and Claude Code surfaces are recorded as replaceable provider examples. Conductor selection does not grant approval authority and does not make provider identity a product dependency."
+    },
+    {
+      "control": "entry_file_and_command_safety",
+      "result": "pass",
+      "evidence": "Entry-file generation validates initialized-project paths and rejects approval-bypass text. Provider execution readiness rejects unsafe command descriptors before CLI readiness is granted."
+    },
+    {
+      "control": "path_escape_boundary",
+      "result": "pass",
+      "evidence": "Adapter artifact validation resolves real paths before trusted-root comparison. A symlink escape regression exists and is skipped only when the Windows host cannot create symlinks."
+    },
+    {
+      "control": "queryable_read_model_boundary",
+      "result": "pass",
+      "evidence": "Conductor ledger events persist selection, entry metadata, delegation grants, routing decisions, worker output refs, adjudication, and approval decisions as queryable read-model records."
+    },
+    {
+      "control": "worker_output_trust_boundary",
+      "result": "pass",
+      "evidence": "Worker output refs and adjudication records are evidence/read-model data only. They do not mutate canonical approval state or become truth claims."
+    }
+  ],
+  "residual_risk": [
+    "PKT-07 does not execute real Codex CLI or Claude Code CLI processes. Future packets that add process launch behavior must repeat security review for executable allowlists, cwd isolation, timeout/cancel behavior, non-interactive capture, and provider local terms.",
+    "Windows symlink escape coverage is present but skipped when the current host lacks symlink creation privileges."
+  ]
+}

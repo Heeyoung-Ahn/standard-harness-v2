@@ -227,6 +227,40 @@ class ProviderNeutralOrchestrationTests(unittest.TestCase):
             self.assertEqual(result["status"], "rejected")
             self.assertEqual(result["failure_classification"], "path_escape")
 
+    def test_boundary_validator_rejects_symlink_artifact_escape(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            trusted = Path(tmp) / "trusted"
+            trusted.mkdir()
+            outside = Path(tmp) / "outside"
+            outside.mkdir()
+            outside_artifact = outside / "adapter-output.json"
+            outside_artifact.write_text("{}", encoding="utf-8")
+            link = trusted / "linked-output.json"
+            try:
+                link.symlink_to(outside_artifact)
+            except OSError as exc:
+                self.skipTest(f"symlink creation unavailable: {exc}")
+
+            result = AdapterBoundaryValidator().validate_envelope(
+                {
+                    "adapter_run_id": "run-symlink-escape",
+                    "input_snapshot_hash": "sha256:input",
+                    "permission_roots": [str(trusted)],
+                    "artifact_manifest": [{"path": str(link), "kind": "review"}],
+                    "event_request": {"event_type": "adapter.output_submitted"},
+                    "failure_classification": None,
+                    "evidence_provenance": {
+                        "execution_mode": "local_subscription_cli",
+                        "result_status": "passed",
+                        "evidence_id": "ev-symlink",
+                    },
+                },
+                trusted_permission_roots=[str(trusted)],
+            )
+
+            self.assertEqual(result["status"], "rejected")
+            self.assertEqual(result["failure_classification"], "path_escape")
+
     def test_boundary_validator_rejects_stale_snapshot_direct_mutation_missing_provenance_and_mock_success(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -356,6 +390,37 @@ class ProviderNeutralOrchestrationTests(unittest.TestCase):
             self.assertEqual(blocked["status"], "execution_blocked")
             self.assertIn("approved_packet_boundary", blocked["missing_preconditions"])
             self.assertEqual(ready["status"], "ready")
+
+    def test_execution_readiness_rejects_unsafe_command_descriptors(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            policy = ProviderOrchestrationPolicy([self.codex_manifest(root)])
+
+            route = policy.prepare_execution(
+                role="Developer",
+                packet_id="PKT-07",
+                input_snapshot_hash="sha256:input",
+                cli_available=True,
+                execution_preconditions={
+                    "approved_packet_boundary": True,
+                    "explicit_local_configuration": True,
+                    "authenticated_outside_repo": True,
+                    "command_descriptor": {
+                        "argv": ["codex", "exec", "$(Get-Content secret.txt)"]
+                    },
+                    "timeout_seconds": 120,
+                    "cancel_supported": True,
+                    "non_interactive_capture": True,
+                    "input_snapshot_current": True,
+                },
+            )
+
+            self.assertEqual(route["status"], "execution_blocked")
+            self.assertEqual(route["diagnostic_code"], "unsafe_command_descriptor")
+            self.assertIn(
+                "untrusted_shell_interpolation",
+                route["command_descriptor_diagnostics"],
+            )
 
     def test_provider_orchestration_ledger_records_queryable_runs_and_adjudications(self):
         with tempfile.TemporaryDirectory() as tmp:

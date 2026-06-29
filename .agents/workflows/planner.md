@@ -17,12 +17,17 @@
 - Open or refine planning packets and planning-lane SSOT updates.
 - Rebaseline planning documents when the user has approved the new direction.
 - Own remodel decisions when implementation discovers a modeling/API/component-boundary error; update packet-local `Modeling Impact`, promoted modeling artifacts, acceptance, or packet boundary before code continues.
+- Record explicit Human Ready For Code decisions and route valid Conductor-delegated
+  approval records, but do not execute Human-delegated approval on Planner authority.
 - Hand off approved autonomous delivery packets to `Orchestrator` after Ready For Code approval when the packet asks for Developer, Tester, Reviewer, remediation, and Planner closeout routing.
 
 ## Non-Authority
 - Do not start implementation, refactoring, or UI changes before approval.
 - Do not treat rough planning artifacts as automatic code approval.
 - Do not close human approval checkpoints on behalf of the user.
+- Do not execute Human-delegated Ready For Code or Closeout approvals; delegated
+  approval execution belongs to the selected Conductor and must validate through trusted
+  harness approval commands/services.
 
 ## Must Read SSOT
 - `.agents/artifacts/REQUIREMENTS.md`

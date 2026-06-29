@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from standard_harness.adapters.envelope import AdapterOutputEnvelope
@@ -246,14 +247,14 @@ class AdapterBoundaryValidator:
         permission_roots = trusted_permission_roots or envelope.permission_roots
         if any(not _looks_absolute(root) for root in permission_roots):
             return True
-        roots = [_normalize_path(root) for root in permission_roots]
+        roots = [_real_path(root) for root in permission_roots]
         if not roots:
             return True
         for artifact in envelope.artifact_manifest:
             path = artifact.get("path")
             if not isinstance(path, str) or not path:
                 return True
-            normalized = _normalize_path(path)
+            normalized = _real_path(path)
             if not any(_is_relative_to(normalized, root) for root in roots):
                 return True
         return False
@@ -296,6 +297,13 @@ def _normalize_path(path: str) -> str:
     if prefix:
         return f"{prefix}/{joined}" if joined else f"{prefix}/"
     return joined
+
+
+def _real_path(path: str) -> str:
+    try:
+        return _normalize_path(str(Path(path).resolve(strict=False)))
+    except OSError:
+        return _normalize_path(path)
 
 
 def _is_relative_to(path: str, root: str) -> bool:

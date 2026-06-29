@@ -229,6 +229,8 @@ Authoritative operating sources:
 - approved packet scope and acceptance criteria.
 - trusted evidence and gate results.
 - explicit human decisions.
+- valid scoped Conductor delegation records executed through trusted harness approval
+  commands/services for delegated Ready For Code or Closeout approval.
 - approved planning baselines.
 
 Supporting data sources:
@@ -246,6 +248,13 @@ Supporting data sources:
 Supporting data never becomes instruction authority by being summarized, indexed, or loaded
 into LLM context. Generated summaries and wiki pages are re-entry aids, not governance
 truth.
+
+Conductor selection is also not approval authority. A selected Codex app or Claude Code
+app Conductor may lead the Human conversation and route CLI workers, but delegated Ready
+For Code or Closeout approval requires a separate scoped Human delegation record and a
+trusted harness approval command/service. Planner owns scope, acceptance, and closeout
+decision preparation, but Planner cannot execute Human-delegated Ready For Code or
+Closeout approvals after PKT-07.
 
 ## Gate And Review Architecture
 Gate strength is selected by packet type, risk level, changed zone, browser/UI
@@ -384,6 +393,9 @@ Architecture direction:
   with the Human Owner, reads harness state and packet boundaries, and decides whether
   a task is handled directly, delegated to one CLI Agent, or routed through a cross-LLM
   worker/verifier loop according to risk and importance,
+- Conductor selection, Conductor approval actor, delegation grant, routing decision,
+  worker envelope, adjudication, and approval decision records remain separate so routing
+  convenience cannot become approval authority,
 - adapters declare capabilities, permissions, evidence modes, limitations, and failure
   modes,
 - role routing policy selects provider assignments,
@@ -392,6 +404,8 @@ Architecture direction:
   Reviewer, Planner, or Human Owner step,
 - handoff prompts preserve authority boundaries,
 - adjudication records capture disagreement without treating LLM consensus as truth.
+- approval services reject Planner, Worker, generated-state, LLM-output, or untrusted
+  prose attempts to create delegated Ready For Code or Closeout approval records.
 
 ## Skill Routing Architecture
 Skills are routed by task type, role, risk surface, packet route, and evidence needs. The
@@ -458,7 +472,7 @@ The architecture follows the implementation waves.
 | Wave 3 | Documenter closeout and evidence index | Produce two-page human report plus structured evidence index and wiki proposal. |
 | Wave 4 | PM daily rhythm and WBS loop | Produce one-page daily reports and spreadsheet-compatible PMO updates. |
 | Wave 5 | Long memory and question-answering index | Connect packet, evidence, closeout, wiki, PM, and active context for compact answers. |
-| Wave 6 | Provider-neutral orchestration contract | Add manual-first multi-provider role routing and adjudication. |
+| Wave 6 | Provider-neutral orchestration and Conductor routing | Add app-facing Conductor selection, CLI worker routing, adjudication, selected entry generation, and delegated approval validation. |
 | Wave 7 | Skill routing and operator ergonomics | Select required skills automatically and evidence-link their use. |
 | Wave 8 | Compound feedback and starter promotion | Convert friction into improvement and starter-promotion candidates. |
 

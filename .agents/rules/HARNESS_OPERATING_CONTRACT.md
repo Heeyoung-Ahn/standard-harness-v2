@@ -105,6 +105,9 @@ Do not use baton text to redefine architecture, reopen approval, or override wor
 - Reviewer checks source parity, evidence quality, residual debt, and closeout readiness.
 - PM coordinates delivery status, priority, blocker, and handoff readability.
 - Orchestrator routes approved post-plan delivery across Developer, Tester, Reviewer, bounded remediation, and Planner closeout.
+- Conductor executes Human-delegated Ready For Code and Closeout approvals only when a
+  scoped Human delegation record validates through a trusted harness approval command or
+  service.
 
 No role may silently absorb another role's approval authority.
 
@@ -134,7 +137,8 @@ Use the decision type to choose authority. Do not use a single global priority l
 | Decision Type | Authority | Supporting Sources | Who Must Stop |
 |---|---|---|---|
 | Explicit user instruction in current turn | User | current conversation | all workflows if conflicting |
-| Ready For Code, release, residual risk approval | User or Planner when delegated by user | approval record, active packet | Developer, Tester, Reviewer, PM, Orchestrator |
+| Ready For Code or Closeout approval | User directly, or Conductor when a scoped Human delegation record validates through a trusted harness approval command/service | approval record, delegation grant, active packet, packet hash, evidence prerequisites | Planner, Developer, Tester, Reviewer, PM, Orchestrator |
+| Release or residual risk approval | User, or the explicitly named approval actor in the active packet when delegated by user | approval record, active packet, residual-risk evidence | Developer, Tester, Reviewer, PM, Orchestrator |
 | Scope, requirements, architecture, acceptance criteria | Planner | requirements, implementation plan, active packet | PM, Orchestrator, Developer |
 | Current status, blocker, priority, handoff readability | PM | Active Context, current state, handoff, packet status | Orchestrator if packet is not approved |
 | Approved post-plan delivery routing | Orchestrator | Ready For Code, active packet, handoff payload, transition runtime, evidence paths | PM after route is concrete |
@@ -174,7 +178,7 @@ When PM and Orchestrator both appear eligible:
 - blockedMutation: `yes | no`
 - sourcesRead:
   - `<path or command>`
-- winningAuthority: `<User | Planner | PM | Orchestrator | Developer | Tester | Reviewer | Runtime>`
+- winningAuthority: `<User | Conductor | Planner | PM | Orchestrator | Developer | Tester | Reviewer | Runtime>`
 - chosenRoute: `<workflow>`
 - refusedRoute: `<workflow or none>`
 - routeReason: `<one sentence>`

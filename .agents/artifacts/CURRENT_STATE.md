@@ -6,7 +6,7 @@
 - Current Stage: unknown
 - Current Focus: unknown
 - Current Release Goal: unknown
-- Generated At: 2026-06-28T08:46:56.316Z
+- Generated At: 2026-06-29T02:37:56.985Z
 - View Mode: generated compatibility fallback
 - Sync Status: fresh at generation time; if this view is missing or drifted, regenerate with `node .harness/runtime/state/harness-cli.js context --repair`.
 

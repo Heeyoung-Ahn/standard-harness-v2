@@ -84,6 +84,9 @@ when the coverage matrix below is closed.
 - PKT-02B Implementation Plan Requirement Alignment is closed for its approved scope after Orchestrator closeout routing and Planner closeout.
 - PKT-02 Risk-Adaptive Gate Profile Engine is closed after Orchestrator-routed implementation, testing, review, security evidence, and Planner closeout.
 - PKT-03 Documenter Closeout And Evidence Index is closed after Orchestrator-routed implementation, testing, review, security evidence, and Planner closeout for closeout report/evidence-index behavior.
+- PKT-07 Conductor Surface And CLI Worker Routing Loop is approved for Ready For Code
+  by explicit Human Owner decision on 2026-06-29 and is the next Orchestrator-routed
+  implementation packet.
 
 ## Dependency Order And Blocking Conditions
 - Requirements freeze precedes architecture sync, implementation-plan sync, and packet
@@ -367,7 +370,7 @@ Verification:
 - context authority/freshness tests
 - sensitive evidence tests
 
-### Wave 6: Provider-Neutral Multi-LLM Orchestration
+### Wave 6: Provider-Neutral Multi-LLM Orchestration And Conductor Routing
 Goal: support Codex/GPT, Claude Code, and future providers above the LLM runtime layer.
 
 Scope:
@@ -386,6 +389,9 @@ Implementation tasks:
   Orchestrator.
 - Add Conductor surface selection and routing policy that keeps app-facing conversation,
   CLI worker delegation, Conductor review, and next-Agent/User routing explicit.
+- Add delegated approval validation so Ready For Code and Closeout approval execution can
+  move from Planner to the selected Conductor only when a scoped Human delegation validates
+  through a trusted harness approval command/service.
 - Add cross-provider review/adjudication records.
 - Add handoff prompt generation that preserves authority boundaries.
 
@@ -397,6 +403,10 @@ Acceptance:
 - Low-risk work may be handled by the Conductor, medium-risk work may be delegated to one
   CLI Agent, and high-risk work may require cross-LLM worker/verifier routing, all with
   packet and approval boundaries preserved.
+- Conductor selection is stored separately from approval authority; selecting Codex app or
+  Claude Code app as Conductor does not grant approval rights.
+- Human direct approval remains the default, and Planner attempts to execute
+  Human-delegated Ready For Code or Closeout approval are rejected with diagnostics.
 - Provider-specific files do not become starter entry contracts.
 - Cross-provider disagreement is captured as findings or adjudication, not final truth.
 
@@ -405,6 +415,8 @@ Verification:
 - role routing tests
 - adjudication record tests
 - provider-specific contamination tests
+- Conductor selection, delegated approval, Planner delegated-approval rejection, entry
+  generation, manual-run fallback, command/path safety, and packet-authoring loop tests
 
 ### Wave 7: Skill Routing And Operator Ergonomics
 Goal: make the harness usable in real projects without asking the Human Owner to know every skill.
@@ -511,7 +523,7 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-045 | Wave 2 | none | Baseline gate profiles exist and are validated for all required packet types. |
 | SHV2-REQ-046 | Wave 2 | none | Risk escalation/de-escalation tests prove hard stops cannot be waived. |
 | SHV2-REQ-047 | Wave 3 | Wave 4 | Evidence index links cover tests, regression, browser/E2E, reviews, gates, risk decisions, wiki/memory, and PM/WBS impact. |
-| SHV2-REQ-048 | Wave 6 | Wave 7 | Conductor routing policy records app-facing Conductor selection, risk/importance routing choice, CLI worker/verifier assignment, Conductor review, and next Agent/User route without granting approval or closeout authority. |
+| SHV2-REQ-048 | Wave 6 | Wave 7 | Conductor routing policy records app-facing Conductor selection, risk/importance routing choice, CLI worker/verifier assignment, Conductor review, and next Agent/User route without granting approval authority by selection alone. Delegated Ready For Code and Closeout approval execution requires scoped Human delegation to the selected Conductor through a trusted harness approval command/service, and Planner delegated-approval execution is rejected. |
 
 ## Packet Decision Gates For Open Questions
 Open questions from `REQUIREMENTS.md` remain allowed planning questions, but they must not
@@ -542,8 +554,9 @@ implementation starts.
 | 6 | PKT-04 PM Daily Rhythm And WBS Loop | Produce max one-page day-start/day-wrap-up reports and WBS TSV updates. | completed | PM report tests, WBS TSV tests, stale projection tests, authority-boundary tests, PMO placement tests, starter validation, full regression |
 | 7 | PKT-05 Long Memory And Question Answering Index | Connect closeout, wiki, PM, evidence, and active context for compact answers. | guarded | memory/context tests, sensitive evidence tests |
 | 8 | PKT-06 Provider-Neutral Orchestration Contract | Add manual-first multi-provider role routing and adjudication records. | guarded | adapter/routing tests, contamination tests |
-| 9 | PKT-07 Skill Routing And Operator Ergonomics | Make required skills discoverable and evidence-linked. | standard | skill router tests, context budget tests |
-| 10 | PKT-08 Compound Feedback And Starter Promotion | Convert friction into improvement and starter-promotion candidates. | guarded | friction/proposal tests, promote-starter smoke |
+| 9 | PKT-07 Conductor Surface And CLI Worker Routing Loop | Add app-facing Conductor selection, selected entry generation, CLI worker routing, packet-authoring review loop, Conductor adjudication, and delegated approval validation. | high | conductor selection tests, delegated approval tests, Planner rejection tests, worker routing tests, adjudication tests, entry/contamination tests, command/path safety tests, starter validation |
+| 10 | PKT-08 Skill Routing And Operator Ergonomics | Make required skills discoverable and evidence-linked. | standard | skill router tests, context budget tests |
+| 11 | PKT-09 Compound Feedback And Starter Promotion | Convert friction into improvement and starter-promotion candidates. | guarded | friction/proposal tests, promote-starter smoke |
 
 ## Verification Baseline
 Each implementation packet must define its own exact commands. The common baseline is:
@@ -594,9 +607,10 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT` is closed; latest closeout handoff is `planner -> planner`.
-- Keep the reusable baseline on planning hold until a new approved lane is selected.
-- Source packet: `reference/packets/PKT-06_PROVIDER_NEUTRAL_ORCHESTRATION_CONTRACT.md`.
+- `PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP` is approved for Ready For Code by explicit Human Owner decision on 2026-06-29.
+- Route PKT-07 through Orchestrator for Developer, Tester, Reviewer, bounded remediation,
+  independent closeout lenses, and Planner closeout.
+- Source packet: `reference/packets/PKT-07_CONDUCTOR_SURFACE_AND_CLI_WORKER_ROUTING_LOOP.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

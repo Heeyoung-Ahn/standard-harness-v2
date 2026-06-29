@@ -66,6 +66,13 @@ NOOP_EVENT_TYPES = {
     "restore_verified",
     "provider_orchestration.run_recorded",
     "provider_orchestration.adjudication_recorded",
+    "conductor.selection_recorded",
+    "conductor.entry_metadata_recorded",
+    "conductor.delegation_grant_recorded",
+    "conductor.routing_decision_recorded",
+    "conductor.worker_output_ref_recorded",
+    "conductor.adjudication_recorded",
+    "conductor.approval_decision_recorded",
 }
 
 

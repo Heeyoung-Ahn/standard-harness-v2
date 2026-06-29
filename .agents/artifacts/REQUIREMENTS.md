@@ -92,6 +92,10 @@ The v2 product direction is:
 - coordinate human roles, LLM providers, tools, packets, evidence, tests, reviews, PM operations, and closeout through explicit operating contracts,
 - orchestrate multiple subscribed LLM runtimes such as Codex/GPT and Claude Code through provider-neutral adapters and policies, while keeping provider assignments as configurable policy or examples rather than product identity,
 - select Codex or Claude Code as a project Conductor at project start when the Human Owner wants an app-led operating surface; the Conductor talks with the Human Owner, assesses task risk and importance, and chooses direct handling, single CLI-agent delegation, or a cross-LLM verification loop,
+- keep Conductor selection separate from approval authority: selecting a Conductor does
+  not grant approval rights, and Ready For Code or Closeout approval may be created only
+  by direct Human decision or by a selected Conductor with a valid scoped Human delegation
+  executed through a trusted harness approval command or service,
 - treat LLM output as reviewable evidence rather than final truth,
 - keep harness system files, project operating records, and product artifacts separated by folder and authority boundary,
 - limit human-facing Markdown to documents humans actually need for planning, approval, risk review, closeout, and daily management,
@@ -135,8 +139,19 @@ The v2 quality model is:
   scope/defer boundaries, and v1.0/v2.0 operating philosophy. It cannot be
   performed by the packet author, Developer, Tester, Orchestrator, or the same
   agent that later claims implementation closeout.
-- Packet closeout review must run four independent review agents in parallel by default: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`. Each agent must produce its own bounded evidence and may not be the Developer, Tester, Orchestrator, Planner, or the same agent as another lens for that packet.
-- The four independent review agents are required for every packet closeout. A packet may record a lens-specific N/A only when the packet and Reviewer evidence show why the lens has no applicable surface; N/A does not remove the requirement for an independent agent to make and record that judgment.
+- Packet closeout review must be risk-adaptive instead of uniformly heavyweight.
+  High-risk, security-sensitive, browser-facing, runtime, harness-system, and
+  starter-promotion packets normally require the full independent lens set:
+  `challenge_review`, `adversarial_security_review`, `code_quality_review`, and
+  `evidence_review`.
+- Docs-only and low-risk packets must keep a real fast path. Their closeout may use a
+  smaller independently verified review set when the packet type, changed files, and
+  claims have no security, runtime, browser, data, approval, or release surface. The
+  minimum valid closeout is one independent verification/review lens with packet-bound
+  evidence plus the required validator/substitute checks for the selected gate profile.
+- Lens-specific N/A is valid only when the packet and Reviewer evidence show why the lens
+  has no applicable surface. N/A decisions must be evidence-linked and cannot hide
+  behavior, security, approval, or runtime risk.
 
 ## Gate Profile Model
 
@@ -144,7 +159,9 @@ The v1.0/v0.2 gate-profile principle is adopted as a v2 product requirement:
 testing and review strength must vary by packet type, risk level, changed zone, and
 release sensitivity. The harness must keep low-risk packets lightweight while forcing
 strict evidence and review for product, security, browser, runtime, harness-system, and
-starter-promotion work.
+starter-promotion work. The success condition is not making every task heavy; it is
+making the gate profile reliably increase or decrease ceremony according to actual risk
+and changed behavior.
 
 Every packet must declare:
 - packet type,
@@ -158,7 +175,7 @@ Baseline packet type profiles are:
 
 | Packet Type | Baseline Test And Review Strength |
 |---|---|
-| `docs-only` | Schema, boundary, docs-command-if-command-changed, and closeout gates. Runtime, browser, and E2E gates may be N/A only when substitute checks prove no runtime or browser behavior changed. |
+| `docs-only` | Schema, boundary, docs-command-if-command-changed, and lightweight closeout gates. Runtime, browser, E2E, and extra review lenses may be N/A only when substitute checks prove no runtime, browser, data, approval, security, or release behavior changed. At least one independent verification/review check remains required. |
 | `product-feature` | Test plan, implementation gate, evidence-trust gate, functional tests, E2E applicability, requirements review, security review, AI review, refactor review, and closeout. Browser evidence is required for web/UI behavior unless a valid E2E N/A decision exists. |
 | `product-bugfix` | Test plan, regression evidence, evidence-trust gate, requirements review, security-if-triggered review, refactor review, and closeout. A bugfix should include reproduction or equivalent defect proof when practical. |
 | `product-refactor` | Test plan, regression evidence, contract-if-applicable gate, refactor review, AI review, and closeout. Refactors must prove behavior preservation before claiming completion. |
@@ -170,14 +187,16 @@ Risk level modifies the packet type baseline:
 
 | Risk Level | Required Adjustment |
 |---|---|
-| Low | Use the packet type baseline with the smallest valid evidence set. Hard stops, closeout, boundary checks, and evidence trust still apply. |
+| Low | Use the packet type baseline with the smallest valid evidence set. Hard stops, closeout, boundary checks, evidence trust, and at least one independent verification/review check still apply. |
 | Standard | Use the full packet type baseline. |
 | High | Add broader regression evidence, independent review where practical, explicit residual-risk tracking, and stricter human decision prompts. |
 | Critical or release-sensitive | Add release-grade validation, rollback or backout evidence when applicable, final adjudication of review findings, and explicit human approval for residual risk. |
 
 Gate profiles tune strength; they do not waive non-overridable hard stops. N/A decisions
 must be explicit, justified, evidence-linked, and invalid when the changed files or claims
-contradict the N/A reason.
+contradict the N/A reason. Validators must judge evidence by behavior verified, command
+result, browser/API/runtime observation, review finding disposition, or trusted state
+transition, not by mere file existence.
 
 ## V2 Human And LLM Operating Model
 
@@ -267,7 +286,12 @@ Each packet follows this operating flow:
 1. Human Owner and Planner define planning intent, acceptance criteria, non-goals, review questions, evidence expectations, and approval boundaries.
 2. Developer LLM implements within the approved packet scope, using TDD where practical or recording why strict TDD is impractical.
 3. Tester LLM verifies behavior, regression coverage, browser/E2E applicability, and evidence trust.
-4. Reviewer LLMs run the four independent closeout-review agents in parallel: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`. These lenses are mandatory for every packet closeout unless a lens-specific independent reviewer records a valid N/A judgment with evidence.
+4. Reviewer LLMs run the closeout-review lenses selected by the packet's gate profile.
+   High-risk and sensitive packets normally run `challenge_review`,
+   `adversarial_security_review`, `code_quality_review`, and `evidence_review` in
+   parallel. Docs-only and low-risk packets may use a smaller review set when N/A
+   decisions are justified by changed behavior and at least one independent
+   verification/review lens remains.
 5. Documenter LLM writes the maximum two-page packet closeout report, creates wiki proposals, and records long-memory candidates.
 6. PM Agent uses packet state, closeout, evidence, and blockers for day-wrap-up and day-start continuity.
 
@@ -413,7 +437,7 @@ decisions.
 | SHV2-REQ-009 | `_ops/` stores copied-project operating records and must be resettable/initializable without damaging `_harness/` or `product/`. | P0 | User direction, HR-100R~HR-111R |
 | SHV2-REQ-010 | `product/` stores product code and human-facing project/product documents for the copied project. | P0 | User direction, HR-010R |
 | SHV2-REQ-011 | Implementation must be packet-based with scope, acceptance, evidence, gates, and closeout. | P0 | HR-030R~HR-033R |
-| SHV2-REQ-012 | Test planning and substantive evidence are required before closeout; AI review cannot replace deterministic tests. | P0 | HR-040R~HR-045, HR-080R~HR-081R |
+| SHV2-REQ-012 | Test planning and substantive behavior evidence are required before closeout; AI review cannot replace deterministic tests, trusted command output, browser/API/runtime observation, or validated state transitions where those are applicable. | P0 | HR-040R~HR-045, HR-080R~HR-081R |
 | SHV2-REQ-013 | Web/UI changes require real browser or explicit E2E applicability evidence. | P1 | HR-050R~HR-051R |
 | SHV2-REQ-014 | Security, requirements, challenge, refactor, and boundary reviews must be trigger-based gates. | P0 | HR-060R, HR-070R, HR-071R, HR-150R~HR-152 |
 | SHV2-REQ-015 | Packet closeout must support documenter output, wiki proposal, and evidence-backed long memory. | P1 | HR-100R~HR-111R |
@@ -422,7 +446,7 @@ decisions.
 | SHV2-REQ-018 | Sensitive/secret evidence must not leak into starter, wiki, handoff context, or LLM context. | P0 | HR-185~HR-186 |
 | SHV2-REQ-019 | v2 must support multi-LLM orchestration where roles, conductors, CLI agents, and subagents can be assigned to Codex/GPT, Claude Code, or future providers by provider-neutral policy. Provider-specific examples are samples, not core identity. | P0 | User direction, HR-020R~HR-023R |
 | SHV2-REQ-020 | Cross-provider or cross-subagent deliberation must produce bounded evidence, review findings, or adjudication records; LLM-to-LLM discussion cannot become final truth without evidence and approval. | P0 | User direction, HR-022R, HR-080R~HR-081R |
-| SHV2-REQ-021 | Evidence trust must separate evidence existence from evidence reliability; completion claims and closeout must require trusted or explicitly accepted evidence according to packet type and risk. | P0 | HR-041R, HR-043, HR-044 |
+| SHV2-REQ-021 | Evidence trust must separate evidence existence from evidence reliability; validators must judge behavior verified rather than file presence, and completion claims and closeout must require trusted or explicitly accepted evidence according to packet type and risk. | P0 | HR-041R, HR-043, HR-044 |
 | SHV2-REQ-022 | Non-overridable hard stops must block unsafe completion even when an LLM or human asks to proceed: missing packet, invalid state transition, product packet touching `_harness/**`, unresolved critical security blocker, or sensitive evidence written to Wiki. | P0 | HR-012R, HR-152, HR-185~HR-186 |
 | SHV2-REQ-023 | Packet type, risk level, changed zone, and release sensitivity must select a versioned gate profile so small safe packets stay lightweight while product, security, runtime, web, harness-system, and starter-promotion changes receive stricter gates. | P0 | HR-052, legacy gate-profiles.yaml |
 | SHV2-REQ-024 | Product artifacts must be separated into program source and human-facing documents under `product/`; project-wide planning, architecture, implementation, API, database, and UI design documents belong under `product/docs/project/`. | P0 | User direction, HR-010R |
@@ -432,7 +456,7 @@ decisions.
 | SHV2-REQ-028 | Implementation should use TDD or record why strict TDD is impractical; packet evidence must distinguish test-plan, RED/GREEN or equivalent proof, and regression evidence. | P0 | User direction, HR-040R~HR-045 |
 | SHV2-REQ-029 | Domain-driven implementation and refactor review must prevent spaghetti code; long-running work must surface refactor proposals when complexity accumulates. | P1 | User direction, HR-060R, HR-090R |
 | SHV2-REQ-030 | Product functional tests must be substantive and user-workflow oriented; marker-only, file-existence-only, or superficial success checks cannot satisfy product behavior acceptance. | P0 | User direction, HR-040R~HR-045, HR-050R~HR-053 |
-| SHV2-REQ-031 | Review gates must include one independent pre-implementation `packet_doc_review` agent for every packet and four independent parallel closeout-review agents for every packet: `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`. Each review must produce separate packet-bound evidence; N/A is valid only when that review's independent reviewer records the no-surface rationale. | P0 | User direction, HR-070R~HR-081R, HR-150R~HR-152 |
+| SHV2-REQ-031 | Review gates must include one independent pre-implementation `packet_doc_review` agent for every packet. Closeout review must be gate-profile selected: high-risk and sensitive packets normally require the four independent lenses `challenge_review`, `adversarial_security_review`, `code_quality_review`, and `evidence_review`, while docs-only and low-risk packets may use a smaller lens set when N/A decisions are evidence-linked and at least one independent verification/review lens remains. Each review must produce separate packet-bound evidence. | P0 | User direction, HR-070R~HR-081R, HR-150R~HR-152 |
 | SHV2-REQ-032 | Skill routing must select required skills automatically by task type or risk surface and record skill use, manifest, permission scope, fallback behavior, and evidence. | P1 | User direction, HR-130R~HR-131R |
 | SHV2-REQ-033 | Maintenance documents must be generated or updated from evidence-backed closeout and documenter flow, with Wiki proposal/apply governance for long memory. | P1 | User direction, HR-100R~HR-111R |
 | SHV2-REQ-034 | v2 must control overconfidence and blind user-following by challenging unsafe or unsupported instructions, recording uncertainty, and preferring evidence over assertion. | P0 | User direction, HR-150R~HR-152 |
@@ -445,11 +469,11 @@ decisions.
 | SHV2-REQ-041 | Each packet must produce one comprehensive human-readable closeout report, limited to a maximum of two pages plus evidence index links, that summarizes original intent, implemented result, acceptance check, test evidence, review evidence, remaining risks, follow-up work, wiki or memory updates, and PM impact. | P0 | User direction, HR-100R~HR-111R |
 | SHV2-REQ-042 | LLM long memory must preserve compact, evidence-backed project knowledge including project intent, architecture decisions, current conventions, packet history, known frictions, open risks, and deprecated context. | P1 | User direction, HR-100R~HR-111R, HR-160R~HR-163 |
 | SHV2-REQ-043 | PM day-start and day-wrap-up must provide daily continuity, WBS-compatible updates, blocker/risk tracking, next-work recommendations, and human decision prompts without becoming approval authority; each report is limited to a maximum of one page. | P1 | User direction |
-| SHV2-REQ-044 | Packet execution must follow the role flow Human/Planner intent definition, independent `packet_doc_review` before Ready For Code, Developer LLM implementation, Tester LLM verification, four independent parallel Reviewer lens agents, Documenter closeout/wiki proposal, and PM continuity. | P0 | User direction, HR-030R~HR-033R, HR-040R~HR-045, HR-100R~HR-111R |
-| SHV2-REQ-045 | The starter must define baseline gate profiles for `docs-only`, `product-feature`, `product-bugfix`, `product-refactor`, `security-data`, `harness-system`, and `starter-promotion` packet types, including required test, review, evidence, boundary, closeout, and N/A substitute checks. | P0 | legacy gate-profiles.yaml, review-governance.yaml |
-| SHV2-REQ-046 | Risk level must escalate or de-escalate gate strength without waiving hard stops: high, critical, security-sensitive, release-sensitive, browser-facing, harness-system, and starter-promotion packets require stricter evidence, review, adjudication, and human residual-risk handling. | P0 | HR-052, legacy gate-profiles.yaml |
+| SHV2-REQ-044 | Packet execution must follow the role flow Human/Planner intent definition, independent `packet_doc_review` before Ready For Code, Developer LLM implementation, Tester LLM verification, gate-profile-selected Reviewer lens agents with at least one independent verification/review lens, Documenter closeout/wiki proposal, and PM continuity. | P0 | User direction, HR-030R~HR-033R, HR-040R~HR-045, HR-100R~HR-111R |
+| SHV2-REQ-045 | The starter must define baseline gate profiles for `docs-only`, `product-feature`, `product-bugfix`, `product-refactor`, `security-data`, `harness-system`, and `starter-promotion` packet types, including required test, review, evidence, boundary, closeout, N/A substitute checks, and fast-path rules that keep docs-only and low-risk packets lightweight without removing hard stops. | P0 | legacy gate-profiles.yaml, review-governance.yaml |
+| SHV2-REQ-046 | Risk level must escalate or de-escalate gate strength without waiving hard stops: docs-only and low-risk packets use the lightest valid gate profile, while high, critical, security-sensitive, release-sensitive, browser-facing, harness-system, and starter-promotion packets require stricter evidence, review, adjudication, and human residual-risk handling. | P0 | HR-052, legacy gate-profiles.yaml |
 | SHV2-REQ-047 | Closeout evidence must use an evidence index link structure for test commands, regression evidence, browser/E2E evidence, review findings, gate results, security or residual-risk decisions, wiki or memory updates, and PM/WBS impact records instead of embedding raw evidence in the report body. | P0 | User direction, HR-100R~HR-111R |
-| SHV2-REQ-048 | At project start, the Human Owner may select Codex or Claude Code as the app-facing Conductor. The Conductor must converse with the Human Owner, assess task risk and importance, choose direct handling, single CLI-agent delegation, or cross-LLM worker/verifier loops, and route CLI results to the next Agent or Human Owner while preserving packet, evidence, Reviewer, Planner, and human approval authority. | P0 | User direction |
+| SHV2-REQ-048 | At project start, the Human Owner may select Codex or Claude Code as the app-facing Conductor. The Conductor must converse with the Human Owner, assess task risk and importance, choose direct handling, single CLI-agent delegation, or cross-LLM worker/verifier loops, and route CLI results to the next Agent or Human Owner while preserving packet, evidence, Reviewer, Planner, and human approval authority. Conductor selection is not approval authority; delegated Ready For Code and Closeout approval execution is valid only through a scoped Human delegation to the selected Conductor and a trusted harness approval command/service. Planner cannot execute Human-delegated Ready For Code or Closeout approvals after PKT-07. | P0 | User direction |
 
 ## Scope
 In scope for the next planning-to-implementation wave:
