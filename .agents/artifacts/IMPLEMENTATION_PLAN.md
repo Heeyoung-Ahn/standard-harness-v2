@@ -963,9 +963,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-20_REAL_PROVIDER_WORKER_SMOKE` is closed; latest closeout handoff is `planner -> planner`.
+- `PKT-21_STRUCTURED_PM_SOURCE_INTAKE` is closed; latest closeout handoff is `planner -> planner`.
 - Keep the reusable baseline on planning hold until a new approved lane is selected.
-- Source packet: `reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md`.
+- Source packet: `reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

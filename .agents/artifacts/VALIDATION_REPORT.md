@@ -1,7 +1,7 @@
 # Validation Report
 
 ## Summary
-- Executed at: 2026-06-30T14:05:56.913Z
+- Executed at: 2026-06-30T14:46:45.208Z
 - Validator version: v1.3
 - Cutover ready: yes
 - Gate decision: pass
@@ -65,14 +65,13 @@
 - reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
-  - modeling impact: status absent, required yes, diagnostics 1
+  - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status absent, required yes, diagnostics 1
 - reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status absent, required yes, diagnostics 1
 
 ## Findings
-- [warning] risk_class_high_requires_packet_approval_evidence: reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding.
 - [warning] risk_class_high_requires_packet_approval_evidence: reference/packets/PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding.
 - [warning] risk_class_high_requires_packet_approval_evidence: reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding.
 

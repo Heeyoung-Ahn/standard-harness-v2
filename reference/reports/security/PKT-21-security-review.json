@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "standard-harness-security-review/v2.2",
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet": "PKT-21_STRUCTURED_PM_SOURCE_INTAKE",
+  "packet_id": "PKT-21_STRUCTURED_PM_SOURCE_INTAKE",
+  "packetId": "reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md",
+  "packet_path": "reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md",
+  "packetPath": "reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md",
+  "work_item_id": "PKT-21_STRUCTURED_PM_SOURCE_INTAKE",
+  "workItemId": "PKT-21_STRUCTURED_PM_SOURCE_INTAKE",
+  "mode": "scoped",
+  "status": "pass",
+  "decision": "pass-with-authority-boundary",
+  "scope": "PM TSV/CSV/WBS source intake, prompt-like PM rows, stale source authority, approval-overclaim diagnostics, operating QA source eligibility",
+  "phases_run": [0, 1, 12, 13, 14],
+  "phasesRun": [0, 1, 12, 13, 14],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "reported_findings": 0
+  },
+  "evidence": [
+    {
+      "id": "SEC-PKT21-001",
+      "surface": "PM approval overclaim",
+      "risk": "PM rows claim Ready For Code, closeout, release, residual risk, User UAT, productization-complete, or Conductor delegation.",
+      "evidence": "PM source intake emits pm_source_claims_approval_authority, sets approval_state_mutation_allowed=false, and sanitizes approval-overclaim summaries.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT21-002",
+      "surface": "prompt-like PM source text",
+      "risk": "PM rows inject instruction-like text into QA answers, wiki, handoff, or context packs.",
+      "evidence": "Prompt-like PM rows emit pm_source_prompt_like and QA emits prompt_like_source_omitted; focused tests confirm approve-release and instruction-style control text are omitted.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT21-003",
+      "surface": "stale PM source authority",
+      "risk": "Stale PM rows shape current answers without freshness diagnostics.",
+      "evidence": "Stale PM rows emit pm_source_stale and QA emits stale_source with blocked answer behavior.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT21-004",
+      "surface": "source provenance",
+      "risk": "PM records become canonical approval truth rather than copied-project coordination sources.",
+      "evidence": "Converted PM records use source_type=pmo, authority_tier=coordination, project_provenance=copied-project, and evidence refs while preserving approval_state_mutation_allowed=false.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT21-005",
+      "surface": "sensitive PM source text",
+      "risk": "Secrets such as passwords, tokens, or API keys enter operating-intelligence summaries or answers through PM rows.",
+      "evidence": "Sensitive PM rows emit pm_source_sensitive, convert to classification=SENSITIVE, use sanitized summaries, and QA emits omitted_sensitive_source without including the sensitive value.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT21-006",
+      "surface": "PM source closeout trace",
+      "risk": "PM source records lose closeout trace while preserving packet/status/evidence fields.",
+      "evidence": "Parser validation now requires closeout_report_path; focused tests cover missing-value failure and round-trip preservation.",
+      "status": "pass"
+    }
+  ],
+  "residualRisks": [
+    {
+      "id": "RR-PKT21-001",
+      "description": "PKT-21 does not prove real-provider readiness from PKT-20.",
+      "owner": "Planner",
+      "disposition": "preserve PKT-20 narrowed limitation in Reviewer adjudication and Planner closeout"
+    }
+  ],
+  "authorityBoundary": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false,
+    "grantsProductizationComplete": false,
+    "grantsUserUatApproval": false,
+    "grantsRealProviderReadiness": false
+  }
+}
