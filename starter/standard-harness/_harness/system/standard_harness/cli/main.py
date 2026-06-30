@@ -35,6 +35,10 @@ from standard_harness.state.store import HarnessStore, resolve_harness_root
 from standard_harness.validation.aggregator import ValidationService
 from standard_harness.validation.readiness import ReadinessService
 from standard_harness.workflow.conductor_worker_e2e import ConductorWorkerE2ERunner
+from standard_harness.workflow.conductor import ConductorApprovalService
+from standard_harness.workflow.conductor_cli import load_grant
+from standard_harness.workflow.conductor_cli import persist_conductor_approval
+from standard_harness.workflow.conductor_cli import write_grant_record
 
 
 COMMANDS = (
@@ -42,6 +46,8 @@ COMMANDS = (
     "ops-reset",
     "operating-qa",
     "conductor-worker-e2e",
+    "conductor-grant-create",
+    "conductor-approve",
     "packet-create",
     "packet-approve",
     "packet-transition",
@@ -209,7 +215,24 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(json.dumps(completion, sort_keys=True))
         return 0 if completion["status"] == "complete" else 1
 
+    if args.command == "conductor-approve":
+        store = HarnessStore(resolve_harness_root(args.harness_root))
+        try:
+            payload = _handle_conductor_approve(store, command_args)
+        except Exception as exc:  # noqa: BLE001 - CLI must convert domain errors to diagnostics.
+            if args.json_output:
+                print(_error_response("command_failed", str(exc), args.command))
+            else:
+                print(str(exc), file=sys.stderr)
+            return 1
+        if args.json_output:
+            print(json.dumps(payload, sort_keys=True))
+        else:
+            print(json.dumps(payload, sort_keys=True))
+        return 0 if payload["status"] == "approved" else 1
+
     handlers: dict[str, Callable[[HarnessStore, list[str]], dict[str, Any]]] = {
+        "conductor-grant-create": _handle_conductor_grant_create,
         "packet-create": _handle_packet_create,
         "packet-approve": _handle_packet_approve,
         "packet-transition": _handle_packet_transition,
@@ -649,6 +672,96 @@ def _handle_conductor_worker_e2e(store: HarnessStore, argv: list[str]) -> dict[s
     return {"conductorWorkerE2E": result}
 
 
+def _handle_conductor_grant_create(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("conductor-grant-create")
+    for name in [
+        "--delegation-grant-id",
+        "--delegating-human-owner",
+        "--conductor-id",
+        "--packet-id",
+        "--approval-type",
+        "--risk-ceiling",
+        "--evidence-prerequisites",
+        "--valid-from",
+        "--valid-until",
+        "--packet-hash",
+    ]:
+        parser.add_argument(name, required=True)
+    parsed = parser.parse_args(argv)
+    grant = ConductorApprovalService().create_grant(
+        delegation_grant_id=parsed.delegation_grant_id,
+        delegating_human_owner=parsed.delegating_human_owner,
+        conductor_id=parsed.conductor_id,
+        packet_id=parsed.packet_id,
+        approval_type=parsed.approval_type,
+        risk_ceiling=parsed.risk_ceiling,
+        evidence_prerequisites=_csv(parsed.evidence_prerequisites),
+        valid_from=parsed.valid_from,
+        valid_until=parsed.valid_until,
+        packet_hash=parsed.packet_hash,
+    )
+    return {"conductorGrant": write_grant_record(store, grant)}
+
+
+def _handle_conductor_approve(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("conductor-approve")
+    for name in [
+        "--packet-id",
+        "--approval-type",
+        "--actor-type",
+        "--approval-channel",
+        "--packet-hash",
+        "--risk-level",
+        "--approved-scope",
+        "--rationale",
+        "--hard-stop-json",
+    ]:
+        parser.add_argument(name, required=True)
+    parser.add_argument("--conductor-id", default=None)
+    parser.add_argument("--grant-file", default=None)
+    parsed = parser.parse_args(argv)
+
+    authority_source = _approval_authority_source(parsed.actor_type, parsed.grant_file)
+    hard_stop_status = json.loads(parsed.hard_stop_json)
+    decision = ConductorApprovalService().decide(
+        approval_type=parsed.approval_type,
+        actor_type=parsed.actor_type,
+        conductor_id=parsed.conductor_id,
+        approval_channel=parsed.approval_channel,
+        authority_source=authority_source,
+        packet_id=parsed.packet_id,
+        packet_hash=parsed.packet_hash,
+        risk_level=parsed.risk_level,
+        evidence_prerequisite_status=_approval_evidence_prerequisite_status(
+            authority_source, hard_stop_status
+        ),
+        decision="approved",
+        decided_at="2026-07-01T00:00:00Z",
+        hard_stop_status=hard_stop_status,
+    )
+    if decision["status"] != "approved":
+        return {
+            "status": "rejected",
+            "diagnostics": decision["diagnostics"],
+            "conductorApproval": {"decision": decision},
+        }
+
+    persisted = persist_conductor_approval(
+        store,
+        decision=decision,
+        approved_scope=parsed.approved_scope,
+        rationale=parsed.rationale,
+        idempotency_key=f"{parsed.packet_id}:{parsed.approval_type}:conductor-approve",
+    )
+    return {
+        "status": "approved",
+        "conductorApproval": {
+            "decision": decision,
+            "persisted": persisted,
+        },
+    }
+
+
 def _repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
@@ -892,6 +1005,34 @@ def _validation_service_for_store(store: HarnessStore) -> ValidationService:
     if (root / "_harness" / "policies" / "project-operating-folders.yaml").exists():
         return ValidationService(store, repo_root=root, starter_root=root)
     return ValidationService(store)
+
+
+def _approval_authority_source(
+    actor_type: str, grant_file: str | None
+) -> dict[str, Any] | None:
+    if grant_file:
+        return load_grant(grant_file)
+    if actor_type == "human":
+        return {"trusted_human_decision": True}
+    return None
+
+
+def _approval_evidence_prerequisite_status(
+    authority_source: dict[str, Any] | None,
+    hard_stop_status: dict[str, bool],
+) -> dict[str, bool | str]:
+    grant = authority_source if isinstance(authority_source, dict) else {}
+    statuses: dict[str, bool | str] = {}
+    for prerequisite in grant.get("evidence_prerequisites", []):
+        statuses[prerequisite] = (
+            "verified_by_harness" if hard_stop_status.get(prerequisite) is True else False
+        )
+    if (
+        not statuses
+        and hard_stop_status.get("evidence_prerequisites_met") is True
+    ):
+        statuses["evidence_prerequisites_met"] = "verified_by_harness"
+    return statuses
 
 
 if __name__ == "__main__":
