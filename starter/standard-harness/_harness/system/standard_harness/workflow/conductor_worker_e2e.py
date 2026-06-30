@@ -250,21 +250,14 @@ class ConductorWorkerE2ERunner:
         provider_policy = ProviderOrchestrationPolicy(_adapter_manifests(root))
         readiness_results = [
             provider_policy.prepare_execution(
-                role="Developer",
+                role=role,
                 packet_id=packet_id,
                 input_snapshot_hash=input_snapshot_hash,
-                preferred_provider="codex",
+                preferred_provider=provider,
                 cli_available=cli_available,
                 execution_preconditions=_execution_preconditions(command_descriptor),
-            ),
-            provider_policy.prepare_execution(
-                role="Reviewer",
-                packet_id=packet_id,
-                input_snapshot_hash=input_snapshot_hash,
-                preferred_provider="claude_code",
-                cli_available=cli_available,
-                execution_preconditions=_execution_preconditions(command_descriptor),
-            ),
+            )
+            for role, provider in _real_cli_role_providers(command_descriptor).items()
         ]
         blocking = [result for result in readiness_results if result["status"] != "ready"]
         if blocking:
@@ -388,6 +381,11 @@ class ConductorWorkerE2ERunner:
             idempotency_key=f"{packet_id}:conductor-worker-e2e:routing",
         )
         provider_policy = ProviderOrchestrationPolicy(_adapter_manifests(root))
+        route = _apply_real_cli_provider_overrides(
+            route,
+            provider_policy=provider_policy,
+            role_providers=_real_cli_role_providers(command_descriptor),
+        )
 
         worker_runs: list[dict[str, Any]] = []
         verifier_runs: list[dict[str, Any]] = []
@@ -841,6 +839,43 @@ def _validated_capture_records(
             continue
         records_by_route[(role, provider)] = normalized["record"]
     return {"diagnostics": sorted(set(diagnostics)), "records": records_by_route}
+
+
+def _real_cli_role_providers(
+    command_descriptor: dict[str, Any] | None,
+) -> dict[str, str]:
+    descriptor = command_descriptor or {}
+    reviewer_provider = descriptor.get("reviewer_provider", "claude_code")
+    if not isinstance(reviewer_provider, str) or not reviewer_provider.strip():
+        reviewer_provider = "claude_code"
+    return {
+        "Developer": "codex",
+        "Reviewer": reviewer_provider.strip().lower(),
+    }
+
+
+def _apply_real_cli_provider_overrides(
+    route: dict[str, Any],
+    *,
+    provider_policy: ProviderOrchestrationPolicy,
+    role_providers: dict[str, str],
+) -> dict[str, Any]:
+    updated_workers: list[dict[str, Any]] = []
+    for worker_task in route.get("selected_workers", []):
+        updated_task = dict(worker_task)
+        role = str(updated_task.get("assigned_role"))
+        provider = role_providers.get(role)
+        if provider is not None:
+            selected_route = provider_policy.select_adapter(
+                role,
+                preferred_provider=provider,
+            )
+            updated_task["provider_label"] = selected_route["provider"]
+            updated_task["adapter_id"] = selected_route["adapter_id"]
+        updated_workers.append(updated_task)
+    updated_route = dict(route)
+    updated_route["selected_workers"] = updated_workers
+    return updated_route
 
 
 def _sensitive_material_diagnostics(value: Any, path: str = "$") -> list[str]:
