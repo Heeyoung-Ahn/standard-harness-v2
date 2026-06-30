@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 
+from standard_harness.design.projection import validate_design_projection, validate_packet_design_trace
 from standard_harness.validation.diagnostics import DiagnosticRecord
 
 
@@ -175,6 +176,7 @@ class PlanningHardeningValidator:
         diagnostics.extend(self._validate_requirement_candidates(packet, planning.get("requirementCandidates")))
         diagnostics.extend(self._validate_trace(packet, planning.get("trace")))
         diagnostics.extend(self._validate_projections(packet, planning.get("projections")))
+        diagnostics.extend(self._validate_design_projection_contract(packet, planning))
         diagnostics.extend(self._validate_end_of_hardening(packet, planning.get("endOfHardening")))
         return diagnostics
 
@@ -445,6 +447,66 @@ class PlanningHardeningValidator:
                         "closeout_plan.planningHardening.projections.authorityClaims",
                     )
                 )
+        return diagnostics
+
+    def _validate_design_projection_contract(self, packet: dict[str, Any], planning: dict[str, Any]) -> list[dict[str, Any]]:
+        design_projections = planning.get("designProjections")
+        design_trace = planning.get("designTrace")
+        packet_requires_design_trace = bool(validate_packet_design_trace(_design_trace_packet_payload(packet, {}, False))["diagnostics"])
+        if design_projections is None and design_trace is None and not packet_requires_design_trace:
+            return []
+
+        diagnostics: list[dict[str, Any]] = []
+        if design_projections is not None:
+            if not isinstance(design_projections, list):
+                return [
+                    _diagnostic(
+                        packet,
+                        "invalid_design_projection",
+                        "planning",
+                        "Design projections must be a list.",
+                        "Record screen, wireframe, mockup, and handoff projections as structured records.",
+                        "closeout_plan.planningHardening.designProjections",
+                    )
+                ]
+            for projection in design_projections:
+                result = validate_design_projection(projection)
+                for diagnostic in result["diagnostics"]:
+                    diagnostics.append(
+                        _diagnostic(
+                            packet,
+                            diagnostic["code"],
+                            "planning",
+                            diagnostic["message"],
+                            "Complete the UI/design projection contract or remove the design artifact from scope.",
+                            f"closeout_plan.planningHardening.designProjections.{diagnostic['field']}",
+                        )
+                    )
+
+        trace = design_trace if isinstance(design_trace, dict) else {}
+        if design_trace is not None and not isinstance(design_trace, dict):
+            diagnostics.append(
+                _diagnostic(
+                    packet,
+                    "invalid_design_trace",
+                    "planning",
+                    "Design trace must be structured.",
+                    "Record screen projection ids and UI module ids as structured design trace.",
+                    "closeout_plan.planningHardening.designTrace",
+                )
+            )
+        packet_trace_result = validate_packet_design_trace(_design_trace_packet_payload(packet, trace, design_projections is not None))
+        for diagnostic in packet_trace_result["diagnostics"]:
+            diagnostics.append(
+                _diagnostic(
+                    packet,
+                    diagnostic["code"],
+                    "planning",
+                    diagnostic["message"],
+                    "Link UI/design packets to screen projection ids and UI module ids, or mark the packet non-UI.",
+                    f"closeout_plan.planningHardening.designTrace.{diagnostic['field']}",
+                )
+            )
         return diagnostics
 
     def _validate_end_of_hardening(self, packet: dict[str, Any], end_gate: Any) -> list[dict[str, Any]]:
@@ -852,6 +914,19 @@ def _safe_packet_evidence_ref(packet: dict[str, Any], ref: str) -> str | None:
     if normalized.startswith(prefix) and normalized.endswith(".json"):
         return normalized
     return None
+
+
+def _design_trace_packet_payload(packet: dict[str, Any], trace: dict[str, Any], includes_design_artifacts: bool) -> dict[str, Any]:
+    return {
+        "packetId": packet.get("packet_id"),
+        "scopeType": packet.get("packet_type"),
+        "packetType": packet.get("packet_type"),
+        "changeZone": " ".join(str(zone) for zone in packet.get("change_zones") or []),
+        "tags": packet.get("tags") or [],
+        "includesDesignArtifacts": includes_design_artifacts,
+        "screenProjectionIds": trace.get("screenProjectionIds"),
+        "uiModuleIds": trace.get("uiModuleIds"),
+    }
 
 
 def _packet_family(packet: dict[str, Any]) -> str:

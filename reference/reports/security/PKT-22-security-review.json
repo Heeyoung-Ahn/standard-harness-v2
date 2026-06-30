@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "standard-harness-security-review/v2.2",
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet": "PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION",
+  "packet_id": "PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION",
+  "packetId": "reference/packets/PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION.md",
+  "packet_path": "reference/packets/PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION.md",
+  "packetPath": "reference/packets/PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION.md",
+  "work_item_id": "PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION",
+  "workItemId": "PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION",
+  "mode": "scoped",
+  "status": "pass",
+  "decision": "pass-with-authority-boundary",
+  "scope": "Design projection validator, conditional design trace, recursive prompt-like and sensitive design text diagnostics, projection authority boundary, and PKT-23 locked module boundary.",
+  "phases_run": [0, 1, 12, 13, 14],
+  "phasesRun": [0, 1, 12, 13, 14],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "reported_findings": 0
+  },
+  "evidence": [
+    {
+      "id": "SEC-PKT22-001",
+      "surface": "design projection authority overclaim",
+      "risk": "Design projection claims Ready For Code, release, closeout, User UAT, residual-risk, productization, requirement, packet-bypass, or acceptance authority.",
+      "evidence": "validate_design_projection emits design_projection_authority_claim_forbidden and focused tests cover Ready For Code, approve release, bypass packet gate, close acceptance, nested design-text approval overclaims, and plural natural-language variants such as requirements are approved, bypasses packets, approval gates are bypassed, and creates requirements.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT22-002",
+      "surface": "prompt-like design text",
+      "risk": "Prompt-like design text enters handoff or validator surfaces as instruction.",
+      "evidence": "validate_design_projection recursively scans projection text and emits design_projection_prompt_like for nested instruction-like design, mockup, and browser expectation notes.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT22-003",
+      "surface": "sensitive design text",
+      "risk": "Sensitive screen/design data is reused in evidence or handoff without being flagged.",
+      "evidence": "validate_design_projection recursively scans projection text and emits design_projection_sensitive_text for nested password/token/API-key style text.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT22-004",
+      "surface": "PKT-23 locked module boundary",
+      "risk": "PKT-22 absorbs PKT-23 locked reusable UI module authority.",
+      "evidence": "Implementation validates module classification metadata only and emits locked_module_contract_out_of_scope when PKT-23 locked module fields such as doNotChangeRules or visualReference are supplied.",
+      "status": "pass"
+    }
+  ],
+  "residualRisks": [
+    {
+      "id": "RR-PKT22-001",
+      "description": "Text-pattern authority scanning may need new negative fixtures if future packets add new authority vocabulary.",
+      "owner": "Planner",
+      "disposition": "non-blocking maintenance risk; current PKT-22 authority variants are covered by focused tests"
+    },
+    {
+      "id": "RR-PKT22-002",
+      "description": "PKT-22 does not implement locked reusable UI module contracts.",
+      "owner": "PKT-23",
+      "disposition": "preserve PKT-23 ownership of locked module enforcement"
+    }
+  ],
+  "authorityBoundary": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false,
+    "grantsProductizationComplete": false,
+    "grantsUserUatApproval": false,
+    "grantsRealProviderReadiness": false,
+    "grantsPkt23LockedModuleEnforcement": false
+  }
+}
