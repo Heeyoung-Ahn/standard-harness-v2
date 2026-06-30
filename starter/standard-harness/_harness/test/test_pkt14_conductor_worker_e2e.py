@@ -182,6 +182,32 @@ class ConductorWorkerE2ETests(unittest.TestCase):
             self.assertEqual(result["status"], "execution_blocked")
             self.assertIn("captured_output_record_missing:Reviewer:claude_code", result["diagnostic_ids"])
 
+    def test_real_cli_accepts_codex_reviewer_capture_when_explicitly_requested(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            descriptor = self._safe_descriptor(
+                ["codex", "exec", "--json"],
+                root=root,
+                records=[
+                    self._capture_record("Developer", "codex", "codex-cli-local"),
+                    self._capture_record("Reviewer", "codex", "codex-cli-local"),
+                ],
+                artifact_name="capture-codex-reviewer.json",
+            )
+            descriptor["reviewer_provider"] = "codex"
+
+            result = ConductorWorkerE2ERunner(tmp).run(
+                packet_id="PKT-14",
+                mode="real-smoke",
+                real_cli_approval=True,
+                command_descriptor=descriptor,
+                cli_available=True,
+            )
+
+            self.assertEqual(result["status"], "pass")
+            self.assertEqual(result["realCliEvidenceStatus"], "pass")
+            self.assertEqual(result["verifierRuns"][0]["provider"], "codex")
+
     def test_real_cli_failed_or_timeout_capture_cannot_pass(self) -> None:
         cases = {
             "captured_output_failed": {"exit_code": 1, "result_status": "failed"},
