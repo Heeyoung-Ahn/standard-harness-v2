@@ -24,3 +24,6 @@ starter/standard-harness/_ops/
 Thumbs.db
 .idea/
 .vscode/
+
+# Local git worktrees
+.worktrees/
