@@ -1,7 +1,7 @@
 # Validation Report
 
 ## Summary
-- Executed at: 2026-06-30T15:53:38.649Z
+- Executed at: 2026-06-30T16:30:34.311Z
 - Validator version: v1.3
 - Cutover ready: yes
 - Gate decision: pass
@@ -69,10 +69,10 @@
 - reference/packets/PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
-  - modeling impact: status absent, required yes, diagnostics 1
+  - modeling impact: status required, required yes, diagnostics 0
 
 ## Findings
-- [warning] risk_class_high_requires_packet_approval_evidence: reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding.
+- none
 
 ## Context Budget
 - none

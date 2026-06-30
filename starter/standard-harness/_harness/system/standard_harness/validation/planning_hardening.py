@@ -6,6 +6,10 @@ from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 
 from standard_harness.design.projection import validate_design_projection, validate_packet_design_trace
+from standard_harness.design.ui_module import (
+    validate_packet_ui_module_trace,
+    validate_ui_module_contracts,
+)
 from standard_harness.validation.diagnostics import DiagnosticRecord
 
 
@@ -177,6 +181,7 @@ class PlanningHardeningValidator:
         diagnostics.extend(self._validate_trace(packet, planning.get("trace")))
         diagnostics.extend(self._validate_projections(packet, planning.get("projections")))
         diagnostics.extend(self._validate_design_projection_contract(packet, planning))
+        diagnostics.extend(self._validate_ui_module_contract(packet, planning))
         diagnostics.extend(self._validate_end_of_hardening(packet, planning.get("endOfHardening")))
         return diagnostics
 
@@ -508,6 +513,82 @@ class PlanningHardeningValidator:
                 )
             )
         return diagnostics
+
+    def _validate_ui_module_contract(self, packet: dict[str, Any], planning: dict[str, Any]) -> list[dict[str, Any]]:
+        module_contracts = planning.get("uiModuleContracts")
+        design_projections = planning.get("designProjections")
+        design_trace = planning.get("designTrace")
+        has_reusable_mockup = self._has_reusable_design_mockup(design_projections)
+        packet_trace_result = validate_packet_ui_module_trace(
+            _design_trace_packet_payload(packet, design_trace if isinstance(design_trace, dict) else {}, has_reusable_mockup)
+        )
+
+        diagnostics: list[dict[str, Any]] = []
+        for diagnostic in packet_trace_result["diagnostics"]:
+            diagnostics.append(
+                _diagnostic(
+                    packet,
+                    diagnostic["code"],
+                    "planning",
+                    diagnostic["message"],
+                    "Link UI/design packets to UI module ids, or mark the packet non-UI.",
+                    f"closeout_plan.planningHardening.designTrace.{diagnostic['field']}",
+                )
+            )
+
+        if module_contracts is None:
+            if has_reusable_mockup:
+                diagnostics.append(
+                    _diagnostic(
+                        packet,
+                        "missing_ui_module_contract_for_design_mockup",
+                        "planning",
+                        "Implementation-reusable UI mockups require reusable UI module contracts.",
+                        "Add uiModuleContracts records for the classified module ids before Developer implementation.",
+                        "closeout_plan.planningHardening.uiModuleContracts",
+                    )
+                )
+            return diagnostics
+
+        if not isinstance(module_contracts, list):
+            return [
+                _diagnostic(
+                    packet,
+                    "invalid_ui_module_contract",
+                    "planning",
+                    "UI module contracts must be a list.",
+                    "Record reusable UI module contracts as structured records.",
+                    "closeout_plan.planningHardening.uiModuleContracts",
+                )
+            ]
+
+        result = validate_ui_module_contracts(module_contracts)
+        for diagnostic in result["diagnostics"]:
+            diagnostics.append(
+                _diagnostic(
+                    packet,
+                    diagnostic["code"],
+                    "planning",
+                    diagnostic["message"],
+                    "Complete the reusable UI module contract or remove it from scope.",
+                    f"closeout_plan.planningHardening.uiModuleContracts.{diagnostic['field']}",
+                )
+            )
+        return diagnostics
+
+    @staticmethod
+    def _has_reusable_design_mockup(design_projections: Any) -> bool:
+        if not isinstance(design_projections, list):
+            return False
+        for projection in design_projections:
+            if not isinstance(projection, dict):
+                continue
+            mockup = projection.get("mockup")
+            if isinstance(mockup, dict) and str(mockup.get("reusableImplementationDetail") or "").strip():
+                return True
+            if _non_empty_list(projection.get("moduleClassifications")):
+                return True
+        return False
 
     def _validate_end_of_hardening(self, packet: dict[str, Any], end_gate: Any) -> list[dict[str, Any]]:
         if end_gate is None:

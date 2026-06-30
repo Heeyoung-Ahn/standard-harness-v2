@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "standard-harness-security-review/v2.2",
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet": "PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE",
+  "packet_id": "PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE",
+  "packetId": "reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md",
+  "packet_path": "reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md",
+  "packetPath": "reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md",
+  "work_item_id": "PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE",
+  "workItemId": "PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE",
+  "mode": "scoped",
+  "status": "pass",
+  "decision": "pass-with-authority-boundary",
+  "scope": "Reusable UI module contract validator, locked-module change trace, design-stage module classification integration, non-UI not-blocked trace behavior, authority-boundary rejection, and prompt-like visual reference rejection.",
+  "phases_run": [0, 1, 12, 13, 14],
+  "phasesRun": [0, 1, 12, 13, 14],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "reported_findings": 0
+  },
+  "evidence": [
+    {
+      "id": "SEC-PKT23-001",
+      "surface": "module contract authority overclaim",
+      "risk": "A reusable module contract claims Ready For Code, implementation, release, User UAT, closeout, productization, requirement, acceptance, or residual-risk authority.",
+      "evidence": "validate_ui_module_contract emits ui_module_authority_claim_forbidden and focused tests cover Ready For Code, approve release, closeout, approve User UAT text, nested approval-like wording, and authority synonyms such as authorize, grant, waive, and certify.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT23-002",
+      "surface": "prompt-like visual reference",
+      "risk": "A visual reference or mockup-like field is reused as instruction authority.",
+      "evidence": "validate_ui_module_contract emits ui_module_visual_reference_prompt_like for prompt-like visual references such as ignore previous instructions.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT23-003",
+      "surface": "locked module unauthorized change",
+      "risk": "A locked common module changes variants or do-not-change rules without packet and evidence trace.",
+      "evidence": "validate_ui_module_contract emits locked_ui_module_change_trace_missing when proposedChange lacks packetId, reason, allowedVariantImpact, evidenceTargetIds, or screenProjectionIds.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT23-004",
+      "surface": "accessibility placeholder masking",
+      "risk": "A locked common module hides accessibility gaps behind placeholder or waiver-like values.",
+      "evidence": "validate_ui_module_contract emits invalid_ui_module_accessibility_requirement for placeholder values such as none, n/a, tbd, later, not-needed, and todo.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT23-005",
+      "surface": "non-UI packet overblocking",
+      "risk": "Reusable UI module trace requirements block unrelated non-UI packets.",
+      "evidence": "validate_packet_ui_module_trace returns pass for non-UI packets and emits missing_ui_module_trace_for_ui_packet only for UI/design packets or design-artifact scope.",
+      "status": "pass"
+    }
+  ],
+  "residualRisks": [
+    {
+      "id": "RR-PKT23-001",
+      "description": "Authority text scanning may require new negative fixtures if future packets introduce new approval vocabulary.",
+      "owner": "Planner",
+      "disposition": "non-blocking maintenance risk; current PKT-23 approval and prompt-like variants are covered by focused tests"
+    }
+  ],
+  "authorityBoundary": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false,
+    "grantsProductizationComplete": false,
+    "grantsUserUatApproval": false,
+    "grantsRealProviderReadiness": false
+  }
+}

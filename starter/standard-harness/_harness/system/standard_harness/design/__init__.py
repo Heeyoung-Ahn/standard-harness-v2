@@ -1,1 +1,1 @@
-"""Design projection contracts."""
+"""Design planning contracts."""

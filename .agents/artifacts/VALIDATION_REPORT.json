@@ -2,7 +2,7 @@
   "ok": true,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-06-30T15:53:38.649Z",
+  "executedAt": "2026-06-30T16:30:34.311Z",
   "cutoverReady": true,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
@@ -871,29 +871,20 @@
       },
       "modelingImpact": {
         "required": true,
-        "status": "absent",
-        "triggerCount": 2,
-        "diagnosticCount": 1,
+        "status": "required",
+        "triggerCount": 3,
+        "diagnosticCount": 0,
         "blockingDiagnosticCount": 0,
         "triggers": [
           "Change zone core",
+          "api contract",
           "schema boundary"
         ]
       },
       "gateEffect": "hold_if_missing_approval_or_evidence"
     }
   ],
-  "findings": [
-    {
-      "code": "risk_class_high_requires_packet_approval_evidence",
-      "severity": "warning",
-      "gateEffect": "hold",
-      "artifactId": "PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE",
-      "packetPath": "reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md",
-      "effectiveRiskClass": "high",
-      "message": "reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
-    }
-  ],
+  "findings": [],
   "nextAction": "Keep the reusable baseline on planning hold until a new approved lane is selected.",
   "gateDecision": "pass",
   "traceSummary": null,
