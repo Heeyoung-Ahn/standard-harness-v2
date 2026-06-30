@@ -2,7 +2,7 @@
   "ok": true,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-06-29T22:26:00.124Z",
+  "executedAt": "2026-06-30T09:43:24.794Z",
   "cutoverReady": true,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
@@ -658,6 +658,224 @@
         ]
       },
       "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-17_PRODUCTIZATION_READINESS_AND_CLEAN_EXPORT",
+      "packetPath": "reference/packets/PKT-17_PRODUCTIZATION_READINESS_AND_CLEAN_EXPORT.md",
+      "declaredRiskClass": "high",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 3,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "api contract",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE",
+      "packetPath": "reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md",
+      "declaredRiskClass": "high",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "absent",
+        "triggerCount": 2,
+        "diagnosticCount": 1,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE",
+      "packetPath": "reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md",
+      "declaredRiskClass": "high",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "absent",
+        "triggerCount": 2,
+        "diagnosticCount": 1,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-20_REAL_PROVIDER_WORKER_SMOKE",
+      "packetPath": "reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md",
+      "declaredRiskClass": "high",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "absent",
+        "triggerCount": 2,
+        "diagnosticCount": 1,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-21_STRUCTURED_PM_SOURCE_INTAKE",
+      "packetPath": "reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md",
+      "declaredRiskClass": "high",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "absent",
+        "triggerCount": 2,
+        "diagnosticCount": 1,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION",
+      "packetPath": "reference/packets/PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION.md",
+      "declaredRiskClass": "high",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "absent",
+        "triggerCount": 2,
+        "diagnosticCount": 1,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE",
+      "packetPath": "reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md",
+      "declaredRiskClass": "high",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "high",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "core",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "absent",
+        "triggerCount": 2,
+        "diagnosticCount": 1,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone core",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hold_if_missing_approval_or_evidence"
     }
   ],
   "findings": [
@@ -665,41 +883,60 @@
       "code": "risk_class_high_requires_packet_approval_evidence",
       "severity": "warning",
       "gateEffect": "hold",
-      "artifactId": "PKT-16_RELEASE_BASELINE_RECONCILIATION",
-      "packetPath": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
+      "artifactId": "PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE",
+      "packetPath": "reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md",
       "effectiveRiskClass": "high",
-      "message": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
+      "message": "reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
     },
     {
-      "code": "planner_packet_challenge_status_unresolved",
+      "code": "risk_class_high_requires_packet_approval_evidence",
       "severity": "warning",
-      "gateEffect": "implementation_transition_hold",
-      "artifactId": "PKT-16_RELEASE_BASELINE_RECONCILIATION",
-      "packetPath": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
-      "field": "Challenge status",
-      "currentValue": "authoring-pass / independent-review-pending.",
-      "expectedValues": [
-        "pass",
-        "exempt for eligible low-risk fast-path only"
-      ],
-      "message": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md must record Challenge status pass or a valid explicit low-risk exemption before implementation transition."
+      "gateEffect": "hold",
+      "artifactId": "PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE",
+      "packetPath": "reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md",
+      "effectiveRiskClass": "high",
+      "message": "reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
+    },
+    {
+      "code": "risk_class_high_requires_packet_approval_evidence",
+      "severity": "warning",
+      "gateEffect": "hold",
+      "artifactId": "PKT-20_REAL_PROVIDER_WORKER_SMOKE",
+      "packetPath": "reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md",
+      "effectiveRiskClass": "high",
+      "message": "reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
+    },
+    {
+      "code": "risk_class_high_requires_packet_approval_evidence",
+      "severity": "warning",
+      "gateEffect": "hold",
+      "artifactId": "PKT-21_STRUCTURED_PM_SOURCE_INTAKE",
+      "packetPath": "reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md",
+      "effectiveRiskClass": "high",
+      "message": "reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
+    },
+    {
+      "code": "risk_class_high_requires_packet_approval_evidence",
+      "severity": "warning",
+      "gateEffect": "hold",
+      "artifactId": "PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION",
+      "packetPath": "reference/packets/PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION.md",
+      "effectiveRiskClass": "high",
+      "message": "reference/packets/PKT-22_DESIGN_PROJECTION_AND_BROWSER_VALIDATION_FOUNDATION.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
+    },
+    {
+      "code": "risk_class_high_requires_packet_approval_evidence",
+      "severity": "warning",
+      "gateEffect": "hold",
+      "artifactId": "PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE",
+      "packetPath": "reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md",
+      "effectiveRiskClass": "high",
+      "message": "reference/packets/PKT-23_REUSABLE_UI_MODULE_CONTRACT_AND_LOCKED_MODULE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
     }
   ],
-  "nextAction": "Review the PKT-16_RELEASE_BASELINE_RECONCILIATION detailed agreement proposal and decide whether to approve, adjust, or hold Ready For Code before implementation opens.",
+  "nextAction": "Keep the reusable baseline on planning hold until a new approved lane is selected.",
   "gateDecision": "pass",
-  "traceSummary": {
-    "path": ".agents/runtime/agent-traces/PKT-16_RELEASE_BASELINE_RECONCILIATION.json",
-    "workItemId": "PKT-16_RELEASE_BASELINE_RECONCILIATION",
-    "packetId": "PKT-16_RELEASE_BASELINE_RECONCILIATION",
-    "turnClosedAt": "2026-06-29T22:26:00.124Z",
-    "semanticTraceStatus": "pass",
-    "warningCount": 0,
-    "candidateGateCount": 6,
-    "workflowDisciplineStatus": "pass",
-    "workflowDisciplineWarningCount": 0,
-    "workflowDisciplineCloseoutHoldCount": 0,
-    "workflowDisciplineHardErrorCount": 0
-  },
+  "traceSummary": null,
   "candidateGates": [
     {
       "id": "required-evidence-present",
@@ -735,141 +972,23 @@
   "riskAdaptive": {
     "schemaVersion": "standard-harness-v2.5-validation-summary/v1",
     "gateEffect": "blocking-in-packet-preflight-and-transition",
-    "activeWorkItemId": "PKT-16_RELEASE_BASELINE_RECONCILIATION",
-    "packetPath": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
+    "activeWorkItemId": null,
+    "packetPath": null,
     "gateStage": "implementation-transition",
     "lane": "standard",
-    "phase": "implementation",
+    "phase": "day-start",
     "riskOverlays": [],
-    "readCount": 6,
-    "targetTokens": 2200,
+    "readCount": 3,
+    "targetTokens": 3000,
     "maxDocuments": 3,
-    "contextBudgetStatus": "warn",
-    "estimatedTokensRead": 1854,
+    "contextBudgetStatus": "pass",
+    "estimatedTokensRead": 836,
     "humanManualAutoRead": false,
     "overlayEvidence": [],
     "diagnostics": [],
     "blocking": false,
     "nextAction": "No V2.5 risk overlay evidence is currently routed; keep default context lean."
   },
-  "securityReview": {
-    "contractStatus": "not-applicable",
-    "activationSource": "not declared",
-    "notApplicableReason": "Reusable security-review evidence is not requested by current packet/runtime metadata."
-  },
-  "contextBudget": {
-    "schemaVersion": "standard-harness-context-budget/v1",
-    "status": "within_budget",
-    "enforcement": "warning-only",
-    "hardFailEnabled": false,
-    "severity": "info",
-    "blocking": false,
-    "gateEffect": "advisory-only",
-    "operatorMessage": "Context budget is within the advisory threshold.",
-    "workItemId": "PKT-16_RELEASE_BASELINE_RECONCILIATION",
-    "role": "planner",
-    "defaultReadSet": {
-      "fileCount": 9,
-      "maxFileCount": 14,
-      "tokenEstimate": 58910,
-      "maxTokenEstimate": 140000,
-      "fileOverrun": false,
-      "tokenOverrun": false,
-      "broadCompatibilityViewsIncluded": false
-    },
-    "fallbackOnlyReadSet": {
-      "fileCount": 0,
-      "tokenEstimate": 0,
-      "includedOnlyWhenFallbackTriggersExist": false,
-      "triggerReasons": []
-    },
-    "overrunRationale": null,
-    "outputBudget": {
-      "summaryMaxLines": 8,
-      "closeoutMaxLines": 12,
-      "repeatedHistoryPolicy": "warn-only",
-      "requireDecisionAndNextAction": true,
-      "residualRiskMustBeExplicit": true
-    },
-    "warningCount": 0
-  },
-  "llmJudge": {
-    "schemaVersion": "standard-harness-llm-judge/v1",
-    "status": "not-run",
-    "gateEffect": "advisory-only",
-    "workItemId": "PKT-16_RELEASE_BASELINE_RECONCILIATION",
-    "packetPath": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
-    "providerInvocation": "not-used",
-    "contextPackage": {
-      "schemaVersion": "standard-harness-llm-judge-input-package/v1",
-      "status": "ready",
-      "allowedInputFields": [
-        "requirementsSummary",
-        "modelingImpact",
-        "packetAcceptance",
-        "diffSummary",
-        "testEvidenceResult"
-      ],
-      "forbiddenContextPolicy": "full chat/history, raw transcripts, unbounded generated docs, and workspace dumps are excluded",
-      "sourceRefs": [
-        {
-          "field": "requirementsSummary",
-          "path": ".agents/artifacts/REQUIREMENTS.md",
-          "status": "present"
-        },
-        {
-          "field": "modelingImpact",
-          "path": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
-          "status": "present"
-        },
-        {
-          "field": "packetAcceptance",
-          "path": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
-          "status": "present"
-        },
-        {
-          "field": "diffSummary",
-          "path": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
-          "status": "present"
-        },
-        {
-          "field": "testEvidenceResult",
-          "path": ".agents/artifacts/VALIDATION_REPORT.json",
-          "status": "present"
-        }
-      ],
-      "inputs": {
-        "requirementsSummary": {
-          "sourceRef": ".agents/artifacts/REQUIREMENTS.md",
-          "summary": "# Requirements > AUTHORITATIVE. Governance requirements SSOT. Edit only through an approved planning boundary or packet. ## Status - v2.0 charter baseline prepared from Human Owner direction and legacy v0.2 requirements. - This document is the hope, direction, and goal of Standard Harness v2.0. - It intentionally prioritizes the Human Owner's operating mo..."
-        },
-        "modelingImpact": {
-          "sourceRef": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
-          "status": "not-declared"
-        },
-        "packetAcceptance": {
-          "sourceRef": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
-          "summary": "section missing"
-        },
-        "diffSummary": {
-          "sourceRef": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
-          "summary": "Use packet-declared changed-file/classification evidence and implementation closeout diff summary; raw workspace dumps are excluded."
-        },
-        "testEvidenceResult": {
-          "sourceRef": ".agents/artifacts/VALIDATION_REPORT.json",
-          "summary": "Use current validation-report gate decision, findings, and explicit test evidence; this is not product verification."
-        }
-      }
-    },
-    "result": {
-      "status": "not-run",
-      "sourceMode": "not-run",
-      "sourcePath": ".agents/runtime/judge/PKT-16_RELEASE_BASELINE_RECONCILIATION.json",
-      "canClaimLiveIndependentReview": false,
-      "rationale": "No LLM judge result artifact exists for this work item.",
-      "findings": [],
-      "disagreements": []
-    },
-    "diagnostics": []
-  }
+  "contextBudget": null,
+  "llmJudge": null
 }

@@ -49,6 +49,10 @@ The target clean starter candidate is a separate folder intended for the next pr
 | exclude | Product code, runtime state, evidence, reports, generated output, logs, secrets, sessions, transcripts, or project-specific planning material. |
 | review | Files that need special handling, such as `package.json` harness scripts, or paths not covered by the explicit boundary. |
 
+Unresolved review lanes block any release-ready claim. Resolve, adjudicate, or explicitly keep
+every review lane as non-release before using promotion evidence in a release or starter
+promotion decision.
+
 ## Contamination Audit
 
 The contamination audit checks the exported candidate for product code, runtime state, packet/evidence/report output, generated validation/context/report output, DB/cache/log files, credentials, local secrets, browser sessions, raw transcripts, project-specific docs, and missing export provenance.

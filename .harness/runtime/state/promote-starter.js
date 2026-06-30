@@ -34,6 +34,7 @@ export function runPromoteStarterCommand({ repoRoot = process.cwd(), args = [] }
       targetRoot,
       summary: summarizePlan(plan),
       plan,
+      releaseReadiness: evaluateReleaseReadiness(plan),
       authority: AUTHORITY_DENIAL,
       nextAction: "Review include/exclude/review lanes, then rerun without --dry-run to export."
     };
@@ -61,6 +62,7 @@ export function runPromoteStarterCommand({ repoRoot = process.cwd(), args = [] }
     summary: summarizePlan(plan),
     contaminationAudit,
     freshVerification,
+    releaseReadiness: evaluateReleaseReadiness(plan),
     writtenFiles: listFiles(targetRoot),
     authority: AUTHORITY_DENIAL,
     nextAction: promotionNextAction({ verify: options.verify, freshVerification })
@@ -86,6 +88,7 @@ export function buildPromotionPlan({ repoRoot = process.cwd(), targetRoot = null
     targetRoot: targetRoot ? path.resolve(targetRoot) : null,
     items,
     summary: summarizePlan({ items }),
+    releaseReadiness: evaluateReleaseReadiness({ items }),
     authority: AUTHORITY_DENIAL
   };
 }
@@ -97,6 +100,11 @@ export function auditStarterCandidate({ candidateRoot = process.cwd() } = {}) {
     const classification = classifyPromotionPath(filePath);
     if (classification.decision === "exclude") {
       findings.push(auditFindingForPath(filePath));
+      continue;
+    }
+    const contentFinding = auditContentForSecrets({ candidateRoot, filePath });
+    if (contentFinding) {
+      findings.push(contentFinding);
     }
   }
 
@@ -270,9 +278,19 @@ function runVerificationCommand(step, { cwd }) {
 }
 
 function validateTarget({ sourceRoot, targetRoot, force }) {
-  if (path.resolve(sourceRoot) === path.resolve(targetRoot)) {
+  const resolvedSource = path.resolve(sourceRoot);
+  const resolvedTarget = path.resolve(targetRoot);
+  if (resolvedSource === resolvedTarget) {
     return failPromotion({
       reason: "Promotion target cannot be the source product project.",
+      nextAction: "Choose a separate target directory outside the source project root."
+    });
+  }
+
+  const relativeTarget = path.relative(resolvedSource, resolvedTarget);
+  if (relativeTarget && !relativeTarget.startsWith("..") && !path.isAbsolute(relativeTarget)) {
+    return failPromotion({
+      reason: "Promotion target cannot be inside the source product project.",
       nextAction: "Choose a separate target directory outside the source project root."
     });
   }
@@ -303,6 +321,27 @@ function summarizePlan(plan) {
     include: items.filter((item) => item.decision === "include").length,
     exclude: items.filter((item) => item.decision === "exclude").length,
     review: items.filter((item) => item.decision === "review").length
+  };
+}
+
+function evaluateReleaseReadiness(plan) {
+  const unresolvedReviewLanes = (plan.items ?? [])
+    .filter((item) => item.decision === "review")
+    .map((item) => ({
+      path: item.path,
+      reviewKind: item.reviewKind ?? "unclassified_review",
+      reason: item.reason
+    }));
+  const unresolvedReviewCount = unresolvedReviewLanes.length;
+  return {
+    decision: unresolvedReviewCount > 0 ? "block" : "pass",
+    unresolvedReviewCount,
+    unresolvedReviewLanes,
+    authority: AUTHORITY_DENIAL,
+    nextAction:
+      unresolvedReviewCount > 0
+        ? "Resolve, adjudicate, or explicitly keep every review lane as non-release before making any release-ready claim."
+        : "No unresolved review lanes remain; still use release, publish, promotion, closeout, and risk gates before any approval claim."
   };
 }
 
@@ -339,6 +378,9 @@ function writeMergedPackageJson({ sourceRoot, targetRoot }) {
         name.startsWith("browser:")
     )
   );
+  if (harnessScripts.test) {
+    harnessScripts.test = "node --test .harness/test/promote-starter.test.js";
+  }
   const starterPackage = {
     name: "standard-harness-clean-starter",
     private: true,
@@ -678,8 +720,8 @@ function writeExportProvenance({ sourceRoot, targetRoot, plan }) {
         schemaVersion: "1.0",
         generatedBy: "harness:promote-starter",
         generatedAt: new Date().toISOString(),
-        sourceRoot,
-        targetRoot,
+        sourceLabel: path.basename(path.resolve(sourceRoot)),
+        targetLabel: path.basename(path.resolve(targetRoot)),
         summary: summarizePlan(plan),
         authority: AUTHORITY_DENIAL
       },
@@ -698,6 +740,65 @@ function auditFindingForPath(filePath) {
     path: normalized,
     reason: "File matches a starter promotion contamination boundary."
   };
+}
+
+function auditContentForSecrets({ candidateRoot, filePath }) {
+  if (!isTextAuditCandidate(filePath)) return null;
+  const absolutePath = path.join(candidateRoot, filePath);
+  let content;
+  try {
+    const stats = fs.statSync(absolutePath);
+    if (!stats.isFile() || stats.size > 1024 * 1024) return null;
+    content = fs.readFileSync(absolutePath, "utf8");
+  } catch {
+    return null;
+  }
+  const contentLower = content.toLowerCase();
+  const secretPatterns = [
+    /\b[A-Z0-9_]*(?:API_KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL|SESSION)[A-Z0-9_]*\s*=\s*['"]?(?:sk-[a-z0-9_-]{8,}|secret[-_a-z0-9]{6,}|[a-z0-9_-]{24,})/i,
+    /\bbearer\s+[a-z0-9._-]{12,}/i,
+    /\b(?:cookie|set-cookie)\s*[:=]/i,
+    /\bsession secret\b/i
+  ];
+  if (!secretPatterns.some((pattern) => pattern.test(content)) && !contentLower.includes("private key")) {
+    return null;
+  }
+  return {
+    severity: "block",
+    lane: "secret_content",
+    path: normalizePromotionPath(filePath),
+    reason: "File content matches a high-confidence secret, credential, session, token, or transcript marker; value redacted."
+  };
+}
+
+function isTextAuditCandidate(filePath) {
+  const normalized = normalizePromotionPath(filePath);
+  const lower = normalized.toLowerCase();
+  if (
+    lower.startsWith(".harness/") ||
+    lower.startsWith("starter/standard-harness/_harness/") ||
+    lower.startsWith("reference/reports/")
+  ) {
+    return false;
+  }
+  const ext = path.posix.extname(normalized).toLowerCase();
+  return new Set([
+    "",
+    ".cmd",
+    ".css",
+    ".html",
+    ".js",
+    ".json",
+    ".md",
+    ".mjs",
+    ".ps1",
+    ".py",
+    ".sh",
+    ".ts",
+    ".txt",
+    ".yaml",
+    ".yml"
+  ]).has(ext);
 }
 
 function auditLaneForPath(filePath) {

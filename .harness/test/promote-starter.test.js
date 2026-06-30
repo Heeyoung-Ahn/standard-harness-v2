@@ -31,13 +31,34 @@ function writeFile(root, relativePath, content = "fixture\n") {
   fs.writeFileSync(absolutePath, content, "utf8");
 }
 
+function writeMinimalPromotionSource(source) {
+  writeFile(source, ".harness/runtime/state/harness-cli.js", "export const ok = true;\n");
+  writeFile(source, ".harness/test/example.test.js");
+  writeFile(source, ".codex-plugin/plugin.json", "{}");
+  writeFile(source, ".agents/artifacts/REQUIREMENTS.md");
+  writeFile(source, ".agents/rules/entry.md");
+  writeFile(source, ".agents/scripts/init-project.js");
+  writeFile(source, ".agents/ssot/AI_OPERATING_CONTRACT.md");
+  writeFile(source, "reference/commands/COMMAND_TAXONOMY.md");
+  writeFile(source, "README.md", "# Product project with improved harness\n");
+  writeFile(source, "package.json", JSON.stringify({
+    name: "product-project",
+    scripts: {
+      pretest: "node .harness/runtime/state/check-node-version.js",
+      test: "node --test .harness/test/*.test.js",
+      "harness:validate": "node .harness/runtime/state/harness-cli.js validate",
+      "browser:evidence:prompt": "node .harness/runtime/state/harness-cli.js browser-evidence prompt",
+      dev: "vite"
+    },
+    dependencies: { vite: "latest" }
+  }));
+}
+
 test("promotion boundary includes reusable harness starter surfaces", () => {
   const included = [
     ".harness/runtime/state/harness-cli.js",
     ".harness/test/promote-starter.test.js",
     ".codex-plugin/plugin.json",
-    ".agents/runtime/DOC_ROUTE.json",
-    ".agents/runtime/HARNESS_ADAPTER_MANIFEST.json",
     ".agents/rules/entry.md",
     ".agents/scripts/init-project.js",
     ".agents/ssot/AI_OPERATING_CONTRACT.md",
@@ -52,7 +73,6 @@ test("promotion boundary includes reusable harness starter surfaces", () => {
     "reference/schemas/evidence.schema.json",
     "reference/artifacts/API_CONTRACT.md",
     "START_HERE.md",
-    "AGENTS.md",
     "README.md"
   ];
 
@@ -96,6 +116,10 @@ test("promotion boundary excludes future product project contamination", () => {
     "src/app/page.tsx",
     "app/product/customer.ts",
     ".agents/runtime/ACTIVE_CONTEXT.json",
+    ".agents/runtime/DOC_ROUTE.json",
+    ".agents/runtime/generated-state-docs/CURRENT_STATE.md",
+    ".agents/runtime/agent-traces/PKT-16_RELEASE_BASELINE_RECONCILIATION.json",
+    ".agents/runtime/review-report-excerpts/PKT-16-review-report.md",
     ".harness/packets/active/PKT-001.md",
     ".harness/reports/security/SECURITY_REVIEW.md",
     "reference/evidence/manifests/PKT-001.json",
@@ -103,6 +127,7 @@ test("promotion boundary excludes future product project contamination", () => {
     ".harness/operating_state.sqlite",
     ".harness/cache/session.json",
     "docs/requirements/PRODUCT_REQUIREMENTS.md",
+    "AGENTS.md",
     ".env",
     ".env.local",
     "browser-session.json",
@@ -158,32 +183,33 @@ test("promotion dry-run plans include exclude and review lanes without writing t
   });
 });
 
+test("promotion result blocks release-ready claims while review lanes are unresolved", () => {
+  withTempDir("promote-source-review-lane-", (source) => {
+    withTempDir("promote-target-review-lane-", (targetParent) => {
+      const target = path.join(targetParent, "starter");
+      writeFile(source, ".harness/runtime/state/harness-cli.js");
+      writeFile(source, "package.json", JSON.stringify({ scripts: { "harness:validate": "node ok.js" } }));
+
+      const result = runPromoteStarterCommand({ repoRoot: source, args: ["--dry-run", "--to", target] });
+
+      assert.equal(result.ok, true);
+      assert.equal(result.summary.review, 1);
+      assert.equal(result.releaseReadiness.decision, "block");
+      assert.equal(result.releaseReadiness.unresolvedReviewCount, 1);
+      assert.deepEqual(result.releaseReadiness.unresolvedReviewLanes.map((lane) => lane.path), ["package.json"]);
+      assert.equal(result.releaseReadiness.authority.grantsReleaseApproval, false);
+      assert.match(result.releaseReadiness.nextAction, /review lane/i);
+    });
+  });
+});
+
 test("promotion export writes only reusable starter files and placeholders to safe target", () => {
   withTempDir("promote-source-", (source) => {
     withTempDir("promote-target-", (targetParent) => {
       const target = path.join(targetParent, "starter");
-      writeFile(source, ".harness/runtime/state/harness-cli.js", "export const ok = true;\n");
-      writeFile(source, ".harness/test/example.test.js");
-      writeFile(source, ".codex-plugin/plugin.json", "{}");
-      writeFile(source, ".agents/artifacts/REQUIREMENTS.md");
-      writeFile(source, ".agents/rules/entry.md");
-      writeFile(source, ".agents/scripts/init-project.js");
-      writeFile(source, ".agents/ssot/AI_OPERATING_CONTRACT.md");
+      writeMinimalPromotionSource(source);
       writeFile(source, ".agents/runtime/ACTIVE_CONTEXT.json", "{}");
-      writeFile(source, "reference/commands/COMMAND_TAXONOMY.md");
       writeFile(source, "src/product.js");
-      writeFile(source, "README.md", "# Product project with improved harness\n");
-      writeFile(source, "package.json", JSON.stringify({
-        name: "product-project",
-        scripts: {
-          pretest: "node .harness/runtime/state/check-node-version.js",
-          test: "node --test .harness/test/*.test.js",
-          "harness:validate": "node .harness/runtime/state/harness-cli.js validate",
-          "browser:evidence:prompt": "node .harness/runtime/state/harness-cli.js browser-evidence prompt",
-          dev: "vite"
-        },
-        dependencies: { vite: "latest" }
-      }));
 
       const result = runPromoteStarterCommand({ repoRoot: source, args: ["--to", target] });
 
@@ -215,6 +241,7 @@ test("promotion export writes only reusable starter files and placeholders to sa
         "harness:validate",
         "browser:evidence:prompt"
       ]);
+      assert.equal(exportedPackage.scripts.test, "node --test .harness/test/promote-starter.test.js");
       assert.equal(exportedPackage.dependencies, undefined);
     });
   });
@@ -231,12 +258,30 @@ test("promotion export blocks unsafe target paths", () => {
     assert.equal(sourceTarget.ok, false);
     assert.match(sourceTarget.nextAction, /separate target/i);
 
-    const nonEmptyTarget = path.join(source, "existing-target");
-    fs.mkdirSync(nonEmptyTarget);
-    writeFile(nonEmptyTarget, "README.md", "occupied\n");
-    const nonEmpty = runPromoteStarterCommand({ repoRoot: source, args: ["--to", nonEmptyTarget] });
-    assert.equal(nonEmpty.ok, false);
-    assert.match(nonEmpty.nextAction, /--force/);
+    const nestedTarget = path.join(source, "nested-clean-export");
+    const nested = runPromoteStarterCommand({ repoRoot: source, args: ["--to", nestedTarget] });
+    assert.equal(nested.ok, false);
+    assert.match(nested.reason, /inside the source/i);
+    assert.equal(fs.existsSync(nestedTarget), false);
+
+    const emptyNestedTarget = path.join(source, "empty-nested-clean-export");
+    fs.mkdirSync(emptyNestedTarget);
+    const emptyNested = runPromoteStarterCommand({ repoRoot: source, args: ["--to", emptyNestedTarget] });
+    assert.equal(emptyNested.ok, false);
+    assert.match(emptyNested.reason, /inside the source/i);
+
+    const forcedNested = runPromoteStarterCommand({ repoRoot: source, args: ["--to", emptyNestedTarget, "--force"] });
+    assert.equal(forcedNested.ok, false);
+    assert.match(forcedNested.reason, /inside the source/i);
+
+    withTempDir("promote-existing-target-", (targetParent) => {
+      const nonEmptyTarget = path.join(targetParent, "existing-target");
+      fs.mkdirSync(nonEmptyTarget);
+      writeFile(nonEmptyTarget, "README.md", "occupied\n");
+      const nonEmpty = runPromoteStarterCommand({ repoRoot: source, args: ["--to", nonEmptyTarget] });
+      assert.equal(nonEmpty.ok, false);
+      assert.match(nonEmpty.nextAction, /--force/);
+    });
   });
 });
 
@@ -262,6 +307,7 @@ test("contamination audit blocks product runtime evidence and secret contaminati
     writeFile(candidate, ".agents/runtime/ACTIVE_CONTEXT.json", "{}");
     writeFile(candidate, "reference/evidence/manifests/PKT-001.json", "{}");
     writeFile(candidate, ".env.local", "TOKEN=secret\n");
+    writeFile(candidate, "README.md", "OPENAI_API_KEY=sk-test-secret-fixture\n");
     writeFile(candidate, "raw-transcript.md", "session text\n");
     writeFile(candidate, ".harness/promotion/EXPORT_PROVENANCE.json", JSON.stringify({ source: "fixture" }));
 
@@ -273,6 +319,28 @@ test("contamination audit blocks product runtime evidence and secret contaminati
     assert.ok(audit.findings.some((finding) => finding.lane === "runtime_state"));
     assert.ok(audit.findings.some((finding) => finding.lane === "evidence_report"));
     assert.ok(audit.findings.some((finding) => finding.lane === "secret_session_transcript"));
+    assert.ok(
+      audit.findings.some(
+        (finding) => finding.lane === "secret_content" && finding.path === "README.md" && !finding.reason.includes("sk-test-secret-fixture")
+      )
+    );
+  });
+});
+
+test("promotion export provenance omits absolute local paths", () => {
+  withTempDir("promote-source-", (source) => {
+    writeMinimalPromotionSource(source);
+    withTempDir("promote-target-", (target) => {
+      const result = runPromoteStarterCommand({ repoRoot: source, args: ["--to", target] });
+
+      assert.equal(result.ok, true);
+      const provenance = JSON.parse(
+        fs.readFileSync(path.join(target, ".harness/promotion/EXPORT_PROVENANCE.json"), "utf8")
+      );
+      assert.equal("sourceRoot" in provenance, false);
+      assert.equal("targetRoot" in provenance, false);
+      assert.equal(provenance.generatedBy, "harness:promote-starter");
+    });
   });
 });
 
@@ -383,6 +451,8 @@ test("starter promotion workflow is documented for human operators", () => {
   assert.match(manual, /include/i);
   assert.match(manual, /exclude/i);
   assert.match(manual, /review/i);
+  assert.match(manual, /release-ready/i);
+  assert.match(manual, /unresolved review/i);
   assert.match(manual, /contamination audit/i);
   assert.match(manual, /fresh starter verification/i);
   assert.match(

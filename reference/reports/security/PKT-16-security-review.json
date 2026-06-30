@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "standard-harness-security-review/v2.2",
+  "packet_path": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
+  "work_item_id": "PKT-16_RELEASE_BASELINE_RECONCILIATION",
+  "mode": "scoped",
+  "phases_run": [0, 1, 12, 13, 14],
+  "workItemId": "PKT-16_RELEASE_BASELINE_RECONCILIATION",
+  "packetPath": "reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md",
+  "executedAtLocal": "2026-06-30",
+  "status": "pass",
+  "decision": "pass",
+  "phasesRun": [0, 1, 12, 13, 14],
+  "scope": [
+    "planning_hardening validator",
+    "PKT16-H10 Product Readiness before User UAT gate",
+    "projection authority boundary",
+    "Developer Done authority boundary",
+    "H10 evidence reference path and existence boundary"
+  ],
+  "reviewedSurfaces": {
+    "approvalBoundary": "pass",
+    "projectionAuthorityBoundary": "pass",
+    "developerDoneUatAuthorityBoundary": "pass",
+    "productReadinessNABoundary": "pass",
+    "evidenceRefPathBoundary": "pass",
+    "secretHandling": "pass",
+    "networkBoundary": "pass",
+    "filesystemMutationBoundary": "pass"
+  },
+  "filter_stats": {
+    "raw_findings": 4,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  },
+  "findings": [],
+  "checks": [
+    {
+      "id": "fake-h10-na-bypass",
+      "result": "pass",
+      "evidence": "reference/reports/review/PKT-16-H10-adversarial-security-review.md"
+    },
+    {
+      "id": "forged-h10-evidence-ref",
+      "result": "pass",
+      "evidence": "reference/reports/review/PKT-16-H10-adversarial-security-review.md"
+    },
+    {
+      "id": "developer-done-uat-authority-alias",
+      "result": "pass",
+      "evidence": "reference/reports/review/PKT-16-H10-adversarial-security-review.md"
+    },
+    {
+      "id": "projection-authority-alias",
+      "result": "pass",
+      "evidence": "reference/reports/review/PKT-16-H10-adversarial-security-review.md"
+    },
+    {
+      "id": "regression",
+      "result": "pass",
+      "evidence": "targeted H10 unittest 11 tests OK; starter unittest 149 tests OK with 1 skipped; root npm test 483 OK; harness:validate ok true findings []; git diff --check CRLF warnings only"
+    }
+  ],
+  "residualRisk": [
+    {
+      "id": "PKT16-H10-evidence-semantic-metadata",
+      "severity": "non-blocking-follow-up",
+      "status": "tracked",
+      "description": "H10 validates safe packet-bound local evidence JSON path shape and file existence when repo_root is available. It does not yet semantically validate evidence JSON freshness, role owner, packet id, or risk-axis content."
+    },
+    {
+      "id": "PKT16-H10-real-product-browser-run",
+      "severity": "not-applicable-to-validator-slice",
+      "status": "explicit-boundary",
+      "description": "PKT-16 implements reusable validator expectations for future user-facing packets. It is not itself a real product User UAT or browser-state run."
+    }
+  ],
+  "authority": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false
+  },
+  "authorityBoundary": "This security review does not approve closeout, release, publish, promotion, residual risk, or human gates. It records scoped PKT-16 implementation security evidence for Reviewer and Planner routing."
+}

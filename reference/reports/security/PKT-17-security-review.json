@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "standard-harness-security-review/v2.2",
+  "packet": "PKT-17_PRODUCTIZATION_READINESS_AND_CLEAN_EXPORT",
+  "packet_id": "PKT-17_PRODUCTIZATION_READINESS_AND_CLEAN_EXPORT",
+  "packet_path": "reference/packets/PKT-17_PRODUCTIZATION_READINESS_AND_CLEAN_EXPORT.md",
+  "work_item_id": "PKT-17_PRODUCTIZATION_READINESS_AND_CLEAN_EXPORT",
+  "workItemId": "PKT-17_PRODUCTIZATION_READINESS_AND_CLEAN_EXPORT",
+  "packetPath": "reference/packets/PKT-17_PRODUCTIZATION_READINESS_AND_CLEAN_EXPORT.md",
+  "mode": "scoped",
+  "phases_run": [0, 1, 12, 13, 14],
+  "phasesRun": [0, 1, 12, 13, 14],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  },
+  "reviewKind": "security-review",
+  "decision": "pass_with_residual_boundaries",
+  "reviewedSurfaces": [
+    "clean starter export target safety",
+    "forbidden state exclusion",
+    "content-level secret/session/token/credential scanning",
+    "generated runtime state exclusion",
+    "root AGENTS.md exclusion",
+    "dry-run no-mutation behavior",
+    "export provenance minimization",
+    "release/publish/promotion authority denial",
+    "review-lane release-readiness blocking"
+  ],
+  "evidence": [
+    {
+      "source": "node --test .harness\\test\\promote-starter.test.js",
+      "summary": "Fresh focused promotion regression passed 19/19, including descendant target rejection, redacted secret-content finding, and provenance path minimization."
+    },
+    {
+      "source": "node --test .harness\\test\\init-project.test.js .harness\\test\\promote-starter.test.js",
+      "summary": "Fresh init plus promotion regression passed 26/26."
+    },
+    {
+      "source": "C:\\tmp\\standard-harness-pkt17-clean-export-verify-20260630f",
+      "summary": "Clean export verify returned ok=true, contamination=pass, verify=pass, releaseReadiness=block, unresolvedReviewCount=30, and all authority grants false."
+    }
+  ],
+  "findings": [],
+  "resolvedPriorFindings": [
+    {
+      "id": "target_descendant_mutation",
+      "disposition": "resolved",
+      "evidence": "validateTarget rejects targetRoot descendants of sourceRoot, including missing, empty, and forced nested targets."
+    },
+    {
+      "id": "allowed_file_secret_content",
+      "disposition": "resolved",
+      "evidence": "auditStarterCandidate scans eligible text files for high-confidence secret/session/token/credential content and emits redacted secret_content findings."
+    },
+    {
+      "id": "absolute_path_provenance",
+      "disposition": "resolved",
+      "evidence": "EXPORT_PROVENANCE.json no longer contains sourceRoot or targetRoot."
+    }
+  ],
+  "boundaryNotes": [
+    "releaseReadiness.decision remains block while 30 review lanes are unresolved.",
+    "All command authority fields deny release, publish, implementation approval, packet closeout, risk closure, product verification, and residual-risk acceptance.",
+    "PKT-17 root approval evidence uses Human Owner delegated Planner RFC for the current v1.0 root-harness context; v2.0 starter Conductor payload concepts are not treated as root approval authority."
+  ],
+  "residualRisk": [
+    "Promotion review lanes remain unresolved and therefore block any release-ready claim.",
+    "Root operating-contract Conductor approval wording remains a separate governance-contract issue unless explicitly approved for correction.",
+    "Content scanning is intentionally high-confidence and skips implementation/test fixture directories to avoid false-positive self-blocking; release packaging should continue to rely on path classification, candidate audit, and payload-boundary checks."
+  ],
+  "authorityBoundary": "This security review does not approve release, publish, actual starter promotion, residual-risk acceptance, productization completion, packet closeout, PKT-18+ implementation, or User UAT."
+}

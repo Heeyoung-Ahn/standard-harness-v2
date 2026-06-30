@@ -60,7 +60,6 @@ export const KNOWN_PROFILES = {
 };
 
 export const REQUIRED_STARTER_FILES = [
-  "AGENTS.md",
   "README.md",
   "START_HERE.md",
   "package.json",

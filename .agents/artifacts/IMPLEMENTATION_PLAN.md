@@ -99,9 +99,10 @@ when the coverage matrix below is closed.
 - PKT-10 owns the Wave 9 SHV2-REQ-016 implementation lane for friction signals,
   recurring groups, improvement proposals, metrics, wiki/long-memory candidates, and
   starter-promotion candidates that stop at `approval-needed`.
-- The next planning direction is v2.0 hardening: convert the implemented pieces into a
-  stable copied-starter operating loop with queryable operating intelligence, real
-  Conductor/worker adjudication, automatic friction capture, and promotion rehearsal.
+- PKT-11 through PKT-16 are closed for the approved hardening scope. PKT-16 is the last
+  broad hardening packet and establishes the final H0-H10/P1-P4 baseline before
+  productization packets.
+- The next route is PKT-17 Productization Readiness And Clean Export.
 
 ## Dependency Order And Blocking Conditions
 - Requirements freeze precedes architecture sync, implementation-plan sync, and packet
@@ -588,10 +589,10 @@ Conductor adjudication, friction signals, and starter promotion.
 | 16 | PKT-13 Operating Intelligence And QA | Extend the existing long-memory/question-answering runtime into a queryable operating-intelligence source model and Human Owner QA CLI/status surface that answers what happened, why, evidence, risks, and next work. | `standard_harness.memory.question_answering`, CLI/status surface, evidence pointers, sensitivity/freshness checks, bounded context retrieval | high | QA source-index tests, token-budget/context tests, stale/sensitive evidence negative tests, named QA CLI smoke, copied-starter status query smoke |
 | 17 | PKT-14 Conductor Worker E2E | Prove the provider-neutral worker loop where Codex CLI and Claude Code CLI workers execute bounded tasks or deterministic fixtures, return evidence, and the selected Conductor adjudicates results without gaining implicit approval authority. | Conductor CLI/service surface, command descriptor validation, worker output envelopes, adjudication records, provider examples, approval/delegation checks | high | deterministic worker fixture E2E, real CLI smoke when tools are available or explicit N/A, delegated approval hard-stop tests, provider-neutral contamination tests, starter validation |
 | 18 | PKT-15 Compound Loop And Starter Promotion Rehearsal | Wire automatic `RuntimeFrictionCapture` call sites into validation, PM, review, closeout, and context-budget paths; promote repeated friction into improvement proposals and starter-promotion candidates; run dry-run and copied-starter smoke rehearsal. | friction call sites, improvement proposal lifecycle, starter-promotion candidate flow, promotion dry-run, copied-starter rehearsal evidence | starter-promotion overlay required | friction call-site integration tests, duplicate-suppression tests, proposal/promotion tests, promotion dry-run, copied-starter smoke validation |
-| 19 | PKT-16 Release Baseline Reconciliation | Rebaseline v2.0 productization blockers and follow-up work from actual copy, init, first packet, QA, closeout, reset, and promotion dry-run evidence before any release-ready claim. | release-baseline evidence report, starter clean export/copy path, QA fresh-start boundary, reset safety, promotion dry-run review lanes, implementation-plan operator next action | release | clean export validation, installed-runtime validation, first-packet smoke, QA before/after reset, closeout guard smoke, ops-reset preservation check, promotion dry-run, root validation, starter regression |
+| 19 | PKT-16 Additional Hardening And Productization | Complete the final broad hardening pass before productization: make v2.0's LLM intent gap reduction testable through precise planning, implementation conformance, planning trace, projection-only authority, product-readiness-before-UAT, clean export, fresh copied-starter QA, and promotion dry-run policy. | PKT16-H0 through PKT16-H10 planning hardening, PKT16-P1 through PKT16-P4 productization blockers, packet-local gate ledger, architecture-boundary decision, implementation-plan operator next action | completed | precise planning contract tests, intent-fidelity and implementation-conformance negative fixtures, candidate/promotion/trace/flow validator tests, H10 product-readiness-before-UAT tests, productization validation, root/starter regression, independent lenses, security review, Reviewer adjudication, Planner closeout |
 
 ### Hardening Closeout Status
-PKT-11 through PKT-15 are closed for the approved hardening scope. This status does not
+PKT-11 through PKT-16 are closed for the approved hardening scope. This status does not
 approve starter promotion, release, live provider execution, residual-risk acceptance, or
 new implementation work.
 
@@ -603,13 +604,80 @@ new implementation work.
 | PKT-14 | Deterministic worker E2E, output envelope intake, Conductor adjudication, and delegated-approval hard stops were proven. | Real authenticated Codex CLI/Claude Code CLI execution remains unapproved and unrun unless explicitly authorized later. |
 | PKT-15 | Runtime friction call-site integration, improvement proposals, starter-promotion candidates, promotion dry-run, and copied-starter smoke were rehearsed. | Actual starter promotion, publish, release, or distribution remains unapproved. |
 
-### Productization Rebaseline Addendum
-PKT-16 is the next release-baseline packet. Initial E2E evidence shows the installed
-copied starter can initialize, validate, create a first packet, block unsupported closeout,
-reset `_ops`, and pass installed-runtime validation. It also shows release blockers:
-the raw `starter/standard-harness/` working directory is not clean-export ready, raw QA can
-answer from inherited PKT-14 operating memory before reset, and promotion dry-run still has
-review lanes that must be adjudicated before any actual export or release claim.
+### Additional Hardening And Productization Addendum
+PKT-16 is the final broad hardening packet before productization/release work. It turns
+the Human Owner's v2.0 product philosophy into implementation scope: reduce the gap
+between impressive LLM capability and disappointing delivered results by making planning
+precise and implementation conformance verifiable.
+
+PKT-16 includes PKT16-H0 through PKT16-H9 planning hardening:
+precise planning contract, intent fidelity, implementation conformance, acceptance/
+scenario/evidence trace, scope-narrowing and convenience-closeout guards, requirement
+candidate promotion, flow metadata, projection-only validation, planning-to-packet trace,
+and end-of-hardening exit.
+
+PKT-16 also carries PKT16-P1 through PKT16-P4 productization blockers from the actual
+release-baseline E2E evidence. The installed copied starter can initialize, validate,
+create a first packet, block unsupported closeout, reset `_ops`, and pass installed-runtime
+validation. Remaining blockers are clean export readiness, fresh copied-starter QA that
+cannot answer from inherited root hardening memory, promotion dry-run review-lane
+adjudication, and release-boundary wording that prevents dry-run evidence from being
+overread as release approval.
+
+After PKT-16 closeout, broad hardening should stop. Productization must not leave
+deferred or optional implementation. PKT-17 through PKT-21 are all required before v2.0
+can claim additional hardening and productization complete.
+
+### Post-PKT-16 Productization Packet Plan
+The remaining work is not another hardening wave. It is a productization/release-readiness
+sequence that must preserve PKT16-H0 through PKT16-H9 and close PKT16-P1 through
+PKT16-P4 without deferring implementation. PKT-17 through PKT-21 are required as a
+single productization completion set; none are optional if the project claims final
+additional hardening and productization are complete.
+
+| Order | Packet Candidate | Outcome | Requirement Links | Changed Surface | Risk Mode | Required Verification |
+|---|---|---|---|---|---|---|
+| 20 | PKT-17 Productization Readiness And Clean Export | Produce a clean starter export/copy path and prove the exported starter excludes root development state, generated state, local DB/cache files, evidence history, wiki state, provider-specific entry contracts, and inherited operating memory. | SHV2-REQ-052, 053, 054, 056 | export/copy policy, contamination validator, promotion dry-run policy, release boundary docs | release | clean export validation, forbidden-state negative fixtures, copied-starter init/validate smoke, dry-run no-mutation check, release-boundary wording checks |
+| 21 | PKT-18 Fresh Starter QA And Onboarding Smoke | Prove a freshly copied starter can initialize, answer only from project-specific trusted sources, abstain on unsupported inherited context, and guide the Human Owner through first packet/onboarding without root memory. | SHV2-REQ-049, 050, 051, 052, 055 | copied-starter QA CLI/status, onboarding docs, source-index bootstrap, abstain/freshness policy | high | before/after reset QA tests, inherited-memory negative test, first-packet smoke, onboarding command smoke, evidence-source trust checks |
+| 22 | PKT-19 Release Candidate Packaging And Evidence Bundle | Assemble release-candidate evidence without publishing: package manifest, command inventory, rollback notes, release-readiness report, security/dependency evidence, and unresolved-risk list. | SHV2-REQ-053, 054, 056 | release docs, package metadata, evidence manifest, dependency/security reports | release | package dry-run, dependency/security review, evidence manifest validation, rollback drill, no-publish/no-release approval boundary checks |
+| 23 | PKT-20 Real Provider Worker Smoke | Run real authenticated Codex CLI / Claude Code CLI worker smoke through provider-neutral Conductor boundaries without making a provider the product identity. Productization remains incomplete until this is closed with real evidence or the product claim is narrowed to exclude real-provider readiness. | SHV2-REQ-019, 020, 048, 056, 057 | provider adapter examples, worker execution evidence, Conductor adjudication | high / explicit approval | real CLI smoke, provider-neutral contamination tests, delegated approval hard-stop tests, evidence that provider identity remains adapter-only |
+| 24 | PKT-21 Structured PM Source Intake | Ingest PM TSV/CSV/WBS sources into operating intelligence without turning PM summaries into approval authority. Productization remains incomplete until structured PM source intake is closed. | SHV2-REQ-026, 027, 038, 039, 043, 057 | PM source intake, operating-intelligence index, WBS parser | high | PM TSV/CSV fixture tests, authority-boundary tests, source freshness checks, QA answer tests, WBS round-trip evidence |
+
+Recommended next productization packet after PKT-16 closeout: `PKT-17 Productization
+Readiness And Clean Export`.
+
+PKT-17 should be opened only after PKT-16 full closeout. It must be opened as a Planner
+packet and must not claim release, publish, starter promotion, or residual-risk
+acceptance. Its job is to make the starter export and release-readiness evidence
+trustworthy enough for a later release decision.
+
+Productization completion rule: do not mark additional hardening and productization
+complete until PKT-17, PKT-18, PKT-19, PKT-20, and PKT-21 are all closed with passing
+Tester/Reviewer evidence and no deferred implementation scope.
+
+### Post-Productization Planning And Design Trace Extension
+These packet candidates are required before Standard Harness claims mature UI/design
+planning support. They are not allowed to reopen PKT-16 as broad hardening, and they do
+not block the PKT-17 through PKT-21 productization completion rule unless a release claim
+includes UI/design planning maturity.
+
+| Order | Packet Candidate | Outcome | Requirement Links | Changed Surface | Risk Mode | Required Verification |
+|---|---|---|---|---|---|---|
+| 25 | PKT-22 Design Projection And Browser Validation Foundation | Add screen projection, wireframe projection, implementation-reusable design mockup, UI handoff, accessibility, required-state, and browser-validation expectation contracts for UI/design-related packets so design artifacts become implementation-verifiable planning projections without becoming requirement or approval authority. | SHV2-REQ-059, 060, 061, 062, 064 | projection schemas, implementation-reusable mockup contract, design handoff contract, browser validation expectation policy, conditional UI/design packet trace validators | high / design | projection-only negative tests, screen/wireframe schema tests, implementation-reusable mockup contract tests, required-state coverage tests, accessibility metadata tests, browser-validation expectation tests, packet trace diagnostics |
+| 26 | PKT-23 Reusable UI Module Contract And Locked Module | Add reusable UI module contracts for app shell, left navigation, top bar, table/data grid, modal, drawer, form field set, detail panel, empty/error/permission states, and toast/notification, including design-stage module classification, module locking, and used-by screen trace before UI implementation starts. | SHV2-REQ-062, 063, 064 | UI module contract schema, design-stage module classification policy, locked-module policy, design-to-packet trace, review/test expectations | high / design-system | module contract tests, design-stage module classification tests, do-not-change negative tests, responsive/interaction-state metadata checks, accessibility contract checks, used-by screen trace validation |
+
+### Product Readiness And UAT Gate Integration
+User UAT must not be the first serious bug-discovery phase for user-facing product
+packets. This is now part of the expanded PKT-16 final hardening scope as `PKT16-H10`,
+not a separate default follow-up packet. PKT-16 must add the reusable gate semantics that
+lower `Developer Done` to implementation-complete only, require Tester to prove readiness
+in real runtime/browser state, and require Reviewer to check product quality before User
+UAT starts.
+
+PKT-17 through PKT-23 inherit this gate only when their packet scope is user-facing,
+browser-facing, role-sensitive, session-sensitive, account-sensitive, or otherwise
+UAT-bound. Non-UI and non-UAT productization packets must not be blocked by irrelevant
+UAT fields, but any packet that claims User UAT readiness must pass the PKT16-H10 gate.
 
 ### Hardening Concern Coverage Matrix
 This matrix is a packet-opening checklist. Before any hardening packet requests Ready For
@@ -774,6 +842,27 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-046 | Wave 2 | Wave 7 | Risk escalation/de-escalation tests prove hard stops cannot be waived and unsafe fast-path downgrade is rejected. |
 | SHV2-REQ-047 | Wave 3 | Wave 4 | Evidence index links cover tests, regression, browser/E2E, reviews, gates, risk decisions, wiki/memory, and PM/WBS impact. |
 | SHV2-REQ-048 | Wave 6 | Wave 8 | Conductor routing policy records app-facing Conductor selection, risk/importance routing choice, CLI worker/verifier assignment, Conductor review, and next Agent/User route without granting approval authority by selection alone. Delegated Ready For Code and Closeout approval execution requires scoped Human delegation to the selected Conductor through a trusted harness approval command/service, and Planner delegated-approval execution is rejected. |
+| SHV2-REQ-049 | PKT-16 | PKT-17 through PKT-21 | Intent-preservation and productization evidence proves the harness reduces LLM intent drift instead of only improving local command success. |
+| SHV2-REQ-050 | PKT-16 | PKT-22 | Precise planning fields, acceptance criteria, scenarios, flows, and evidence targets block implementation approval when intent is vague or contradicted. |
+| SHV2-REQ-051 | PKT-16 | PKT-17 through PKT-21 | Implementation conformance gates and closeout evidence compare delivered behavior to approved planning intent and explicit defers. |
+| SHV2-REQ-052 | PKT-16 | PKT-17 through PKT-23 | Final hardening rows H0-H10 are preserved by productization and later design-trace packets without reopening broad hardening. |
+| SHV2-REQ-053 | PKT-16 | PKT-17 through PKT-21 | Broad hardening remains closed; later work is productization, release readiness, design-trace maturity, or narrow approved defect scope. |
+| SHV2-REQ-054 | PKT-17 | PKT-19 | Clean export and release-candidate evidence exclude root/generated/local/provider-specific state before release-ready claims. |
+| SHV2-REQ-055 | PKT-18 | PKT-17 | Fresh copied-starter QA abstains or fails closed when only inherited root/hardening memory exists. |
+| SHV2-REQ-056 | PKT-17 | PKT-19 | Promotion dry-run and release-readiness evidence are validated as non-mutating and non-approving. |
+| SHV2-REQ-057 | PKT-17 through PKT-21 | none | Additional hardening and productization cannot be marked complete while any required productization packet remains unclosed or deferred. |
+| SHV2-REQ-058 | PKT-16 | PKT-22 | Requirement candidate lifecycle tests prove `draft`, `reviewed`, `promoted`, `rejected`, and `deferred` candidates cannot become authority without canonical promotion links to policy, schema, validator, test, and coverage rows; implementation-readiness checks then require packet and evidence-target links before `Ready For Code`. |
+| SHV2-REQ-059 | PKT-16 | PKT-22 | Requirement-to-feature-to-scenario-to-acceptance-to-flow-to-evidence trace exists and packet preflight rejects missing or narrowed trace. |
+| SHV2-REQ-060 | PKT-16 | PKT-22 | Flow metadata records related candidates/features, entry point, success/failure paths, roles, state changes, evidence targets, E2E status, and touched screens when applicable. |
+| SHV2-REQ-061 | PKT-16 | PKT-22 | PRD, meeting-note, feature-tree, and flow projections remain projection-only and cannot create requirements, approve implementation/release, bypass packets, or close acceptance. |
+| SHV2-REQ-062 | PKT-22 | PKT-23 | UI/design-related packets structure screen, wireframe, implementation-reusable mockup, UI handoff, required-state, accessibility, reusable-module, and browser-validation contracts so design work can be reused by Developer and Tester workflows. |
+| SHV2-REQ-063 | PKT-23 | none | Locked reusable UI module contracts validate design-stage common module classification, allowed variants, responsive behavior, interaction states, accessibility rules, do-not-change rules, used-by screens, and visual references before UI implementation starts. |
+| SHV2-REQ-064 | PKT-16 | PKT-22, PKT-23 | Packet trace validators connect requirement, candidate, feature, scenario, flow, acceptance, and evidence target ids before implementation and closeout; screen projection and UI module ids become mandatory only when UI/design scope or design artifacts are in scope, and non-UI packets are not blocked by irrelevant design trace fields. |
+| SHV2-REQ-065 | PKT-16 | none | Developer Done is implementation-complete only and cannot be used as User UAT readiness for product/user-facing packets. |
+| SHV2-REQ-066 | PKT-16 | none | Tester Product Readiness Gate proves real runtime, role/session/account/data-reflection, viewer visibility, and placeholder/diagnostic cleanup before User UAT. |
+| SHV2-REQ-067 | PKT-16 | none | Risk-axis regression suites cover permission, session, account lifecycle, data reflection, viewer runtime, and productness using browser-state E2E where API-only checks are insufficient. |
+| SHV2-REQ-068 | PKT-16 | none | Reviewer product-quality review checks placeholder/diagnostic leakage, admin/viewer component leakage, stale session state, and DB-to-UI mapping consistency. |
+| SHV2-REQ-069 | PKT-16 | none | User UAT entry requires DB runtime preflight, Product Readiness Gate, P0/P1 browser E2E, Reviewer product-quality pass, zero known placeholder/diagnostic UI findings, and UAT account/initial-state handoff. |
 
 ## Packet Decision Gates For Open Questions
 Open questions from `REQUIREMENTS.md` remain allowed planning questions, but they must not
@@ -792,6 +881,7 @@ implementation starts.
 | Canonical risk level names | Risk taxonomy gate | PKT-02 | Packet must decide or explicitly defer canonical risk names before implementing gate resolver behavior. |
 | Mandatory starter long-memory pages vs on-demand memory | Long-memory seed gate | PKT-05 | Packet must define required seed pages or on-demand creation rules before memory snapshot/query behavior is implemented. |
 | Authoritative hot operating state store | Hot-state authority gate | PKT-05, PKT-06 | Packet must state which structured state source is authoritative for the implemented behavior and how generated summaries remain read models. |
+| User-facing packet handoff to User UAT | Product readiness and UAT entry gate | PKT-16 and any future UAT-bound product packet | PKT-16 must define the reusable gate; each future UAT-bound packet must prove Developer Done is not treated as UAT-ready, Tester Product Readiness Gate passed, Reviewer product-quality review passed, and UAT accounts/initial state are documented before User UAT starts. |
 
 ## Initial Packet Roadmap
 | Order | Packet | Purpose | Risk Mode | Required Verification |
@@ -814,7 +904,14 @@ implementation starts.
 | 16 | PKT-13 Operating Intelligence And QA | Extend existing long-memory/question-answering services into a queryable operating-intelligence layer and Human Owner QA CLI/status surface. | high | source-index tests, token-budget/context tests, named QA CLI smoke, stale/sensitive evidence negative tests, copied-starter query smoke |
 | 17 | PKT-14 Conductor Worker E2E | Run deterministic worker E2E fixtures and, when available with explicit boundaries, real Codex CLI and Claude Code CLI smoke through Conductor adjudication. | high | worker fixture E2E tests, real CLI smoke or explicit N/A, output envelope tests, adjudication tests, delegated approval hard-stop tests |
 | 18 | PKT-15 Compound Loop And Starter Promotion Rehearsal | Integrate automatic friction capture, improvement proposal promotion, starter-promotion candidates, promotion dry-run, and copied-starter smoke validation. | starter-promotion overlay required | call-site integration tests, duplicate-suppression tests, proposal/promotion tests, promotion dry-run, copied-starter smoke |
-| 19 | PKT-16 Release Baseline Reconciliation | Rebaseline v2.0 productization blockers and follow-up work from actual E2E evidence before any release-ready claim. | release | clean export validation, installed-runtime validation, first packet smoke, QA before/after reset, closeout guard, reset preservation, promotion dry-run, root/starter regression |
+| 19 | PKT-16 Additional Hardening And Productization | Complete the final broad hardening pass by making planning precise, implementation conformance verifiable, and productization blockers explicit before any release-ready claim. | completed | precise planning and intent-conformance tests, candidate/promotion/trace/flow validator tests, clean export/productization validation, H10 Product Readiness before User UAT validation, root/starter regression, independent review, security review, Planner closeout |
+| 20 | PKT-17 Productization Readiness And Clean Export | Produce clean starter export and prove forbidden root/generated/local/provider-specific state is excluded. | release | clean export validation, forbidden-state negative fixtures, copied-starter init/validate smoke, dry-run no-mutation checks |
+| 21 | PKT-18 Fresh Starter QA And Onboarding Smoke | Prove copied-starter QA and onboarding answer only from initialized project-specific trusted sources. | high | QA freshness tests, inherited-memory negative tests, first-packet smoke, onboarding command smoke |
+| 22 | PKT-19 Release Candidate Packaging And Evidence Bundle | Assemble release-candidate evidence without publishing or granting release approval. | release | package dry-run, dependency/security review, evidence manifest validation, rollback drill, no-release boundary checks |
+| 23 | PKT-20 Real Provider Worker Smoke | Prove real provider workers can run through provider-neutral Conductor boundaries without becoming product identity. | high / explicit approval | real CLI smoke, provider-neutral contamination tests, delegated approval hard-stop tests |
+| 24 | PKT-21 Structured PM Source Intake | Ingest PM TSV/CSV/WBS sources into operating intelligence without making PM summaries approval authority. | high | PM fixture tests, authority-boundary tests, freshness checks, QA answer tests, WBS round-trip evidence |
+| 25 | PKT-22 Design Projection And Browser Validation Foundation | Structure screen/wireframe/implementation-reusable mockup/UI handoff projections and browser-validation expectations for UI/design-related packets without making design artifacts authority. | high / design | projection schema tests, projection-only negative tests, implementation-reusable mockup checks, required-state/accessibility checks, browser expectation diagnostics |
+| 26 | PKT-23 Reusable UI Module Contract And Locked Module | Define common UI module classification during design projection, then lock reusable UI module contracts with used-by screen trace and review/test expectations before UI implementation starts. | high / design-system | module contract tests, design-stage module classification tests, locked-module negative tests, responsive/interaction-state checks, accessibility checks |
 
 ## Verification Baseline
 Each implementation packet must define its own exact commands. The common baseline is:
@@ -866,8 +963,12 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-16_RELEASE_BASELINE_RECONCILIATION` active handoff is `planner -> planner`.
-- Review the PKT-16_RELEASE_BASELINE_RECONCILIATION detailed agreement proposal and decide whether to approve, adjust, or hold Ready For Code before implementation opens.
+- `PKT-16_RELEASE_BASELINE_RECONCILIATION` is closed for its approved H0-H10/P1-P4
+  scope with Developer/Tester evidence, independent lenses, security review, Reviewer
+  adjudication, and Planner closeout complete.
+- Next route: open `PKT-17 Productization Readiness And Clean Export` to close
+  clean-export, fresh starter export, promotion dry-run, and release-boundary readiness
+  without reopening broad hardening.
 - Source packet: `reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 

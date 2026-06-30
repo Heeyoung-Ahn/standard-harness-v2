@@ -22,7 +22,6 @@ export const PROMOTION_BOUNDARY_CONTRACT = Object.freeze({
     ".codex-plugin/",
     ".agents/artifacts/",
     ".agents/modes/",
-    ".agents/runtime/",
     ".agents/rules/",
     ".agents/scripts/",
     ".agents/ssot/",
@@ -31,7 +30,7 @@ export const PROMOTION_BOUNDARY_CONTRACT = Object.freeze({
     "reference/",
     "starter/standard-harness/_harness/"
   ],
-  includeFiles: ["START_HERE.md", "AGENTS.md", "README.md"],
+  includeFiles: ["START_HERE.md", "README.md"],
   reviewFiles: ["package.json"],
   projectSpecificGovernanceFiles: [
     ".agents/artifacts/REQUIREMENTS.md",
@@ -45,6 +44,7 @@ export const PROMOTION_BOUNDARY_CONTRACT = Object.freeze({
     ".harness/reports/",
     ".harness/cache/",
     ".harness/logs/",
+    ".agents/runtime/",
     "reference/evidence/",
     "reference/handoffs/",
     "evidence/",
@@ -68,6 +68,7 @@ export const PROMOTION_BOUNDARY_CONTRACT = Object.freeze({
     ".agents/runtime/ACTIVE_CONTEXT.md",
     ".agents/artifacts/VALIDATION_REPORT.json",
     ".agents/artifacts/VALIDATION_REPORT.md",
+    "AGENTS.md",
     "browser-session.json",
     "raw-transcript.md"
   ],

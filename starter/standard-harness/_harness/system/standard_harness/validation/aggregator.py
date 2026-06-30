@@ -22,6 +22,7 @@ from standard_harness.validation.boundary import boundary_input_from_packet
 from standard_harness.validation.challenge_gate import ChallengeGateValidator
 from standard_harness.validation.diagnostics import DiagnosticRecord
 from standard_harness.validation.evidence_trust import packet_requires_trusted_evidence
+from standard_harness.validation.planning_hardening import PlanningHardeningValidator
 from standard_harness.validation.readiness import ReadinessService
 from standard_harness.validation.requirements_metadata import RequirementsMetadataValidator
 from standard_harness.validation.test_plan import TestPlanValidator
@@ -129,6 +130,7 @@ class ValidationService:
         diagnostics.extend(self._gate_activation_diagnostics(packet_id))
         diagnostics.extend(self._approval_diagnostics(packet_id))
         diagnostics.extend(self._challenge_gate_diagnostics(packet_id))
+        diagnostics.extend(self._planning_hardening_diagnostics(packet_id))
         _capture_validation_diagnostics(
             self.friction_capture,
             source_ref="validation/aggregator.py::ValidationService.validate_packet",
@@ -137,6 +139,10 @@ class ValidationService:
             diagnostics=diagnostics,
         )
         return diagnostics
+
+    def _planning_hardening_diagnostics(self, packet_id: str) -> list[dict[str, Any]]:
+        packet = PacketService(self.store).get_packet(packet_id)
+        return PlanningHardeningValidator(self.repo_root).validate(packet)
 
     def validate_projection(self, packet_id: str) -> list[dict[str, Any]]:
         try:
