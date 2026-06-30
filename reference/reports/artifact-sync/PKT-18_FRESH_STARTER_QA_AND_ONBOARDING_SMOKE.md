@@ -1,6 +1,6 @@
 # PKT-18 Artifact Sync Report
 
-Provisional sequence draft only. Re-plan after PKT-17 closeout evidence is reviewed.
+PKT-18 planning artifact-sync after PKT-17 closeout review.
 
 ## Scope
 Packet: `reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md`
@@ -15,13 +15,14 @@ release, publish, starter promotion, residual risk, User UAT, or closeout.
 | `.agents/artifacts/IMPLEMENTATION_PLAN.md` | PKT-18 owns fresh starter QA and onboarding smoke after PKT-17. | aligned |
 | `.agents/artifacts/ARCHITECTURE_GUIDE.md` | Generated state, wiki/memory, and operating QA are bounded source/read-model surfaces, not approval authority. | aligned |
 | `reference/reports/release-baseline/PKT-16_RELEASE_BASELINE_RECONCILIATION.md` | Raw copied QA answered from inherited PKT-14 memory before reset. | aligned |
+| `reference/reports/closeout/PKT-17_PLANNER_CLOSEOUT.md` | Clean export dependency and non-approval boundaries for PKT-18. | aligned |
 
 ## Decisions
 | Topic | Decision | Reason |
 |---|---|---|
-| Ready For Code | pending | Independent reviews and explicit Human Owner approval or Human Owner delegated Planner approval evidence are required for the current v1.0 root context. |
+| Ready For Code | approved | Independent reviews passed and Human Owner delegated Planner approval evidence is recorded for the current v1.0 root context. |
 | Productization completion | incomplete | PKT-19 through PKT-21 still remain after PKT-18. |
 | UAT gate | not-needed | No product UI/User UAT claim is included. |
 
 ## Verdict
-PKT-18 is aligned for independent pre-implementation review.
+PKT-18 is aligned for Ready For Code implementation routing through Orchestrator.

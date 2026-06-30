@@ -26,6 +26,7 @@ LOW_AUTHORITY_TIERS = {"generated", "low-authority", "llm-summary"}
 SENSITIVE_CLASSIFICATIONS = {"SENSITIVE", "SECRET"}
 SAFE_CLASSIFICATIONS = {"PUBLIC", "INTERNAL"}
 UNKNOWN_CLASSIFICATION = "UNCLASSIFIED"
+NON_ANSWER_PROJECT_PROVENANCE = {"inherited-root-reference", "retained-reference-evidence"}
 PROMPT_LIKE_PATTERNS = [
     re.compile(r"(?i)\bignore (?:all )?(?:previous|prior|above) instructions\b"),
     re.compile(r"(?i)\bdisregard (?:all )?(?:previous|prior|above) instructions\b"),
@@ -53,6 +54,17 @@ SOURCE_PATTERNS = [
     ("_ops/active-context/**/*", "active_context", "packet_history", "generated"),
 ]
 EVIDENCE_REF_RE = re.compile(r"(?P<path>(?:_ops|product|reference)[^\s`'\"<>)]*evidence-index\.json)")
+INHERITED_ROOT_REFERENCE_PREFIXES = (
+    "reference/packets/",
+    "reference/reports/closeout/",
+    "reference/reports/review/",
+    "reference/reports/security/",
+    "reference/reports/test/",
+    "reference/reports/developer/",
+    "reference/reports/tdd/",
+    "reference/reports/planner/",
+)
+RETAINED_REFERENCE_EVIDENCE_PREFIX = "reference/reports/validation/"
 
 
 class LongMemorySourceDiscovery:
@@ -91,6 +103,7 @@ class LongMemorySourceDiscovery:
                     "category": category,
                     "path": relative_path,
                     "authority_tier": authority_tier,
+                    "project_provenance": _infer_project_provenance(relative_path),
                     "freshness_status": _freshness_from_content(content),
                     "summary": summary,
                     "evidence_refs": source_refs,
@@ -142,9 +155,20 @@ class LongMemorySourceIndexBuilder:
         promotion_diagnostics: list[dict[str, Any]] = []
 
         for raw_source in sources or []:
-            source = _normalize_source(raw_source)
+            source = _normalize_source(raw_source, infer_inherited_root=self.repo_root is not None)
             if source["classification"] == UNKNOWN_CLASSIFICATION:
                 diagnostic_ids.add("classification_policy_unavailable")
+            if source["projectProvenance"] == "inherited-root-reference":
+                diagnostic_ids.add("inherited_root_source_omitted")
+                omitted_source_diagnostics.append(
+                    {
+                        "code": "inherited_root_source_omitted",
+                        "path": source["path"],
+                        "projectProvenance": source["projectProvenance"],
+                        "reason": "Fresh copied-starter QA cannot answer from inherited root packet, evidence, review, or generated hardening memory.",
+                    }
+                )
+                continue
             if source["promptLike"]:
                 diagnostic_ids.add("prompt_like_source_omitted")
                 omitted_source_diagnostics.append(
@@ -317,7 +341,10 @@ class LongMemoryQuestionAnsweringService:
                 "pathOrId": source["path"],
                 "category": source["category"],
                 "authorityTier": source["authorityTier"],
+                "projectProvenance": source["projectProvenance"],
+                "projectId": source.get("projectId", ""),
                 "trustStatus": source["trustStatus"],
+                "trustDecision": source["trustDecision"],
                 "freshnessStatus": source["freshnessStatus"],
                 "answerEligibility": source["answerEligibility"],
             }
@@ -355,7 +382,7 @@ class LongMemoryQuestionAnsweringService:
         }
 
 
-def _normalize_source(source: dict[str, Any]) -> dict[str, Any]:
+def _normalize_source(source: dict[str, Any], *, infer_inherited_root: bool = True) -> dict[str, Any]:
     source_type = _text(source.get("source_type") or source.get("sourceType") or source.get("type"))
     path = _text(source.get("path") or source.get("sourcePath") or source.get("id"))
     category = _text(source.get("category"))
@@ -365,6 +392,9 @@ def _normalize_source(source: dict[str, Any]) -> dict[str, Any]:
         "category": category or "uncategorized",
         "path": path,
         "authorityTier": _text(source.get("authority_tier") or source.get("authorityTier")) or "untrusted-content",
+        "projectProvenance": _text(source.get("project_provenance") or source.get("projectProvenance"))
+        or _infer_project_provenance(path, infer_inherited_root=infer_inherited_root),
+        "projectId": _text(source.get("project_id") or source.get("projectId")),
         "freshnessStatus": _text(source.get("freshness_status") or source.get("freshnessStatus")) or "unknown",
         "summary": _text(source.get("summary")),
         "evidenceRefs": [_text(ref) for ref in source.get("evidence_refs", source.get("evidenceRefs", [])) if _text(ref)],
@@ -372,6 +402,7 @@ def _normalize_source(source: dict[str, Any]) -> dict[str, Any]:
         "promptLike": bool(source.get("prompt_like") or source.get("promptLike") or _contains_prompt_like_content(_text(source.get("summary")))),
     }
     normalized["trustStatus"] = _trust_status(source, normalized)
+    normalized["trustDecision"] = _trust_decision(normalized)
     normalized["answerEligibility"] = _is_claim_supporting_source(normalized)
     return normalized
 
@@ -391,6 +422,14 @@ def _trust_status(raw_source: dict[str, Any], source: dict[str, Any]) -> str:
     return "trusted"
 
 
+def _trust_decision(source: dict[str, Any]) -> str:
+    if source["projectProvenance"] == "inherited-root-reference":
+        return "omit-inherited-root-source"
+    if source["trustStatus"] == "trusted":
+        return "eligible-copied-project-source"
+    return f"not-eligible:{source['trustStatus']}"
+
+
 def _is_claim_supporting_source(source: dict[str, Any]) -> bool:
     return (
         source.get("classification") not in SENSITIVE_CLASSIFICATIONS
@@ -398,6 +437,7 @@ def _is_claim_supporting_source(source: dict[str, Any]) -> bool:
         and not source.get("promptLike")
         and source.get("freshnessStatus") == "fresh"
         and source.get("authorityTier") not in LOW_AUTHORITY_TIERS
+        and source.get("projectProvenance") not in NON_ANSWER_PROJECT_PROVENANCE
     )
 
 
@@ -591,6 +631,9 @@ def _memory_sources_from_evidence_index(
                 "category": category,
                 "path": source_path,
                 "authority_tier": _text(item.get("authority_tier") or item.get("authorityTier")) or "canonical",
+                "project_provenance": _text(item.get("project_provenance") or item.get("projectProvenance"))
+                or _infer_project_provenance(source_path),
+                "project_id": _text(item.get("project_id") or item.get("projectId")),
                 "freshness_status": _text(item.get("freshness_status") or item.get("freshnessStatus")) or "fresh",
                 "summary": summary,
                 "evidence_refs": evidence_refs or [relative_path],
@@ -629,13 +672,11 @@ def _valid_evidence_ref(repo_root: Path, ref: str) -> bool:
     if normalized.startswith("reference/"):
         return _valid_retained_reference_ref(repo_root, normalized)
     if normalized.startswith("product/docs/packets/"):
-        return _path_within_repo_exists(repo_root, normalized)
+        return _path_within_repo_subdir_exists(repo_root, normalized, "product/docs/packets")
     if not normalized.startswith("_ops/evidence/"):
         return False
-    path = (repo_root / normalized).resolve()
-    if not _is_within_repo(repo_root, path):
-        return False
-    if not path.is_file():
+    path = _path_within_repo_subdir(repo_root, normalized, "_ops/evidence")
+    if path is None or not path.is_file():
         return False
     if not _is_index_like_evidence_path(normalized):
         return True
@@ -643,12 +684,27 @@ def _valid_evidence_ref(repo_root: Path, ref: str) -> bool:
 
 
 def _valid_retained_reference_ref(repo_root: Path, ref: str) -> bool:
-    path = (repo_root / ref).resolve()
-    if not _is_within_repo(repo_root, path) or not path.is_file():
+    if not ref.startswith(RETAINED_REFERENCE_EVIDENCE_PREFIX):
+        return False
+    path = _path_within_repo_subdir(repo_root, ref, RETAINED_REFERENCE_EVIDENCE_PREFIX.rstrip("/"))
+    if path is None or not path.is_file():
         return False
     if _is_index_like_evidence_path(ref):
         return _has_passing_evidence_entry(path)
     return True
+
+
+def _infer_project_provenance(relative_path: str, *, infer_inherited_root: bool = True) -> str:
+    normalized = relative_path.replace("\\", "/").lower()
+    if normalized.startswith(("_ops/", "product/")):
+        return "copied-project"
+    if normalized.startswith(RETAINED_REFERENCE_EVIDENCE_PREFIX):
+        return "retained-reference-evidence"
+    if infer_inherited_root and any(normalized.startswith(prefix) for prefix in INHERITED_ROOT_REFERENCE_PREFIXES):
+        return "inherited-root-reference"
+    if normalized.startswith("reference/"):
+        return "reference"
+    return "unknown"
 
 
 def _has_passing_evidence_entry(path: Path) -> bool:
@@ -659,9 +715,20 @@ def _has_passing_evidence_entry(path: Path) -> bool:
     return any(_passing_evidence_entry(entry) for entry in entries if isinstance(entry, dict))
 
 
-def _path_within_repo_exists(repo_root: Path, ref: str) -> bool:
+def _path_within_repo_subdir_exists(repo_root: Path, ref: str, subdir: str) -> bool:
+    path = _path_within_repo_subdir(repo_root, ref, subdir)
+    return path is not None and path.is_file()
+
+
+def _path_within_repo_subdir(repo_root: Path, ref: str, subdir: str) -> Path | None:
     path = (repo_root / ref).resolve()
-    return _is_within_repo(repo_root, path) and path.is_file()
+    if not _is_within_repo(repo_root, path):
+        return None
+    try:
+        path.relative_to((repo_root / subdir).resolve())
+    except ValueError:
+        return None
+    return path
 
 
 def _is_within_repo(repo_root: Path, path: Path) -> bool:

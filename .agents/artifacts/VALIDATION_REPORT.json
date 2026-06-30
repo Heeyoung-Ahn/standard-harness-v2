@@ -2,7 +2,7 @@
   "ok": true,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-06-30T09:43:24.794Z",
+  "executedAt": "2026-06-30T11:19:20.628Z",
   "cutoverReady": true,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
@@ -711,12 +711,13 @@
       },
       "modelingImpact": {
         "required": true,
-        "status": "absent",
-        "triggerCount": 2,
-        "diagnosticCount": 1,
+        "status": "required",
+        "triggerCount": 3,
+        "diagnosticCount": 0,
         "blockingDiagnosticCount": 0,
         "triggers": [
           "Change zone core",
+          "api contract",
           "schema boundary"
         ]
       },
@@ -879,15 +880,6 @@
     }
   ],
   "findings": [
-    {
-      "code": "risk_class_high_requires_packet_approval_evidence",
-      "severity": "warning",
-      "gateEffect": "hold",
-      "artifactId": "PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE",
-      "packetPath": "reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md",
-      "effectiveRiskClass": "high",
-      "message": "reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
-    },
     {
       "code": "risk_class_high_requires_packet_approval_evidence",
       "severity": "warning",

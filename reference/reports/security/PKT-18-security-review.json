@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "standard-harness-security-review/v2.2",
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet": "PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE",
+  "packet_id": "PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE",
+  "packetId": "reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md",
+  "packet_path": "reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md",
+  "packetPath": "reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md",
+  "work_item_id": "PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE",
+  "workItemId": "PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE",
+  "mode": "scoped",
+  "phases_run": [0, 1, 12, 13, 14],
+  "phasesRun": [0, 1, 12, 13, 14],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "main_findings": 0
+  },
+  "reviewDate": "2026-06-30",
+  "reviewType": "packet-bound-security-review",
+  "status": "pass",
+  "decision": "pass-with-authority-boundary",
+  "scope": [
+    "fresh copied-starter QA source provenance",
+    "inherited root memory omission",
+    "stale generated state exclusion",
+    "PM approval-overclaim rejection",
+    "sensitive evidence omission",
+    "evidence reference validation",
+    "operating QA approval refusal"
+  ],
+  "sourcesReviewed": [
+    "reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md",
+    "reference/reports/developer/PKT-18_DEVELOPER_REPORT.md",
+    "reference/reports/test/PKT-18_TESTER_REPORT.md",
+    "reference/reports/tdd/PKT-18_TDD_EVIDENCE.md",
+    "starter/standard-harness/_harness/system/standard_harness/memory/question_answering.py",
+    "starter/standard-harness/_harness/test/test_pkt18_fresh_starter_qa.py"
+  ],
+  "checks": [
+    {
+      "id": "SEC-PKT18-001",
+      "surface": "inherited root reference memory",
+      "risk": "fresh starter QA answers from root packet/review/evidence history",
+      "evidence": "test_fresh_qa_omits_inherited_root_hardening_memory_and_fails_closed; inherited_root_source_omitted diagnostic",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT18-002",
+      "surface": "mixed copied/root sources",
+      "risk": "newer or more complete root memory wins over copied-project sources",
+      "evidence": "test_copied_project_sources_win_over_newer_inherited_root_memory",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT18-003",
+      "surface": "evidence references",
+      "risk": "copied-project answer validates root closeout/review/test evidence as authority",
+      "evidence": "test_evidence_ref_outside_copied_project_is_rejected_unless_retained_validation_evidence",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT18-004",
+      "surface": "PM/generated/sensitive sources",
+      "risk": "PM approval claims, stale generated Active Context, or sensitive memory enter answer context",
+      "evidence": "test_pm_authority_claim_stale_active_context_and_sensitive_sources_are_not_answers",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT18-005",
+      "surface": "local DB/cache",
+      "risk": "local SQLite/cache files become copied-project memory sources",
+      "evidence": "test_discovery_does_not_import_local_db_or_cache_as_fresh_memory",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT18-006",
+      "surface": "evidence reference traversal",
+      "risk": "path traversal escapes allowed evidence namespaces while preserving a trusted-looking evidence-index filename",
+      "evidence": "test_evidence_ref_traversal_cannot_escape_allowed_namespaces",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT18-007",
+      "surface": "operating QA approval boundary",
+      "risk": "QA answer grants release, Ready For Code, closeout, residual risk, or human gate approval",
+      "evidence": "exported starter operating-qa returned status=blocked with approval_authority_refused and no source refs",
+      "status": "pass"
+    }
+  ],
+  "residualRisks": [
+    {
+      "id": "RR-PKT18-001",
+      "description": "PKT-18 does not prove release candidate packaging, real provider worker execution, structured PM source intake, design trace, reusable UI modules, or actual User UAT readiness.",
+      "owner": "Planner",
+      "disposition": "deferred to PKT-19 through PKT-23 and explicit future UAT gates"
+    }
+  ],
+  "authorityBoundary": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false,
+    "grantsUserUatApproval": false
+  },
+  "requiredFollowUp": [
+    "Reviewer adjudication must still evaluate four independent closeout lenses before Planner closeout.",
+    "Planner closeout must keep productization completion, release, publish, actual starter promotion, and User UAT non-approved."
+  ]
+}

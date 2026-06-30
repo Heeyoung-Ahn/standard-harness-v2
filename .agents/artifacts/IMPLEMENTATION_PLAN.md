@@ -963,13 +963,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-16_RELEASE_BASELINE_RECONCILIATION` is closed for its approved H0-H10/P1-P4
-  scope with Developer/Tester evidence, independent lenses, security review, Reviewer
-  adjudication, and Planner closeout complete.
-- Next route: open `PKT-17 Productization Readiness And Clean Export` to close
-  clean-export, fresh starter export, promotion dry-run, and release-boundary readiness
-  without reopening broad hardening.
-- Source packet: `reference/packets/PKT-16_RELEASE_BASELINE_RECONCILIATION.md`.
+- `PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE` is closed; latest closeout handoff is `planner -> planner`.
+- Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Source packet: `reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

@@ -1,7 +1,7 @@
 # Validation Report
 
 ## Summary
-- Executed at: 2026-06-30T09:43:24.794Z
+- Executed at: 2026-06-30T11:19:20.628Z
 - Validator version: v1.3
 - Cutover ready: yes
 - Gate decision: pass
@@ -59,7 +59,7 @@
 - reference/packets/PKT-17_PRODUCTIZATION_READINESS_AND_CLEAN_EXPORT.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
-  - modeling impact: status absent, required yes, diagnostics 1
+  - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status absent, required yes, diagnostics 1
 - reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md: declared high, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
@@ -72,7 +72,6 @@
   - modeling impact: status absent, required yes, diagnostics 1
 
 ## Findings
-- [warning] risk_class_high_requires_packet_approval_evidence: reference/packets/PKT-18_FRESH_STARTER_QA_AND_ONBOARDING_SMOKE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding.
 - [warning] risk_class_high_requires_packet_approval_evidence: reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding.
 - [warning] risk_class_high_requires_packet_approval_evidence: reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding.
 - [warning] risk_class_high_requires_packet_approval_evidence: reference/packets/PKT-21_STRUCTURED_PM_SOURCE_INTAKE.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding.
