@@ -31,6 +31,7 @@ from standard_harness.skills.router import SkillRouter
 from standard_harness.starter.contamination import StarterContaminationChecker
 from standard_harness.starter.contamination import CLEAN_EXPORT_MODE
 from standard_harness.starter.contamination import INSTALLED_RUNTIME_MODE
+from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore, resolve_harness_root
 from standard_harness.validation.aggregator import ValidationService
 from standard_harness.validation.readiness import ReadinessService
@@ -719,10 +720,12 @@ def _handle_conductor_approve(store: HarnessStore, argv: list[str]) -> dict[str,
         parser.add_argument(name, required=True)
     parser.add_argument("--conductor-id", default=None)
     parser.add_argument("--grant-file", default=None)
+    parser.add_argument("--decided-at", default=None)
     parsed = parser.parse_args(argv)
 
     authority_source = _approval_authority_source(parsed.actor_type, parsed.grant_file)
     hard_stop_status = json.loads(parsed.hard_stop_json)
+    decided_at = parsed.decided_at or utc_now_iso()
     decision = ConductorApprovalService().decide(
         approval_type=parsed.approval_type,
         actor_type=parsed.actor_type,
@@ -736,7 +739,7 @@ def _handle_conductor_approve(store: HarnessStore, argv: list[str]) -> dict[str,
             authority_source, hard_stop_status
         ),
         decision="approved",
-        decided_at="2026-07-01T00:00:00Z",
+        decided_at=decided_at,
         hard_stop_status=hard_stop_status,
     )
     if decision["status"] != "approved":
@@ -751,7 +754,12 @@ def _handle_conductor_approve(store: HarnessStore, argv: list[str]) -> dict[str,
         decision=decision,
         approved_scope=parsed.approved_scope,
         rationale=parsed.rationale,
-        idempotency_key=f"{parsed.packet_id}:{parsed.approval_type}:conductor-approve",
+        idempotency_key=_conductor_approval_idempotency_key(
+            packet_id=parsed.packet_id,
+            approval_type=parsed.approval_type,
+            actor_type=parsed.actor_type,
+            conductor_id=parsed.conductor_id,
+        ),
     )
     return {
         "status": "approved",
@@ -1033,6 +1041,17 @@ def _approval_evidence_prerequisite_status(
     ):
         statuses["evidence_prerequisites_met"] = "verified_by_harness"
     return statuses
+
+
+def _conductor_approval_idempotency_key(
+    *,
+    packet_id: str,
+    approval_type: str,
+    actor_type: str,
+    conductor_id: str | None,
+) -> str:
+    actor_key = conductor_id if actor_type == "conductor" and conductor_id else actor_type
+    return f"{packet_id}:{approval_type}:{actor_key}:conductor-approve"
 
 
 if __name__ == "__main__":

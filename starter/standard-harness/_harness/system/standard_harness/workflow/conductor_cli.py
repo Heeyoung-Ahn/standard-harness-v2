@@ -50,14 +50,26 @@ def persist_conductor_approval(
         idempotency_key=f"{idempotency_key}:decision",
     )
     actor = decision.get("actor", {})
+    actor_type = str(actor.get("actor_type") or "conductor")
     approver_id = str(actor.get("conductor_id") or "human-owner")
+    approver_role = "Human" if actor_type == "human" else "Conductor"
+    ready_for_code_authority = (
+        "trusted human direct approval"
+        if actor_type == "human"
+        else "trusted conductor delegated approval"
+    )
+    closeout_authority = (
+        "trusted human direct closeout"
+        if actor_type == "human"
+        else "trusted conductor delegated closeout"
+    )
 
     if decision["approval_type"] == "ready_for_code":
         approval = PacketService(store).approve_packet(
             packet_id=str(decision["packet_id"]),
             approver_id=approver_id,
-            approver_role="Conductor",
-            authority_basis="trusted conductor delegated approval",
+            approver_role=approver_role,
+            authority_basis=ready_for_code_authority,
             approved_scope=approved_scope,
             rationale=rationale,
             idempotency_key=idempotency_key,
@@ -71,7 +83,7 @@ def persist_conductor_approval(
     closeout = CloseoutService(store).close_packet(
         closeout_id=f"closeout-{decision['packet_id']}",
         packet_id=str(decision["packet_id"]),
-        authority_basis="trusted conductor delegated closeout",
+        authority_basis=closeout_authority,
         rationale=rationale,
         idempotency_key=idempotency_key,
     )
