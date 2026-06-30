@@ -1,27 +1,27 @@
 # PKT-20 Artifact Sync Report
 
-Provisional sequence draft only. Re-plan after PKT-17 closeout evidence is reviewed.
-
 ## Scope
-Packet: `reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md`
+- Work item: `PKT-20_REAL_PROVIDER_WORKER_SMOKE`
+- Packet: `reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md`
+- Report date: 2026-06-30
 
-Planning evidence only. This report does not approve Ready For Code, implementation,
-real provider execution, release, publish, starter promotion, residual risk, or closeout.
+## Drift Matrix
+| Source Change | Required Artifact | Current Status | Required Owner |
+|---|---|---|---|
+| Local provider tool/auth availability was approved for inspection. | PKT-20 packet approval boundary and environment evidence. | updated in packet and availability report | Planner |
+| Real provider CLI smoke is not yet executable from current environment evidence. | Tester evidence must distinguish smoke pass from approval-bound hold/narrowed claim. | planned as hold/narrowed evidence, not release/productization approval | Tester |
+| Provider identity must remain adapter-only. | Packet acceptance, security review, and negative fixtures. | required before closeout | Developer/Tester/Reviewer |
+| Productization-complete remains blocked until PKT-21 closes. | Planner closeout boundary. | required before closeout | Planner |
 
-## Sources Checked
-| Source | Relevance | Sync Result |
-|---|---|---|
-| `.agents/artifacts/REQUIREMENTS.md` | SHV2-REQ-019, 020, 048, 056, 057 require provider-neutral orchestration and delegated approval hard stops. | aligned |
-| `.agents/artifacts/IMPLEMENTATION_PLAN.md` | PKT-20 owns real authenticated provider worker smoke. | aligned |
-| `.agents/artifacts/ARCHITECTURE_GUIDE.md` | Provider identity remains adapter-only; Planner cannot execute delegated approvals. | aligned |
-| `reference/packets/PKT-14_CONDUCTOR_WORKER_E2E.md` | Deterministic/captured-output worker evidence exists; live provider execution remains explicit-approval work. | aligned |
+## Generated Context Boundary
+Active Context is a generated re-entry summary only. Governance truth remains in the packet,
+requirements, implementation plan, and packet-bound evidence reports.
 
-## Decisions
-| Topic | Decision | Reason |
-|---|---|---|
-| Real provider execution | approval-bound | Requires explicit Human/trusted Conductor approval plus local tool/auth availability. |
-| Fixture-only evidence | insufficient | Cannot prove real-provider readiness. |
-| Product identity | provider-neutral | Codex/Claude remain adapter examples, not product identity. |
+## Decision
+Proceed with PKT-20 planning updates and independent packet reviews. Do not run real provider
+CLI smoke until the packet is Ready For Code and the execution path is bounded. Current
+availability evidence may support an explicit hold/narrowed product claim.
 
-## Verdict
-PKT-20 is aligned for independent pre-implementation review, but real execution remains approval-bound.
+## Approval Boundary
+This report does not approve implementation, real provider execution, release, publish,
+starter promotion, residual-risk acceptance, productization completion, or User UAT.

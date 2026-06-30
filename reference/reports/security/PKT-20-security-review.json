@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "standard-harness-security-review/v2.2",
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet": "PKT-20_REAL_PROVIDER_WORKER_SMOKE",
+  "packet_id": "PKT-20_REAL_PROVIDER_WORKER_SMOKE",
+  "packetId": "reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md",
+  "packet_path": "reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md",
+  "packetPath": "reference/packets/PKT-20_REAL_PROVIDER_WORKER_SMOKE.md",
+  "work_item_id": "PKT-20_REAL_PROVIDER_WORKER_SMOKE",
+  "workItemId": "PKT-20_REAL_PROVIDER_WORKER_SMOKE",
+  "mode": "scoped",
+  "status": "pass",
+  "decision": "pass-with-provider-execution-hold",
+  "scope": "provider tool availability, delegated approval boundary, credential/session/raw transcript exclusion, provider identity neutrality, productization overclaim prevention",
+  "phases_run": [0, 1, 12, 13, 14],
+  "phasesRun": [0, 1, 12, 13, 14],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "reported_findings": 0
+  },
+  "evidence": [
+    {
+      "id": "SEC-PKT20-001",
+      "surface": "real provider execution",
+      "risk": "real authenticated Codex CLI or Claude Code CLI smoke executes without explicit real-execution approval",
+      "evidence": "PKT-20 Ready For Code approval explicitly does not approve real authenticated provider smoke execution; Tester report classifies current state as hold/unavailable rather than smoke pass.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT20-002",
+      "surface": "credential/session/cache/raw transcript exposure",
+      "risk": "availability or smoke evidence reads or persists secrets, sessions, caches, or raw provider transcripts",
+      "evidence": "PKT-20 local availability evidence records no token, credential, session content, cache content, raw provider transcript, network call, or actual provider worker smoke was executed or inspected.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT20-003",
+      "surface": "approval authority",
+      "risk": "Planner or provider output creates delegated Ready For Code, closeout, release, residual-risk, or productization approval",
+      "evidence": "Packet and RFC evidence narrow delegated execution to selected Conductor/trusted validation; Planner may prepare, record, and route validated evidence only.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT20-004",
+      "surface": "provider identity contamination",
+      "risk": "Codex or Claude Code becomes product identity rather than adapter/sample evidence",
+      "evidence": "Packet, Developer report, and targeted Conductor/provider regression keep provider identity adapter-only.",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT20-005",
+      "surface": "productization overclaim",
+      "risk": "hold/unavailable/narrowed provider evidence is treated as real-provider readiness or productization-complete",
+      "evidence": "Packet A1/A5 and Tester report require real-provider readiness to be excluded from productization-complete claims unless a follow-up owner is named.",
+      "status": "pass"
+    }
+  ],
+  "residualRisks": [
+    {
+      "id": "RR-PKT20-001",
+      "description": "Real authenticated provider worker smoke was not executed in this environment. Real-provider readiness is not proven.",
+      "owner": "Planner",
+      "disposition": "close PKT-20 only as hold/unavailable/narrowed claim; exclude real-provider readiness from productization-complete unless a follow-up owner is named"
+    },
+    {
+      "id": "RR-PKT20-002",
+      "description": "PKT-21 structured PM source intake remains required before productization-complete claims.",
+      "owner": "Planner",
+      "disposition": "deferred to PKT-21"
+    }
+  ],
+  "authorityBoundary": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false,
+    "grantsProductizationComplete": false,
+    "grantsUserUatApproval": false,
+    "grantsRealProviderExecutionApproval": false,
+    "grantsCredentialAccess": false
+  },
+  "requiredFollowUp": [
+    "Reviewer must confirm hold/unavailable/narrowed evidence is not overclaimed as real-provider readiness.",
+    "Planner closeout must preserve PKT-21 as still required before productization-complete.",
+    "Any future real authenticated provider smoke requires separate explicit real-execution approval and safe command envelope evidence."
+  ]
+}
