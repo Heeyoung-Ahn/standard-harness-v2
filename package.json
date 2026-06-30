@@ -59,6 +59,7 @@
     "harness:context-budget-policy": "node .harness/runtime/state/harness-cli.js p2 context-budget-policy",
     "harness:packaging-readiness": "node .harness/runtime/state/harness-cli.js p2 packaging-readiness",
     "harness:promote-starter": "node .harness/runtime/state/harness-cli.js promote-starter",
+    "harness:release-candidate": "node .harness/runtime/state/harness-cli.js release-candidate",
     "harness:dashboard": "node .harness/runtime/state/harness-cli.js p2 dashboard",
     "harness:plan-quality": "node .harness/runtime/state/harness-cli.js p2 plan-quality",
     "harness:review-scope": "node .harness/runtime/state/harness-cli.js p2 review-scope",

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "standard-harness-v2.4-untrusted-content/v1",
+  "generatedAt": "2026-06-30T11:40:45.356Z",
+  "ok": true,
+  "trustLabel": "trusted-repo",
+  "instructionStrippingApplied": false,
+  "digestOnlyRequired": false,
+  "sources": [],
+  "findings": [],
+  "nextAction": "Use normal evidence handling; keep external content labeled."
+}

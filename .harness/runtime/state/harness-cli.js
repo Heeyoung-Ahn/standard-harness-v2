@@ -34,7 +34,7 @@ if (invokedPath === import.meta.url) {
 }
 
 function formatResult(result) {
-  if (["codex-start", "codex-plugin", "codex-ready", "codex-task", "reviewers", "reviewer-report", "learn", "doctor", "status", "next", "handoff", "explain", "validation-report", "context", "context --repair", "sync-state", "transition", "risk", "first-packet", "evidence", "evidence-manifest", "browser-evidence", "docs-commands", "promote-starter", "packet-preflight", "brief", "agent", "orchestrate", "learning", "p2", "v23", "v24", "v25", "v26", "v27", "v28"].includes(result.command)) {
+  if (["codex-start", "codex-plugin", "codex-ready", "codex-task", "reviewers", "reviewer-report", "learn", "doctor", "status", "next", "handoff", "explain", "validation-report", "context", "context --repair", "sync-state", "transition", "risk", "first-packet", "evidence", "evidence-manifest", "browser-evidence", "docs-commands", "promote-starter", "release-candidate-bundle", "packet-preflight", "brief", "agent", "orchestrate", "learning", "p2", "v23", "v24", "v25", "v26", "v27", "v28"].includes(result.command)) {
     return `${formatHumanSummary(result)}\n\n${JSON.stringify(result, null, 2)}`;
   }
 
@@ -287,6 +287,20 @@ function formatHumanSummary(result) {
       `- Review: ${result.summary?.review ?? 0}`,
       `- Target: ${result.targetRoot ?? "missing"}`,
       "- Authority: evidence-only; no release, publish, approval, closeout, risk-closure, product-verification, or residual-risk acceptance",
+      `- Next action: ${result.nextAction ?? "none"}`
+    ].join("\n");
+  }
+
+  if (result.command === "release-candidate-bundle") {
+    return [
+      "Harness Release Candidate Bundle",
+      `- Subcommand: ${result.subcommand ?? "create"}`,
+      `- Result: ${result.ok ? "pass" : "fail"}`,
+      `- Target: ${result.targetRoot ?? "missing"}`,
+      `- Bundle: ${result.bundlePath ?? "n/a"}`,
+      `- Diagnostics: ${result.diagnostics?.length ?? 0}`,
+      `- Unresolved risks: ${result.summary?.unresolvedRisks ?? "n/a"}`,
+      "- Authority: evidence-only; no release, publish, promotion, productization-complete, User UAT, or residual-risk approval",
       `- Next action: ${result.nextAction ?? "none"}`
     ].join("\n");
   }

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "standard-harness-security-review/v2.2",
+  "schema_version": "standard-harness-security-review/v2.2",
+  "packet": "PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE",
+  "packet_id": "PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE",
+  "packetId": "reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md",
+  "packet_path": "reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md",
+  "packetPath": "reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md",
+  "work_item_id": "PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE",
+  "workItemId": "PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE",
+  "mode": "scoped",
+  "status": "pass",
+  "decision": "pass-with-release-boundary",
+  "scope": "local release-candidate bundle, no-publish boundary, forbidden state exclusion, dependency/secret/untrusted scans",
+  "phases_run": [0, 1, 12, 13, 14],
+  "phasesRun": [0, 1, 12, 13, 14],
+  "filter_stats": {
+    "raw_findings": 0,
+    "suppressed_findings": 0,
+    "reported_findings": 0
+  },
+  "evidence": [
+    {
+      "id": "SEC-PKT19-001",
+      "surface": "publish/release command execution",
+      "risk": "release-candidate bundle executes or recommends a publish/release/deploy command",
+      "evidence": "release-candidate-bundle validation rejects npm publish, gh release, deploy, git push, and promotion apply patterns",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT19-002",
+      "surface": "approval overclaim",
+      "risk": "bundle, PKT-17/18 input evidence, or command output grants release, publish, promotion, residual-risk, productization, or User UAT approval",
+      "evidence": "AUTHORITY_DENIAL is required and overclaim tests reject true authority flags",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT19-003",
+      "surface": "forbidden state inclusion",
+      "risk": "root runtime/generated/local/credential state enters the release-candidate package manifest",
+      "evidence": "forbidden-state inclusion test rejects .agents/runtime, generated compatibility artifacts, and generated/local state patterns; remediated live bundle reports 39 forbidden-state exclusions and generated compatibility state is absent from includedPaths",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT19-004",
+      "surface": "dependency surface",
+      "risk": "new dependency, install script, registry, or lockfile drift is introduced by release-candidate tooling",
+      "evidence": "reference/reports/dependency/DEPENDENCY-INTAKE-20260630-c4ed1ac8ee.json",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT19-005",
+      "surface": "secret exposure",
+      "risk": "secret, token, or credential appears in scanned release-candidate surfaces",
+      "evidence": "reference/reports/security/SECRET-SCAN-20260630-52db3eef64.json",
+      "status": "pass"
+    },
+    {
+      "id": "SEC-PKT19-006",
+      "surface": "untrusted content",
+      "risk": "external or untrusted content enters the evidence bundle without labeling",
+      "evidence": "reference/reports/security/UNTRUSTED-SCAN-20260630-0c19d4568e.json",
+      "status": "pass"
+    }
+  ],
+  "residualRisks": [
+    {
+      "id": "RR-PKT19-001",
+      "description": "Release-candidate evidence remains blocked by unresolved promotion review lanes and cannot be treated as release-ready.",
+      "owner": "Planner",
+      "disposition": "kept as unresolved release-readiness blocker"
+    },
+    {
+      "id": "RR-PKT19-002",
+      "description": "Real provider worker smoke and structured PM source intake remain productization blockers.",
+      "owner": "Planner",
+      "disposition": "deferred to PKT-20 and PKT-21"
+    }
+  ],
+  "authorityBoundary": {
+    "grantsReleaseApproval": false,
+    "grantsPublishApproval": false,
+    "grantsImplementationApproval": false,
+    "grantsPacketCloseout": false,
+    "grantsRiskClosure": false,
+    "grantsProductVerification": false,
+    "grantsResidualRiskAcceptance": false,
+    "grantsProductizationComplete": false,
+    "grantsUserUatApproval": false
+  },
+  "requiredFollowUp": [
+    "Tester must independently verify generated bundle behavior and evidence manifest.",
+    "Reviewer must adjudicate all four closeout lenses before Planner closeout.",
+    "Planner closeout must preserve release/publish/promotion/residual-risk/productization/User UAT non-approval."
+  ]
+}

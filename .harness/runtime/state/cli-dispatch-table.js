@@ -37,6 +37,7 @@ import { runBrowserEvidenceCommand } from "./browser-evidence.js";
 import { runDocsCommandInventoryCommand } from "./docs-command-inventory.js";
 import { runRiskCommand } from "./bootstrap-risk-closure.js";
 import { runPromoteStarterCommand } from "./promote-starter.js";
+import { runReleaseCandidateBundleCommand } from "./release-candidate-bundle.js";
 
 export function createCommandTable({ repoRoot, outputDir = repoRoot, dbPath = DEFAULT_DB_PATH, args = [] } = {}) {
   return {
@@ -64,6 +65,7 @@ export function createCommandTable({ repoRoot, outputDir = repoRoot, dbPath = DE
   "browser-evidence": () => runBrowserEvidenceCommand({ repoRoot, args: args }),
   "docs-commands": () => runDocsCommandInventoryCommand({ repoRoot, args: args }),
   "promote-starter": () => runPromoteStarterCommand({ repoRoot, args: args }),
+  "release-candidate": () => runReleaseCandidateBundleCommand({ repoRoot, args: args }),
   "packet-preflight": () => runPacketPreflightCommand({ repoRoot, dbPath, args: args }),
   brief: () => buildRoleBriefCommand({ repoRoot, outputDir, dbPath, args: args }),
   agent: () => runAgentCommand({ repoRoot, outputDir, dbPath, args: args }),

@@ -1,0 +1,24 @@
+{
+  "schema_version": "standard-harness-evidence-manifest/v2.8",
+  "evidence_id": "RELEASE-pkt-19-release-candidate-packaging-and-evidence-bundle",
+  "packet_path": "reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md",
+  "work_item_id": "PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE",
+  "evidence_type": "release",
+  "status": "pass",
+  "source_command": "npm run harness:release-candidate -- create --to C:\\tmp\\standard-harness-pkt19-release-candidate-20260630b --packet reference/packets/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md --work-item PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE",
+  "generated_at": "2026-06-30T12:10:00.000Z",
+  "artifact_paths": [
+    "reference/reports/developer/PKT-19_DEVELOPER_REPORT.md",
+    "reference/reports/test/PKT-19_TESTER_REPORT.md",
+    "reference/reports/security/PKT-19-security-review.json",
+    "reference/reports/dependency-audit/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md",
+    "reference/reports/publish/PKT-19_RELEASE_CANDIDATE_PACKAGING_AND_EVIDENCE_BUNDLE.md",
+    "reference/reports/dependency/DEPENDENCY-INTAKE-20260630-c4ed1ac8ee.json",
+    "reference/reports/security/SECRET-SCAN-20260630-52db3eef64.json",
+    "reference/reports/security/UNTRUSTED-SCAN-20260630-0c19d4568e.json"
+  ],
+  "summary": "PKT-19 remediated local release-candidate evidence bundle generated and validated without release approval.",
+  "limitations": [
+    "Local bundle under C:\\tmp is evidence only and grants no release publish starter promotion productization complete residual risk acceptance or User UAT approval."
+  ]
+}
