@@ -232,7 +232,9 @@ Operator closeout docs must explain effective decision precedence:
   that behavior evidence without evidence/claim/gate ledger support remains blocked.
 
 ## Implementation Sequencing Note
-- PKT-26 may consume PKT-25 topology evidence envelopes when PKT-25 has closed, or use a
-  bounded fixture with the same envelope shape if PKT-26 is implemented first.
+- PKT-26 may consume PKT-25 topology evidence envelopes when PKT-25 has closed, including
+  `projectTopology`, packet-scoped `roleAssignments`, mixed-provider reviewer records,
+  and compatibility `workerAliases`; if PKT-26 is implemented first, it may use a bounded
+  fixture with the same envelope shape.
 - PKT-26 must not define, persist, validate, or mutate provider topology. That scope stays
   with PKT-25.

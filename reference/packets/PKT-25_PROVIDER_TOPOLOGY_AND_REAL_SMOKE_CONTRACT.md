@@ -7,8 +7,8 @@
 
 ## Purpose
 Make provider topology a first-class starter contract so a copied project can select a
-project-level Conductor at project start and assign `worker1` and `worker2` per packet
-without relying on hard-coded role/provider assumptions.
+project-level Conductor at project start and assign packet roles to Codex CLI or
+Claude Code CLI per packet without relying on hard-coded role/provider assumptions.
 
 This packet directly addresses the A-lane E2E finding where the real-smoke validator
 looked for `Reviewer=claude_code` even when the requested topology was
@@ -22,6 +22,8 @@ too ad hoc and stringly typed for a durable v2.0 product contract.
 | User decision: two packets | Split topology contract from closeout-ledger/productization governance. |
 | User decision: Ready For Code 직전 수준 | Draft packet definition only; do not approve or start implementation. |
 | User decision: project-start conductor, packet-level worker1/worker2 | Add explicit schema, CLI, persistence, and validation targets. |
+| User decision: first Conductor is Codex; packet instructions can assign PM, Planner, Developer, Documenter, Tester, and Reviewer roles to Claude Code CLI or Codex CLI per packet | Expand topology from fixed worker slots to packet-scoped role assignments, while retaining worker aliases for compatibility. |
+| User decision: mixed-provider review should be possible, for example one Claude Code CLI reviewer and one Codex CLI reviewer | Add multi-reviewer assignment shape with independent reviewer ids, lenses, providers, and evidence refs. |
 | A-lane E2E review | Preserve `Reviewer=claude_code` default but support codex/codex topology through declared topology, not an ad hoc reviewer override. |
 | PKT-20 closeout | Real authenticated provider readiness was not proven; this packet must not claim provider readiness without bounded smoke evidence. |
 | Requirements `SHV2-REQ-048` | Conductor routing records must preserve provider-neutral identity and approval boundaries. |
@@ -39,7 +41,7 @@ too ad hoc and stringly typed for a durable v2.0 product contract.
 | Profile evidence status | not-needed | No optional profile evidence is required before RFC. | closed |
 | UX archetype status | not-needed | This is not a UX/UI implementation packet. | closed |
 | UX deviation status | none | No UX archetype applies. | closed |
-| Environment topology status | in-scope | Project-level conductor and packet-level worker topology are the packet subject. | selected |
+| Environment topology status | in-scope | Project-level conductor and packet-level role/worker topology are the packet subject. | selected |
 | Domain foundation status | not-needed | No product domain foundation is changed. | closed |
 | Authoritative source intake status | complete | User decisions, A-lane E2E finding, PKT-20 closeout, and requirements are mapped. | closed |
 | Shared-source wave status | not-needed | No sibling rollout or shared-source promotion is included. | closed |
@@ -78,21 +80,27 @@ too ad hoc and stringly typed for a durable v2.0 product contract.
 ## In Scope
 - Add a first-class provider-topology contract for copied-starter operation:
   - project-level `conductor` selected during project start/init;
-  - packet-level `worker1` and `worker2` assignments;
-  - role labels such as Developer/Reviewer are mapped from packet topology instead of hard-coded provider defaults.
-- Add schema and validation for supported provider ids, roles, and packet topology shape.
+  - this project starts with `conductor.provider=codex`;
+  - packet-level role assignments for `project_manager`, `planner`, `developer`,
+    `documenter`, `tester`, and `reviewer`;
+  - optional `worker1`/`worker2` aliases for backward-compatible two-worker packet
+    instructions;
+  - multi-reviewer assignments where each reviewer has an independent reviewer id,
+    lens, provider, and evidence reference.
+- Add schema and validation for supported provider ids, roles, reviewer entries, worker
+  aliases, and packet topology shape.
 - Bind provider ids to adapter/provider manifest records such as
   `starter/standard-harness/_harness/system/standard_harness/adapters/manifest.py`
   and provider orchestration policy surfaces. Codex and Claude Code values are examples
   and supported local providers, not product identity or hard-coded starter defaults.
 - Add CLI or command-surface support for setting and reading:
   - project conductor;
-  - packet worker1 provider;
-  - packet worker2 provider;
-  - packet worker role mapping when the packet needs role-specific execution.
+  - packet role provider assignments at packet instruction time;
+  - packet multi-reviewer assignments;
+  - optional packet worker aliases when the packet needs worker-slot wording.
 - Replace ad hoc real-smoke inputs such as `reviewer_provider` with a topology-derived contract, while keeping backward-compatible default behavior where no explicit topology exists.
 - Update real-smoke readiness and captured-output validation so it consumes the declared topology consistently.
-- Add negative checks for unsupported providers, blank provider values, mixed legacy/topology fields, and role/provider evidence mismatches.
+- Add negative checks for unsupported providers, blank provider values, mixed legacy/topology fields, duplicate or ambiguous role assignments, missing reviewer independence fields, and role/provider evidence mismatches.
 - Preserve delegated-approval boundaries: Conductor selection does not grant approval authority by itself.
 
 ## Out Of Scope
@@ -107,21 +115,58 @@ Minimum topology record:
 
 ```json
 {
-  "conductor": { "provider": "codex" },
-  "workers": {
-    "worker1": { "provider": "codex", "role": "Developer" },
-    "worker2": { "provider": "codex", "role": "Reviewer" }
+  "projectTopology": {
+    "conductor": { "provider": "codex", "adapterId": "codex-cli-local" }
+  },
+  "packetTopology": {
+    "roles": {
+      "project_manager": { "provider": "codex", "adapterId": "codex-cli-local" },
+      "planner": { "provider": "claude_code", "adapterId": "claude-code-cli-local" },
+      "developer": { "provider": "codex", "adapterId": "codex-cli-local" },
+      "documenter": { "provider": "codex", "adapterId": "codex-cli-local" },
+      "tester": { "provider": "codex", "adapterId": "codex-cli-local" },
+      "reviewer": [
+        {
+          "reviewerId": "reviewer_a",
+          "provider": "claude_code",
+          "adapterId": "claude-code-cli-local",
+          "reviewLens": "packet_doc_review"
+        },
+        {
+          "reviewerId": "reviewer_b",
+          "provider": "codex",
+          "adapterId": "codex-cli-local",
+          "reviewLens": "challenge_review"
+        }
+      ]
+    },
+    "workerAliases": {
+      "worker1": { "role": "developer" },
+      "worker2": { "role": "reviewer", "reviewerId": "reviewer_b" }
+    }
   }
 }
 ```
 
 Contract rules:
-- `conductor.provider` is selected at project start and persisted in project operating state.
-- `worker1.provider` and `worker2.provider` are packet-scoped and may differ per packet.
+- `projectTopology.conductor.provider` is selected at project start and persisted in
+  project operating state.
+- The first project-start selection for this planning lane is `codex`; that is a project
+  configuration decision, not starter product identity or a global default.
+- `packetTopology.roles` is packet-scoped and may differ per packet instruction.
+- Supported packet role keys are `project_manager`, `planner`, `developer`,
+  `documenter`, `tester`, and `reviewer`.
+- Non-reviewer roles resolve to exactly one provider assignment per packet.
+- `reviewer` may resolve to one or more reviewer assignments; each reviewer assignment
+  must include a unique reviewer id and a review lens so mixed-provider review can be
+  audited independently.
+- `workerAliases.worker1` and `workerAliases.worker2` are compatibility aliases only;
+  the canonical execution meaning comes from `packetTopology.roles`.
 - Role names are logical duties; provider ids are runtime/adaptor choices.
 - The default topology remains backward compatible with existing sample behavior.
 - Unsupported provider ids fail closed before smoke execution.
-- A worker evidence record must match both logical worker id and declared provider.
+- A role or reviewer evidence record must match logical role, provider, adapter id,
+  reviewer id when present, and declared evidence reference.
 
 PKT-25 must emit a topology evidence envelope that PKT-26 can consume without redefining
 topology. Minimum fields:
@@ -130,27 +175,43 @@ topology. Minimum fields:
 {
   "schemaVersion": "standard-harness-provider-topology-evidence/v1",
   "packetId": "PKT-25_PROVIDER_TOPOLOGY_AND_REAL_SMOKE_CONTRACT",
-  "conductor": { "provider": "codex", "adapterId": "codex-cli-local" },
-  "workers": [
+  "projectTopology": {
+    "conductor": { "provider": "codex", "adapterId": "codex-cli-local" }
+  },
+  "roleAssignments": [
     {
-      "workerId": "worker1",
-      "role": "Developer",
-      "provider": "codex",
-      "adapterId": "codex-cli-local",
+      "role": "planner",
+      "provider": "claude_code",
+      "adapterId": "claude-code-cli-local",
       "readinessState": "captured_output_pass",
-      "evidenceRef": "_ops/evidence/<packet-id>/capture/worker1.json",
+      "evidenceRef": "_ops/evidence/<packet-id>/capture/planner.json",
       "claimStatus": "non_claim_evidence"
     },
     {
-      "workerId": "worker2",
-      "role": "Reviewer",
+      "role": "reviewer",
+      "reviewerId": "reviewer_a",
+      "reviewLens": "packet_doc_review",
+      "provider": "claude_code",
+      "adapterId": "claude-code-cli-local",
+      "readinessState": "captured_output_pass",
+      "evidenceRef": "_ops/evidence/<packet-id>/capture/reviewer_a.json",
+      "claimStatus": "non_claim_evidence"
+    },
+    {
+      "role": "reviewer",
+      "reviewerId": "reviewer_b",
+      "reviewLens": "challenge_review",
       "provider": "codex",
       "adapterId": "codex-cli-local",
       "readinessState": "captured_output_pass",
-      "evidenceRef": "_ops/evidence/<packet-id>/capture/worker2.json",
+      "evidenceRef": "_ops/evidence/<packet-id>/capture/reviewer_b.json",
       "claimStatus": "non_claim_evidence"
     }
   ],
+  "workerAliases": {
+    "worker1": { "role": "developer" },
+    "worker2": { "role": "reviewer", "reviewerId": "reviewer_b" }
+  },
   "approvalStateMutationAllowed": false
 }
 ```
@@ -167,23 +228,30 @@ Boundary rules:
 | ID | Acceptance | Required evidence |
 |---|---|---|
 | A1 | Project init/start can persist and report `conductor.provider`. | CLI/unit test plus starter validation evidence. |
-| A2 | Packet metadata can persist and report `worker1` and `worker2` provider assignments. | Packet service/schema test and CLI smoke. |
+| A2 | Packet instructions can persist and report role provider assignments for PM, Planner, Developer, Documenter, Tester, and Reviewer using Codex CLI or Claude Code CLI. | Packet service/schema test and CLI smoke for each supported role key. |
 | A3 | Real-smoke readiness consumes declared topology and no longer assumes `Reviewer=claude_code` when worker2 is `codex`. | Fail-first fixture `codex_codex_reviewer_hardcode_red` must reproduce `captured_output_record_missing:Reviewer:claude_code`, then pass with topology-derived reviewer provider. |
 | A4 | No explicit topology preserves existing default reviewer-provider behavior. | Backward-compatible default test. |
 | A5 | Unsupported, blank, or conflicting provider declarations fail closed with actionable diagnostics. | Negative tests. |
-| A6 | Captured-output validation checks logical worker id, role, provider, readiness state, non-claim status, and evidence reference consistently. | Captured evidence envelope fixture tests compatible with PKT-26 consumption. |
+| A6 | Captured-output validation checks logical role, optional worker alias, provider, adapter id, reviewer id/lens when present, readiness state, non-claim status, and evidence reference consistently. | Captured evidence envelope fixture tests compatible with PKT-26 consumption. |
 | A7 | Conductor selection remains separate from approval authority. | Delegated-approval hard-stop regression test. |
 | A8 | Starter boundary validation proves no provider-specific entry contract becomes product identity. | Starter validation and contamination check. |
+| A9 | The first project-start Conductor can be recorded as Codex while packet-level role providers remain independently assignable. | Fixture proving `projectTopology.conductor.provider=codex` with packet Planner assigned to `claude_code` and Developer/Tester assigned to `codex`. |
+| A10 | A packet can request two independent Reviewer agents with mixed providers, for example Claude Code CLI plus Codex CLI, and keep their findings separate for adjudication. | Multi-reviewer fixture proving unique reviewer ids, review lenses, provider ids, evidence refs, and no self-review collapse. |
 
 ## Verification Plan
 - Focused starter Python tests for provider topology schema, persistence, manifest-backed
   provider id validation, and smoke routing.
+- Role-assignment fixture proving PM, Planner, Developer, Documenter, Tester, and Reviewer
+  can be assigned at packet instruction time to `codex` or `claude_code`.
+- Mixed-provider review fixture proving one Claude Code CLI reviewer and one Codex CLI
+  reviewer can produce separate captured-output records and independent review lenses.
 - Focused regression for codex/codex reviewer capture that previously failed with
   `captured_output_record_missing:Reviewer:claude_code`.
 - Fail-first fixture name: `codex_codex_reviewer_hardcode_red`.
 - GREEN fixture expectation: worker2 role `Reviewer`, provider `codex`, adapter id from
   provider manifest, captured output matched, and `claimStatus=non_claim_evidence`.
-- Negative fixtures for unsupported provider ids and mixed legacy/topology fields.
+- Negative fixtures for unsupported provider ids, duplicate non-reviewer role assignment,
+  duplicate reviewer ids, missing reviewer lens, and mixed legacy/topology fields.
 - Delegated approval regression proving Planner cannot execute delegated approval and
   Conductor selection alone is not approval.
 - Starter validation with bytecode/cache-safe execution.
@@ -193,7 +261,7 @@ Boundary rules:
 - Ready For Code: pending; explicit approval is required before implementation transition.
 - Root validation: required before RFC transition and closeout.
 - Standard-template check: required for copied-starter provider topology surfaces.
-- Targeted tests: provider topology schema/persistence/CLI tests, codex-codex reviewer hardcode regression, unsupported-provider negatives, delegated-approval hard-stop regression.
+- Targeted tests: provider topology schema/persistence/CLI tests, role-assignment CLI tests, mixed-provider reviewer tests, codex-codex reviewer hardcode regression, unsupported-provider negatives, delegated-approval hard-stop regression.
 - Active context refresh: required after registration and every state-changing transition.
 - Review closeout: independent packet challenge and packet-doc review are advisory pre-RFC evidence only; closeout requires security/authority review, challenge/code-quality/evidence lenses, Reviewer adjudication, and Planner closeout.
 
@@ -240,3 +308,6 @@ Operator docs must explain that project-level Conductor selection is not approva
   closeout.
 - The first implementation action should be a failing topology regression that reproduces
   the old codex/codex reviewer-provider mismatch.
+- The packet implementation plan must also include fixtures for the user-requested
+  topology examples: project-start Codex Conductor, packet Planner assigned to Claude Code
+  CLI, and dual Reviewer agents split across Claude Code CLI and Codex CLI.
