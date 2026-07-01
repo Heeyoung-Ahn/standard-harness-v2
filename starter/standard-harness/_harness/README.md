@@ -92,6 +92,84 @@ It is not clean export proof. `validate --starter --clean-export` is the strict 
 candidate check and rejects runtime state, caches, logs, generated reports, provider
 entry contracts, secrets, release evidence, and real operating history.
 
+Provider worker smoke uses a provider-neutral descriptor. `reviewer_provider` remains a
+legacy fallback; new packet instructions should use `providerTopology` so project-level
+Conductor selection and packet-level role assignments are explicit:
+
+```json
+{
+  "providerTopology": {
+    "projectTopology": {
+      "conductor": {"provider": "codex", "adapterId": "codex-cli-local"}
+    },
+    "packetTopology": {
+      "roles": {
+        "project_manager": {"provider": "codex", "adapterId": "codex-cli-local"},
+        "planner": {"provider": "claude_code", "adapterId": "claude-code-local"},
+        "developer": {"provider": "codex", "adapterId": "codex-cli-local"},
+        "documenter": {"provider": "codex", "adapterId": "codex-cli-local"},
+        "tester": {"provider": "codex", "adapterId": "codex-cli-local"},
+        "reviewer": [
+          {
+            "provider": "claude_code",
+            "adapterId": "claude-code-local",
+            "reviewerId": "reviewer_a",
+            "reviewLens": "code_quality_review"
+          },
+          {
+            "provider": "codex",
+            "adapterId": "codex-cli-local",
+            "reviewerId": "reviewer_b",
+            "reviewLens": "evidence_review"
+          }
+        ]
+      },
+      "workerAliases": {
+        "worker1": {"role": "developer"},
+        "worker2": {"role": "reviewer", "reviewerId": "reviewer_b"}
+      }
+    }
+  }
+}
+```
+
+Persist and report the packet topology through the starter CLI when a copied project
+needs durable operating-state evidence:
+
+```powershell
+python _harness\bin\harness_cli.py --json --harness-root . provider-topology record --packet-id PKT-0001 --topology-json "{...}" --idempotency-key PKT-0001:provider-topology
+python _harness\bin\harness_cli.py --json --harness-root . provider-topology report --packet-id PKT-0001
+```
+
+Topology validation fails closed for unsupported providers, blank providers, unknown
+role keys, ambiguous non-reviewer role assignments, missing or duplicate reviewer ids,
+missing review lenses, invalid worker aliases, mixed `reviewer_provider` plus
+`providerTopology`, and adapter ids that do not match the selected provider. Emitted
+topology evidence normalizes adapter ids from the provider policy instead of trusting
+descriptor text.
+
+Topology assignments also fail closed on unknown nested fields before persistence.
+Normalized topology records retain only provider topology contract fields, so
+authority-looking fields such as `approvalStateMutationAllowed` cannot be smuggled
+through packet role assignments.
+
+Worker aliases are limited to `worker1` and `worker2` and retain only `role` plus
+`reviewerId` when applicable. Captured role assignments include `evidenceRef`, and
+reviewer capture must match the declared reviewer id, review lens, provider, adapter
+id, and declared evidence reference when one is supplied.
+
+Worker alias values are canonicalized before persistence: `role` is stored as stripped
+lowercase, and `reviewerId` is stored stripped. Routing uses the same canonical
+interpretation as reporting.
+Reviewer assignment values are also canonicalized before persistence and routing:
+`reviewerId`, `reviewLens`, and `evidenceRef` are stored stripped, and captured-output
+matching uses the same canonical values.
+
+The emitted `providerTopologyEvidence` is evidence only. It records role/provider,
+reviewer id, review lens, readiness state, and `approvalStateMutationAllowed=false`; it
+does not approve Ready For Code, closeout, release, residual risk, productization, or
+real-provider readiness.
+
 Create the first low-risk packet before implementation starts:
 
 ```powershell

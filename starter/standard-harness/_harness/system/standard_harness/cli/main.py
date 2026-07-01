@@ -36,6 +36,8 @@ from standard_harness.state.store import HarnessStore, resolve_harness_root
 from standard_harness.validation.aggregator import ValidationService
 from standard_harness.validation.readiness import ReadinessService
 from standard_harness.workflow.conductor_worker_e2e import ConductorWorkerE2ERunner
+from standard_harness.workflow.conductor_worker_e2e import normalize_provider_topology
+from standard_harness.workflow.conductor_worker_e2e import provider_topology_diagnostics
 from standard_harness.workflow.conductor import ConductorApprovalService
 from standard_harness.workflow.conductor_cli import load_grant
 from standard_harness.workflow.conductor_cli import persist_conductor_approval
@@ -46,6 +48,7 @@ COMMANDS = (
     "init",
     "ops-reset",
     "operating-qa",
+    "provider-topology",
     "conductor-worker-e2e",
     "conductor-grant-create",
     "conductor-approve",
@@ -249,6 +252,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "closeout": _handle_closeout,
         "context": _handle_context,
         "operating-qa": _handle_operating_qa,
+        "provider-topology": _handle_provider_topology,
         "conductor-worker-e2e": _handle_conductor_worker_e2e,
         "starter-check": _handle_starter_check,
         "skill-route": _handle_skill_route,
@@ -645,6 +649,75 @@ def _handle_operating_qa(store: HarnessStore, argv: list[str]) -> dict[str, Any]
         max_sources=parsed.max_sources,
     )
     return {"operatingQa": answer}
+
+
+def _handle_provider_topology(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("provider-topology")
+    subparsers = parser.add_subparsers(dest="action", required=True)
+    record = subparsers.add_parser("record")
+    record.add_argument("--packet-id", required=True)
+    record.add_argument("--topology-json", required=True)
+    record.add_argument("--idempotency-key", required=True)
+    report = subparsers.add_parser("report")
+    report.add_argument("--packet-id", required=True)
+    parsed = parser.parse_args(argv)
+    if parsed.action == "record":
+        try:
+            topology = json.loads(parsed.topology_json)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid --topology-json: {exc}") from exc
+        if not isinstance(topology, dict):
+            raise ValueError("--topology-json must decode to an object")
+        descriptor = {"providerTopology": topology}
+        diagnostics = provider_topology_diagnostics(descriptor)
+        if diagnostics:
+            raise ValueError("provider_topology_invalid:" + ",".join(diagnostics))
+        normalized = normalize_provider_topology(descriptor)
+        event = store.append_event(
+            event_type="provider_topology.recorded",
+            actor_id="provider-topology-cli",
+            actor_role="System",
+            authority_basis="packet-scoped provider topology record",
+            idempotency_key=parsed.idempotency_key,
+            packet_id=parsed.packet_id,
+            payload={
+                "packetId": parsed.packet_id,
+                "topology": normalized,
+                "approvalStateMutationAllowed": False,
+            },
+        )
+        return {
+            "providerTopology": {
+                "packetId": parsed.packet_id,
+                **normalized,
+                "approvalStateMutationAllowed": False,
+                "eventId": event["event_id"],
+                "source": "operating_state",
+            }
+        }
+    with store.connection() as conn:
+        row = conn.execute(
+            """
+            select * from events
+            where event_type = ? and packet_id = ?
+            order by event_seq desc
+            limit 1
+            """,
+            ("provider_topology.recorded", parsed.packet_id),
+        ).fetchone()
+    if row is None:
+        raise ValueError(f"provider_topology_not_found:{parsed.packet_id}")
+    payload = json.loads(row["payload_json"])
+    topology = payload["topology"]
+    return {
+        "providerTopology": {
+            "packetId": parsed.packet_id,
+            **topology,
+            "approvalStateMutationAllowed": False,
+            "eventId": row["event_id"],
+            "source": "operating_state",
+        }
+    }
 
 
 def _handle_conductor_worker_e2e(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
