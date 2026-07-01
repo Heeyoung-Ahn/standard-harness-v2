@@ -34,6 +34,8 @@ from standard_harness.starter.contamination import INSTALLED_RUNTIME_MODE
 from standard_harness.state.events import utc_now_iso
 from standard_harness.state.store import HarnessStore, resolve_harness_root
 from standard_harness.validation.aggregator import ValidationService
+from standard_harness.validation.closeout_ledger import CloseoutLedgerGovernance
+from standard_harness.validation.closeout_ledger import build_runtime_closeout_ledger
 from standard_harness.validation.readiness import ReadinessService
 from standard_harness.workflow.conductor_worker_e2e import ConductorWorkerE2ERunner
 from standard_harness.workflow.conductor_worker_e2e import normalize_provider_topology
@@ -71,6 +73,7 @@ COMMANDS = (
     "handoff-prompt",
     "skill-route",
     "compound-feedback",
+    "closeout-ledger-validate",
     "validate",
 )
 
@@ -255,6 +258,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "provider-topology": _handle_provider_topology,
         "conductor-worker-e2e": _handle_conductor_worker_e2e,
         "starter-check": _handle_starter_check,
+        "closeout-ledger-validate": _handle_closeout_ledger_validate,
         "skill-route": _handle_skill_route,
         "handoff-prompt": _handle_handoff_prompt,
         "compound-feedback": _handle_compound_feedback,
@@ -796,7 +800,7 @@ def _handle_conductor_approve(store: HarnessStore, argv: list[str]) -> dict[str,
     parser.add_argument("--decided-at", default=None)
     parsed = parser.parse_args(argv)
 
-    authority_source = _approval_authority_source(parsed.actor_type, parsed.grant_file)
+    authority_source = _approval_authority_source(store, parsed.actor_type, parsed.grant_file)
     hard_stop_status = json.loads(parsed.hard_stop_json)
     decided_at = parsed.decided_at or utc_now_iso()
     decision = ConductorApprovalService().decide(
@@ -1060,6 +1064,51 @@ def _handle_validate(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
     return {"diagnostics": diagnostics, "metadata": metadata}
 
 
+def _handle_closeout_ledger_validate(store: HarnessStore, argv: list[str]) -> dict[str, Any]:
+    parser = _command_parser("closeout-ledger-validate")
+    parser.add_argument("--ledger-json", default=None)
+    parser.add_argument("--ledger-path", default=None)
+    parser.add_argument("--packet-id", default=None)
+    parsed = parser.parse_args(argv)
+    source_count = sum(bool(value) for value in [parsed.ledger_json, parsed.ledger_path, parsed.packet_id])
+    if source_count != 1:
+        raise ValueError("closeout-ledger-validate requires exactly one of --ledger-json, --ledger-path, or --packet-id")
+    if parsed.packet_id:
+        ledger = build_runtime_closeout_ledger(store, parsed.packet_id)
+    elif parsed.ledger_path:
+        path = Path(parsed.ledger_path)
+        if not path.is_absolute():
+            path = store.harness_root / path
+        try:
+            ledger = json.loads(path.read_text(encoding="utf-8"))
+        except OSError as exc:
+            raise ValueError(f"Cannot read --ledger-path: {parsed.ledger_path}") from exc
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid closeout ledger JSON file: {exc}") from exc
+        _mark_untrusted_closeout_ledger_source(ledger, source="caller-path")
+    else:
+        try:
+            ledger = json.loads(str(parsed.ledger_json))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid --ledger-json: {exc}") from exc
+        _mark_untrusted_closeout_ledger_source(ledger, source="caller-json")
+    if not isinstance(ledger, dict):
+        raise ValueError("closeout ledger must be a JSON object")
+    result = CloseoutLedgerGovernance().evaluate(ledger)
+    return {"closeoutLedger": result}
+
+
+def _mark_untrusted_closeout_ledger_source(ledger: Any, *, source: str) -> None:
+    if not isinstance(ledger, dict):
+        return
+    packet_id = ledger.get("packetId") or ledger.get("packet_id") or "unknown"
+    ledger["ledgerProvenance"] = {
+        "source": source,
+        "trustedHarnessSurface": False,
+        "packetId": packet_id,
+    }
+
+
 def _starter_validation_mode_arg(parsed: argparse.Namespace, *, default: str = CLEAN_EXPORT_MODE) -> str:
     if parsed.clean_export and parsed.installed_runtime:
         raise ValueError("Use exactly one starter validation mode flag: --clean-export or --installed-runtime")
@@ -1089,10 +1138,10 @@ def _validation_service_for_store(store: HarnessStore) -> ValidationService:
 
 
 def _approval_authority_source(
-    actor_type: str, grant_file: str | None
+    store: HarnessStore, actor_type: str, grant_file: str | None
 ) -> dict[str, Any] | None:
     if grant_file:
-        return load_grant(grant_file)
+        return load_grant(store, grant_file)
     if actor_type == "human":
         return {"trusted_human_decision": True}
     return None

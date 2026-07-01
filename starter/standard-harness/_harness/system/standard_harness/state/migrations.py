@@ -754,6 +754,20 @@ create table if not exists improvement_proposals (
   trace_event_id text not null,
   trace_event_seq integer not null
 );
+
+create table if not exists conductor_delegation_grants (
+  delegation_grant_id text primary key,
+  packet_id text not null,
+  conductor_id text not null,
+  approval_type text not null,
+  status text not null,
+  risk_ceiling text not null,
+  valid_from text not null,
+  valid_until text not null,
+  grant_json text not null,
+  source_event_id text not null,
+  source_event_seq integer not null
+);
 """
 
 

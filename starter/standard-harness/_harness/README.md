@@ -170,6 +170,37 @@ reviewer id, review lens, readiness state, and `approvalStateMutationAllowed=fal
 does not approve Ready For Code, closeout, release, residual risk, productization, or
 real-provider readiness.
 
+Validate closeout ledger support chains before packet closeout:
+
+```powershell
+python _harness\bin\harness_cli.py --json --harness-root . closeout-ledger-validate --packet-id PKT-0001
+python _harness\bin\harness_cli.py --json --harness-root . closeout-ledger-validate --ledger-path _ops\evidence\PKT-0001\closeout-ledger.json
+```
+
+Use `--packet-id` for trusted closeout validation. It builds the ledger from runtime
+records owned by the harness store. `--ledger-json` and `--ledger-path` are diagnostic
+fixture modes only; they are marked untrusted by the CLI even if the input JSON contains
+trusted-looking provenance or delegation fields. Caller-supplied dictionaries and
+supplemental fixture data cannot create trusted runtime provenance; trusted scoped
+delegation must come from a service-owned Conductor delegation grant record created by
+the trusted `conductor-grant-create` command/service path. Conductor grant events are
+audit/read-model traces only; closeout authority is not derived from caller-controlled
+event payload fields.
+
+The closeout ledger validator requires the full support chain:
+evidence -> claim -> gate -> pre-RFC `packet_doc_review` -> independent review lenses
+-> Reviewer adjudication -> Planner closeout. It fails closed when any link is missing,
+when supported claims reference missing evidence, when passing gates reference missing
+claims, when the ledger did not come from the trusted `--packet-id` runtime ledger path,
+when retrospective packet-doc review is used as pre-RFC evidence, when wrapper output
+claims approval but persisted closeout is blocked, when provider readiness is unavailable
+or narrowed but reported as proven, or when PM rows, projections, release bundles, QA
+answers, generated state, clean-export evidence, or inherited root memory try to approve
+gates. Delivery-loop thresholds require a User decision unless a selected Conductor has
+a valid scoped Human delegation record read from the trusted service-owned grant store
+for loop-threshold judgment. Each required independent review lens must also carry
+packet-bound evidence linkage.
+
 Create the first low-risk packet before implementation starts:
 
 ```powershell
