@@ -19,6 +19,23 @@ from standard_harness.workflow.provider_orchestration import ProviderOrchestrati
 
 SCHEMA_VERSION = "standard-harness-conductor-worker-e2e/v1"
 REAL_CLI_MODES = {"real-smoke", "real_cli", "real-cli"}
+SUPPORTED_TOPOLOGY_PROVIDERS = {"codex", "claude_code"}
+TOPOLOGY_PROVIDER_ADAPTER_IDS = {
+    "codex": "codex-cli-local",
+    "claude_code": "claude-code-local",
+}
+TOPOLOGY_ASSIGNMENT_FIELDS = {"provider", "adapterId", "evidenceRef"}
+TOPOLOGY_REVIEWER_ASSIGNMENT_FIELDS = TOPOLOGY_ASSIGNMENT_FIELDS | {"reviewerId", "reviewLens"}
+TOPOLOGY_WORKER_ALIAS_KEYS = {"worker1", "worker2"}
+TOPOLOGY_WORKER_ALIAS_FIELDS = {"role", "reviewerId"}
+PACKET_ROLE_KEYS = (
+    "project_manager",
+    "planner",
+    "developer",
+    "documenter",
+    "tester",
+    "reviewer",
+)
 
 
 @dataclass(frozen=True)
@@ -248,16 +265,29 @@ class ConductorWorkerE2ERunner:
             )
         input_snapshot_hash = _input_snapshot_hash(packet_id, mode)
         provider_policy = ProviderOrchestrationPolicy(_adapter_manifests(root))
-        readiness_results = [
-            provider_policy.prepare_execution(
-                role=role,
+        topology_diagnostics = _provider_topology_diagnostics(command_descriptor or {})
+        if topology_diagnostics:
+            return self._blocked_result(
                 packet_id=packet_id,
-                input_snapshot_hash=input_snapshot_hash,
-                preferred_provider=provider,
-                cli_available=cli_available,
-                execution_preconditions=_execution_preconditions(command_descriptor),
+                mode=mode,
+                status="execution_blocked",
+                real_cli_evidence_status="execution_blocked",
+                diagnostics=topology_diagnostics,
             )
-            for role, provider in _real_cli_role_providers(command_descriptor).items()
+        role_routes = _real_cli_role_routes(command_descriptor)
+        readiness_results = [
+            _with_route_metadata(
+                provider_policy.prepare_execution(
+                    role=route["role"],
+                    packet_id=packet_id,
+                    input_snapshot_hash=input_snapshot_hash,
+                    preferred_provider=route["provider"],
+                    cli_available=cli_available,
+                    execution_preconditions=_execution_preconditions(command_descriptor),
+                ),
+                route,
+            )
+            for route in role_routes
         ]
         blocking = [result for result in readiness_results if result["status"] != "ready"]
         if blocking:
@@ -312,6 +342,7 @@ class ConductorWorkerE2ERunner:
             root=root,
             command_descriptor=command_descriptor,
             capture_records=capture_validation["records"],
+            role_routes=role_routes,
         )
 
     def _blocked_result(
@@ -358,7 +389,8 @@ class ConductorWorkerE2ERunner:
         packet_id: str,
         root: Path,
         command_descriptor: dict[str, Any] | None,
-        capture_records: dict[tuple[str, str], dict[str, Any]],
+        capture_records: dict[tuple[str, str, str], dict[str, Any]],
+        role_routes: list[dict[str, Any]],
     ) -> dict[str, Any]:
         store = HarnessStore(root)
         conductor_policy = ConductorRoutingPolicy()
@@ -384,7 +416,13 @@ class ConductorWorkerE2ERunner:
         route = _apply_real_cli_provider_overrides(
             route,
             provider_policy=provider_policy,
-            role_providers=_real_cli_role_providers(command_descriptor),
+            role_routes=role_routes,
+        )
+        topology_evidence = _provider_topology_evidence(
+            packet_id=packet_id,
+            command_descriptor=command_descriptor or {},
+            role_routes=role_routes,
+            capture_records=capture_records,
         )
 
         worker_runs: list[dict[str, Any]] = []
@@ -395,7 +433,11 @@ class ConductorWorkerE2ERunner:
         for worker_task in route["selected_workers"]:
             worker_label = worker_task["worker_task_id"].rsplit(":", 1)[-1]
             record = capture_records[
-                (worker_task["assigned_role"], worker_task["provider_label"])
+                (
+                    worker_task["assigned_role"],
+                    worker_task["provider_label"],
+                    worker_task.get("reviewer_id") or "",
+                )
             ]
             selected_route = provider_policy.select_adapter(
                 worker_task["assigned_role"],
@@ -412,6 +454,8 @@ class ConductorWorkerE2ERunner:
                 "capturedCommand": record["argv"],
                 "stdoutSha256": record.get("stdout_sha256"),
                 "stderrSha256": record.get("stderr_sha256"),
+                "reviewerId": worker_task.get("reviewer_id"),
+                "reviewLens": worker_task.get("review_lens"),
                 "truthClaim": False,
             }
             _write_json(artifact_path, artifact_payload)
@@ -488,6 +532,7 @@ class ConductorWorkerE2ERunner:
             mode="real-smoke",
             real_cli_evidence_status="pass",
             envelope_refs=envelope_refs,
+            provider_topology_evidence=topology_evidence,
         )
         return {
             "schemaVersion": SCHEMA_VERSION,
@@ -501,6 +546,7 @@ class ConductorWorkerE2ERunner:
             "outputEnvelopeRefs": envelope_refs,
             "adjudication": adjudication,
             "evidenceRefs": [*evidence_refs, _relative_or_absolute(root, evidence_index_path)],
+            "providerTopologyEvidence": topology_evidence,
             "diagnostic_ids": [],
             "realCliEvidenceStatus": "pass",
             "authorityBoundary": _authority_boundary(),
@@ -509,42 +555,34 @@ class ConductorWorkerE2ERunner:
 
 
 def _adapter_manifests(root: Path) -> list[AdapterManifest]:
-    return [
-        AdapterManifest.from_dict(
-            {
-                "adapter_id": "codex-cli-local",
-                "adapter_version": "1.0",
-                "provider": "codex",
-                "supported_roles": ["Developer", "Reviewer"],
-                "execution_modes": ["local_subscription_cli", "manual"],
-                "credential_mode": "local_subscription",
-                "evidence_modes": ["cli_command", "artifact_manifest"],
-                "read_write_capability": "write_artifacts",
-                "artifact_export_capability": "artifact_manifest",
-                "permission_roots": [str(root)],
-                "known_limitations": ["requires user-managed local login"],
-                "failure_modes": ["success", "blocked", "provider_unavailable"],
-                "capabilities": {"non_interactive": True},
-            }
-        ),
-        AdapterManifest.from_dict(
-            {
-                "adapter_id": "claude-code-local",
-                "adapter_version": "1.0",
-                "provider": "claude_code",
-                "supported_roles": ["Reviewer"],
-                "execution_modes": ["local_subscription_cli", "manual"],
-                "credential_mode": "local_subscription",
-                "evidence_modes": ["cli_command", "artifact_manifest"],
-                "read_write_capability": "write_artifacts",
-                "artifact_export_capability": "artifact_manifest",
-                "permission_roots": [str(root)],
-                "known_limitations": ["requires user-managed local login"],
-                "failure_modes": ["success", "blocked", "provider_unavailable", "timeout"],
-                "capabilities": {"non_interactive": True},
-            }
-        ),
+    supported_topology_roles = [
+        _logical_role_name(role_key) for role_key in PACKET_ROLE_KEYS
     ]
+    manifests: list[AdapterManifest] = []
+    for provider, adapter_id in TOPOLOGY_PROVIDER_ADAPTER_IDS.items():
+        failure_modes = ["success", "blocked", "provider_unavailable"]
+        if provider == "claude_code":
+            failure_modes.append("timeout")
+        manifests.append(
+            AdapterManifest.from_dict(
+                {
+                    "adapter_id": adapter_id,
+                    "adapter_version": "1.0",
+                    "provider": provider,
+                    "supported_roles": supported_topology_roles,
+                    "execution_modes": ["local_subscription_cli", "manual"],
+                    "credential_mode": "local_subscription",
+                    "evidence_modes": ["cli_command", "artifact_manifest"],
+                    "read_write_capability": "write_artifacts",
+                    "artifact_export_capability": "artifact_manifest",
+                    "permission_roots": [str(root)],
+                    "known_limitations": ["requires user-managed local login"],
+                    "failure_modes": failure_modes,
+                    "capabilities": {"non_interactive": True},
+                }
+            )
+        )
+    return manifests
 
 
 def _fixture_envelope(
@@ -626,6 +664,8 @@ def _captured_envelope(
             "captured_argv": record["argv"],
             "stdout_sha256": record.get("stdout_sha256"),
             "stderr_sha256": record.get("stderr_sha256"),
+            "reviewer_id": record.get("reviewer_id") or worker_task.get("reviewer_id"),
+            "review_lens": record.get("review_lens") or worker_task.get("review_lens"),
         },
     }
 
@@ -637,6 +677,7 @@ def _write_evidence_index(
     mode: str,
     real_cli_evidence_status: str,
     envelope_refs: list[str],
+    provider_topology_evidence: dict[str, Any] | None = None,
 ) -> Path:
     index_path = evidence_dir / "evidence-index.json"
     summary = _evidence_summary(
@@ -647,6 +688,7 @@ def _write_evidence_index(
         "schemaVersion": "standard-harness-evidence-index/v1",
         "packetId": packet_id,
         "summary": summary,
+        **({"providerTopologyEvidence": provider_topology_evidence} if provider_topology_evidence else {}),
         "entries": [
             {
                 "id": f"{packet_id}:conductor-worker-e2e:{mode}",
@@ -806,14 +848,35 @@ def _validated_capture_records(
     records = capture.get("records")
     if not isinstance(records, list) or not records:
         return {"diagnostics": ["captured_output_records_missing"], "records": {}}
-    records_by_route: dict[tuple[str, str], dict[str, Any]] = {}
+    records_by_route: dict[tuple[str, str, str], dict[str, Any]] = {}
     for ready in readiness_results:
         role = str(ready.get("role"))
         provider = str(ready.get("provider"))
         adapter_id = str(ready.get("adapter_id"))
-        record = _find_capture_record(records, role=role, provider=provider, adapter_id=adapter_id)
+        reviewer_id = str(ready.get("reviewer_id") or "")
+        review_lens = ready.get("review_lens")
+        record = _find_capture_record(
+            records,
+            role=role,
+            provider=provider,
+            adapter_id=adapter_id,
+            reviewer_id=reviewer_id,
+            review_lens=review_lens if isinstance(review_lens, str) else None,
+        )
         if record is None:
-            diagnostics.append(f"captured_output_record_missing:{role}:{provider}")
+            lens_mismatch = _capture_review_lens_mismatch(
+                records,
+                role=role,
+                provider=provider,
+                adapter_id=adapter_id,
+                reviewer_id=reviewer_id,
+                review_lens=review_lens if isinstance(review_lens, str) else None,
+            )
+            if lens_mismatch:
+                diagnostics.append(lens_mismatch)
+                continue
+            missing = f"captured_output_record_missing:{role}:{provider}"
+            diagnostics.append(f"{missing}:{reviewer_id}" if reviewer_id else missing)
             continue
         normalized = _normalize_capture_record(
             record,
@@ -821,6 +884,9 @@ def _validated_capture_records(
             role=role,
             provider=provider,
             adapter_id=adapter_id,
+            reviewer_id=reviewer_id,
+            review_lens=review_lens,
+            expected_evidence_ref=ready.get("evidence_ref"),
         )
         diagnostics.extend(normalized["diagnostics"])
         if normalized["record"] is None:
@@ -837,42 +903,482 @@ def _validated_capture_records(
         if record_readiness["status"] != "ready":
             diagnostics.extend(_readiness_diagnostics([record_readiness]))
             continue
-        records_by_route[(role, provider)] = normalized["record"]
+        records_by_route[(role, provider, reviewer_id)] = normalized["record"]
     return {"diagnostics": sorted(set(diagnostics)), "records": records_by_route}
 
 
 def _real_cli_role_providers(
     command_descriptor: dict[str, Any] | None,
 ) -> dict[str, str]:
-    descriptor = command_descriptor or {}
-    reviewer_provider = descriptor.get("reviewer_provider", "claude_code")
-    if not isinstance(reviewer_provider, str) or not reviewer_provider.strip():
-        reviewer_provider = "claude_code"
     return {
-        "Developer": "codex",
-        "Reviewer": reviewer_provider.strip().lower(),
+        route["role"]: route["provider"]
+        for route in _real_cli_role_routes(command_descriptor)
     }
+
+
+def _real_cli_role_routes(
+    command_descriptor: dict[str, Any] | None,
+) -> list[dict[str, Any]]:
+    descriptor = command_descriptor or {}
+    topology = _provider_topology(descriptor)
+    developer_provider = _provider_for_role(topology, "developer") or "codex"
+    routes = [
+        {
+            "role": "Developer",
+            "role_key": "developer",
+            "provider": developer_provider,
+            "reviewer_id": "",
+            "review_lens": None,
+            "evidence_ref": _evidence_ref_for_role(topology, "developer"),
+        }
+    ]
+    reviewer_routes = _reviewer_routes(topology)
+    if not reviewer_routes:
+        reviewer_provider = _string_provider(descriptor.get("reviewer_provider")) or "claude_code"
+        reviewer_routes = [
+            {
+                "role": "Reviewer",
+                "role_key": "reviewer",
+                "provider": reviewer_provider,
+                "reviewer_id": "",
+                "review_lens": None,
+                "evidence_ref": None,
+            }
+        ]
+    routes.extend(reviewer_routes)
+    return routes
+
+
+def _reviewer_routes(topology: dict[str, Any]) -> list[dict[str, Any]]:
+    assignment = _role_assignment(topology, "reviewer")
+    assignments = assignment if isinstance(assignment, list) else [assignment]
+    routes: list[dict[str, Any]] = []
+    for item in assignments:
+        normalized = _normalized_topology_assignment(item)
+        if not normalized:
+            continue
+        provider = _string_provider(normalized.get("provider"), invalid_token=True)
+        if not provider:
+            continue
+        routes.append(
+            {
+                "role": "Reviewer",
+                "role_key": "reviewer",
+                "provider": provider,
+                "reviewer_id": normalized.get("reviewerId")
+                if isinstance(normalized.get("reviewerId"), str)
+                else "",
+                "review_lens": normalized.get("reviewLens")
+                if isinstance(normalized.get("reviewLens"), str)
+                else None,
+                "evidence_ref": normalized.get("evidenceRef")
+                if isinstance(normalized.get("evidenceRef"), str)
+                else None,
+            }
+        )
+    return routes
+
+
+def _with_route_metadata(result: dict[str, Any], route: dict[str, Any]) -> dict[str, Any]:
+    updated = dict(result)
+    updated["role_key"] = route.get("role_key")
+    updated["reviewer_id"] = route.get("reviewer_id") or ""
+    updated["review_lens"] = route.get("review_lens")
+    updated["evidence_ref"] = route.get("evidence_ref")
+    return updated
+
+
+def _provider_topology_diagnostics(descriptor: dict[str, Any]) -> list[str]:
+    topology = _provider_topology(descriptor)
+    if not topology:
+        return []
+    diagnostics: list[str] = []
+    project_topology = topology.get("projectTopology")
+    if isinstance(project_topology, dict) and "conductor" in project_topology:
+        diagnostics.extend(
+            _topology_assignment_diagnostics(
+                "project_conductor",
+                project_topology.get("conductor"),
+                reviewer=False,
+            )
+        )
+    elif "projectTopology" in topology:
+        diagnostics.append("invalid_project_topology")
+
+    packet_topology = topology.get("packetTopology")
+    roles = packet_topology.get("roles") if isinstance(packet_topology, dict) else None
+    if isinstance(roles, dict):
+        for role_key in sorted(set(roles).difference(PACKET_ROLE_KEYS)):
+            diagnostics.append(f"unknown_role_key:{role_key}")
+    elif isinstance(packet_topology, dict) and "roles" in packet_topology:
+        diagnostics.append("invalid_packet_roles")
+
+    for role_key in PACKET_ROLE_KEYS:
+        assignment = _role_assignment(topology, role_key)
+        if assignment is None:
+            continue
+        if role_key != "reviewer" and isinstance(assignment, list):
+            diagnostics.append(f"ambiguous_role_assignment:{role_key}")
+            continue
+        assignments = assignment if isinstance(assignment, list) else [assignment]
+        reviewer_ids: set[str] = set()
+        for item in assignments:
+            diagnostics.extend(
+                _topology_assignment_diagnostics(
+                    role_key,
+                    item,
+                    reviewer=role_key == "reviewer",
+                    reviewer_ids=reviewer_ids,
+                )
+            )
+    diagnostics.extend(_worker_alias_diagnostics(topology))
+    legacy_reviewer = _string_provider(descriptor.get("reviewer_provider"))
+    if legacy_reviewer:
+        diagnostics.append("conflicting_provider_declaration:Reviewer")
+    return sorted(set(diagnostics))
+
+
+def provider_topology_diagnostics(descriptor: dict[str, Any]) -> list[str]:
+    return _provider_topology_diagnostics(descriptor)
+
+
+def normalize_provider_topology(descriptor: dict[str, Any]) -> dict[str, Any]:
+    topology = _provider_topology(descriptor)
+    normalized: dict[str, Any] = {"projectTopology": {}, "packetTopology": {"roles": {}}}
+    project_topology = topology.get("projectTopology")
+    if isinstance(project_topology, dict) and isinstance(project_topology.get("conductor"), dict):
+        conductor = _normalized_topology_assignment(project_topology["conductor"])
+        if conductor:
+            normalized["projectTopology"]["conductor"] = conductor
+    packet_topology = topology.get("packetTopology")
+    roles = packet_topology.get("roles") if isinstance(packet_topology, dict) else None
+    if isinstance(roles, dict):
+        for role_key in PACKET_ROLE_KEYS:
+            assignment = roles.get(role_key)
+            if assignment is None:
+                continue
+            if isinstance(assignment, list):
+                normalized_items = [
+                    item
+                    for item in (_normalized_topology_assignment(entry) for entry in assignment)
+                    if item
+                ]
+                normalized["packetTopology"]["roles"][role_key] = normalized_items
+            else:
+                normalized_assignment = _normalized_topology_assignment(assignment)
+                if normalized_assignment:
+                    normalized["packetTopology"]["roles"][role_key] = normalized_assignment
+    worker_aliases = packet_topology.get("workerAliases") if isinstance(packet_topology, dict) else None
+    if isinstance(worker_aliases, dict):
+        normalized["packetTopology"]["workerAliases"] = _normalized_worker_aliases(worker_aliases)
+    return normalized
+
+
+def _topology_assignment_diagnostics(
+    role_key: str,
+    item: Any,
+    *,
+    reviewer: bool,
+    reviewer_ids: set[str] | None = None,
+) -> list[str]:
+    if not isinstance(item, dict):
+        return [f"invalid_role_assignment:{role_key}"]
+    diagnostics: list[str] = []
+    allowed_fields = (
+        TOPOLOGY_REVIEWER_ASSIGNMENT_FIELDS
+        if reviewer
+        else TOPOLOGY_ASSIGNMENT_FIELDS
+    )
+    for field in sorted(set(item).difference(allowed_fields)):
+        diagnostics.append(f"unknown_assignment_field:{role_key}:{field}")
+    provider_value = item.get("provider")
+    if not isinstance(provider_value, str) or not provider_value.strip():
+        return [f"blank_provider:{role_key}"]
+    provider = provider_value.strip().lower()
+    if provider not in SUPPORTED_TOPOLOGY_PROVIDERS:
+        return [f"unsupported_provider:{role_key}:{provider}"]
+    adapter_id = item.get("adapterId")
+    expected_adapter_id = TOPOLOGY_PROVIDER_ADAPTER_IDS[provider]
+    if not isinstance(adapter_id, str) or not adapter_id.strip():
+        diagnostics.append(f"missing_adapter_id:{role_key}:{provider}")
+    elif adapter_id.strip() != expected_adapter_id:
+        diagnostics.append(f"adapter_provider_mismatch:{role_key}:{provider}:{adapter_id.strip()}")
+    if reviewer:
+        reviewer_id = item.get("reviewerId")
+        if not isinstance(reviewer_id, str) or not reviewer_id.strip():
+            diagnostics.append("missing_reviewer_id")
+        else:
+            normalized_reviewer_id = reviewer_id.strip()
+            if reviewer_ids is not None:
+                if normalized_reviewer_id in reviewer_ids:
+                    diagnostics.append(f"duplicate_reviewer_id:{normalized_reviewer_id}")
+                reviewer_ids.add(normalized_reviewer_id)
+            review_lens = item.get("reviewLens")
+            if not isinstance(review_lens, str) or not review_lens.strip():
+                diagnostics.append(f"missing_review_lens:{normalized_reviewer_id}")
+    return diagnostics
+
+
+def _worker_alias_diagnostics(topology: dict[str, Any]) -> list[str]:
+    packet_topology = topology.get("packetTopology")
+    if not isinstance(packet_topology, dict) or "workerAliases" not in packet_topology:
+        return []
+    aliases = packet_topology.get("workerAliases")
+    if not isinstance(aliases, dict):
+        return ["invalid_worker_aliases"]
+    diagnostics: list[str] = []
+    reviewer_ids = _declared_reviewer_ids(topology)
+    for alias, value in aliases.items():
+        if alias not in TOPOLOGY_WORKER_ALIAS_KEYS:
+            diagnostics.append(f"unknown_worker_alias_key:{alias}")
+            continue
+        if not isinstance(value, dict):
+            diagnostics.append(f"invalid_worker_alias:{alias}")
+            continue
+        for field in sorted(set(value).difference(TOPOLOGY_WORKER_ALIAS_FIELDS)):
+            diagnostics.append(f"unknown_worker_alias_field:{alias}:{field}")
+        role = str(value.get("role", "")).strip().lower()
+        if role not in PACKET_ROLE_KEYS:
+            diagnostics.append(f"unknown_worker_alias_role:{alias}:{role}")
+            continue
+        if role == "reviewer":
+            reviewer_id = value.get("reviewerId")
+            if not isinstance(reviewer_id, str) or not reviewer_id.strip():
+                diagnostics.append(f"missing_worker_alias_reviewer:{alias}")
+            elif reviewer_id.strip() not in reviewer_ids:
+                diagnostics.append(f"unknown_worker_alias_reviewer:{alias}:{reviewer_id.strip()}")
+    return diagnostics
+
+
+def _normalized_worker_aliases(aliases: dict[str, Any]) -> dict[str, Any]:
+    normalized: dict[str, Any] = {}
+    for alias, value in aliases.items():
+        if alias not in TOPOLOGY_WORKER_ALIAS_KEYS or not isinstance(value, dict):
+            continue
+        role = value.get("role")
+        alias_record: dict[str, Any] = {}
+        if isinstance(role, str):
+            alias_record["role"] = role.strip().lower()
+        reviewer_id = value.get("reviewerId")
+        if isinstance(reviewer_id, str) and reviewer_id.strip():
+            alias_record["reviewerId"] = reviewer_id.strip()
+        normalized[alias] = alias_record
+    return normalized
+
+
+def _declared_reviewer_ids(topology: dict[str, Any]) -> set[str]:
+    assignment = _role_assignment(topology, "reviewer")
+    assignments = assignment if isinstance(assignment, list) else [assignment]
+    return {
+        item["reviewerId"].strip()
+        for item in assignments
+        if isinstance(item, dict)
+        and isinstance(item.get("reviewerId"), str)
+        and item["reviewerId"].strip()
+    }
+
+
+def _normalized_topology_assignment(item: Any) -> dict[str, Any] | None:
+    if not isinstance(item, dict):
+        return None
+    provider = _string_provider(item.get("provider"))
+    if provider not in TOPOLOGY_PROVIDER_ADAPTER_IDS:
+        return None
+    allowed_fields = (
+        TOPOLOGY_REVIEWER_ASSIGNMENT_FIELDS
+        if "reviewerId" in item or "reviewLens" in item
+        else TOPOLOGY_ASSIGNMENT_FIELDS
+    )
+    normalized = {key: item[key] for key in allowed_fields if key in item}
+    for key in ("reviewerId", "reviewLens", "evidenceRef"):
+        value = normalized.get(key)
+        if isinstance(value, str):
+            normalized[key] = value.strip()
+    normalized["provider"] = provider
+    normalized["adapterId"] = TOPOLOGY_PROVIDER_ADAPTER_IDS[provider]
+    return normalized
+
+
+def _provider_topology_evidence(
+    *,
+    packet_id: str,
+    command_descriptor: dict[str, Any],
+    role_routes: list[dict[str, Any]],
+    capture_records: dict[tuple[str, str, str], dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    topology = normalize_provider_topology(command_descriptor)
+    role_assignments: list[dict[str, Any]] = []
+    capture_records = capture_records or {}
+    for role_key in PACKET_ROLE_KEYS:
+        assignment = _role_assignment(topology, role_key)
+        assignments = assignment if isinstance(assignment, list) else [assignment]
+        for item in assignments:
+            if not isinstance(item, dict):
+                continue
+            provider = _string_provider(item.get("provider"))
+            if not provider:
+                continue
+            reviewer_id = item.get("reviewerId") if isinstance(item.get("reviewerId"), str) else ""
+            role_name = _logical_role_name(role_key)
+            capture_record = capture_records.get((role_name, provider, reviewer_id))
+            evidence_ref = (
+                capture_record.get("evidence_id")
+                if capture_record
+                else item.get("evidenceRef")
+            )
+            role_assignments.append(
+                {
+                    "roleKey": role_key,
+                    "role": role_name,
+                    "provider": provider,
+                    "adapterId": TOPOLOGY_PROVIDER_ADAPTER_IDS[provider],
+                    **({"reviewerId": item.get("reviewerId")} if item.get("reviewerId") else {}),
+                    **({"reviewLens": item.get("reviewLens")} if item.get("reviewLens") else {}),
+                    **({"evidenceRef": evidence_ref} if evidence_ref else {}),
+                    "readinessState": "captured_output_pass"
+                    if capture_record
+                    else "declared",
+                    "claimStatus": "non_claim_evidence",
+                }
+            )
+    return {
+        "schemaVersion": "standard-harness-provider-topology-evidence/v1",
+        "packetId": packet_id,
+        "projectTopology": topology.get("projectTopology", {}),
+        "roleAssignments": role_assignments,
+        "workerAliases": (topology.get("packetTopology") or {}).get("workerAliases", {}),
+        "approvalStateMutationAllowed": False,
+    }
+
+
+def _logical_role_name(role_key: str) -> str:
+    return {
+        "project_manager": "Project Manager",
+        "planner": "Planner",
+        "developer": "Developer",
+        "documenter": "Documenter",
+        "tester": "Tester",
+        "reviewer": "Reviewer",
+    }.get(role_key, role_key)
+
+
+def _provider_topology(descriptor: dict[str, Any]) -> dict[str, Any]:
+    topology = (
+        descriptor.get("providerTopology")
+        or descriptor.get("provider_topology")
+        or descriptor.get("topology")
+    )
+    if isinstance(topology, dict):
+        return topology
+    if isinstance(descriptor.get("packetTopology"), dict):
+        return descriptor
+    return {}
+
+
+def _provider_for_role(topology: dict[str, Any], role_key: str) -> str | None:
+    assignment = _role_assignment(topology, role_key)
+    if not isinstance(assignment, dict):
+        return None
+    return _string_provider(assignment.get("provider"), invalid_token=True)
+
+
+def _evidence_ref_for_role(topology: dict[str, Any], role_key: str) -> str | None:
+    assignment = _role_assignment(topology, role_key)
+    if not isinstance(assignment, dict):
+        return None
+    evidence_ref = assignment.get("evidenceRef")
+    return evidence_ref if isinstance(evidence_ref, str) and evidence_ref.strip() else None
+
+
+def _provider_for_reviewer(topology: dict[str, Any]) -> str | None:
+    assignment = _role_assignment(topology, "reviewer")
+    if isinstance(assignment, dict):
+        return _string_provider(assignment.get("provider"), invalid_token=True)
+    if not isinstance(assignment, list):
+        return None
+    reviewer_id = _worker2_reviewer_id(topology)
+    selected = None
+    if reviewer_id:
+        selected = next(
+            (
+                item
+                for item in assignment
+                if isinstance(item, dict)
+                and isinstance(item.get("reviewerId"), str)
+                and item["reviewerId"].strip() == reviewer_id
+            ),
+            None,
+        )
+    if selected is None:
+        selected = next((item for item in assignment if isinstance(item, dict)), None)
+    if not isinstance(selected, dict):
+        return None
+    return _string_provider(selected.get("provider"), invalid_token=True)
+
+
+def _role_assignment(topology: dict[str, Any], role_key: str) -> Any:
+    packet_topology = topology.get("packetTopology")
+    if not isinstance(packet_topology, dict):
+        packet_topology = {}
+    roles = packet_topology.get("roles")
+    if not isinstance(roles, dict):
+        return None
+    return roles.get(role_key)
+
+
+def _worker2_reviewer_id(topology: dict[str, Any]) -> str | None:
+    packet_topology = topology.get("packetTopology")
+    if not isinstance(packet_topology, dict):
+        return None
+    aliases = packet_topology.get("workerAliases")
+    if not isinstance(aliases, dict):
+        return None
+    worker2 = aliases.get("worker2")
+    if not isinstance(worker2, dict):
+        return None
+    role = worker2.get("role")
+    if not isinstance(role, str) or role.strip().lower() != "reviewer":
+        return None
+    reviewer_id = worker2.get("reviewerId")
+    return reviewer_id.strip() if isinstance(reviewer_id, str) and reviewer_id.strip() else None
+
+
+def _string_provider(value: Any, *, invalid_token: bool = False) -> str | None:
+    if not isinstance(value, str):
+        return "__invalid_provider__" if invalid_token and value is not None else None
+    provider = value.strip().lower()
+    if provider:
+        return provider
+    return "__invalid_blank_provider__" if invalid_token else None
 
 
 def _apply_real_cli_provider_overrides(
     route: dict[str, Any],
     *,
     provider_policy: ProviderOrchestrationPolicy,
-    role_providers: dict[str, str],
+    role_routes: list[dict[str, Any]],
 ) -> dict[str, Any]:
     updated_workers: list[dict[str, Any]] = []
     for worker_task in route.get("selected_workers", []):
-        updated_task = dict(worker_task)
-        role = str(updated_task.get("assigned_role"))
-        provider = role_providers.get(role)
-        if provider is not None:
+        role = str(worker_task.get("assigned_role"))
+        matching_routes = [item for item in role_routes if item.get("role") == role]
+        if not matching_routes:
+            updated_workers.append(dict(worker_task))
+            continue
+        for index, role_route in enumerate(matching_routes, start=1):
+            updated_task = dict(worker_task)
             selected_route = provider_policy.select_adapter(
                 role,
-                preferred_provider=provider,
+                preferred_provider=role_route["provider"],
             )
             updated_task["provider_label"] = selected_route["provider"]
             updated_task["adapter_id"] = selected_route["adapter_id"]
-        updated_workers.append(updated_task)
+            updated_task["reviewer_id"] = role_route.get("reviewer_id") or None
+            updated_task["review_lens"] = role_route.get("review_lens")
+            if role == "Reviewer" and len(matching_routes) > 1:
+                suffix = role_route.get("reviewer_id") or str(index)
+                updated_task["worker_task_id"] = f"{worker_task['worker_task_id']}:{suffix}"
+            updated_workers.append(updated_task)
     updated_route = dict(route)
     updated_route["selected_workers"] = updated_workers
     return updated_route
@@ -923,7 +1429,13 @@ def _sensitive_material_diagnostics(value: Any, path: str = "$") -> list[str]:
 
 
 def _find_capture_record(
-    records: list[Any], *, role: str, provider: str, adapter_id: str
+    records: list[Any],
+    *,
+    role: str,
+    provider: str,
+    adapter_id: str,
+    reviewer_id: str = "",
+    review_lens: str | None = None,
 ) -> dict[str, Any] | None:
     for record in records:
         if not isinstance(record, dict):
@@ -932,8 +1444,36 @@ def _find_capture_record(
             record.get("role") == role
             and record.get("provider") == provider
             and record.get("adapter_id") == adapter_id
+            and (not reviewer_id or record.get("reviewer_id") == reviewer_id)
+            and (not review_lens or record.get("review_lens") == review_lens)
         ):
             return record
+    return None
+
+
+def _capture_review_lens_mismatch(
+    records: list[Any],
+    *,
+    role: str,
+    provider: str,
+    adapter_id: str,
+    reviewer_id: str = "",
+    review_lens: str | None = None,
+) -> str | None:
+    if not review_lens:
+        return None
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        if (
+            record.get("role") == role
+            and record.get("provider") == provider
+            and record.get("adapter_id") == adapter_id
+            and (not reviewer_id or record.get("reviewer_id") == reviewer_id)
+            and record.get("review_lens") != review_lens
+        ):
+            suffix = f":{reviewer_id}" if reviewer_id else ""
+            return f"captured_output_review_lens_mismatch:{role}:{provider}{suffix}:{review_lens}"
     return None
 
 
@@ -944,6 +1484,9 @@ def _normalize_capture_record(
     role: str,
     provider: str,
     adapter_id: str,
+    reviewer_id: str = "",
+    review_lens: Any = None,
+    expected_evidence_ref: Any = None,
 ) -> dict[str, Any]:
     diagnostics: list[str] = []
     argv = record.get("argv")
@@ -964,6 +1507,10 @@ def _normalize_capture_record(
     evidence_id = record.get("evidence_id")
     if not isinstance(evidence_id, str) or not evidence_id.strip():
         diagnostics.append("captured_output_evidence_id_missing")
+    elif isinstance(expected_evidence_ref, str) and expected_evidence_ref.strip() and evidence_id.strip() != expected_evidence_ref.strip():
+        diagnostics.append(
+            f"captured_output_evidence_ref_mismatch:{role}:{provider}:{expected_evidence_ref.strip()}"
+        )
     if diagnostics:
         return {"diagnostics": diagnostics, "record": None}
     descriptor = dict(base_command_descriptor)
@@ -984,6 +1531,8 @@ def _normalize_capture_record(
         "role": role,
         "provider": provider,
         "adapter_id": adapter_id,
+        "reviewer_id": reviewer_id,
+        "review_lens": review_lens,
         "argv": argv,
         "shell": record.get("shell") is True,
         "exit_code": exit_code,
@@ -1011,12 +1560,15 @@ def _readiness_diagnostics(readiness_results: list[dict[str, Any]]) -> list[str]
 
 
 def _public_run_record(run: dict[str, Any]) -> dict[str, Any]:
+    provenance = dict(run["output_envelope"].get("evidence_provenance", {}))
     return {
         "orchestrationRunId": run["orchestration_run_id"],
         "adapterRunId": run["output_envelope"]["adapter_run_id"],
         "role": run["role"],
         "adapterId": run["adapter_id"],
         "provider": run["provider"],
+        "reviewerId": provenance.get("reviewer_id"),
+        "reviewLens": provenance.get("review_lens"),
         "status": run["status"],
         "evidenceRefs": list(run["evidence_refs"]),
         "truthClaim": bool(run["truth_claim"]),

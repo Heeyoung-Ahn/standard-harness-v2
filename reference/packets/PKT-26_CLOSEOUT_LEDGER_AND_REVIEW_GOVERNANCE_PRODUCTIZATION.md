@@ -29,6 +29,7 @@ decision stayed `blocked`.
 | PKT-21 | PM/WBS sources are read-model evidence only and cannot approve gates. |
 | PKT-22 | Design projections are contracts/projections, not approval authority or real browser proof. |
 | PKT-23 | Locked UI module contract closeout was successful but required remediation to record complete closeout shape and lens evidence. |
+| PKT-25 remediation-loop experience | Closeout governance must prevent unbounded Reviewer -> Developer -> Tester -> Reviewer loops and must preserve User or delegated Conductor decision authority when the loop threshold is reached. |
 
 ## Quick Decision Header
 | Item | Proposed | Why | Status |
@@ -102,6 +103,13 @@ decision stayed `blocked`.
   outcomes so PKT-20-style narrowed claims are not overread. PKT-25 remains the owner of
   topology schema, persistence, CLI, manifest validation, and real-smoke validation
   correction.
+- Add delivery-loop guard support so repeated Developer remediation requests and repeated
+  full delivery loops are recorded, surfaced, and stopped before autonomous agents can
+  continue indefinitely.
+- Add a User/Conductor decision boundary for loop-threshold escalation: when a scoped
+  Human delegation record validates through a trusted command/service, the selected
+  Conductor may decide whether to allow one more bounded remediation, route to Planner
+  for scope/contract decision, or keep the packet blocked.
 - Consolidate PKT-17 through PKT-23 unresolved cleanup lessons into validation/reporting
   diagnostics without reopening their closed scopes.
 
@@ -116,6 +124,10 @@ decision stayed `blocked`.
 - Repairing historical PKT-A3 pre-RFC compliance. PKT-26 productizes the prevention and
   replay path; it must not convert retrospective PKT-A3 review evidence into valid
   pre-RFC evidence.
+- Allowing Orchestrator, Developer, Tester, Reviewer, PM, generated summaries, or wrapper
+  output to bypass the delivery-loop threshold after it is reached.
+- Allowing Conductor loop-threshold decisions without explicit scoped Human delegation
+  validated through a trusted harness command/service.
 
 ## Acceptance Criteria
 | ID | Acceptance | Required evidence |
@@ -128,6 +140,8 @@ decision stayed `blocked`.
 | A6 | PM rows, design projections, release bundles, clean-export evidence, and QA answers remain evidence/read-model inputs only and cannot approve gates. | Authority-boundary negative tests expecting source-specific non-approval diagnostics. |
 | A7 | One compact human closeout report can summarize status while evidence details stay indexed and structured. | Closeout report/evidence-index validation with packet-exit fields, security evidence path, independent lens evidence, and structured behavior verification. |
 | A8 | Starter validation passes and proves no root evidence/history/runtime state is copied into the clean starter. | Starter validation and contamination checks. |
+| A9 | Delivery-loop guard stops autonomous remediation when the same blocking finding requests Developer remediation twice or the full delivery loop runs three times. | Loop-ledger fixtures expecting `same_finding_second_remediation_requires_user_decision` and `third_delivery_loop_requires_user_decision`. |
+| A10 | User may explicitly delegate loop-threshold judgment to the selected Conductor, but only through a scoped Human delegation record validated by trusted command/service; without that grant, Conductor/worker/reviewer output cannot authorize another loop. | Delegation fixtures expecting `conductor_loop_judgment_requires_scoped_grant` for missing grant and positive evidence for a valid grant choosing bounded remediation, Planner route, or blocked state. |
 
 ## Missing-Link Failure Fixtures
 | Fixture | Missing link | Expected diagnostic |
@@ -142,6 +156,9 @@ decision stayed `blocked`.
 | `ledger_missing_planner_closeout_red` | Planner closeout | `missing_planner_closeout` |
 | `ledger_wrapper_approved_persisted_blocked_red` | effective decision precedence | `effective_decision_persisted_blocked` |
 | `ledger_provider_readiness_overclaim_red` | provider readiness proof | `provider_readiness_not_proven` |
+| `loop_same_finding_second_remediation_red` | repeated Developer remediation for same blocking finding | `same_finding_second_remediation_requires_user_decision` |
+| `loop_third_full_delivery_loop_red` | third full Developer -> Tester -> Orchestrator -> Reviewer loop | `third_delivery_loop_requires_user_decision` |
+| `loop_conductor_judgment_without_grant_red` | Conductor decision without scoped Human delegation | `conductor_loop_judgment_requires_scoped_grant` |
 
 ## Verification Plan
 - Focused starter Python tests for evidence, claim, gate, review, adjudication, and closeout
@@ -152,6 +169,9 @@ decision stayed `blocked`.
 - Regression that packet-doc review after RFC cannot satisfy the pre-RFC gate.
 - Authority-boundary tests for PM, projection, release-candidate, QA answer, and generated
   state inputs.
+- Delivery-loop guard tests for same-finding repeated remediation, third full-loop
+  escalation, User decision routing, and Conductor delegated judgment with and without a
+  trusted scoped delegation record.
 - Starter validation with bytecode/cache-safe execution.
 - Root harness validation if root packet reports or wrappers are changed.
 
@@ -160,6 +180,9 @@ decision stayed `blocked`.
 - Root validation: required before RFC transition and closeout.
 - Standard-template check: required for copied-starter closeout ledger surfaces.
 - Targeted tests: closeout-ledger service/CLI tests, full missing-link negative matrix, retrospective packet-doc timing regression, wrapper-vs-persisted decision regression, and authority-boundary negative tests.
+- Loop-guard tests: same-finding second remediation hold, third full-loop hold, User
+  decision route, trusted Conductor delegation positive path, and untrusted Conductor
+  decision rejection.
 - Active context refresh: required after registration and every state-changing transition.
 - Review closeout: independent packet challenge and packet-doc review are advisory pre-RFC evidence only; closeout requires security/authority review, challenge/code-quality/evidence lenses, Reviewer adjudication, and Planner closeout.
 
@@ -173,6 +196,7 @@ decision stayed `blocked`.
 | PKT-21 Structured PM intake | PM intake is closed. | Keep PM TSV/CSV/WBS rows as read-model evidence only, never approval authority. |
 | PKT-22 Design projection | Projection foundation is closed. | Keep projection artifacts non-authoritative and separate from real browser proof. |
 | PKT-23 Reusable UI module | Locked module contract is closed. | Reuse the complete closeout-shape expectations that PKT-23 needed after remediation. |
+| PKT-25 Provider topology | Remediation loop reached User/Planner decision boundary. | Productize loop-threshold recording and User/Conductor judgment boundary without reopening PKT-25. |
 
 ## Cleanup-To-Acceptance Mapping
 | Prior lesson | PKT-26 acceptance | Required negative or positive proof |
@@ -184,6 +208,7 @@ decision stayed `blocked`.
 | PKT-21 PM/WBS rows are read-model evidence only. | A6 | `pm_row_cannot_approve_gate_red`. |
 | PKT-22 design projections are projection-only, not browser proof. | A6 | `projection_cannot_close_acceptance_red`. |
 | PKT-23 closeout-shape remediation required security path, lens evidence, structured behavior verification, and packet-exit fields. | A7 | positive report validation requires all four fields plus evidence-index links. |
+| PKT-25 remediation loop needed a clear stop condition after repeated Reviewer holds. | A9, A10 | loop guard diagnostics require User decision at the threshold; Conductor may decide only with scoped Human delegation. |
 
 ## Required Artifacts Before Ready For Code
 | Artifact | Status | Owner |
@@ -214,6 +239,10 @@ Operator closeout docs must explain effective decision precedence:
   implementation plan, SSOT, verification scope, v1 constraints, and v2 philosophy.
 - Closeout docs must show the minimum support chain:
   evidence -> claim -> gate -> independent reviews -> Reviewer adjudication -> Planner closeout.
+- Orchestrator/closeout docs must explain the delivery-loop stop rule:
+  same blocking finding requests Developer remediation twice, or the full delivery loop
+  runs three times, so User judgment is required unless a selected Conductor has a valid
+  scoped Human delegation record.
 
 ## Approval Boundary
 - This packet is not Ready For Code.
