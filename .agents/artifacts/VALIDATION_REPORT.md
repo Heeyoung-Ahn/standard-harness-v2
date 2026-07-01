@@ -1,11 +1,11 @@
 # Validation Report
 
 ## Summary
-- Executed at: 2026-07-01T08:32:38.534Z
+- Executed at: 2026-07-01T11:41:11.264Z
 - Validator version: v1.3
 - Cutover ready: yes
 - Gate decision: pass
-- Next action: No active PKT-26 lane remains. Choose the next approved lane only after separate Human/Planner decision; do not reopen same-class A10 remediation without explicit Human Owner or valid delegated Conductor authority.
+- Next action: Keep the reusable baseline on planning hold until a new approved lane is selected.
 - Scope: harness structural/state validation and workflow evidence consistency only; this is not product/feature verification approval.
 - Product evidence owner: Tester/Reviewer/product-specific acceptance evidence.
 - Surface role: persisted gate evidence only, not product acceptance; live re-entry should use `.agents/runtime/ACTIVE_CONTEXT.json` and CLI context/status.
@@ -75,6 +75,8 @@
 - reference/packets/PKT-25_PROVIDER_TOPOLOGY_AND_REAL_SMOKE_CONTRACT.md: declared not-declared, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
   - modeling impact: status required, required yes, diagnostics 0
 - reference/packets/PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION.md: declared not-declared, derived high, effective high, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hold_if_missing_approval_or_evidence
+  - modeling impact: status required, required yes, diagnostics 0
+- reference/packets/PKT-27_CONDUCTOR_WORKER_EXECUTOR_AND_AUTOMATED_DELIVERY_LOOP.md: declared critical, derived high, effective critical, requested route packet-path, chosen route packet-path, eligibility not-applicable, gate effect hard_stop
   - modeling impact: status required, required yes, diagnostics 0
 
 ## Findings

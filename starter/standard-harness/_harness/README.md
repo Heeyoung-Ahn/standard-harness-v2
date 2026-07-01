@@ -170,6 +170,62 @@ reviewer id, review lens, readiness state, and `approvalStateMutationAllowed=fal
 does not approve Ready For Code, closeout, release, residual risk, productization, or
 real-provider readiness.
 
+Conductor-worker delivery loop execution is automatic when a packet supplies an
+approved provider topology plus bounded worker command descriptors. The Conductor reads
+the topology, selects the Developer/Reviewer route, invokes the local subscription CLI
+commands with `shell=false`, captures stdout/stderr and declared artifacts, records
+provider run evidence, then returns the next route. The Human Owner must not copy a
+prompt into a worker CLI and paste the worker response back as the normal delivery loop.
+
+```powershell
+python _harness\bin\harness_cli.py --json --harness-root . conductor-worker-e2e --packet PKT-0001 --mode automatic --real-cli-approval --cli-available --command-descriptor-json "{...}"
+```
+
+The descriptor JSON must include `providerTopology` and `workerCommands` for each
+routed worker role. Each worker command is a descriptor with bounded `argv`,
+`shell=false`, `timeout_seconds`, `cancel_supported`, non-interactive capture, explicit
+local configuration, and artifact roots scoped inside the harness root. Unsupported or
+missing local CLIs return `tool_unavailable`; unsafe shells, interpolation, redirects,
+pipes, missing timeout/cancel, path escapes, nonzero exits, timeouts, and secret-like
+output fail closed before approval or closeout state can change.
+
+When `workerCommands` is omitted, the descriptor may provide `workerPrompts` instead.
+The Conductor then builds bounded built-in provider adapter commands from the selected
+`providerTopology`: Codex workers run through `codex exec ... -o <artifact>`, and Claude
+Code workers run through headless `claude -p <prompt> --output-format json`.
+
+Built-in Codex adapter options are policy-selected through `providerOptions.codex`.
+Supported options include `sandbox` (`read-only` or `workspace-write`),
+`askForApproval` (`untrusted`, `on-request`, or `never`), `model`, `profile`,
+`outputSchema`, `requireJson`, `jsonEvents`, `ignoreUserConfig`, and `ignoreRules`.
+`danger-full-access` is intentionally rejected by the normal automatic delivery loop and
+requires a separate elevated policy/approval path outside this adapter. The adapter
+passes the approval policy as a Codex global option before `exec`, passes only supported
+`exec` options after `exec`, writes the final Codex message to the declared artifact
+through `--output-last-message`, and emits only safe metadata to stdout so provider
+stderr, cache paths, credentials, and local roots are not stored as normal evidence.
+
+Built-in Claude Code adapter options are policy-selected through
+`providerOptions.claude_code`, including `bare`, `allowedTools`, `permissionMode`,
+`maxTurns`, `maxBudgetUsd`, `resumeSessionId`, and `continueSession`; defaults are
+`bare=true`, `maxTurns=10`, and `maxBudgetUsd=0.50`. Claude JSON output is parsed, the
+`result` field is written as the worker artifact, and the full JSON is persisted as a
+sidecar artifact for cost/session/duration/session evidence. `bypassPermissions` is
+rejected by the normal automatic delivery loop and requires a separate elevated
+policy/approval path outside this adapter.
+
+Implementation scenarios that intentionally modify product files must declare
+`allowedChangeRoots` either on the worker command or provider options. The executor
+permits changes only inside those roots, blocks and records side effects elsewhere, and
+adds recovered `worktree_changes` to the output envelope. Planning, review, and testing
+scenarios should normally run read-only and recover only final-message or JSON-result
+artifacts.
+
+`real-smoke` with trusted captured output is a recovery/diagnostic path only. It records
+bounded evidence for review and topology validation, but its status is
+`captured_output_recovery_only`, `productizationEvidence=false`, and it is not acceptable
+as automatic delivery-loop proof.
+
 Validate closeout ledger support chains before packet closeout:
 
 ```powershell

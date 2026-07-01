@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "standard-harness-security-review/v1",
+  "packetId": "PKT-27_CONDUCTOR_WORKER_EXECUTOR_AND_AUTOMATED_DELIVERY_LOOP",
+  "reviewDate": "2026-07-01",
+  "status": "pass_after_remediation",
+  "scope": [
+    "worker subprocess command descriptor safety",
+    "stdout/stderr and artifact redaction",
+    "timeout output handling",
+    "artifact-root containment",
+    "worker side-effect detection",
+    "approval-state mutation boundary",
+    "provider-neutral CLI routing evidence"
+  ],
+  "findingsReviewed": [
+    {
+      "id": "PKT27-SEC-01",
+      "source": "reference/reports/review/PKT-27-closeout-adversarial-security-review.md",
+      "summary": "Rejected secret/root-path stdout/stderr was persisted before rejection.",
+      "status": "remediated",
+      "evidence": [
+        "starter/standard-harness/_harness/test/test_pkt27_worker_executor.py::test_timeout_and_secret_output_are_blocked_evidence_not_passes",
+        "starter/standard-harness/_harness/test/test_pkt27_worker_executor.py::test_root_development_path_output_is_blocked_evidence_not_pass"
+      ]
+    },
+    {
+      "id": "PKT27-SEC-02",
+      "source": "reference/reports/review/PKT-27-closeout-adversarial-security-review.md",
+      "summary": "Worker subprocess could create authority-bearing side effects outside artifact root.",
+      "status": "remediated",
+      "evidence": [
+        "starter/standard-harness/_harness/test/test_pkt27_worker_executor.py::test_worker_side_effect_outside_artifact_root_is_blocked",
+        "diagnostic: worker_side_effect_new_file_removed for newly created unauthorized side-effect files"
+      ]
+    },
+    {
+      "id": "PKT27-SEC-03",
+      "source": "reference/reports/review/PKT-27-closeout-regression-review.md",
+      "summary": "Automatic Conductor path did not connect declared artifact containment to worker commands.",
+      "status": "remediated",
+      "evidence": [
+        "starter/standard-harness/_harness/test/test_pkt27_automated_delivery_loop.py::test_automatic_mode_rejects_worker_command_artifact_escape"
+      ]
+    }
+  ],
+  "verification": [
+    {
+      "command": "py -3 -B -m unittest discover -s starter\\standard-harness\\_harness\\test -p \"test_pkt27_worker_executor.py\"",
+      "result": "pass",
+      "tests": 6
+    },
+    {
+      "command": "py -3 -B -m unittest discover -s starter\\standard-harness\\_harness\\test -p \"test_pkt27_automated_delivery_loop.py\"",
+      "result": "pass",
+      "tests": 4
+    },
+    {
+      "command": "py -3 -B -m unittest discover -s starter\\standard-harness\\_harness\\test",
+      "result": "pass",
+      "tests": 241,
+      "skipped": 1
+    },
+    {
+      "command": "C:\\Users\\user\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe --test .harness\\test\\*.test.js",
+      "result": "pass",
+      "tests": 492
+    }
+  ],
+  "residualRisks": [
+    {
+      "id": "live-provider-cli-not-run",
+      "status": "accepted_as_out_of_scope_for_pkt27_closeout_review",
+      "rationale": "PKT-27 acceptance uses deterministic local fake-provider commands plus provider descriptor/tool_unavailable evidence. Live external Codex/Claude Code subscription CLI execution remains outside this packet closeout."
+    },
+    {
+      "id": "npm-wrapper-path-node-missing",
+      "status": "closed_by_exact_npm_test_evidence",
+      "rationale": "The exact package script was rerun with the bundled Node runtime directory prepended to PATH. `npm test` passed, including pretest runtime check, skills-check dry run, and 492 root JS tests."
+    }
+  ],
+  "authorityBoundary": {
+    "doesNotApproveRelease": true,
+    "doesNotApprovePublish": true,
+    "doesNotApproveHumanAcceptance": true,
+    "doesNotMutateApprovalState": true
+  }
+}

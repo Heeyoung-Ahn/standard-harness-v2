@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -15,10 +16,13 @@ from standard_harness.workflow.conductor import ConductorLedger
 from standard_harness.workflow.conductor import ConductorRoutingPolicy
 from standard_harness.workflow.provider_orchestration import ProviderOrchestrationLedger
 from standard_harness.workflow.provider_orchestration import ProviderOrchestrationPolicy
+from standard_harness.workflow.worker_executor import WorkerExecutionRequest
+from standard_harness.workflow.worker_executor import WorkerExecutor
 
 
 SCHEMA_VERSION = "standard-harness-conductor-worker-e2e/v1"
 REAL_CLI_MODES = {"real-smoke", "real_cli", "real-cli"}
+AUTOMATIC_CLI_MODES = {"automatic", "auto"}
 SUPPORTED_TOPOLOGY_PROVIDERS = {"codex", "claude_code"}
 TOPOLOGY_PROVIDER_ADAPTER_IDS = {
     "codex": "codex-cli-local",
@@ -65,13 +69,22 @@ class ConductorWorkerE2ERunner:
                 diagnostics=packet_diagnostics,
             )
         normalized_mode = mode.strip().lower()
-        if normalized_mode not in {"fixture", *REAL_CLI_MODES}:
+        if normalized_mode not in {"fixture", *REAL_CLI_MODES, *AUTOMATIC_CLI_MODES}:
             return self._blocked_result(
                 packet_id=packet_id,
                 mode=mode,
                 status="execution_blocked",
                 real_cli_evidence_status="execution_blocked",
                 diagnostics=["unsupported_conductor_worker_e2e_mode"],
+            )
+        if normalized_mode in AUTOMATIC_CLI_MODES:
+            return self._automatic_execution_result(
+                packet_id=packet_id,
+                mode=normalized_mode,
+                root=root,
+                real_cli_approval=real_cli_approval,
+                command_descriptor=command_descriptor,
+                cli_available=cli_available,
             )
         if normalized_mode in REAL_CLI_MODES:
             return self._real_cli_boundary_result(
@@ -232,6 +245,8 @@ class ConductorWorkerE2ERunner:
             "packetId": packet_id,
             "mode": mode,
             "status": "pass",
+            "deliveryLoopReadiness": "fixture_only",
+            "productizationEvidence": False,
             "selectedConductor": "provider-neutral-conductor",
             "selectedRoute": route["selected_route"],
             "workerRuns": worker_runs,
@@ -239,8 +254,256 @@ class ConductorWorkerE2ERunner:
             "outputEnvelopeRefs": envelope_refs,
             "adjudication": adjudication,
             "evidenceRefs": [*evidence_refs, _relative_or_absolute(root, evidence_index_path)],
-            "diagnostic_ids": ["fixture_mode_real_cli_not_attempted"] if mode == "fixture" else [],
+            "diagnostic_ids": ["fixture_only_not_delivery_loop_evidence"] if mode == "fixture" else [],
             "realCliEvidenceStatus": real_cli_evidence_status,
+            "authorityBoundary": _authority_boundary(),
+            "nextRoute": "Tester",
+        }
+
+    def _automatic_execution_result(
+        self,
+        *,
+        packet_id: str,
+        mode: str,
+        root: Path,
+        real_cli_approval: bool,
+        command_descriptor: dict[str, Any] | None,
+        cli_available: bool,
+    ) -> dict[str, Any]:
+        if not real_cli_approval:
+            return self._blocked_result(
+                packet_id=packet_id,
+                mode=mode,
+                status="approval_unavailable",
+                real_cli_evidence_status="approval_unavailable",
+                diagnostics=["automatic_execution_requires_explicit_approval"],
+            )
+        if not cli_available:
+            return self._blocked_result(
+                packet_id=packet_id,
+                mode=mode,
+                status="tool_unavailable",
+                real_cli_evidence_status="tool_unavailable",
+                diagnostics=["provider_cli_unavailable"],
+            )
+        descriptor = command_descriptor or {}
+        topology_diagnostics = _provider_topology_diagnostics(descriptor)
+        if topology_diagnostics:
+            return self._blocked_result(
+                packet_id=packet_id,
+                mode=mode,
+                status="automatic_execution_blocked",
+                real_cli_evidence_status="automatic_execution_blocked",
+                diagnostics=topology_diagnostics,
+            )
+        worker_commands = descriptor.get("workerCommands") or descriptor.get("worker_commands")
+        worker_prompts = descriptor.get("workerPrompts") or descriptor.get("worker_prompts")
+        if not isinstance(worker_commands, dict) and not isinstance(worker_prompts, dict):
+            return self._blocked_result(
+                packet_id=packet_id,
+                mode=mode,
+                status="automatic_execution_blocked",
+                real_cli_evidence_status="automatic_execution_blocked",
+                diagnostics=["worker_command_or_prompt_descriptor_missing"],
+            )
+
+        input_snapshot_hash = _input_snapshot_hash(packet_id, mode)
+        store = HarnessStore(root)
+        conductor_policy = ConductorRoutingPolicy()
+        conductor_ledger = ConductorLedger(store)
+        provider_ledger = ProviderOrchestrationLedger(store)
+        provider_policy = ProviderOrchestrationPolicy(_adapter_manifests(root))
+        evidence_dir = root / "_ops" / "evidence" / packet_id / "conductor-worker-e2e"
+        evidence_dir.mkdir(parents=True, exist_ok=True)
+        route = conductor_policy.route(
+            packet_id=packet_id,
+            risk_level="high",
+            importance_level="high",
+            conductor_id="provider-neutral-conductor",
+            input_snapshot_hash=input_snapshot_hash,
+            permission_roots=[str(root)],
+            context_refs=[f"_ops/evidence/{packet_id}/conductor-worker-e2e/evidence-index.json"],
+        )
+        role_routes = _real_cli_role_routes(descriptor)
+        route = _apply_real_cli_provider_overrides(
+            route,
+            provider_policy=provider_policy,
+            role_routes=role_routes,
+        )
+        conductor_ledger.record_routing_decision(
+            routing_decision=route,
+            idempotency_key=f"{packet_id}:conductor-worker-e2e:routing",
+        )
+
+        executor = WorkerExecutor(root)
+        approved_executables = descriptor.get("approved_executables")
+        if not isinstance(approved_executables, list):
+            approved_executables = []
+        artifact_root = Path(str(descriptor.get("artifact_root") or (root / "_ops" / "worker-artifacts")))
+        timeout_seconds = descriptor.get("timeout_seconds")
+        if not isinstance(timeout_seconds, int):
+            timeout_seconds = None
+
+        worker_runs: list[dict[str, Any]] = []
+        verifier_runs: list[dict[str, Any]] = []
+        output_refs: list[dict[str, Any]] = []
+        envelope_refs: list[str] = []
+        evidence_refs: list[str] = []
+        for worker_task in route["selected_workers"]:
+            command = _command_for_worker(
+                worker_commands if isinstance(worker_commands, dict) else {},
+                worker_task,
+            )
+            if command is None and isinstance(worker_prompts, dict):
+                command = _built_in_provider_command(
+                    root=root,
+                    artifact_root=artifact_root,
+                    worker_task=worker_task,
+                    worker_prompts=worker_prompts,
+                    descriptor=descriptor,
+                    timeout_seconds=timeout_seconds,
+                )
+            if isinstance(command, dict) and isinstance(command.get("diagnostic_ids"), list):
+                return self._blocked_result(
+                    packet_id=packet_id,
+                    mode=mode,
+                    status="automatic_execution_blocked",
+                    real_cli_evidence_status="automatic_execution_blocked",
+                    diagnostics=[str(item) for item in command["diagnostic_ids"]],
+                )
+            if not isinstance(command, dict) or not isinstance(command.get("argv"), list):
+                return self._blocked_result(
+                    packet_id=packet_id,
+                    mode=mode,
+                    status="automatic_execution_blocked",
+                    real_cli_evidence_status="automatic_execution_blocked",
+                    diagnostics=["worker_command_descriptor_missing"],
+                )
+            selected_route = provider_policy.select_adapter(
+                worker_task["assigned_role"],
+                preferred_provider=worker_task["provider_label"],
+            )
+            run_id = f"{worker_task['worker_task_id']}:automatic-cli-run"
+            execution = executor.execute(
+                WorkerExecutionRequest(
+                    packet_id=packet_id,
+                    run_id=run_id,
+                    role=worker_task["assigned_role"],
+                    provider=worker_task["provider_label"],
+                    adapter_id=worker_task["adapter_id"],
+                    argv=[str(item) for item in command["argv"]],
+                    approved_executables=[str(item) for item in command.get("approved_executables", approved_executables)],
+                    permission_roots=[root],
+                    artifact_root=artifact_root,
+                    evidence_root=evidence_dir / "worker-executor",
+                    input_snapshot_hash=input_snapshot_hash,
+                    timeout_seconds=command.get("timeout_seconds") if isinstance(command.get("timeout_seconds"), int) else timeout_seconds,
+                    shell=command.get("shell") is True,
+                    declared_artifacts=command.get("declared_artifacts"),
+                    allowed_change_roots=command.get("allowed_change_roots") or command.get("allowedChangeRoots") or descriptor.get("allowedChangeRoots") or descriptor.get("allowed_change_roots"),
+                )
+            )
+            if execution["status"] != "automatic_execution_pass":
+                return self._blocked_result(
+                    packet_id=packet_id,
+                    mode=mode,
+                    status=execution["status"],
+                    real_cli_evidence_status=execution["status"],
+                    diagnostics=list(execution.get("diagnostic_ids", [])),
+                )
+            envelope = execution["outputEnvelope"]
+            ledger_envelope = _ledger_envelope(root, envelope)
+            envelope_path = execution["envelopePath"]
+            run = provider_ledger.record_run(
+                orchestration_run_id=run_id,
+                packet_id=packet_id,
+                role=worker_task["assigned_role"],
+                selected_route=selected_route,
+                input_snapshot_hash=input_snapshot_hash,
+                command_descriptor={
+                    **descriptor,
+                    "argv": list(command["argv"]),
+                    "shell": command.get("shell") is True,
+                    "captured_output": None,
+                    "automatic_execution": True,
+                },
+                output_envelope=ledger_envelope,
+                evidence_refs=list(execution["evidenceRefs"]),
+                diagnostics=[],
+                adjudication_state="pending_adjudication",
+                status="evidence_recorded",
+                idempotency_key=run_id,
+            )
+            output_ref = conductor_policy.worker_output_ref(
+                worker_task=worker_task,
+                output_envelope_path=envelope_path,
+                artifact_manifest_refs=[artifact["path"] for artifact in envelope["artifact_manifest"]],
+                evidence_refs=list(execution["evidenceRefs"]),
+                verified_evidence=True,
+            )
+            conductor_ledger.record_worker_output_ref(
+                worker_output_ref=output_ref,
+                idempotency_key=f"{worker_task['worker_task_id']}:automatic-output-ref",
+            )
+            public_run = _public_run_record(run)
+            public_run["outputEnvelope"] = envelope
+            if worker_task["assigned_role"].lower() == "reviewer":
+                verifier_runs.append(public_run)
+            else:
+                worker_runs.append(public_run)
+            output_refs.append(output_ref)
+            envelope_refs.append(envelope_path)
+            evidence_refs.extend(execution["evidenceRefs"])
+
+        provider_adjudication = provider_ledger.record_adjudication(
+            packet_id=packet_id,
+            left_adapter_run_id=worker_runs[0]["adapterRunId"],
+            right_adapter_run_id=verifier_runs[0]["adapterRunId"],
+            disagreement="automatic worker and verifier outputs require downstream evidence review",
+            follow_up_owner="Tester",
+            idempotency_key=f"{packet_id}:provider-adjudication",
+        )
+        adjudication = conductor_policy.adjudicate(
+            packet_id=packet_id,
+            worker_outputs=output_refs,
+            disagreements=[],
+            resolution="automatic worker and verifier envelopes recorded for downstream verification",
+            unresolved_items=[],
+            next_route="Tester",
+        )
+        adjudication["provider_adjudication"] = provider_adjudication
+        conductor_ledger.record_adjudication(
+            adjudication=adjudication,
+            idempotency_key=f"{packet_id}:conductor-worker-e2e:adjudication",
+        )
+        evidence_index_path = _write_evidence_index(
+            evidence_dir=evidence_dir,
+            packet_id=packet_id,
+            mode=mode,
+            real_cli_evidence_status="automatic_execution_pass",
+            envelope_refs=envelope_refs,
+            provider_topology_evidence=_provider_topology_evidence(
+                packet_id=packet_id,
+                command_descriptor=descriptor,
+                role_routes=role_routes,
+            ),
+        )
+        return {
+            "schemaVersion": SCHEMA_VERSION,
+            "packetId": packet_id,
+            "mode": mode,
+            "status": "automatic_execution_pass",
+            "deliveryLoopReadiness": "automatic_execution_pass",
+            "productizationEvidence": True,
+            "selectedConductor": "provider-neutral-conductor",
+            "selectedRoute": route["selected_route"],
+            "workerRuns": worker_runs,
+            "verifierRuns": verifier_runs,
+            "outputEnvelopeRefs": envelope_refs,
+            "adjudication": adjudication,
+            "evidenceRefs": [*evidence_refs, _relative_or_absolute(root, evidence_index_path)],
+            "diagnostic_ids": [],
+            "realCliEvidenceStatus": "automatic_execution_pass",
             "authorityBoundary": _authority_boundary(),
             "nextRoute": "Tester",
         }
@@ -530,7 +793,7 @@ class ConductorWorkerE2ERunner:
             evidence_dir=evidence_dir,
             packet_id=packet_id,
             mode="real-smoke",
-            real_cli_evidence_status="pass",
+            real_cli_evidence_status="captured_output_recovery_only",
             envelope_refs=envelope_refs,
             provider_topology_evidence=topology_evidence,
         )
@@ -538,7 +801,9 @@ class ConductorWorkerE2ERunner:
             "schemaVersion": SCHEMA_VERSION,
             "packetId": packet_id,
             "mode": "real-smoke",
-            "status": "pass",
+            "status": "captured_output_recovery_only",
+            "deliveryLoopReadiness": "captured_output_recovery_only",
+            "productizationEvidence": False,
             "selectedConductor": "provider-neutral-conductor",
             "selectedRoute": route["selected_route"],
             "workerRuns": worker_runs,
@@ -547,11 +812,152 @@ class ConductorWorkerE2ERunner:
             "adjudication": adjudication,
             "evidenceRefs": [*evidence_refs, _relative_or_absolute(root, evidence_index_path)],
             "providerTopologyEvidence": topology_evidence,
-            "diagnostic_ids": [],
-            "realCliEvidenceStatus": "pass",
+            "diagnostic_ids": ["captured_output_recovery_only"],
+            "realCliEvidenceStatus": "captured_output_recovery_only",
             "authorityBoundary": _authority_boundary(),
             "nextRoute": "Tester",
         }
+
+
+def _command_for_worker(
+    worker_commands: dict[str, Any],
+    worker_task: dict[str, Any],
+) -> dict[str, Any] | None:
+    role = str(worker_task.get("assigned_role") or "")
+    reviewer_id = worker_task.get("reviewer_id")
+    keys = []
+    if reviewer_id:
+        keys.append(f"{role}:{reviewer_id}")
+    keys.extend([role, role.lower()])
+    for key in keys:
+        value = worker_commands.get(key)
+        if isinstance(value, dict):
+            return value
+    return None
+
+
+def _built_in_provider_command(
+    *,
+    root: Path,
+    artifact_root: Path,
+    worker_task: dict[str, Any],
+    worker_prompts: dict[str, Any],
+    descriptor: dict[str, Any],
+    timeout_seconds: int | None,
+) -> dict[str, Any] | None:
+    prompt = _prompt_for_worker(worker_prompts, worker_task)
+    if not isinstance(prompt, str) or not prompt.strip():
+        return None
+    provider = str(worker_task.get("provider_label") or "").strip().lower()
+    role = str(worker_task.get("assigned_role") or "Worker")
+    adapter_name = {
+        "codex": "codex_cli_adapter.py",
+        "claude_code": "claude_code_cli_adapter.py",
+    }.get(provider)
+    if adapter_name is None:
+        return None
+    adapter_path = Path(__file__).resolve().parent / adapter_name
+    artifact = artifact_root / f"{_safe_ref_name(role)}-{provider}-output.txt"
+    provider_cli_argv = _provider_cli_argv(descriptor, provider)
+    provider_cli_diagnostics = _provider_cli_argv_diagnostics(
+        descriptor=descriptor,
+        provider=provider,
+        provider_cli_argv=provider_cli_argv,
+    )
+    if provider_cli_diagnostics:
+        return {"diagnostic_ids": provider_cli_diagnostics}
+    provider_options = _provider_options(descriptor, provider)
+    adapter_timeout = timeout_seconds if isinstance(timeout_seconds, int) else 120
+    allowed_change_roots = provider_options.get("allowedChangeRoots") or provider_options.get("allowed_change_roots")
+    if not isinstance(allowed_change_roots, list):
+        allowed_change_roots = descriptor.get("allowedChangeRoots") or descriptor.get("allowed_change_roots")
+    if not isinstance(allowed_change_roots, list):
+        allowed_change_roots = []
+    return {
+        "argv": [
+            sys.executable,
+            str(adapter_path),
+            "--role",
+            role,
+            "--artifact",
+            str(artifact),
+            "--prompt",
+            prompt.strip(),
+            "--workdir",
+            str(root),
+            "--timeout-seconds",
+            str(adapter_timeout),
+            "--provider-argv-json",
+            json.dumps(provider_cli_argv),
+            "--provider-options-json",
+            json.dumps(provider_options),
+        ],
+        "approved_executables": [sys.executable],
+        "declared_artifacts": [str(artifact)],
+        "allowed_change_roots": [str(item) for item in allowed_change_roots if isinstance(item, str)],
+        "shell": False,
+        "timeout_seconds": adapter_timeout + 30,
+    }
+
+
+def _prompt_for_worker(worker_prompts: dict[str, Any], worker_task: dict[str, Any]) -> str | None:
+    role = str(worker_task.get("assigned_role") or "")
+    reviewer_id = worker_task.get("reviewer_id")
+    keys = []
+    if reviewer_id:
+        keys.append(f"{role}:{reviewer_id}")
+    keys.extend([role, role.lower()])
+    for key in keys:
+        value = worker_prompts.get(key)
+        if isinstance(value, str):
+            return value
+        if isinstance(value, dict) and isinstance(value.get("prompt"), str):
+            return value["prompt"]
+    return None
+
+
+def _provider_cli_argv(descriptor: dict[str, Any], provider: str) -> list[str]:
+    provider_cli = descriptor.get("providerCli") or descriptor.get("provider_cli")
+    if isinstance(provider_cli, dict):
+        value = provider_cli.get(provider)
+        if isinstance(value, str) and value.strip():
+            return [value.strip()]
+        if isinstance(value, list) and value:
+            return [str(item) for item in value if isinstance(item, str) and item.strip()]
+    return ["claude"] if provider == "claude_code" else ["codex"]
+
+
+def _provider_cli_argv_diagnostics(
+    *,
+    descriptor: dict[str, Any],
+    provider: str,
+    provider_cli_argv: list[str],
+) -> list[str]:
+    if not provider_cli_argv:
+        return ["provider_cli_argv_missing"]
+    expected = "claude" if provider == "claude_code" else "codex"
+    if provider_cli_argv == [expected]:
+        return []
+    approved = descriptor.get("approvedProviderExecutables") or descriptor.get("approved_provider_executables")
+    if not isinstance(approved, list):
+        approved = []
+    executable = str(provider_cli_argv[0])
+    if executable not in [str(item) for item in approved if isinstance(item, str)]:
+        return ["provider_cli_executable_not_approved"]
+    return []
+
+
+def _provider_options(descriptor: dict[str, Any], provider: str) -> dict[str, Any]:
+    provider_options = descriptor.get("providerOptions") or descriptor.get("provider_options")
+    if not isinstance(provider_options, dict):
+        provider_options = {}
+    options = provider_options.get(provider)
+    return options if isinstance(options, dict) else {}
+
+
+def _safe_ref_name(value: str) -> str:
+    cleaned = "".join(ch.lower() if ch.isalnum() else "-" for ch in value.strip())
+    return cleaned.strip("-") or "worker"
 
 
 def _adapter_manifests(root: Path) -> list[AdapterManifest]:
@@ -732,10 +1138,20 @@ def _operating_qa_memory_sources(
 
 
 def _evidence_summary(*, packet_id: str, real_cli_evidence_status: str) -> str:
+    if real_cli_evidence_status == "automatic_execution_pass":
+        return (
+            f"{packet_id} Conductor worker E2E used automatic worker CLI "
+            "execution evidence."
+        )
     if real_cli_evidence_status == "pass":
         return (
             f"{packet_id} Conductor worker E2E used trusted captured real CLI "
             "evidence."
+        )
+    if real_cli_evidence_status == "captured_output_recovery_only":
+        return (
+            f"{packet_id} Conductor worker E2E used trusted captured CLI "
+            "recovery evidence; it is not automatic delivery-loop evidence."
         )
     return (
         f"{packet_id} Conductor worker E2E used fixture evidence; "
@@ -1608,3 +2024,29 @@ def _relative_or_absolute(root: Path, path: Path) -> str:
         return path.resolve().relative_to(root.resolve()).as_posix()
     except ValueError:
         return str(path)
+
+
+def _ledger_envelope(root: Path, envelope: dict[str, Any]) -> dict[str, Any]:
+    ledger = json.loads(json.dumps(envelope))
+    ledger["permission_roots"] = [
+        str(_resolve_public_ref(root, item))
+        for item in ledger.get("permission_roots", [])
+    ]
+    ledger["artifact_manifest"] = [
+        {
+            **artifact,
+            "path": str(_resolve_public_ref(root, artifact["path"])),
+        }
+        for artifact in ledger.get("artifact_manifest", [])
+        if isinstance(artifact, dict) and isinstance(artifact.get("path"), str)
+    ]
+    return ledger
+
+
+def _resolve_public_ref(root: Path, ref: str) -> Path:
+    if ref == ".":
+        return root.resolve()
+    path = Path(ref)
+    if path.is_absolute():
+        return path.resolve()
+    return (root / path).resolve()

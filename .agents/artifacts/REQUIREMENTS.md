@@ -101,8 +101,8 @@ The good-harness standard from legacy v0.2 is binding for this project:
 ## Product Direction
 The v2 product direction is:
 - coordinate human roles, LLM providers, tools, packets, evidence, tests, reviews, PM operations, and closeout through explicit operating contracts,
-- orchestrate multiple subscribed LLM runtimes such as Codex/GPT and Claude Code through provider-neutral adapters and policies, while keeping provider assignments as configurable policy or examples rather than product identity,
-- select Codex or Claude Code as a project Conductor at project start when the Human Owner wants an app-led operating surface; the Conductor talks with the Human Owner, assesses task risk and importance, and chooses direct handling, single CLI-agent delegation, or a cross-LLM verification loop,
+- orchestrate multiple subscribed LLM runtimes such as Codex/GPT and Claude Code through provider-neutral adapters, worker executors, and policies, while keeping provider assignments as configurable policy or examples rather than product identity,
+- select Codex or Claude Code as a project Conductor at project start when the Human Owner wants an app-led operating surface; the Conductor talks with the Human Owner, assesses task risk and importance, chooses direct handling, single CLI-agent delegation, or a cross-LLM verification loop, and drives worker CLI execution/results through the harness without requiring the Human Owner to copy prompts or paste worker output,
 - keep Conductor selection separate from approval authority: selecting a Conductor does
   not grant approval rights, and Ready For Code or Closeout approval may be created only
   by direct Human decision or by a selected Conductor with a valid scoped Human delegation
@@ -376,6 +376,17 @@ and bounded evidence; the Conductor then routes the next step to another Agent,
 Reviewer, Planner, or the Human Owner without taking over approval or closeout
 authority.
 
+This is an automated Conductor-led delivery loop requirement for v2.0. The starter must
+provide a worker executor/adapter layer that can prepare role prompts and input
+snapshots, invoke approved Codex CLI or Claude Code CLI worker commands from
+provider-neutral topology policy, capture stdout/stderr/exit/timeout/cancel/artifacts,
+hash artifacts, produce structured output envelopes, submit the envelopes to the harness
+validator/evidence ledger, and return bounded results to the Conductor for adjudication
+and next-route selection. Fixture mode may exist for tests and offline validation, but it
+cannot replace the automatic worker executor as the product behavior. Human copy/paste of
+prompts, raw CLI transcripts, or captured worker output is not an acceptable primary
+workflow for v2.0.
+
 Example operating patterns include:
 - Claude Code acting as Orchestrator while Codex/GPT handles implementation.
 - Claude handling planning, testing, and review while Codex/GPT handles coding.
@@ -506,6 +517,7 @@ decisions.
 | SHV2-REQ-067 | Product readiness testing must include risk-axis regression suites, not only menu-by-menu checks. Required axes for applicable product packets are permission, session, account lifecycle, data reflection, viewer runtime, and productness checks such as placeholder, test copy, diagnostic panel, and mock metadata exposure. Browser-state E2E must cover P0/P1 risks where API-only evidence cannot prove the user-visible state. | P0 | User direction, PKT-16 H10 |
 | SHV2-REQ-068 | Reviewer closeout for user-facing product packets must include product-quality review in addition to source/code review. Reviewer must check for user-visible placeholder or diagnostic UI, test/technical copy leakage, admin component leakage into viewer routes, stale state shared across sessions, and inconsistent DB-to-UI state mapping. | P0 | User direction, PKT-16 H10 |
 | SHV2-REQ-069 | User UAT entry must be explicitly gated. User UAT may start only after DB runtime preflight, Tester Product Readiness Gate, P0/P1 browser E2E, Reviewer permission/session/product-quality review, zero known placeholder or diagnostic UI findings, and documented UAT accounts, credentials or handoff, and initial state. User UAT is a final sampling and confidence check, not the primary bug discovery phase. | P0 | User direction, PKT-16 H10 |
+| SHV2-REQ-070 | v2.0 Conductor worker orchestration must be automatic for the normal product workflow. The selected Conductor must be able to invoke bounded Codex CLI and/or Claude Code CLI workers through a provider-neutral executor, collect structured output envelopes, validate and persist evidence, adjudicate worker/verifier results, and route the next Agent, Reviewer, Planner, or Human Owner without relying on the Human Owner to manually copy prompts into CLI tools or paste CLI results back into the harness. Manual captured-output intake may remain only as an explicit recovery/debug/import mode and cannot satisfy productization-complete or normal delivery-loop acceptance. | P0 | User direction, Multi-LLM Orchestration Model correction |
 
 ## Final Hardening And Productization Requirement Map
 PKT-16 is the final broad hardening packet. Its hardening rows are not a separate
@@ -552,7 +564,7 @@ Out of scope for the first packet:
 - bulk-copying legacy v1/v2 files into starter,
 - treating legacy docs as directly shippable starter contracts,
 - publishing or releasing a starter package,
-- implementing full automatic multi-provider control,
+- implementing unbounded remote/cloud provider control outside approved local CLI worker executors,
 - implementing every skill as built-in core instead of a routed skill contract,
 - making PM summaries, LLM deliberation, generated context, or Wiki pages into approval authority,
 - requiring the Human Owner to inspect code or read all generated operating artifacts,
@@ -563,6 +575,7 @@ Out of scope for the first packet:
 - No implementation starts until requirements freeze and an approved work packet exist.
 - Required evidence, owner, and verification paths must be explicit before `Ready For Code`.
 - Completion claims require evidence; closeout requires trusted or explicitly accepted evidence.
+- Multi-LLM orchestration completion claims require automatic Conductor-owned worker CLI execution evidence. Fixture-only, manual handoff, or captured-output-only evidence cannot satisfy v2.0 productization-complete.
 - Every packet must declare packet type, risk level, selected gate profile, gate profile version, required gates, and approved N/A decisions.
 - Human decisions must be explicit and cannot override non-overridable hard stops.
 - `starter/standard-harness/AGENTS.md` remains absent.
@@ -578,7 +591,7 @@ Out of scope for the first packet:
 ## Open Questions
 - No PKT-11 through PKT-15 implementation question remains open for the approved hardening scope.
 - Actual starter promotion, publish, release, or distribution remains unapproved. PKT-15 closed only the promotion dry-run, candidate lifecycle, and copied-starter smoke rehearsal boundary.
-- Live authenticated Codex CLI or Claude Code CLI worker execution remains unapproved and unrun; it is no longer optional for a final productization-complete claim and must be closed by PKT-20 or productization remains incomplete.
+- Live authenticated Codex CLI or Claude Code CLI worker execution remains unproven as an automatic Conductor-led product workflow. PKT-20 hold/narrowed evidence is not sufficient for v2.0 productization-complete; the automatic worker executor and delivery loop must be closed by PKT-27 or productization remains incomplete.
 - Structured PM TSV/CSV/WBS ingestion into operating-intelligence remains unclosed; it is no longer optional for a final productization-complete claim and must be closed by PKT-21 or productization remains incomplete.
 - Tester Product Readiness Gate and User UAT entry contracts are implemented in the expanded PKT-16 H10 validator slice with Developer/Tester evidence, independent review-lens evidence, Reviewer adjudication, security review, and Planner closeout complete. They are required before any future user-facing product packet is handed to User UAT.
 - Lower-level non-index `reference/**` evidence-reference hardening remains a non-blocking follow-up for broader operating-intelligence coverage.
@@ -604,5 +617,5 @@ Out of scope for the first packet:
 - Full XP-00 through XP-10 implementation sequence remains a roadmap and must be packetized.
 - v1 zip artifacts remain reference-only unless separately promoted by approved plan.
 - Full skill catalog/router implementation follows the folder and starter boundary baseline.
-- Full automatic multi-provider control remains deferred; v2.2 should first prove provider-neutral policy, manual handoff, and evidence/adjudication contracts.
+- Unbounded automatic multi-provider control remains out of scope, but bounded local CLI worker execution through the selected Conductor is required for v2.0. Manual handoff and captured-output contracts are recovery/debug/import modes, not the normal delivery workflow.
 - Full natural-language project-status assistant behavior remains deferred until the structured state, evidence index, closeout, wiki, and PM summaries are reliable enough to answer from evidence.

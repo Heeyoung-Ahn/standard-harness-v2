@@ -386,8 +386,8 @@ state and must not override packet scope, evidence gates, Reviewer findings, or 
 decisions.
 
 ## Provider-Neutral Orchestration Architecture
-v2 supports multi-LLM orchestration through policy and adapter contracts, not product
-identity.
+v2 supports multi-LLM orchestration through policy, worker executor, and adapter
+contracts, not product identity.
 
 Allowed examples:
 - Claude Code as Orchestrator with Codex/GPT as Developer.
@@ -407,11 +407,18 @@ Architecture direction:
   with the Human Owner, reads harness state and packet boundaries, and decides whether
   a task is handled directly, delegated to one CLI Agent, or routed through a cross-LLM
   worker/verifier loop according to risk and importance,
+- the selected Conductor owns the normal delivery loop from task routing through worker
+  command invocation, output capture, evidence validation, adjudication, and next-route
+  selection; the Human Owner must not be required to copy prompts into worker CLIs or
+  paste worker output back into the harness,
 - Conductor selection, Conductor approval actor, delegation grant, routing decision,
   worker envelope, adjudication, and approval decision records remain separate so routing
   convenience cannot become approval authority,
 - adapters declare capabilities, permissions, evidence modes, limitations, and failure
   modes,
+- worker executors build safe command descriptors from provider topology policy, role
+  prompts, input snapshots, timeout/cancel policy, artifact roots, and redaction rules,
+  then run approved local provider CLIs without shell interpolation,
 - role routing policy selects provider assignments,
 - CLI Agent outputs return to the Conductor as bounded output envelopes, artifacts,
   diagnostics, and evidence references before the Conductor routes the next Agent,
@@ -420,6 +427,9 @@ Architecture direction:
 - adjudication records capture disagreement without treating LLM consensus as truth.
 - approval services reject Planner, Worker, generated-state, LLM-output, or untrusted
   prose attempts to create delegated Ready For Code or Closeout approval records.
+- manual captured-output intake remains a recovery/debug/import path only. It can
+  preserve evidence when an external tool already ran, but it is not the primary product
+  workflow and cannot satisfy automatic multi-LLM delivery-loop readiness.
 
 ## Skill Routing Architecture
 Skills are routed by task type, role, risk surface, packet route, and evidence needs. The

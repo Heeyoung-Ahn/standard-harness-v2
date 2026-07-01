@@ -2,7 +2,7 @@
   "ok": true,
   "command": "validation-report",
   "validatorVersion": "v1.3",
-  "executedAt": "2026-07-01T08:32:38.534Z",
+  "executedAt": "2026-07-01T11:41:11.264Z",
   "cutoverReady": true,
   "profileSummary": {
     "path": ".agents/artifacts/ACTIVE_PROFILES.md",
@@ -974,6 +974,38 @@
         ]
       },
       "gateEffect": "hold_if_missing_approval_or_evidence"
+    },
+    {
+      "artifactId": "PKT-27_CONDUCTOR_WORKER_EXECUTOR_AND_AUTOMATED_DELIVERY_LOOP",
+      "packetPath": "reference/packets/PKT-27_CONDUCTOR_WORKER_EXECUTOR_AND_AUTOMATED_DELIVERY_LOOP.md",
+      "declaredRiskClass": "critical",
+      "derivedRiskClass": "high",
+      "effectiveRiskClass": "critical",
+      "routeClass": "packet-path",
+      "requestedRouteClass": "packet-path",
+      "chosenRouteClass": "packet-path",
+      "routeEligibility": "not-applicable",
+      "routeRejectionReasons": [],
+      "fastPathNoteStatus": "not-applicable",
+      "changeZone": {
+        "declared": "load-bearing",
+        "changedFiles": [],
+        "effectiveRouteClass": "packet-path",
+        "diagnostics": []
+      },
+      "modelingImpact": {
+        "required": true,
+        "status": "required",
+        "triggerCount": 3,
+        "diagnosticCount": 0,
+        "blockingDiagnosticCount": 0,
+        "triggers": [
+          "Change zone load-bearing",
+          "api contract",
+          "schema boundary"
+        ]
+      },
+      "gateEffect": "hard_stop"
     }
   ],
   "findings": [
@@ -987,7 +1019,7 @@
       "message": "reference/packets/PKT-24_SURVEY_APP_WEB_REVIEW.md has effective riskClass high, so it must keep an approved packet, explicit Ready For Code approval, and verification/evidence markers before proceeding."
     }
   ],
-  "nextAction": "No active PKT-26 lane remains. Choose the next approved lane only after separate Human/Planner decision; do not reopen same-class A10 remediation without explicit Human Owner or valid delegated Conductor authority.",
+  "nextAction": "Keep the reusable baseline on planning hold until a new approved lane is selected.",
   "gateDecision": "pass",
   "traceSummary": null,
   "candidateGates": [

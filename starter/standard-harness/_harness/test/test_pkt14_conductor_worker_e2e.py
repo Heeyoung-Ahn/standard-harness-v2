@@ -150,15 +150,14 @@ class ConductorWorkerE2ETests(unittest.TestCase):
                 cli_available=True,
             )
 
-            self.assertEqual(result["status"], "pass")
+            self._assert_captured_recovery_result(result)
             self.assertEqual(result["mode"], "real-smoke")
-            self.assertEqual(result["realCliEvidenceStatus"], "pass")
             self.assertEqual(len(result["workerRuns"]), 1)
             self.assertEqual(len(result["verifierRuns"]), 1)
             self.assertIn("captured-cli-evidence", json.dumps(result["evidenceRefs"]))
             self.assertIn("captured-envelope", json.dumps(result["outputEnvelopeRefs"]))
             evidence_index = root / "_ops" / "evidence" / "PKT-14" / "conductor-worker-e2e" / "evidence-index.json"
-            self.assertIn("trusted captured real CLI evidence", evidence_index.read_text(encoding="utf-8"))
+            self.assertIn("trusted captured CLI recovery evidence", evidence_index.read_text(encoding="utf-8"))
             artifacts = list(evidence_index.parent.glob("*-captured-artifact.json"))
             self.assertEqual(len(artifacts), 2)
             self.assertIn("trusted_harness_capture", artifacts[0].read_text(encoding="utf-8"))
@@ -204,8 +203,7 @@ class ConductorWorkerE2ETests(unittest.TestCase):
                 cli_available=True,
             )
 
-            self.assertEqual(result["status"], "pass")
-            self.assertEqual(result["realCliEvidenceStatus"], "pass")
+            self._assert_captured_recovery_result(result)
             self.assertEqual(result["verifierRuns"][0]["provider"], "codex")
 
     def test_real_cli_consumes_packet_topology_for_codex_reviewer_without_string_override(self) -> None:
@@ -261,8 +259,7 @@ class ConductorWorkerE2ETests(unittest.TestCase):
                 cli_available=True,
             )
 
-            self.assertEqual(result["status"], "pass")
-            self.assertEqual(result["realCliEvidenceStatus"], "pass")
+            self._assert_captured_recovery_result(result)
             self.assertEqual(result["verifierRuns"][0]["provider"], "codex")
             self.assertNotIn(
                 "captured_output_record_missing:Reviewer:claude_code",
@@ -320,7 +317,7 @@ class ConductorWorkerE2ETests(unittest.TestCase):
                 cli_available=True,
             )
 
-            self.assertEqual(result["status"], "pass")
+            self._assert_captured_recovery_result(result)
             topology = result["providerTopologyEvidence"]
             self.assertEqual(topology["schemaVersion"], "standard-harness-provider-topology-evidence/v1")
             self.assertEqual(topology["projectTopology"]["conductor"]["provider"], "codex")
@@ -653,7 +650,7 @@ class ConductorWorkerE2ETests(unittest.TestCase):
                             cli_available=True,
                         )
 
-                        self.assertEqual(result["status"], "pass")
+                        self._assert_captured_recovery_result(result)
                         assignment = next(
                             entry
                             for entry in result["providerTopologyEvidence"]["roleAssignments"]
@@ -914,7 +911,7 @@ class ConductorWorkerE2ETests(unittest.TestCase):
                 cli_available=True,
             )
 
-            self.assertEqual(result["status"], "pass")
+            self._assert_captured_recovery_result(result)
             reviewer_assignment = next(
                 entry
                 for entry in result["providerTopologyEvidence"]["roleAssignments"]
@@ -1056,6 +1053,13 @@ class ConductorWorkerE2ETests(unittest.TestCase):
                 }
             ),
         )
+
+    def _assert_captured_recovery_result(self, result: dict[str, object]) -> None:
+        self.assertEqual(result["status"], "captured_output_recovery_only")
+        self.assertEqual(result["realCliEvidenceStatus"], "captured_output_recovery_only")
+        self.assertEqual(result["deliveryLoopReadiness"], "captured_output_recovery_only")
+        self.assertFalse(result["productizationEvidence"])
+        self.assertIn("captured_output_recovery_only", result["diagnostic_ids"])
 
     @staticmethod
     def _safe_descriptor(

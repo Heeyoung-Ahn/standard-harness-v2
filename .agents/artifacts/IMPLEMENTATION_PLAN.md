@@ -142,7 +142,7 @@ these reusable guardrails.
 | Evidence and closeout | Closeout reports now target `product/docs/packets/` and validate linked `_ops/evidence/<packet-id>/` evidence indexes. PKT-04 PM reports and WBS output cite evidence-index links, and PKT-13 consumes indexed sources for operating-intelligence QA. | Lower-level non-index `reference/**` evidence references are not yet uniformly hardened. | Treat broad reference evidence-ref hardening as productization follow-up, not as PKT-13 closeout drift. |
 | PM rhythm | PMO projection table/service exists, and PKT-04 adds one-page day-start/day-wrap-up report generation, PMO placement validation, stale-summary checks, authority-boundary diagnostics, and WBS TSV support. PKT-13 can cite PM summaries as non-authoritative indexed sources. | Structured PM TSV/CSV/WBS bulk ingestion into operating intelligence remains follow-up work. | Keep generated PM reports/WBS support as v2.0 baseline; route structured PM source-intake expansion to future productization work. |
 | Long memory | Wiki proposal validator/applier, operational memory snapshots, source indexing, and Human Owner QA are implemented for the approved PKT-13 scope. | Mandatory starter seed pages beyond on-demand evidence-backed memory are not required for v2.0 and remain future scope if needed. | Preserve index-first, bounded, evidence-backed memory and avoid turning generated summaries into authority. |
-| Multi-LLM routing | Adapter manifest, workflow run records, Conductor worker fixtures, output envelopes, and adjudication records exist for deterministic/captured-output E2E. | Live authenticated provider CLI smoke is not approved or run. | Keep real Codex CLI/Claude Code CLI execution as explicit approval-boundary follow-up. |
+| Multi-LLM routing | Adapter manifest, workflow run records, Conductor worker fixtures, output envelopes, adjudication records, and captured-output recovery intake exist. | The normal product workflow still lacks a Conductor-owned worker executor that invokes Codex CLI / Claude Code CLI, captures output, validates envelopes, and routes results without Human copy/paste. | Add PKT-27 as a required productization blocker for automatic Conductor worker execution and delivery-loop evidence. Captured-output/manual handoff becomes recovery/debug/import only. |
 | Skill routing | Skill catalog/router exists. | Current starter does not yet expose a complete skill auto-use workflow for copied projects. | Add catalog validation and handoff prompts after core packet loop. |
 | Human question answering | Active Context, operational memory projections, PKT-13 source indexes, and Human Owner QA answers exist for the approved v2.0 hardening scope. | Export/onboarding release readiness and broader structured PM source ingestion are still productization follow-up work. | Preserve the compact evidence-backed answer contract and route future expansion through explicit Planner approval. |
 
@@ -389,11 +389,15 @@ Verification:
 - sensitive evidence tests
 
 ### Wave 6: Provider-Neutral Multi-LLM Orchestration And Conductor Routing
-Goal: support Codex/GPT, Claude Code, and future providers above the LLM runtime layer.
+Goal: support Codex/GPT, Claude Code, and future providers above the LLM runtime layer,
+including a bounded automatic Conductor worker execution loop for the normal v2.0
+delivery workflow.
 
 Scope:
 - Provider assignments are policy-selected examples, not product identity.
-- Orchestration starts manual-first and adapter-backed, then can evolve into automated execution.
+- Orchestration must be Conductor-led and automatic for bounded local CLI workers in the
+  normal product workflow. Manual/captured-output intake is retained only as
+  recovery/debug/import behavior.
 - Project startup can select Codex app or Claude Code app as the app-facing Conductor;
   the Conductor chooses direct handling, single CLI-agent delegation, or cross-LLM
   worker/verifier loops according to task risk and importance.
@@ -407,6 +411,11 @@ Implementation tasks:
   Orchestrator.
 - Add Conductor surface selection and routing policy that keeps app-facing conversation,
   CLI worker delegation, Conductor review, and next-Agent/User routing explicit.
+- Add a worker executor/adapter layer that builds safe command descriptors from
+  provider topology policy, role prompts, input snapshots, artifact roots, timeout/cancel
+  policy, and redaction rules; runs approved Codex CLI / Claude Code CLI workers; captures
+  stdout/stderr/exit/timeout/cancel/artifacts; hashes artifacts; emits structured
+  envelopes; submits harness evidence; and returns results to the selected Conductor.
 - Add delegated approval validation so Ready For Code and Closeout approval execution can
   move from Planner to the selected Conductor only when a scoped Human delegation validates
   through a trusted harness approval command/service.
@@ -625,14 +634,14 @@ adjudication, and release-boundary wording that prevents dry-run evidence from b
 overread as release approval.
 
 After PKT-16 closeout, broad hardening should stop. Productization must not leave
-deferred or optional implementation. PKT-17 through PKT-21 are all required before v2.0
-can claim additional hardening and productization complete.
+deferred or optional implementation. PKT-17 through PKT-21 and PKT-27 are all required
+before v2.0 can claim additional hardening and productization complete.
 
 ### Post-PKT-16 Productization Packet Plan
 The remaining work is not another hardening wave. It is a productization/release-readiness
 sequence that must preserve PKT16-H0 through PKT16-H9 and close PKT16-P1 through
-PKT16-P4 without deferring implementation. PKT-17 through PKT-21 are required as a
-single productization completion set; none are optional if the project claims final
+PKT16-P4 without deferring implementation. PKT-17 through PKT-21 and PKT-27 are required
+as a single productization completion set; none are optional if the project claims final
 additional hardening and productization are complete.
 
 | Order | Packet Candidate | Outcome | Requirement Links | Changed Surface | Risk Mode | Required Verification |
@@ -640,8 +649,9 @@ additional hardening and productization are complete.
 | 20 | PKT-17 Productization Readiness And Clean Export | Produce a clean starter export/copy path and prove the exported starter excludes root development state, generated state, local DB/cache files, evidence history, wiki state, provider-specific entry contracts, and inherited operating memory. | SHV2-REQ-052, 053, 054, 056 | export/copy policy, contamination validator, promotion dry-run policy, release boundary docs | release | clean export validation, forbidden-state negative fixtures, copied-starter init/validate smoke, dry-run no-mutation check, release-boundary wording checks |
 | 21 | PKT-18 Fresh Starter QA And Onboarding Smoke | Prove a freshly copied starter can initialize, answer only from project-specific trusted sources, abstain on unsupported inherited context, and guide the Human Owner through first packet/onboarding without root memory. | SHV2-REQ-049, 050, 051, 052, 055 | copied-starter QA CLI/status, onboarding docs, source-index bootstrap, abstain/freshness policy | high | before/after reset QA tests, inherited-memory negative test, first-packet smoke, onboarding command smoke, evidence-source trust checks |
 | 22 | PKT-19 Release Candidate Packaging And Evidence Bundle | Assemble release-candidate evidence without publishing: package manifest, command inventory, rollback notes, release-readiness report, security/dependency evidence, and unresolved-risk list. | SHV2-REQ-053, 054, 056 | release docs, package metadata, evidence manifest, dependency/security reports | release | package dry-run, dependency/security review, evidence manifest validation, rollback drill, no-publish/no-release approval boundary checks |
-| 23 | PKT-20 Real Provider Worker Smoke | Run real authenticated Codex CLI / Claude Code CLI worker smoke through provider-neutral Conductor boundaries without making a provider the product identity. Productization remains incomplete until this is closed with real evidence or the product claim is narrowed to exclude real-provider readiness. | SHV2-REQ-019, 020, 048, 056, 057 | provider adapter examples, worker execution evidence, Conductor adjudication | high / explicit approval | real CLI smoke, provider-neutral contamination tests, delegated approval hard-stop tests, evidence that provider identity remains adapter-only |
+| 23 | PKT-20 Real Provider Worker Smoke | Historical packet for real-provider readiness classification. Its hold/unavailable/narrowed closeout does not satisfy the normal automatic Conductor delivery-loop requirement. | SHV2-REQ-019, 020, 048, 056, 057 | provider adapter examples, worker execution evidence, Conductor adjudication | high / explicit approval | real CLI smoke or hold/narrowed evidence, provider-neutral contamination tests, delegated approval hard-stop tests |
 | 24 | PKT-21 Structured PM Source Intake | Ingest PM TSV/CSV/WBS sources into operating intelligence without turning PM summaries into approval authority. Productization remains incomplete until structured PM source intake is closed. | SHV2-REQ-026, 027, 038, 039, 043, 057 | PM source intake, operating-intelligence index, WBS parser | high | PM TSV/CSV fixture tests, authority-boundary tests, source freshness checks, QA answer tests, WBS round-trip evidence |
+| 25 | PKT-27 Conductor Worker Executor And Automated Delivery Loop | Productize the normal automatic delivery loop: selected Conductor reads topology/policy, invokes bounded Codex CLI / Claude Code CLI workers, captures outputs/artifacts, validates envelopes, persists evidence, adjudicates worker/verifier results, and routes the next step without Human copy/paste. Productization remains incomplete until this closes with passing automatic execution evidence. | SHV2-REQ-019, 020, 048, 057, 070 | worker executor, provider topology executor policy, command descriptor builder, subprocess capture, output envelopes, evidence ledger intake, Conductor adjudication, CLI/status contract, tests/docs | critical / contract / provider / security | TDD red/green executor tests, safe command negative tests, timeout/cancel tests, artifact hash tests, evidence ledger tests, Conductor route tests, captured-output recovery downgrade tests, provider-neutral contamination tests, approval hard-stop tests, starter regression |
 
 Recommended next productization packet after PKT-16 closeout: `PKT-17 Productization
 Readiness And Clean Export`.
@@ -652,8 +662,10 @@ acceptance. Its job is to make the starter export and release-readiness evidence
 trustworthy enough for a later release decision.
 
 Productization completion rule: do not mark additional hardening and productization
-complete until PKT-17, PKT-18, PKT-19, PKT-20, and PKT-21 are all closed with passing
-Tester/Reviewer evidence and no deferred implementation scope.
+complete until PKT-17, PKT-18, PKT-19, PKT-20, PKT-21, and PKT-27 are all closed with
+passing Tester/Reviewer evidence and no deferred implementation scope. PKT-20
+hold/unavailable/narrowed evidence cannot satisfy PKT-27 automatic delivery-loop
+evidence.
 
 ### Post-Productization Planning And Design Trace Extension
 These packet candidates are required before Standard Harness claims mature UI/design
@@ -850,7 +862,7 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-054 | PKT-17 | PKT-19 | Clean export and release-candidate evidence exclude root/generated/local/provider-specific state before release-ready claims. |
 | SHV2-REQ-055 | PKT-18 | PKT-17 | Fresh copied-starter QA abstains or fails closed when only inherited root/hardening memory exists. |
 | SHV2-REQ-056 | PKT-17 | PKT-19 | Promotion dry-run and release-readiness evidence are validated as non-mutating and non-approving. |
-| SHV2-REQ-057 | PKT-17 through PKT-21 | none | Additional hardening and productization cannot be marked complete while any required productization packet remains unclosed or deferred. |
+| SHV2-REQ-057 | PKT-17 through PKT-21, PKT-27 | none | Additional hardening and productization cannot be marked complete while any required productization packet remains unclosed or deferred, including automatic Conductor worker execution. |
 | SHV2-REQ-058 | PKT-16 | PKT-22 | Requirement candidate lifecycle tests prove `draft`, `reviewed`, `promoted`, `rejected`, and `deferred` candidates cannot become authority without canonical promotion links to policy, schema, validator, test, and coverage rows; implementation-readiness checks then require packet and evidence-target links before `Ready For Code`. |
 | SHV2-REQ-059 | PKT-16 | PKT-22 | Requirement-to-feature-to-scenario-to-acceptance-to-flow-to-evidence trace exists and packet preflight rejects missing or narrowed trace. |
 | SHV2-REQ-060 | PKT-16 | PKT-22 | Flow metadata records related candidates/features, entry point, success/failure paths, roles, state changes, evidence targets, E2E status, and touched screens when applicable. |
@@ -863,6 +875,7 @@ tests, validation, and packet closeout evidence.
 | SHV2-REQ-067 | PKT-16 | none | Risk-axis regression suites cover permission, session, account lifecycle, data reflection, viewer runtime, and productness using browser-state E2E where API-only checks are insufficient. |
 | SHV2-REQ-068 | PKT-16 | none | Reviewer product-quality review checks placeholder/diagnostic leakage, admin/viewer component leakage, stale session state, and DB-to-UI mapping consistency. |
 | SHV2-REQ-069 | PKT-16 | none | User UAT entry requires DB runtime preflight, Product Readiness Gate, P0/P1 browser E2E, Reviewer product-quality pass, zero known placeholder/diagnostic UI findings, and UAT account/initial-state handoff. |
+| SHV2-REQ-070 | PKT-27 | none | Normal multi-LLM delivery requires Conductor-owned worker CLI execution, structured output envelopes, evidence validation, adjudication, and next-route selection without Human prompt/result copy-paste. |
 
 ## Packet Decision Gates For Open Questions
 Open questions from `REQUIREMENTS.md` remain allowed planning questions, but they must not
@@ -908,10 +921,11 @@ implementation starts.
 | 20 | PKT-17 Productization Readiness And Clean Export | Produce clean starter export and prove forbidden root/generated/local/provider-specific state is excluded. | release | clean export validation, forbidden-state negative fixtures, copied-starter init/validate smoke, dry-run no-mutation checks |
 | 21 | PKT-18 Fresh Starter QA And Onboarding Smoke | Prove copied-starter QA and onboarding answer only from initialized project-specific trusted sources. | high | QA freshness tests, inherited-memory negative tests, first-packet smoke, onboarding command smoke |
 | 22 | PKT-19 Release Candidate Packaging And Evidence Bundle | Assemble release-candidate evidence without publishing or granting release approval. | release | package dry-run, dependency/security review, evidence manifest validation, rollback drill, no-release boundary checks |
-| 23 | PKT-20 Real Provider Worker Smoke | Prove real provider workers can run through provider-neutral Conductor boundaries without becoming product identity. | high / explicit approval | real CLI smoke, provider-neutral contamination tests, delegated approval hard-stop tests |
+| 23 | PKT-20 Real Provider Worker Smoke | Historical real-provider readiness packet; hold/unavailable/narrowed evidence does not prove the normal automatic delivery loop. | high / explicit approval | real CLI smoke or hold/narrowed evidence, provider-neutral contamination tests, delegated approval hard-stop tests |
 | 24 | PKT-21 Structured PM Source Intake | Ingest PM TSV/CSV/WBS sources into operating intelligence without making PM summaries approval authority. | high | PM fixture tests, authority-boundary tests, freshness checks, QA answer tests, WBS round-trip evidence |
 | 25 | PKT-22 Design Projection And Browser Validation Foundation | Structure screen/wireframe/implementation-reusable mockup/UI handoff projections and browser-validation expectations for UI/design-related packets without making design artifacts authority. | high / design | projection schema tests, projection-only negative tests, implementation-reusable mockup checks, required-state/accessibility checks, browser expectation diagnostics |
 | 26 | PKT-23 Reusable UI Module Contract And Locked Module | Define common UI module classification during design projection, then lock reusable UI module contracts with used-by screen trace and review/test expectations before UI implementation starts. | high / design-system | module contract tests, design-stage module classification tests, locked-module negative tests, responsive/interaction-state checks, accessibility checks |
+| 27 | PKT-27 Conductor Worker Executor And Automated Delivery Loop | Productize automatic Conductor-owned worker CLI execution and evidence/adjudication routing without Human prompt/result copy-paste. | critical / contract / provider / security | executor TDD, command safety, timeout/cancel, artifact hashing, evidence ledger, Conductor routing, recovery-mode downgrade, provider-neutral contamination, approval hard stops, full starter regression |
 
 ## Verification Baseline
 Each implementation packet must define its own exact commands. The common baseline is:
@@ -963,9 +977,9 @@ Current evidence does not support those conditions. The expected lower-cost path
 kernel preservation plus targeted operating-layer implementation.
 
 ## Operator Next Action
-- `PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION` is closed; latest closeout handoff is `planner -> planner`.
-- No active PKT-26 lane remains. Choose the next approved lane only after separate Human/Planner decision; do not reopen same-class A10 remediation without explicit Human Owner or valid delegated Conductor authority.
-- Source packet: `reference/packets/PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION.md`.
+- `PKT-27_CONDUCTOR_WORKER_EXECUTOR_AND_AUTOMATED_DELIVERY_LOOP` is closed; latest closeout handoff is `planner -> planner`.
+- Keep the reusable baseline on planning hold until a new approved lane is selected.
+- Source packet: `reference/packets/PKT-27_CONDUCTOR_WORKER_EXECUTOR_AND_AUTOMATED_DELIVERY_LOOP.md`.
 - Preserve packet-before-code, active-context derived authority, generated-doc immutability, root/starter sync, Tester/Reviewer separation, and human approval gates.
 
 ## Long-Memory Boundary

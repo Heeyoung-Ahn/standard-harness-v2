@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "standard-harness-guard-report/v1",
+  "ok": true,
+  "packetId": "PKT-27_CONDUCTOR_WORKER_EXECUTOR_AND_AUTOMATED_DELIVERY_LOOP",
+  "mode": "guard",
+  "reviewDate": "2026-07-01",
+  "editBoundary": {
+    "allowedPaths": [
+      "starter/standard-harness/_harness/system/standard_harness/workflow/worker_executor.py",
+      "starter/standard-harness/_harness/system/standard_harness/workflow/conductor_worker_e2e.py",
+      "starter/standard-harness/_harness/system/standard_harness/workflow/provider_orchestration.py",
+      "starter/standard-harness/_harness/system/standard_harness/cli/main.py",
+      "starter/standard-harness/_harness/test/test_pkt27_worker_executor.py",
+      "starter/standard-harness/_harness/test/test_pkt27_automated_delivery_loop.py",
+      "starter/standard-harness/_harness/test/test_pkt14_conductor_worker_e2e.py",
+      "starter/standard-harness/_harness/README.md",
+      "reference/reports/tdd/PKT-27-red-green.md",
+      "reference/reports/developer/PKT-27_DEVELOPER_REPORT.md",
+      "reference/reports/tester/PKT-27_TESTER_REPORT.md",
+      "reference/reports/security/PKT-27-security-review.json",
+      "reference/reports/security/PKT-27-guard-report.json",
+      "reference/reports/review/PKT-27-closeout-challenge-review.md",
+      "reference/reports/review/PKT-27-closeout-adversarial-security-review.md",
+      "reference/reports/review/PKT-27-closeout-regression-review.md",
+      "reference/reports/review/PKT-27-closeout-requirements-parity-review.md",
+      "reference/reports/review/PKT-27_REVIEW_REPORT.md",
+      "reference/reports/closeout/PKT-27_PLANNER_CLOSEOUT.md"
+    ],
+    "generatedStatePolicy": "Regenerate generated state through harness commands only; do not manually edit generated summaries.",
+    "outsideBoundaryPolicy": "Stop and return to Planner before editing any product/runtime surface not listed here."
+  },
+  "commandPolicy": {
+    "destructiveCommandsApproved": false,
+    "forbiddenPatterns": [
+      "recursive delete",
+      "git reset --hard",
+      "git checkout --",
+      "unbounded move",
+      "shell-interpolated worker execution",
+      "credential/session/cache inspection",
+      "release/publish/deploy"
+    ],
+    "allowedExecution": "Non-destructive reads, TDD test runs, harness validation, and bounded fake-worker subprocess tests inside temporary directories.",
+    "workerExecutionConstraint": "Worker executor implementation must reject shell interpolation, pipes, redirects, subshells, path escapes, unapproved executables, missing timeout, secret-like output, and artifact writes outside approved roots."
+  },
+  "rollback": {
+    "strategy": "Revert PKT-27 code, docs, tests, and evidence files through git if required; preserve review evidence history unless the user explicitly requests cleanup.",
+    "destructiveRollbackApproved": false
+  },
+  "decision": {
+    "guardDecision": "allow-with-boundary",
+    "rationale": "PKT-27 requires command-execution implementation, but the approved edit boundary is explicit, destructive commands are not approved, and worker subprocess tests must use bounded fake workers rather than real credential-bearing provider sessions."
+  }
+}
