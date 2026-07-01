@@ -1,0 +1,57 @@
+{
+  "schema_version": "standard-harness-cso-security-review/v2.2",
+  "packet": "PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION",
+  "packet_path": "reference/packets/PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION.md",
+  "work_item_id": "PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION",
+  "mode": "scoped",
+  "phases_run": [0, 1, 2, 5, 8, 12, 13, 14],
+  "filter_stats": {
+    "raw_candidates": 7,
+    "suppressed_false_positives": 0,
+    "main_findings": 0
+  },
+  "decision": "pass",
+  "review_type": "security",
+  "status": "pass",
+  "reviewed_on": "2026-07-01",
+  "scope": [
+    "starter/standard-harness/_harness/system/standard_harness/workflow/conductor.py",
+    "starter/standard-harness/_harness/system/standard_harness/workflow/conductor_cli.py",
+    "starter/standard-harness/_harness/system/standard_harness/cli/main.py",
+    "starter/standard-harness/_harness/system/standard_harness/validation/closeout_ledger.py",
+    "starter/standard-harness/_harness/test/test_pkt26_closeout_ledger_governance.py",
+    "starter/standard-harness/_harness/test/test_conductor_routing_loop.py"
+  ],
+  "findings": [],
+  "security_controls": [
+    {
+      "control": "delegated_approval_authority_boundary",
+      "result": "pass",
+      "evidence": "Conductor delegated approval requires service-created grant snapshots, service-owned persisted authority rows, safe grant ids, verified grant-file row parity, and approval-service validation before closeout loop judgment."
+    },
+    {
+      "control": "forged_grant_file_rejection",
+      "result": "pass",
+      "evidence": "Fabricated grant files without matching conductor_delegation_grants rows are downgraded to untrusted and conductor-approve rejects them."
+    },
+    {
+      "control": "raw_grant_persistence_rejection",
+      "result": "pass",
+      "evidence": "record_grant rejects raw dictionaries without a service-created one-shot snapshot and rejects mismatched idempotency replay."
+    },
+    {
+      "control": "closeout_grant_semantics",
+      "result": "pass",
+      "evidence": "Closeout ledger reuses ConductorApprovalService grant validation for conductor, packet, approval type, packet hash, risk ceiling, validity window, and evidence prerequisites."
+    },
+    {
+      "control": "runtime_event_read_model_boundary",
+      "result": "pass",
+      "evidence": "Conductor grant events remain audit/read-model traces; closeout authority is consumed from service-owned conductor_delegation_grants rows."
+    }
+  ],
+  "residual_risk": [
+    "This packet hardens service/API misuse boundaries and does not claim hostile same-process Python sandboxing.",
+    "PKT-24 validation warning is pre-existing and unrelated to PKT-26 authority lifecycle remediation."
+  ]
+}

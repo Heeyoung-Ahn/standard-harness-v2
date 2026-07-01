@@ -73,32 +73,39 @@ class ConductorRoutingLoopTests(unittest.TestCase):
             valid_until="2026-06-29T10:00:00Z",
         )
 
-        approved = service.decide(
-            approval_type="ready_for_code",
-            actor_type="conductor",
-            conductor_id="cond-codex",
-            approval_channel="trusted_harness_command",
-            authority_source=grant,
-            packet_id="PKT-07",
-            packet_hash="sha256:packet",
-            risk_level="high",
-            evidence_prerequisite_status={"packet_doc_review:pass": "verified_by_harness"},
-            decision="approved",
-            decided_at="2026-06-29T09:30:00Z",
-        )
-        planner_attempt = service.decide(
-            approval_type="ready_for_code",
-            actor_type="planner",
-            conductor_id=None,
-            approval_channel="trusted_harness_command",
-            authority_source=grant,
-            packet_id="PKT-07",
-            packet_hash="sha256:packet",
-            risk_level="high",
-            evidence_prerequisite_status={"packet_doc_review:pass": "verified_by_harness"},
-            decision="approved",
-            decided_at="2026-06-29T09:30:00Z",
-        )
+        with tempfile.TemporaryDirectory() as tmp:
+            trusted_grant = service.record_grant(
+                HarnessStore(Path(tmp)),
+                grant=grant,
+                idempotency_key="grant-1",
+            )
+
+            approved = service.decide(
+                approval_type="ready_for_code",
+                actor_type="conductor",
+                conductor_id="cond-codex",
+                approval_channel="trusted_harness_command",
+                authority_source=trusted_grant,
+                packet_id="PKT-07",
+                packet_hash="sha256:packet",
+                risk_level="high",
+                evidence_prerequisite_status={"packet_doc_review:pass": "verified_by_harness"},
+                decision="approved",
+                decided_at="2026-06-29T09:30:00Z",
+            )
+            planner_attempt = service.decide(
+                approval_type="ready_for_code",
+                actor_type="planner",
+                conductor_id=None,
+                approval_channel="trusted_harness_command",
+                authority_source=trusted_grant,
+                packet_id="PKT-07",
+                packet_hash="sha256:packet",
+                risk_level="high",
+                evidence_prerequisite_status={"packet_doc_review:pass": "verified_by_harness"},
+                decision="approved",
+                decided_at="2026-06-29T09:30:00Z",
+            )
 
         self.assertEqual(approved["status"], "approved")
         self.assertEqual(approved["actor"]["actor_type"], "conductor")

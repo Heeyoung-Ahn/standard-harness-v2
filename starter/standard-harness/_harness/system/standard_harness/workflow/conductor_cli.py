@@ -9,31 +9,61 @@ from typing import Any
 from standard_harness.domain.closeout import CloseoutService
 from standard_harness.domain.packets import PacketService
 from standard_harness.state.store import HarnessStore
+from standard_harness.workflow.conductor import ConductorApprovalService
 from standard_harness.workflow.conductor import ConductorLedger
 
 
 def write_grant_record(store: HarnessStore, grant: dict[str, Any]) -> dict[str, Any]:
+    ledger_record = ConductorApprovalService().record_grant(
+        store,
+        grant=grant,
+        idempotency_key=f"{grant['delegation_grant_id']}:grant",
+    )
     record_path = (
         Path(store.harness_root)
         / "_ops"
         / "decisions"
         / "records"
-        / f"{grant['delegation_grant_id']}.json"
+        / f"{ledger_record['delegation_grant_id']}.json"
     )
     record_path.parent.mkdir(parents=True, exist_ok=True)
-    record_path.write_text(json.dumps(grant, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-    ledger_record = ConductorLedger(store).record_delegation_grant(
-        grant=grant,
-        idempotency_key=f"{grant['delegation_grant_id']}:grant",
-    )
+    file_record = dict(ledger_record)
+    file_record.pop("trace_event_id", None)
+    file_record.pop("trace_event_seq", None)
+    record_path.write_text(json.dumps(file_record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     result = dict(ledger_record)
     result["record_path"] = str(record_path)
     return result
 
 
-def load_grant(grant_path: str) -> dict[str, Any]:
-    return json.loads(Path(grant_path).read_text(encoding="utf-8"))
+def load_grant(store: HarnessStore, grant_path: str) -> dict[str, Any]:
+    try:
+        loaded = json.loads(Path(grant_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"trusted_harness_surface": False, "grant_reference_status": "unreadable_grant_file"}
+    if not isinstance(loaded, dict):
+        return {"trusted_harness_surface": False, "grant_reference_status": "invalid_grant_file"}
+    grant_id = str(loaded.get("delegation_grant_id") or "")
+    persisted = ConductorApprovalService().get_persisted_grant(store, grant_id)
+    if persisted is None:
+        untrusted = dict(loaded)
+        untrusted["trusted_harness_surface"] = False
+        untrusted["grant_reference_status"] = "missing_authoritative_grant_row"
+        return untrusted
+    if _grant_file_fingerprint(loaded) != _grant_file_fingerprint(persisted):
+        untrusted = dict(loaded)
+        untrusted["trusted_harness_surface"] = False
+        untrusted["grant_reference_status"] = "grant_file_row_mismatch"
+        return untrusted
+    return persisted
+
+
+def _grant_file_fingerprint(grant: dict[str, Any]) -> str:
+    record = dict(grant)
+    record.pop("trace_event_id", None)
+    record.pop("trace_event_seq", None)
+    record.pop("record_path", None)
+    return json.dumps(record, sort_keys=True, separators=(",", ":"))
 
 
 def persist_conductor_approval(

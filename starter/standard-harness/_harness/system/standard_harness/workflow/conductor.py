@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 import json
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from standard_harness.policy.risk import RISK_ORDER
 from standard_harness.policy.risk import normalize_risk_level
@@ -19,6 +21,8 @@ PROVIDER_ENTRY_FILES = {
 }
 
 TRUSTED_APPROVAL_CHANNELS = {"trusted_harness_command", "trusted_harness_service"}
+_SAFE_DELEGATION_GRANT_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
+_SERVICE_CREATED_GRANT_SNAPSHOTS: dict[str, str] = {}
 
 
 @dataclass(frozen=True)
@@ -169,10 +173,12 @@ class ConductorLedger:
     def record_delegation_grant(
         self, *, grant: dict[str, Any], idempotency_key: str
     ) -> dict[str, Any]:
+        record = dict(grant)
+        record.pop("grant_provenance", None)
         return self._append(
             event_type="conductor.delegation_grant_recorded",
-            record=grant,
-            packet_id=grant.get("packet_id"),
+            record=record,
+            packet_id=record.get("packet_id"),
             idempotency_key=idempotency_key,
             authority_basis="conductor delegation grant read model",
         )
@@ -293,7 +299,8 @@ class ConductorApprovalService:
         packet_hash: str | None = None,
         status: str = "active",
     ) -> dict[str, Any]:
-        return {
+        _validate_delegation_grant_id(delegation_grant_id)
+        grant = {
             "delegation_grant_id": delegation_grant_id,
             "delegating_human_owner": delegating_human_owner,
             "conductor_id": conductor_id,
@@ -308,8 +315,136 @@ class ConductorApprovalService:
             "revoked_by": None,
             "revoked_at": None,
             "invalidated_reason": None,
-            "trusted_harness_surface": True,
+            "trusted_harness_surface": False,
         }
+        creation_token = uuid4().hex
+        grant["_service_creation_token"] = creation_token
+        _SERVICE_CREATED_GRANT_SNAPSHOTS[creation_token] = _canonical_grant_json(grant)
+        return grant
+
+    def get_persisted_grant(
+        self,
+        store: HarnessStore,
+        delegation_grant_id: str,
+    ) -> dict[str, Any] | None:
+        if not _safe_delegation_grant_id(delegation_grant_id):
+            return None
+        with store.connection() as conn:
+            row = conn.execute(
+                """
+                select grant_json, source_event_id, source_event_seq
+                from conductor_delegation_grants
+                where delegation_grant_id = ?
+                """,
+                (delegation_grant_id,),
+            ).fetchone()
+        if row is None:
+            return None
+        grant = json.loads(row["grant_json"])
+        grant["trace_event_id"] = row["source_event_id"]
+        grant["trace_event_seq"] = row["source_event_seq"]
+        return grant
+
+    def record_grant(
+        self,
+        store: HarnessStore,
+        grant: dict[str, Any],
+        *,
+        idempotency_key: str,
+    ) -> dict[str, Any]:
+        """Persist a scoped delegation grant through the trusted service path."""
+
+        record = dict(grant)
+        record.pop("grant_provenance", None)
+        _validate_delegation_grant_id(str(record.get("delegation_grant_id") or ""))
+        existing = store.event_for_idempotency_key(idempotency_key)
+        if existing is not None:
+            existing_grant_id = str(existing["payload"].get("delegation_grant_id") or "")
+            incoming_grant_id = str(record.get("delegation_grant_id") or "")
+            if incoming_grant_id and existing_grant_id and incoming_grant_id != existing_grant_id:
+                raise ValueError("idempotent_grant_replay_mismatch")
+            persisted = self.get_persisted_grant(
+                store,
+                str(existing_grant_id or incoming_grant_id),
+            )
+            if persisted is None:
+                raise ValueError("trusted_grant_row_missing_for_idempotency_replay")
+            return persisted
+
+        creation_token = str(record.pop("_service_creation_token", "") or "")
+        expected_snapshot = _SERVICE_CREATED_GRANT_SNAPSHOTS.pop(creation_token, None)
+        if expected_snapshot is None or expected_snapshot != _canonical_grant_json(record):
+            raise ValueError("untrusted_delegation_grant_record")
+        record["trusted_harness_surface"] = True
+        record["grant_provenance"] = {
+            "source": "trusted_harness_service",
+            "created_by_trusted_harness_service": True,
+            "delegation_grant_id": record["delegation_grant_id"],
+        }
+        with store.transaction() as conn:
+            event = store.append_event(
+                event_type="conductor.delegation_grant_recorded",
+                actor_id="conductor-approval-service",
+                actor_role="System",
+                authority_basis="trusted conductor delegation grant service",
+                idempotency_key=idempotency_key,
+                packet_id=record.get("packet_id"),
+                payload=record,
+                conn=conn,
+            )
+            conn.execute(
+                """
+                insert or replace into conductor_delegation_grants (
+                  delegation_grant_id, packet_id, conductor_id, approval_type,
+                  status, risk_ceiling, valid_from, valid_until, grant_json,
+                  source_event_id, source_event_seq
+                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    record["delegation_grant_id"],
+                    record["packet_id"],
+                    record["conductor_id"],
+                    record["approval_type"],
+                    record["status"],
+                    record["risk_ceiling"],
+                    record["valid_from"],
+                    record["valid_until"],
+                    json.dumps(record, sort_keys=True, separators=(",", ":")),
+                    event["event_id"],
+                    event["event_seq"],
+                ),
+            )
+        result = dict(record)
+        result["trace_event_id"] = event["event_id"]
+        result["trace_event_seq"] = event["event_seq"]
+        return result
+
+    def validate_delegation_grant(
+        self,
+        *,
+        grant: dict[str, Any] | None,
+        approval_type: str,
+        conductor_id: str | None,
+        packet_id: str,
+        packet_hash: str,
+        risk_level: str,
+        evidence_prerequisite_status: dict[str, bool | str],
+        decided_at: str,
+        hard_stop_status: dict[str, bool] | None = None,
+    ) -> list[str]:
+        return self._diagnostics(
+            approval_type=approval_type,
+            actor_type="conductor",
+            conductor_id=conductor_id,
+            approval_channel="trusted_harness_service",
+            authority_source=grant,
+            packet_id=packet_id,
+            packet_hash=packet_hash,
+            risk_level=risk_level,
+            evidence_prerequisite_status=evidence_prerequisite_status,
+            decided_at=decided_at,
+            hard_stop_status=hard_stop_status or {},
+        )
 
     def transition_grant(
         self,
@@ -669,3 +804,22 @@ def _normalize_risk(risk: str) -> str:
 
 def _risk_value(risk: str) -> int:
     return risk_value(risk, unknown="critical")
+
+
+def _safe_delegation_grant_id(value: str) -> bool:
+    grant_id = str(value or "")
+    return bool(_SAFE_DELEGATION_GRANT_ID.fullmatch(grant_id)) and ".." not in grant_id
+
+
+def _validate_delegation_grant_id(value: str) -> None:
+    if not _safe_delegation_grant_id(value):
+        raise ValueError("unsafe_delegation_grant_id")
+
+
+def _canonical_grant_json(grant: dict[str, Any]) -> str:
+    record = dict(grant)
+    record.pop("_service_creation_token", None)
+    record.pop("trace_event_id", None)
+    record.pop("trace_event_seq", None)
+    record.pop("grant_provenance", None)
+    return json.dumps(record, sort_keys=True, separators=(",", ":"))

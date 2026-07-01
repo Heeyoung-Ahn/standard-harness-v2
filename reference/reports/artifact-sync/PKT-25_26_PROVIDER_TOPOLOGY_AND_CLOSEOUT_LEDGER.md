@@ -1,7 +1,7 @@
 # PKT-25 / PKT-26 Artifact Sync And Source Intake
 
 Workflow: Planner  
-Status: PKT-25 Ready For Code approved; PKT-26 remains planning/RFC-pending  
+Status: PKT-25 closed; PKT-26 Ready For Code approved for Orchestrator delivery  
 Scope: provider topology, real-smoke contract, closeout ledger, review governance, and
 PKT-17 through PKT-23 cleanup lessons.
 
@@ -9,7 +9,7 @@ PKT-17 through PKT-23 cleanup lessons.
 | Source input | Required artifact | Current status | Required owner |
 |---|---|---|---|
 | User selected two packets | `reference/packets/PKT-25...`, `reference/packets/PKT-26...` | created as planning drafts | Planner |
-| User selected Ready For Code 직전 수준 | packet approval boundary | recorded as `Ready For Code status: pending` | Planner |
+| User selected Ready For Code 직전 수준 | packet approval boundary | PKT-25 closed; PKT-26 explicitly approved for Ready For Code by Human Owner on 2026-07-01 | Planner / Orchestrator |
 | User requested project-start Conductor and per-packet worker1/worker2 | provider topology packet | covered by PKT-25 as packet-scoped topology record/report; worker aliases retained as compatibility aliases under role assignments | Planner, then Orchestrator after RFC |
 | User requested first Conductor as Codex | provider topology packet | covered by PKT-25 as packet-scoped `projectTopology.conductor.provider=codex`, not product identity or a completed project-start UI/init flow | Planner, then Orchestrator after RFC |
 | User requested per-packet PM, Planner, Developer, Documenter, Tester, and Reviewer assignment to Claude Code CLI or Codex CLI | provider topology packet | covered by PKT-25 through packet-scoped role assignments | Planner, then Orchestrator after RFC |
@@ -32,8 +32,8 @@ PKT-17 through PKT-23 cleanup lessons.
 ## Impacted Packet Set
 | Packet path | Source wave packet disposition | Current status | Required owner |
 |---|---|---|---|
-| reference/packets/PKT-25_PROVIDER_TOPOLOGY_AND_REAL_SMOKE_CONTRACT.md | PKT-25 selected for topology implementation; PKT-26 dependent consumer for closeout-ledger productization | Ready For Code approved by Human Owner on 2026-07-01; may transition only through approved Orchestrator route | Orchestrator after transition |
-| reference/packets/PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION.md | PKT-26 dependent consumer for closeout-ledger productization; PKT-25 remains topology authority | Planning/RFC-pending until explicit Human Owner approval | Planner |
+| reference/packets/PKT-25_PROVIDER_TOPOLOGY_AND_REAL_SMOKE_CONTRACT.md | PKT-25 selected for topology implementation; PKT-26 dependent consumer for closeout-ledger productization | Closed after Orchestrator-routed implementation, verification, review, and Planner closeout | Closed |
+| reference/packets/PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION.md | PKT-26 dependent consumer for closeout-ledger productization; PKT-25 remains topology authority | Ready For Code approved by Human Owner on 2026-07-01; may transition only through approved Orchestrator route | Orchestrator after transition |
 
 ## Drift Findings
 1. Provider topology is now represented by PKT-25 as a packet-scoped topology
@@ -54,9 +54,9 @@ PKT-17 through PKT-23 cleanup lessons.
    Conductor-delegated loop judgment.
 
 ## Generated Context Status
-- `.agents/runtime/ACTIVE_CONTEXT.json` currently routes to Reviewer for
-  `PKT-25_PROVIDER_TOPOLOGY_AND_REAL_SMOKE_CONTRACT`; PKT-25 is in closeout review after
-  implementation and PKT-26 remains planning/RFC-pending.
+- `.agents/runtime/ACTIVE_CONTEXT.json` may lag the current approval turn until the
+  transition/runtime sync completes. The governance truth is that PKT-25 is closed and
+  PKT-26 is Ready For Code approved for Orchestrator delivery.
 - Generated state is a read model only and was not manually edited.
 - `reference/packets/PKT-24_SURVEY_APP_WEB_REVIEW.md` is a separate product survey-app
   review packet and is intentionally not reused for these harness improvements.
@@ -71,13 +71,13 @@ PKT-17 through PKT-23 cleanup lessons.
 - Repo-bound A-lane source summary in `reference/reports/source/PKT-25_26_A_LANE_SOURCE_SUMMARY.md`
 
 ## Approval Boundary
-- PKT-25 Ready For Code is approved by explicit Human Owner message on 2026-07-01.
-- PKT-25 implementation may start only after the harness transition selects the PKT-25 work item and Orchestrator route.
-- PKT-26 remains planning/RFC-pending; no PKT-26 implementation is approved by the PKT-25 approval.
-- Independent packet challenge and independent `packet_doc_review` have passed for PKT-25 and PKT-26, but explicit Ready For Code remains packet-specific.
+- PKT-25 is closed for its approved packet scope.
+- PKT-26 Ready For Code is approved by explicit Human Owner message on 2026-07-01.
+- PKT-26 implementation may start only after the harness transition selects the PKT-26 work item and Orchestrator route.
+- Independent packet challenge and independent `packet_doc_review` have passed for PKT-25 and PKT-26; Ready For Code approval remains packet-specific and is now recorded for PKT-26.
 - No release, publish, starter promotion, productization-complete, User UAT, residual-risk
   acceptance, or real-provider readiness is approved.
 
 ## Next First Action
-Transition PKT-25 from approved planning to Orchestrator delivery once the active-lane
-state no longer conflicts with PKT-24. Keep PKT-26 in planning until separately approved.
+Transition PKT-26 from approved planning to Orchestrator delivery, then route Developer,
+Tester, Reviewer, bounded remediation, and Planner closeout.
