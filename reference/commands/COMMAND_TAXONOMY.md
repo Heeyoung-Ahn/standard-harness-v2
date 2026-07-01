@@ -18,6 +18,7 @@ Use these commands to initialize, validate, inspect, refresh, and hand off a sta
 | `harness:next` | core starter lifecycle | Run the documented harness command surface. |
 | `harness:payload-boundary` | core starter lifecycle | Check clean reusable payload boundaries. |
 | `harness:promote-starter` | core starter lifecycle | Export reusable harness improvements into a target clean starter candidate. |
+| `harness:release-candidate` | core starter lifecycle | Build or validate a local release-candidate evidence bundle without granting release approval. |
 | `harness:risk` | core starter lifecycle | Run the documented harness command surface. |
 | `harness:status` | core starter lifecycle | Run the documented harness command surface. |
 | `harness:sync-state` | core starter lifecycle | Run the documented harness command surface. |
