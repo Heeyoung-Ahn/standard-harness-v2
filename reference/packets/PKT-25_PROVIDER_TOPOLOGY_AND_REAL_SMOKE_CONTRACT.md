@@ -32,7 +32,7 @@ too ad hoc and stringly typed for a durable v2.0 product contract.
 | Item | Proposed | Why | Status |
 |---|---|---|---|
 | Work item | `PKT-25_PROVIDER_TOPOLOGY_AND_REAL_SMOKE_CONTRACT` | First-class provider topology and real-smoke contract hardening. | selected |
-| Ready For Code | pending | Independent reviews are recorded, but explicit RFC approval has not been granted. | pending |
+| Ready For Code | pending | Role-topology rerun review findings are corrected in the packet draft, but explicit RFC approval has not been granted. | pending |
 | Human sync needed | `no` | User decisions are captured; RFC remains a separate explicit approval boundary. | closed |
 | Gate profile | contract | Harness-system topology and smoke validation surfaces require strict contract gates. | selected |
 | User-facing impact | `no` | No product UI or browser-facing runtime is changed by this packet. | closed |
@@ -228,7 +228,7 @@ Boundary rules:
 | ID | Acceptance | Required evidence |
 |---|---|---|
 | A1 | Project init/start can persist and report `conductor.provider`. | CLI/unit test plus starter validation evidence. |
-| A2 | Packet instructions can persist and report role provider assignments for PM, Planner, Developer, Documenter, Tester, and Reviewer using Codex CLI or Claude Code CLI. | Packet service/schema test and CLI smoke for each supported role key. |
+| A2 | Packet instructions can persist and report role provider assignments for PM, Planner, Developer, Documenter, Tester, and Reviewer using either Codex CLI or Claude Code CLI for each role. | Packet service/schema test and CLI smoke using a role-provider matrix fixture that covers all six logical role keys against both `codex` and `claude_code`. |
 | A3 | Real-smoke readiness consumes declared topology and no longer assumes `Reviewer=claude_code` when worker2 is `codex`. | Fail-first fixture `codex_codex_reviewer_hardcode_red` must reproduce `captured_output_record_missing:Reviewer:claude_code`, then pass with topology-derived reviewer provider. |
 | A4 | No explicit topology preserves existing default reviewer-provider behavior. | Backward-compatible default test. |
 | A5 | Unsupported, blank, or conflicting provider declarations fail closed with actionable diagnostics. | Negative tests. |
@@ -241,8 +241,9 @@ Boundary rules:
 ## Verification Plan
 - Focused starter Python tests for provider topology schema, persistence, manifest-backed
   provider id validation, and smoke routing.
-- Role-assignment fixture proving PM, Planner, Developer, Documenter, Tester, and Reviewer
-  can be assigned at packet instruction time to `codex` or `claude_code`.
+- Role-provider matrix fixture proving PM, Planner, Developer, Documenter, Tester, and
+  Reviewer can each be assigned at packet instruction time to either `codex` or
+  `claude_code`.
 - Mixed-provider review fixture proving one Claude Code CLI reviewer and one Codex CLI
   reviewer can produce separate captured-output records and independent review lenses.
 - Focused regression for codex/codex reviewer capture that previously failed with
@@ -261,15 +262,15 @@ Boundary rules:
 - Ready For Code: pending; explicit approval is required before implementation transition.
 - Root validation: required before RFC transition and closeout.
 - Standard-template check: required for copied-starter provider topology surfaces.
-- Targeted tests: provider topology schema/persistence/CLI tests, role-assignment CLI tests, mixed-provider reviewer tests, codex-codex reviewer hardcode regression, unsupported-provider negatives, delegated-approval hard-stop regression.
+- Targeted tests: provider topology schema/persistence/CLI tests, role-provider matrix CLI tests, mixed-provider reviewer tests, codex-codex reviewer hardcode regression, unsupported-provider negatives, delegated-approval hard-stop regression.
 - Active context refresh: required after registration and every state-changing transition.
 - Review closeout: independent packet challenge and packet-doc review are advisory pre-RFC evidence only; closeout requires security/authority review, challenge/code-quality/evidence lenses, Reviewer adjudication, and Planner closeout.
 
 ## Required Artifacts Before Ready For Code
 | Artifact | Status | Owner |
 |---|---|---|
-| Packet challenge review | recorded with no open findings after correction addendum; does not approve RFC | independent challenge reviewer |
-| Independent `packet_doc_review` | recorded with correction addendum; does not approve RFC | independent packet document reviewer |
+| Packet challenge review | required before RFC; latest role-topology rerun evidence is `reference/reports/review/PKT-25_26-role-topology-planner-challenge-rerun.md` with correction disposition in `reference/reports/review/PKT-25_26-role-topology-correction-addendum.md`; does not approve RFC | independent challenge reviewer / Planner correction |
+| Independent `packet_doc_review` | required before RFC; latest role-topology rerun evidence is `reference/reports/review/PKT-25_26-role-topology-packet-doc-review-rerun.md` with correction disposition in `reference/reports/review/PKT-25_26-role-topology-correction-addendum.md`; does not approve RFC | independent packet document reviewer / Planner correction |
 | Artifact-sync report | draft in `reference/reports/artifact-sync/PKT-25_26_PROVIDER_TOPOLOGY_AND_CLOSEOUT_LEDGER.md` | Planner |
 | Development documentation impact decision | closed in packet draft; Developer parity updates required if docs surfaces change | Planner / Developer |
 | Implementation-transition preflight | required after RFC, before Developer work | Orchestrator |

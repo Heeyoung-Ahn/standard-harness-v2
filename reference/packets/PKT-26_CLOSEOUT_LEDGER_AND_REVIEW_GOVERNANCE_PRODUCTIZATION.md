@@ -34,7 +34,7 @@ decision stayed `blocked`.
 | Item | Proposed | Why | Status |
 |---|---|---|---|
 | Work item | `PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION` | Productize strict closeout ledger and review-governance support chain. | selected |
-| Ready For Code | pending | Independent reviews are recorded, but explicit RFC approval has not been granted. | pending |
+| Ready For Code | pending | Role-topology rerun review findings are corrected in the packet draft, but explicit RFC approval has not been granted. | pending |
 | Human sync needed | `no` | User decisions are captured; RFC remains a separate explicit approval boundary. | closed |
 | Gate profile | contract | Harness-system closeout ledger and governance surfaces require strict contract gates. | selected |
 | User-facing impact | `no` | No product UI or browser-facing runtime is changed by this packet. | closed |
@@ -188,8 +188,8 @@ decision stayed `blocked`.
 ## Required Artifacts Before Ready For Code
 | Artifact | Status | Owner |
 |---|---|---|
-| Packet challenge review | recorded with no open findings after correction addendum; does not approve RFC | independent challenge reviewer |
-| Independent `packet_doc_review` | recorded with correction addendum; does not approve RFC | independent packet document reviewer |
+| Packet challenge review | required before RFC; latest role-topology rerun evidence is `reference/reports/review/PKT-25_26-role-topology-planner-challenge-rerun.md` with correction disposition in `reference/reports/review/PKT-25_26-role-topology-correction-addendum.md`; does not approve RFC | independent challenge reviewer / Planner correction |
+| Independent `packet_doc_review` | required before RFC; latest role-topology rerun evidence is `reference/reports/review/PKT-25_26-role-topology-packet-doc-review-rerun.md` with correction disposition in `reference/reports/review/PKT-25_26-role-topology-correction-addendum.md`; does not approve RFC | independent packet document reviewer / Planner correction |
 | Artifact-sync report | draft in `reference/reports/artifact-sync/PKT-25_26_PROVIDER_TOPOLOGY_AND_CLOSEOUT_LEDGER.md` | Planner |
 | Development documentation impact decision | closed in packet draft; Developer parity updates required if docs surfaces change | Planner / Developer |
 | Implementation-transition preflight | required after RFC, before Developer work | Orchestrator |
@@ -236,5 +236,9 @@ Operator closeout docs must explain effective decision precedence:
   `projectTopology`, packet-scoped `roleAssignments`, mixed-provider reviewer records,
   and compatibility `workerAliases`; if PKT-26 is implemented first, it may use a bounded
   fixture with the same envelope shape.
+- Any PKT-26-first topology fixture is non-authoritative and copied only from the current
+  PKT-25 draft envelope for ledger-consumption testing. It cannot define, persist,
+  validate, or mutate topology semantics, and must be replaced or revalidated against the
+  closed PKT-25 contract before closeout claims consume it as current topology evidence.
 - PKT-26 must not define, persist, validate, or mutate provider topology. That scope stays
   with PKT-25.

@@ -57,7 +57,7 @@ PKT-17 through PKT-23 cleanup lessons.
 - `.agents/workflows/planner.md`
 - `reference/packets/PKT-25_PROVIDER_TOPOLOGY_AND_REAL_SMOKE_CONTRACT.md`
 - `reference/packets/PKT-26_CLOSEOUT_LEDGER_AND_REVIEW_GOVERNANCE_PRODUCTIZATION.md`
-- A-lane review evidence under `C:\tmp\survey-starter-review\reference\artifacts\REVIEW_REPORT.md`
+- Repo-bound A-lane source summary in `reference/reports/source/PKT-25_26_A_LANE_SOURCE_SUMMARY.md`
 
 ## Approval Boundary
 - Planning drafts only.
@@ -69,6 +69,7 @@ PKT-17 through PKT-23 cleanup lessons.
   acceptance, or real-provider readiness is approved.
 
 ## Next First Action
-Route PKT-25 and PKT-26 to independent packet challenge and independent
-`packet_doc_review`. If both pass or their findings are corrected, Planner may return to
-the Human Owner for explicit `Ready For Code` approval for the selected packet sequence.
+Rerun independent packet challenge and independent `packet_doc_review` after the
+role-topology correction addendum. If both pass or their findings are explicitly
+resolved, Planner may return to the Human Owner for explicit `Ready For Code` approval
+for the selected packet sequence.
